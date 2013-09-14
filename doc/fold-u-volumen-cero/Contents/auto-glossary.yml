@@ -1,0 +1,218 @@
+glossary:
+    options: 
+        # 'all' (default): all ocurrences
+        # 'item': only first ocurrence into an item (i.e. chapter)
+        # 'first': first ocurrence in the whole book
+        coverage: 'first'  
+        # Elements to process (default: "chapter")
+        elements: ["chapter", "introduction"]
+    
+    ####
+    # Definición de términos:
+    #
+    #   "término": Descripción del término
+    #
+    # Se pueden incluir variantes (singular, plural)
+    #
+    #   "término[s]": Descripción que se aplica a "término" y "términos"
+    #   "término [uno|dos]": Descripción que se aplica a "término uno" y "término dos"
+    ####
+    terms:
+    
+      #### CONFLICTOS
+      
+        "Interactúan": > 
+          Ejercen una relación recíproca.
+        "Discrepancias": >
+          Desacuerdo en opiniones o en conducta.
+        "Estimulación": >
+          La acción de avivar una actividad.
+        "Incentivación": >
+          Ofrecimiento de algún tipo de gratificación para que se haga algo. 
+        "Frustración": >
+          Fracaso en un deseo o esperanza. 
+        "Liberalización de horarios": >
+          Legislación según la cual las empresas que regentan establecimientos pueden decidir libremente su horario de apertura. En general, suele dar lugar a la ampliación del horario y de los días de apertura de  dichos establecimientos.
+        "Incompatibilidades": >
+          Incapacidades para unirse en un objetivo, debidas a causas diversas (de carácter, por problemas anteriores no resueltos, etc.).
+        "Coacciones": >
+          Acciones que implican violencia física, psíquica o moral para obligar a una persona a decir o hacer algo contra su voluntad.
+        "Merma el poder de decisión": >
+          Disminuye la influencia en la toma de decisiones propia de  un departamento, persona, etc.
+        "Funciones subordinadas": >
+          Funciones que dependen de otras.
+        "Minimizar": >
+          Reducir o disminuir a su grado mínimo.
+        "Reacción": >
+          Sucesión de acontecimientos en la que cada uno es provocado por el anterior.
+        "Percepción diferente": >
+          Sensación e interpretación interior, propia y distinta de otras, que resulta de la forma personal de interpretar los acontecimientos acaecidos.
+        "Estereotipos": >
+          Ideas o imágenes aceptadas por la mayoría como modelo de cualidades o de conducta.
+        "Prejuicios": >
+          Juicios u opiniones negativas que se generan sin el conocimiento necesario.
+        "Tangible[s]": >
+          Puede tocarse. Se percibe y se ve de manera precisa.
+        "Intangible[s]": >
+          No se puede tocar. Se imagina, pero no se percibe por los sentidos con precisión.
+        "Empatía": >
+          Identificación mental y afectiva de un sujeto con el estado de ánimo de otro.
+        "Tercero neutral": >
+          Persona que no se inclina por ninguna de las partes o alternativas que se oponen en una confrontación, pero que participa para conseguir una solución equilibrada y justa.
+        "Recurrirse": >
+          Interponer un recurso contra una resolución.
+        "Convergen[cia]": >
+          Unión de dos cosas que confluyen en un mismo punto.
+        "Divergente[s]": >
+          Que discrepan o que se alejan.
+        "Potestad": >
+          Dominio o poder sobre una toma de decisión concreta.
+        "Deliberaciones": >
+          Reflexiones sobre un asunto, compartidas entre varias partes, antes de tomar una decisión sobre él.
+        "Saber escuchar activamente": >
+          Enlace comunicación en equipos de trabajo.
+        "Extrajudicial": >
+          Forma de resolución de controversias fuera o antes de recurrir a la vía judicial.          
+        
+        #### CONTRATOS
+        
+        "Persona física": >
+          Individuo de la especie humana.
+        "Persona jurídica": >
+          Organización de personas o de personas y de bienes a la que el derecho reconoce capacidad unitaria para ser sujeto de derechos y obligaciones, como las corporaciones, asociaciones, sociedades y fundaciones.
+        "Consentimiento": >
+          Manifestación de voluntad, expresa o tácita, por la cual un sujeto se vincula jurídicamente.
+          En los contratos, conformidad que sobre su contenido expresan las partes.
+        "Salario": >
+          Paga o remuneración regular.
+          En especial, cantidad de dinero con que se retribuye a los trabajadores por cuenta ajena.
+        "Causa": >
+          Motivo o razón para obrar.
+        "Modalidad": >
+          Modo de ser o de manifestarse algo.
+        "Causa[ viciada|s viciadas]": >
+          Motivo o razón que anula o quita el valor o validación de un acto.
+        "Mercantil": >
+          Perteneciente o relativo al mercader, a la mercancía o al comercio.
+        "Autónomo[s]": >
+          Que trabaja por cuenta propia.
+        "Falta": >
+          Infracción voluntaria o culposa de una norma, que puede ser castigada bien penal o administrativamente, bien por el empresario en las relaciones laborales.
+        "Incapacitado[s]": >
+          Persona que no tiene capacidad o aptitud para hacer algo, adquirir derechos y/o contraer obligaciones.
+        "Emancipa[ción|r]": >
+          Liberarse por parte de un menor o de un mayor incapacitado de la patria potestad, de la tutela o de la servidumbre.         
+                  
+        "Tutor": >
+          Persona que ejerce la tutela, es decir, la autoridad que, en defecto de la paterna o materna, se confiere para cuidar de la persona y los bienes de aquel que, por minoría de edad o por otra causa, no tiene completa capacidad civil.
+          
+        "Unión Europea": >
+          Asociación económica y política singular de 27 países europeos que abarcan juntos gran parte del continente.
+        "Requisito": >
+          Circunstancia o condición necesaria para algo.
+        "Extranjería": >
+          Sistema o conjunto de normas reguladoras de la condición, los actos y los intereses de los extranjeros en un país.
+        "Comunidad de bienes": >
+          Hay comunidad de bienes cuando la propiedad de una cosa o de un derecho pertenece pro indiviso a varias personas que no forman una persona jurídica. Por ejemplo, una comunidad de vecinos.
+        "Naturaleza": >
+          Especie, género, clase.
+          Cantidad.
+        "Discrepancia[s]": >
+          Diferencia, desigualdad que resulta de la comparación de las cosas entre sí.
+          Disentimiento personal en opiniones o en conducta.
+        "Itinerante[s]": > 
+          Se considera empresa móvil o itinerante aquélla que, por las características propias de la actividad que realiza, requiere un desplazamiento necesario de sus trabajadores a los lugares donde sus servicios son requeridos.
+        "Cuantía": >
+          Cantidad.
+        "Preaviso": >
+          Aviso obligatorio previo a la realización de un acto.
+        "Registro": >
+          Acción y efecto de registrar, es decir, inscribir en una oficina determinados documentos públicos, instancias, etc.
+          Lugar desde donde se puede registrar o ver algo.
+        
+        "Modelo": >
+          Impreso. Hoja u hojas impresas con espacios en blanco para llenar en la realización de trámites.
+          
+        "Fidelidad": >
+          Lealtad, observancia de la fe que alguien debe a otra persona.
+        "Concurrencia": >
+          Coincidencia, concurso simultáneo de varias circunstancias.
+        "Competencia": >
+          Situación de empresas que rivalizan en un mercado ofreciendo o demandando un mismo producto o servicio.
+        "Pluriempleo": >
+          Situación social caracterizada por el desempeño de varios cargos, empleos, oficios, etc., por la misma persona.
+        "Indefinido": >
+          Que no tiene término señalado o conocido.
+        
+        "Peculiar[idades]": >
+          Propio o privativo de cada persona o cosa.
+
+      #### EQUIPOS
+      
+        "Cohesión": >
+          Unión o adhesión de dos o más cosas.
+        "Solidaridad": >
+          Adhesión circunstancial a la causa o empresa de otros.
+        "Implicación": >
+          Participación activa en algún asunto.
+        "Robert [S. Kaplan|Kaplan]": >
+           (1940 -). Profesor de harvard. Es ingeniero y Doctor en Filosofía en Investigación de Operaciones. La investigación de Kaplan ha dado lugar al enfoque de la unión del coste y del sistema de medida como estrategia y excelencia operacional. Es autor o coautor de diez libros y más de 120 artículos periodísticos.
+        "Peter Drucker": > 
+          (Viena 1905-Claremont 2005). Abogado y tratadista, es considerado el más grande filósofo de la gestión empresarial del siglo XX. Fue autor de más de 35 libros, y sus ideas fueron decisivas en la creación de la filosofía de la corporación moderna.
+        "Empatía": >
+          Identificación mental y afectiva de un sujeto con el estado de ánimo de otro.
+        "Jerárquicas": >
+          La jerarquía es el criterio que permite establecer un orden de superioridad o de subordinación entre personas e instituciones.
+        "Toma de decisiones": >
+          Consiste en elegir una opción entre varias disponibles, a los efectos de resolver un problema o situación.
+        "Productividad": >
+          Incremento de los rendimientos finales en función de los factores productivos.
+        "Clima laboral": >
+          Medio ambiente humano y físico en el que se desenvuelven las personas en su trabajo cotidiano.
+        "Flexibilidad": >
+          Facilidad para acomodarse a diferentes situaciones o a las propuestas de otros.
+        "Persuasión": >
+          Capacidad de convencer sutilmente a alguien.
+        "Creatividad": >
+          Facultad de crear algo novedoso. Pensamiento original.
+        "Frustraciones": >
+          Fracaso en una esperanza o deseo.
+        "Autocrítica": >
+          Juicio crítico sobre sí mismo, o sobre su propia obra o trabajo.
+        "Uniformidad": >
+          Igualdad o semejanza.
+        "Incertidumbre": >
+          Inseguridad, duda
+        "Rendimiento": >
+          Trabajo, esfuerzo y logro. Resultado obtenido como consecuencia de ellos.
+        "Espontánea": >
+          Que se produce por sí solo, sin premeditación, y voluntariamente.
+        "Periódica": >
+          Que ocurre o tiene lugar cada cierto periodo de tiempo.
+        "Idoneidad": >
+          Conjunto de condiciones necesarias para desempeñar una función.
+        "Promoción laboral": >
+          Ascenso de una persona dentro de la escala jerárquica de su organización.
+        "Eficientemente": >
+          La consecución de un propósito empleando los medios idóneos.
+        "Destructivas": >
+          Que tienen la facultad de destruir o deshacer.
+        "Sutil": >
+          Fino, delicado, agudo, perspicaz.
+        "Moderador": >
+          Persona que dirige un debate, asamblea o cualquier técnica de comunicación grupal.
+        "Monotonía": >
+          Falta de variedad. Rutina, aburrimiento.
+        "Juicios de valor": >
+          Facultad del entendimiento que permite discernir y valorar. Opinión, valoración.
+        "Reacciones": >
+          Respuestas a un estímulo o suceso.
+        "Consensuar": >
+          Adoptar una decisión de común acuerdo entre dos o más partes.
+        "Fomentar": >
+          Impulsar, promover, favorecer.
+        "Rol[es]": 
+          only-in: [ capitulo09 ]
+          description: >
+            Conducta que un grupo o equipo espera de un miembro en una situación determinada.
+      

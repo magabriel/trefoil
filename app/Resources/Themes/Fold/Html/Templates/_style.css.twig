@@ -1,0 +1,567 @@
+{% extends '@theme_base/style.css.twig' %}
+
+{% block theme_name        'fold' %}
+{% block theme_description 'FOLD project - HTML theme' %}
+{% block theme_updated_at  '16/december/2012' %}
+
+{# ==========================================================================
+   @items
+   ========================================================================== #}
+{% block cover %}
+{{ parent() }}
+
+.item.cover h1 {
+    color: {{ color_black }};
+    font-size: 2em;
+    line-height: 1.1;
+    padding: 1.5em .25em .25em 0;
+    text-align: left;
+}
+.item.cover h2 {
+    color: {{ color_gray }};
+    font-size: 1em;
+    font-weight: normal;
+    margin-top: .5em;
+    text-align: left;
+}
+{% endblock %}
+
+{% block title %}
+{{ parent() }}
+
+.item.title h1,
+.item.title h2,
+.item.title h3 {
+    font-weight: normal;
+    text-align: center;
+}
+.item.title h1 {
+    font-size: 2em;
+    line-height: 1.1;
+    margin-top: 1em;
+    margin-bottom: 0;
+}
+.item.title h2 {
+    font-size: 1.5em;
+    margin-top: .5em;
+}
+.item.title h3 {
+    font-size: 1em;
+    font-style: italic;
+    margin-top: 1em;
+}
+{% endblock %}
+
+{% block dedication %}
+{{ parent() }}
+
+.item.dedication {
+    padding-top: 5em;
+}
+.item.dedication h1.title {
+    display: none;
+}
+.item.dedication p {
+    font-style: italic;
+    text-align: center;
+}
+{% endblock %}
+
+{% block appendix %}
+{{ parent() }}
+
+.item.appendix h1 {
+    margin: 5em 1em .25em 0;
+}
+
+.item.appendix h1 span {
+    color: {{ color_gray }};
+    display: block;
+    font-size: 90%;
+    font-weight: normal;
+    padding-bottom: .25em;
+}
+
+.item.appendix h1 + h2,
+.item.chapter h2 + h3,
+.item.chapter h3 + h4,
+.item.chapter h4 + h5,
+.item.chapter h5 + h6 {
+    margin-top: 1em;
+}
+{% endblock %}
+
+{% block part %}
+{{ parent() }}
+
+.item.part h1 {
+    font-size: 2em;
+    margin: 3em 0;
+}
+.item.part h1 span {
+    color: {{ color_black }};
+    display: block;
+    font-size: 1.5em;
+    font-weight: normal;
+    margin-bottom: .5em;
+}
+{% endblock %}
+
+
+{% block links %}
+{{ parent() }}
+
+a {
+    background-image: url('../images/theme_tmp/ico/ico_externo.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    padding-left: 22px; 
+}
+
+a.internal, .toc a {
+    background-image: none;
+    padding-left: 0;
+}
+
+h6 a {
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+}
+{% endblock %}
+
+{% block headings %}
+{{ parent() }}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+}
+
+h1 {
+	font-size: 1.6em;
+}
+h2 {
+	font-size: 1.4em;
+}
+h3 {
+	font-size: 1.4em;
+}
+h4 {
+	font-size: 1.2em;
+}
+h5 {
+	font-size: 1.2em;
+}
+h6 {
+	font-size: 1.1em;
+}
+{% endblock %}
+
+{% block lists %}
+{{ parent() }}
+
+ul li li {
+    list-style-type: circle;
+}
+
+ul li li li {
+    list-style-type: square;
+}
+{% endblock %}
+
+{% block misc %}
+{{ parent() }}
+
+blockquote {
+    margin: 1em 0 1em 2.5em;
+}
+
+.page-break {
+  page-break-after: always;
+}
+
+/*
+ * Kindle specific
+ */
+@media amzn-mobi {
+	.mobi {display: block;}
+	.kf8  {display: none;}
+	.not-mobi {display: none;}
+}
+
+@media not amzn-mobi {
+	.mobi {display: none;}
+    .kf8  {display: none;}
+    .not-mobi {display: block;}
+}
+
+@media amzn-kf8 {
+	.mobi {display: none;}
+    .kf8  {display: block;}
+    .not-mobi {display: block;}
+}
+
+/*
+ * Bloques
+ */
+.bloque {
+    margin: 1em;
+}
+
+    /* 
+     * Bloque legislacion 
+     */
+    .bloque-legislacion {
+        padding: .5em;
+        background: #eee;
+        border: 1px solid #BBBBBB;
+    }
+    
+    .bloque-legislacion h5 {
+        margin-top: 0;
+    }
+    
+    .legislacion h6 {
+       bloque-border-bottom: 1px solid;
+       color: #444444;
+       font-size: 0.9em;
+       margin-bottom: 1em;
+    }
+    
+    .bloque-legislacion dt {
+        margin-bottom: 1em;
+    }
+    
+    .bloque-legislacion dd {
+        font-size: .9em;
+    }
+
+    /* 
+     * Bloque cuadro 
+     */
+    .bloque-destacado {
+        border-left: 22px solid #F66;
+        padding: 0 0 0 .5em;
+    }
+    
+    .bloque-destacado h5 {
+        background: #ddc;
+        padding: 0.4em;
+    }
+    
+    .bloque-destacado h6 {
+        color: #444;
+        font-size: 1.2em;
+        font-family: sans-serif;
+        font-weight: bold;
+        border-bottom: 1px solid;
+        margin-bottom: 1em;
+    }
+    
+    /* 
+     * Bloque Video 
+     */
+    .bloque-video {
+        border-left: 22px solid #6F6;
+        padding: 0 0 0 .5em;
+    }
+    
+    .bloque-video h5 {
+        background: #ddc;
+        padding: 0.4em;
+    }
+    
+    .bloque-video h6 {
+        color: #444;
+        font-size: 1.2em;
+        font-family: sans-serif;
+        font-weight: bold;
+        border-bottom: 1px solid;
+        margin-bottom: 1em;
+    }
+    
+/* 
+ * Bloque glosario manual 
+ */
+.glosario {
+	background: #feb;
+}
+
+.glosario h5 {
+	background: #FC9;
+    padding: 0.4em;
+    color: #555;
+}
+
+.glosario dl {
+	padding: 0 1em 1em 1em;
+}
+
+/* 
+ * Bloque autoglosario 
+ */
+.auto-glossary .definition {
+    background: #feb;
+}
+
+.auto-glossary h5 {
+	font-size: 1.5em;
+    background: #FC9;
+    padding: 0.4em;
+    color: #555;
+}
+
+.auto-glossary h6 {
+	padding: 0 .5em;
+	margin: 0;
+}
+
+.auto-glossary .description {
+	padding: .4em .6em .4em 1em;
+}
+
+/*
+ * Término del glosario (en el texto)
+ */
+.auto-glossary-term a {
+    font-weight: bold;
+    color: #067600;    
+}
+
+
+/*
+ * Bloque Activity
+ */
+.activity {
+	border-left: 22px solid #66F;
+	padding: 0 0 0 .5em;
+}
+
+.activity h5 {
+	background: #cdd;
+	padding: 0.4em;
+}
+
+.activity p.response {
+	margin: .3em 0;
+}
+
+/*
+ * Item de tipo respuestas
+ */
+.item.respuestas h6 {
+  font-size: 1.6em;
+  margin: .5em;
+}
+
+/*
+ * Bloque Solution
+ */
+.solution {
+    border-left: 22px solid #66F;
+    padding: 0 0 0 .5em;
+}
+
+.solution h5 {
+    background: #cdd;
+    padding: 0.4em;
+}
+
+/*
+ * Respuesta
+ */
+.answer {
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: .5em;
+  display: inline-block;
+}
+
+.answer-ok {
+  color: white;
+  background: green;
+}
+
+.answer-error {
+  color: white;
+  background: red;
+}
+
+.mags {
+    background: #ff8;
+}
+    .mags.poner {
+        color: green;        
+    }
+
+    .mags.nota {
+        color: blue;        
+    }
+
+    .mags.quitar {
+        color: red;        
+    }
+
+.indent {
+    margin-left: 2em;   
+}
+
+.indent2 {
+    margin-left: 4em;  
+}
+
+/* @articulo
+   -------------------------------------------------------------------------- */
+.item.articulo {
+    border: 8px solid #CCCCCC;
+    padding: 0 1.5em 1em;
+}
+
+/* @end-of-contents
+   -------------------------------------------------------------------------- */
+.item.end-of-contents h1 {
+    font-size: 3em !important;
+}
+
+{% endblock %}
+
+{% block images %}
+{{ parent() }}
+
+.center img {
+	display: inline-block;
+}
+
+p.caption {
+	font-style: italic;
+	font-size: .9em;
+}
+
+.figure {
+    text-align: center;
+}
+
+{% endblock %}
+
+{% block chapter %}
+{{ parent() }}
+
+.item.chapter h1 {
+    margin: 5em 1em .25em 0;
+}
+
+.item.chapter h1 span {
+    color: {{ color_gray }};
+    display: block;
+    font-size: 90%;
+    font-weight: normal;
+    padding-bottom: .25em;
+}
+
+.item.chapter h1 + h2,
+.item.chapter h2 + h3,
+.item.chapter h3 + h4,
+.item.chapter h4 + h5,
+.item.chapter h5 + h6 {
+    margin-top: 1em;
+}
+
+.item.chapter h1 {
+    border-bottom: 10px solid #335577;
+    font-size: 2em;
+    margin: 0 0 1em;
+    padding-bottom: 0.2em;
+    text-align: left;;
+}
+
+/* the label of the chapter title */
+.item.chapter h1 span {
+    color: inherit;
+    display: inline;
+    font-size: 2em;
+    font-weight: bold;
+    padding-bottom: 0;
+}
+
+.item.chapter h2 {
+    border-bottom: 5px solid gray;
+    padding: 0.2em;
+}
+
+.item.chapter h3 {
+}
+
+.item.chapter h4 {
+}
+
+.item.chapter h5 {
+    color: #444;
+}
+
+.item.chapter h6 {
+    font-style: italic;
+}
+
+.item.chapter p {
+}
+{% endblock %}
+
+{% block introduction %}
+{{ parent() }}
+
+.item.introduction h1 {
+	margin-top: 0;
+    border-bottom: 5px solid #335577;
+    margin: 0 0 1em;
+}
+
+.item.introduction h2 {
+	background: #cde;
+	padding: .2em;
+}
+
+.item.introduction h3 {
+	border-bottom: 5px solid #CCC;
+    color: #A0A;
+}
+
+.item.introduction h4 {
+}
+
+.item.introduction h5 {
+    color: #444;
+}
+{% endblock %}
+
+{% block toc %}
+{{ parent() }}
+
+/* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
+.item.toc div.level-1 {
+	margin-left: 1em;
+}
+.item.toc div.level-2 {
+	margin-left: 2em;
+}
+.item.toc div.level-3 {
+	margin-left: 3em;
+}
+.item.toc div.level-4 {
+	margin-left: 4em;
+}
+.item.toc div.level-5 {
+	margin-left: 5em;
+}
+.item.toc div.level-6 {
+	margin-left: 6em;
+}
+{% endblock %}
+
+{% block edition %}
+{{  parent() }}
+
+.item.edition p {
+    margin: .3em 0;
+}
+
+{% endblock %}

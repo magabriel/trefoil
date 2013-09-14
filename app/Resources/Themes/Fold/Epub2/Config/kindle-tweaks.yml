@@ -1,0 +1,9 @@
+tags:
+  onPreParse:
+    cuadros: 
+      tag: 'div'                                    
+      class: 'cuadro'                           
+      insert: 
+        open:  '<img class="mobi" src="images/sep_1_open.gif" alt="*" />'
+        close: '<img class="mobi" src="images/sep_1_close.gif" alt="*" />'
+   

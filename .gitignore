@@ -1,0 +1,7 @@
+doc/*/Output/*
+
+vendor
+
+.buildpath
+.project
+.settings

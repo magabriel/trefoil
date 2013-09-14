@@ -1,0 +1,34 @@
+<!-- 
+========================================
+Activity: {{ activity.id }}
+Type....: {{ activity.type }} 
+========================================
+-->
+<div class="activity activity-{{ activity.type }}" data-type="{{ activity.type }}">
+
+{% if activity.heading.text %}
+    <h5 class="{{ activity.heading.class }}">{{ activity.heading.text }}</h5>
+{% else %}
+    <h5 class="{{ activity.heading.class }}">Actividad {{ activity.id }}</h5>
+{% endif %}
+
+{% if activity.introduction %}
+    <div class="introduction">{{ activity.introduction }}</div>
+{% endif %}
+
+{% if activity.subheading.text %}
+    <h6 class="{{ activity.subheading.class }}">{{ activity.subheading.text }}</h6>
+{% endif %}
+
+{% for qindex, question in activity.questions  %}
+    {% set qid = 'a-'~activity.id ~ '_' ~ qindex %}
+    <h6 id="{{ qid }}">{{ qindex+1 }}. {{ question }}</h6>
+    <p>
+    {% for rindex, response in activity.responses %}
+        <a href="#{{ qid }}_{{ rindex }}">
+            <span class="image"><img src="btn_{{ response|lower }}.jpg"  /></span></a>
+    {% endfor %}
+    </p>
+{% endfor %}
+
+</div>

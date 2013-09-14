@@ -1,0 +1,66 @@
+<!--
+========================================
+QuestionSet: {{ questionSet.id }}
+========================================
+-->
+{% if questionSet.pagebreak == true %}
+<div class="page-break"></div>
+{% endif %}
+<div class="questions">
+
+    {% set questionSet_heading_text = questionSet.heading.text ? questionSet.heading.text : 'Preguntas ' ~ questionSet.id %}
+
+    <h5 class="{{ questionSet.heading.class }}">{{ questionSet_heading_text }}</h5>
+
+    {% if questionSet.subheading.text %}
+        <h6 class="{{ questionSet.subheading.class }}">{{ questionSet.subheading.text }}</h6>
+    {% else %}
+        <h6 class="{{ questionSet.subheading.class }}">Piensa la respuesta a las siguientes preguntas y luego consulta la respuesta.</h6>
+    {% endif %}
+
+    {% if questionSet.introduction %}
+        <div class="introduction">{{ questionSet.introduction }}</div>
+    {% endif %}
+
+    {# start link #}
+    {% set start= 'q-'~questionSet.id  ~ '_0'  %}
+    <a href="#{{ start }}"><span class="image"><img src="btn_start.jpeg" class="button" width="80" height="30" alt="*"  /></span></a>
+    <a href="#skip-q-{{ questionSet.id }}"><span class="image"><img src="btn_skip_activity.jpeg" class="button" width="120" height="30" alt="*"  /></span></a>
+
+    <div class="page-break"></div>
+
+{% for qindex, question in questionSet.questions  %}
+    {% set qid = 'q-'~questionSet.id ~ '_' ~ qindex %}
+
+    <h5 id="{{ qid }}" class="{{ questionSet.heading.class }}">{{ questionSet_heading_text }}</h5>
+
+    {#
+    {% if false and questionSet.introduction %}
+        <div class="introduction">{{ questionSet.introduction }}</div>
+    {% endif %}
+
+    {% if false and questionSet.subheading.text %}
+        <h6 class="{{ questionSet.subheading.class }}">{{ questionSet.subheading.text }}</h6>
+    {% endif %}
+    #}
+
+    <div class="question"><span class="mobi">[</span><span class="number">{{ qindex+1 }}</span><span class="mobi">]</span> {{ question.text }}</div>
+
+    <hr class="not-mobi"/><img class="mobi" src="images/sep_1_open.gif" alt="*"  />
+        {% if question.solution %}
+            <a href="#{{ qid }}-solution"><span class="image"><img src="btn_view_solution.jpeg" class="button" width="120" height="30" alt="*"  /></span></a>
+        {% else %}
+            <p class="response">Consulta la solución con tu profesor.</p>
+        {% endif %}
+    <hr class="not-mobi"/><img class="mobi" src="images/sep_1_close.gif" alt="*"  />
+
+    <div class="page-break"></div>
+{% endfor %}
+</div>
+
+{# skip link target #}
+<div id="skip-q-{{ questionSet.id }}"></div>
+<hr class="not-mobi"/><img class="mobi" src="images/sep_1_open.gif" alt="*"  />
+    <p>Fin de la actividad.</p>
+<hr class="not-mobi"/><img class="mobi" src="images/sep_1_close.gif" alt="*"  />
+<div class="page-break"></div>

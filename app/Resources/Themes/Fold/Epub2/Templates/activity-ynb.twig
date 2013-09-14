@@ -1,0 +1,12 @@
+{% extends 'activity-base.twig' %}
+
+{% block responses %}
+
+    <div class="responses">
+    {% for rindex, response in activity.responses %}
+        <a href="#{{ qid }}_{{ rindex }}">
+            <span class="image"><img src="btn_{{ response|lower }}.jpeg" class="button" width="80" height="30" alt="*"  /></span></a>
+    {% endfor %}
+    </div>
+
+{% endblock %}

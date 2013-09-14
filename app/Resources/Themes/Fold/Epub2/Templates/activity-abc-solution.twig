@@ -1,0 +1,25 @@
+{% extends 'activity-solution-base.twig' %}
+
+{% block result %}
+
+    {# use a block instead of a set var because it cannot be seen out of current scope
+    {# note that it is commented out on purpose to avoid displaying the value #}
+    <!-- {% block success question.solution == rindex ? 1 : 0 %} -->
+
+    {% if block('success') %}
+        <div>
+            <span class="image"><img src="res_ok.jpeg" class="icon" width="30" height="30" alt="*" /></span>
+            <span class="answer answer-ok">¡¡Respuesta correcta!!</span>
+        </div>
+        {% if question.explanation|default('') %}
+            {{ question.explanation }}
+        {% endif %}
+    {% else %}
+        <div>
+            <span class="image"><img src="res_nook.jpeg" class="icon" width="30" height="30" alt="*" /></span>
+            <span class="answer answer-error">Respuesta incorrecta</span>
+        </div>
+    {% endif %}
+
+{% endblock %}
+

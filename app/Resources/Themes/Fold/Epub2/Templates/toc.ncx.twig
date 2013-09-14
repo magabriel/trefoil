@@ -1,0 +1,144 @@
+{% spaceless %}
+
+{% import _self as helper %}
+
+{% macro tocItem(level, item, entry) %}
+    {% set hash = entry ? '#' ~ (entry.level == 1 ? item.slug : entry.slug ) : '' %}
+    {% if entry %}
+        <navLabel><text>{{ entry.label ? entry.label ~ ' - ' ~ entry.title : entry.title }}</text></navLabel>
+    {% else %}
+        <navLabel><text>{{ item.title }}</text></navLabel>
+    {% endif %}
+    <content src="{{ item.page_name }}.html{{ hash }}" />
+
+{% endmacro %}
+
+{% macro navPointStart(level, id, order) %}
+    <navPoint class="chapter" id="{{ id }}" playOrder="{{ order }}"> <!-- level {{ level }} -->
+{% endmacro %}
+
+{% macro navPointEnd(level) %}
+     </navPoint> <!-- level {{ level }} -->
+{% endmacro %}
+
+{% endspaceless %}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ncx PUBLIC "-//NISO//DTD ncx 2005-1//EN" "http://www.daisy.org/z3986/2005/ncx-2005-1.dtd">
+
+<ncx version="2005-1" xml:lang="{{ book.language }}" xmlns="http://www.daisy.org/z3986/2005/ncx/">
+
+    <head>
+        <meta name="dtb:uid" content="{{ edition.id.value }}" />
+        <meta name="dtb:depth" content="{{ edition.toc.deep }}" />
+        <meta name="dtb:totalPageCount" content="0" /> <!-- must be 0 -->
+        <meta name="dtb:maxPageNumber" content="0" />  <!-- must be 0 -->
+    </head>
+
+    <docTitle>
+        <text>{{ book.title }}</text>
+    </docTitle>
+
+    <docAuthor>
+        <text>{{ book.author }}</text>
+    </docAuthor>
+
+    <navMap>
+{% spaceless %}
+{% set hasParts = false %}
+{% set partStarted = false %}
+{% set playOrder = 0 %}
+{% for item in app.get('publishing.items') %}
+
+    {# editions define the *tocable* items #}
+    {% if item.config.element in edition.toc.elements|default([]) %}
+
+        {# item has several elements in its toc #}
+        {% if item.toc|length > 0 %}
+
+            {% set currentLevel = 0 %}
+
+            {% if item.config.element == 'chapter' and hasParts %}
+                {% set currentLevel = 1 %}
+            {% endif %}
+
+            {% set minLevel = 1 %}
+
+            {% if item.config.element == 'part' %}
+                {% set hasParts = true %}
+                {% if partStarted %}
+                    {{ helper.navPointEnd('before part') }}
+                {% endif %}
+                {% set partStarted = true %}
+            {% elseif item.config.element != 'chapter' and partStarted %}
+                {{ helper.navPointEnd('end part') }}
+                {% set partStarted = false %}
+            {% endif %}
+
+            {% set openLevels = '' %}
+            {% for entry in item.toc %}
+
+                {% set level = entry.level %}
+                {% set maxDeep = edition.tocncx.deep | default(edition.toc.deep)  %}
+
+                {% if item.config.element == 'chapter' and hasParts %}
+                    {% set level = entry.level + 1 %}
+                    {% set minLevel = 2 %}
+                {% endif %}
+
+                {% if level <= maxDeep %}
+
+                    {% if level > currentLevel %}
+                        {% if level == currentLevel+1 %}
+                            {% set openLevels = (level not in openLevels) ? (openLevels ~ level) : openLevels %}
+                            {% set playOrder = playOrder + 1 %}
+                            {{ helper.navPointStart(level, entry.slug, playOrder) }}
+                            {{ helper.tocItem(level, item, entry) }}
+                        {% else %}
+                            {% set level = currentLevel %}
+                        {% endif %}
+                    {% elseif level < currentLevel %}
+                        {{ helper.navPointEnd(currentLevel) }}
+                        {% for ol in openLevels|split('') %}
+                             {% if ol > level %}
+                                 {{ helper.navPointEnd(ol) }}
+                                 {% set openLevels = openLevels|replace({(ol):''}) %}
+                             {% endif %}
+                        {% endfor %}
+                        {% set playOrder = playOrder + 1 %}
+                        {{ helper.navPointStart(level, entry.slug, playOrder) }}
+                        {{ helper.tocItem(level, item, entry) }}
+                    {% else %}
+                        {{ helper.navPointEnd(level) }}
+                        {% set playOrder = playOrder + 1 %}
+                        {{ helper.navPointStart(level, entry.slug, playOrder) }}
+                        {{ helper.tocItem(level, item, entry) }}
+                    {% endif %}
+
+                    {% set currentLevel = level %}
+                {% endif %}
+
+            {% endfor %}
+
+            {% if item.config.element != 'part' and openLevels %}
+                {% for ol in openLevels|split('') %}
+                    {{ helper.navPointEnd(ol) }}
+                {% endfor %}
+            {% endif %}
+
+        {# empty or special item (anything different from 'chapter' and 'appendix' #}
+        {% else %}
+            {% set playOrder = playOrder + 1 %}
+            {{ helper.navPointStart(1, item.page_name, playOrder) }}
+            {{ helper.tocItem(1, item, '') }}
+            {{ helper.navPointEnd(1) }}
+        {% endif %}
+
+    {% endif %}
+{% endfor %}
+{% if partStarted %}
+    {{ helper.navPointEnd('end part') }}
+{% endif %}
+{% endspaceless %}
+    </navMap>
+
+</ncx>

@@ -1,0 +1,52 @@
+{% extends '@theme_common/style.css.twig' %}
+
+{% block links %}
+{{ parent() }}
+
+a {
+    background-image: url('../images/theme_tmp/ico/ico_externo.png');
+}
+{% endblock %}
+
+{% block images %}
+{{ parent() }}
+
+.figure img {
+    min-width: auto;
+    max-width: 100%;
+}
+
+{% endblock %}
+
+{% block cover %}
+{{ parent() }}
+
+.item.cover img {
+    width: 300px;
+}
+
+{% endblock %}
+
+{% block toc %}
+{{ parent() }}
+
+/* ebook toc is defined using li */
+.item.toc li.level-1 {
+	margin-left: 0;
+}
+.item.toc li.level-2 {
+	margin-left: 1em;
+}
+.item.toc li.level-3 {
+	margin-left: 2em;
+}
+.item.toc li.level-4 {
+	margin-left: 3em;
+}
+.item.toc li.level-5 {
+	margin-left: 4em;
+}
+.item.toc li.level-6 {
+	margin-left: 5em;
+}
+{% endblock %}
