@@ -30,6 +30,7 @@ class AutoGlossaryPlugin extends EpubInteractivePluginBase implements EventSubsc
     {
         return array(TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
                 Events::POST_PARSE => array('onItemPostParse', -100),
+                Events::PRE_DECORATE => array('onItemPreDecorate', -500),
                 Events::POST_PUBLISH => 'onPostPublish');
     }
 
@@ -82,6 +83,15 @@ class AutoGlossaryPlugin extends EpubInteractivePluginBase implements EventSubsc
 
         $this->wrapUp();
         $this->app['book.logger']->debug('onItemPostParse:end', get_class(), $this->item['config']['content']);
+    }
+
+    public function onItemPreDecorate(BaseEvent $event)
+    {
+        $item = $event->getItem();
+
+        $item['content'] = $this->fixLinks($item['content'], $event->app->get('publishing.links'));
+
+        $event->setItem($item);
     }
 
     public function onPostPublish(BaseEvent $event)
@@ -204,14 +214,12 @@ class AutoGlossaryPlugin extends EpubInteractivePluginBase implements EventSubsc
      */
     protected function extractDefinitions($glossary)
     {
-        $slugger = new Slugger($this->app);
-
         $definitions = array();
         foreach ($glossary['glossary']['terms'] as $term => $definition) {
 
             // assign an unique slug for this term
             if (!isset($this->slugs[$term])) {
-                $slug = $slugger->slugify($term);
+                $slug = $this->app->get('slugger')->slugify($term);
                 $this->slugs[$term] = $slug;
             }
 

@@ -22,4 +22,10 @@ use Easybook\Console\ConsoleApplication;
 
 $app = new Application();
 $console = new ConsoleApplication($app);
+
+$options = getopt('',array('vvv'));
+if (isset($options['vvv'])) {
+    $console->setCatchExceptions(false);
+}
+
 $console->run();

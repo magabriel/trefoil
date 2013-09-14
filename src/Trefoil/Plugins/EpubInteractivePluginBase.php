@@ -20,8 +20,34 @@ class EpubInteractivePluginBase
         $this->item = $event->getItem();
     }
 
+    public function fixLinks($itemContent, $publishingLinks)
+    {
+        $itemContent = preg_replace_callback(
+                '/<a href="(#.*)"(.*)<\/a>/Us',
+                function($matches) use($publishingLinks) {
+                    $links = $publishingLinks;
+
+                    if (!isset($links[$matches[1]])) {
+                        return sprintf(
+                                '<a href="%s"%s</a>',
+                                $matches[1], $matches[2]
+                        );
+                    }
+
+                    return sprintf(
+                            '<a class="internal" href="./%s"%s</a>',
+                            $links[$matches[1]], $matches[2]
+                    );
+                },
+                $itemContent
+        );
+
+        return $itemContent;
+    }
+
     protected function wrapUp($idsToRemoveFromToc = array())
     {
+        // TODO: No funciona porque ya no se usa 'publishing.links'. Ver LinkPlugin
         // save new links
         $oldLinks = $this->app->get('publishing.links');
         $newLinks = array_merge($oldLinks, $this->links);

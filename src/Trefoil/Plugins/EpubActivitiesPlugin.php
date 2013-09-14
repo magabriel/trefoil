@@ -20,6 +20,7 @@ class EpubActivitiesPlugin extends EpubInteractivePluginBase implements EventSub
     public static function getSubscribedEvents()
     {
         return array(Events::POST_PARSE => 'onItemPostParse',
+                Events::PRE_DECORATE => array('onItemPreDecorate', -500),
                 Events::POST_PUBLISH => 'onPostPublish');
     }
 
@@ -64,6 +65,15 @@ class EpubActivitiesPlugin extends EpubInteractivePluginBase implements EventSub
 
         $this->wrapUp($activityIds);
         $this->app['book.logger']->debug('onItemPostParse:end', get_class(), $this->item['config']['content']);
+    }
+
+    public function onItemPreDecorate(BaseEvent $event)
+    {
+        $item = $event->getItem();
+
+        $item['content'] = $this->fixLinks($item['content'], $event->app->get('publishing.links'));
+
+        $event->setItem($item);
     }
 
     public function onPostPublish(BaseEvent $event)
