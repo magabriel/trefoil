@@ -19,7 +19,7 @@ book:
     description:      > 
        Volumen X de Formación y Orientación Laboral
 
-    version:          "1.35"
+    version:          "1.43"
     #version_options:
     #  increment_ver:  false
     #  increment_rev:  true

@@ -2,36 +2,32 @@
 
 namespace Trefoil\Console;
 
-use Symfony\Component\Console\Application as SymfonyConsoleApplication;
-use Trefoil\Console\Command\TestCommand;
+use Trefoil\Console\Command\TrefoilVersionCommand;
+use Trefoil\Console\Command\TrefoilBookPublishCommand;
 
 use Easybook\DependencyInjection\Application;
+use Easybook\Console\ConsoleApplication as EasybookConsoleApplication;
 
-class ConsoleApplication extends SymfonyConsoleApplication
+class ConsoleApplication extends EasybookConsoleApplication
 {
-    private $app;
-
-    public function getApp()
-    {
-        return $this->app;
-    }
-
     public function __construct(Application $app)
     {
-        $this->app = $app;
+        parent::__construct($app);
 
-        parent::__construct('trefoil', $this->app->getVersion());
-
-        $this->add(new TestCommand());
+        $this->add(new TrefoilVersionCommand());
+        $this->add(new TrefoilBookPublishCommand());
     }
 
     public function getHelp()
     {
-        $help = array(
-            $this->app['app.signature'],
-            '<info>trefoil</info> help text.'
-        );
+        $app = $this->getApp();
 
-        return implode("\n", $help);
+        $help = parent::getHelp();
+
+        $help .= "\n"
+            . '<info>trefoil</info> extends easybook providing additional features.'
+        ;
+
+        return $help;
     }
 }

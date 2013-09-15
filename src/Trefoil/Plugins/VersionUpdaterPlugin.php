@@ -21,7 +21,11 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
     {
         return array(
                 // runs in the first place after publishing
-                EasybookEvents::POST_PUBLISH => array('onPostPublish', 1000));
+                EasybookEvents::POST_PUBLISH => array(
+                        'onPostPublish',
+                        1000
+                )
+        );
     }
 
     public function onPostPublish(BaseEvent $event)
@@ -37,8 +41,7 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         if (!$this->app->book('version')) {
             $this->output
                     ->writeLn(
-                            ' <error>No "book.version" option found. Cannot update version.</error>'
-                                    . "\n");
+                            ' <error>No "book.version" option found. Cannot update version.</error>' . "\n");
             return;
         }
 
@@ -56,10 +59,8 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         $versionIncrementRev = true;
         if ($this->app->book('version_options')) {
             $versionOptions = $this->app->book('version_options');
-            $versionIncrementVer = isset($versionOptions['increment_ver']) ? $versionOptions['increment_ver']
-                    : false;
-            $versionIncrementRev = isset($versionOptions['increment_rev']) ? $versionOptions['increment_rev']
-                    : true;
+            $versionIncrementVer = isset($versionOptions['increment_ver']) ? $versionOptions['increment_ver'] : false;
+            $versionIncrementRev = isset($versionOptions['increment_rev']) ? $versionOptions['increment_rev'] : true;
         }
 
         // analize parts
@@ -68,15 +69,11 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         // check for correctness
         if (count($parts) <> 2) {
             throw new \Exception(
-                    sprintf(
-                            'Malformed version string "%s". Expected "int.int"',
-                            $versionString));
+                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString));
         }
         if (!ctype_digit($parts[0]) || !ctype_digit($parts[1])) {
             throw new \Exception(
-                    sprintf(
-                            'Malformed version string "%s". Expected "int.int"',
-                            $versionString));
+                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString));
 
         }
 
@@ -113,13 +110,14 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         $regExp .= '"(?<version>.*)"';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $config = preg_replace_callback($regExp,
+        $config = preg_replace_callback(
+                $regExp,
                 function ($matches) use ($newVersionString)
-                {
-                    $new = $matches['label'] . $matches['spaces'] . '"'
-                            . $newVersionString . '"';
-                    return $new;
-                }, $config);
+                          {
+                          $new = $matches['label'] . $matches['spaces'] . '"' . $newVersionString . '"';
+                          return $new;
+                          },
+                          $config);
 
         file_put_contents($configFile, $config);
     }

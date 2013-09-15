@@ -1,5 +1,5 @@
 <?php
-namespace Trefoil\Plugins;
+namespace Trefoil\Bridge\Easybook;
 
 use Trefoil\Util\Logger;
 
@@ -13,10 +13,10 @@ use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
 
 /**
- * plugin to register our own resources (plugins and themes)
+ * Register our own resources into easybook
  *
  */
-class RegisterOwnResourcesBase implements EventSubscriberInterface
+class RegisterResources implements EventSubscriberInterface
 {
     protected $app;
     protected $output;
@@ -45,7 +45,7 @@ class RegisterOwnResourcesBase implements EventSubscriberInterface
     }
 
     /**
-     * Register own services
+     * Register services that need a dynamic configuration
      *
      * @return \Trefoil\Util\Logger
      */
@@ -73,7 +73,7 @@ class RegisterOwnResourcesBase implements EventSubscriberInterface
 
         $enabledPlugins = $this->app->book('editions')[$edition]['plugins'];
 
-        $this->registerEventSubscribers(__DIR__, 'Trefoil\Plugins', $enabledPlugins);
+        $this->registerEventSubscribers(__DIR__.'/../../Plugins', 'Trefoil\Plugins', $enabledPlugins);
     }
 
     private function registerEventSubscribers($dir, $namespace = '',
