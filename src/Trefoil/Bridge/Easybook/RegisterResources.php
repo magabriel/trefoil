@@ -1,16 +1,14 @@
 <?php
 namespace Trefoil\Bridge\Easybook;
 
-use Trefoil\Util\Logger;
-
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Publishers\BasePublisher;
 use Easybook\Events\BaseEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
-
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
+use Trefoil\Util\Logger;
 
 /**
  * Register our own resources into easybook
@@ -98,7 +96,7 @@ class RegisterResources implements EventSubscriberInterface
             $registered[] = $pluginName;
             $this->output->writeLn(sprintf(" > Using plugin %s", $pluginName));
 
-            // book plugins aren't namespaced. We must include the classes.
+            // if book plugins aren't namespaced, we must include the classes.
             if ('' == $namespace) {
                 include_once $file->getPathName();
             }

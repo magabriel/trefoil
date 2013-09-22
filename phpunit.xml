@@ -17,7 +17,7 @@
         <whitelist>
             <directory>src</directory>
             <exclude>
-                <directory>src/Trefoil/Tests</directory>
+                <directory>./src/Trefoil/Tests</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -9,7 +9,26 @@ use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
 
 /**
- * plugin to update the version in the book.yml
+ * Plugin to update the version in the book config.yml file.
+ *
+ * The following book configuration option must be defined:
+ *
+ *     book:
+ *         ...
+ *         version: "1.0" # current version string, of form "version.revision"
+ *         verson_options:
+ *             increment_ver: false # don't increment the version part
+ *             increment_rev: true  # increment the revision part
+ *
+ * After execution the book config.yml file will be updated with the
+ * new version string:
+ *
+ *     book:
+ *         ...
+ *         version: "1.1"
+ *
+ * The plugin runs just after the book publishing has finished, so the
+ * new version will be used the <i>next</i> time it gets published.
  *
  */
 class VersionUpdaterPlugin implements EventSubscriberInterface
@@ -21,10 +40,7 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
     {
         return array(
                 // runs in the first place after publishing
-                EasybookEvents::POST_PUBLISH => array(
-                        'onPostPublish',
-                        1000
-                )
+                EasybookEvents::POST_PUBLISH => array('onPostPublish',1000)
         );
     }
 
@@ -39,9 +55,8 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
     protected function updateVersion()
     {
         if (!$this->app->book('version')) {
-            $this->output
-                    ->writeLn(
-                            ' <error>No "book.version" option found. Cannot update version.</error>' . "\n");
+            $this->output->writeLn(
+                  ' <error>No "book.version" option found. Cannot update version.</error>' . "\n");
             return;
         }
 
@@ -49,6 +64,11 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         $this->updateConfigFile($newVersionString);
     }
 
+    /**
+     * Calculate the new version string using the rules defined in the <b>book.version</b> configuration option
+     *
+     * @return string
+     */
     protected function calculateNewVersion()
     {
         // read current version
@@ -97,6 +117,12 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
         return $newVersionString;
     }
 
+    /**
+     * Update the book config file with the new version string.
+     * Note that this is a naive implementation of a yaml file updater.
+     *
+     * @param string $newVersionString
+     */
     protected function updateConfigFile($newVersionString)
     {
         $configFile = $this->app->get('publishing.dir.book') . '/config.yml';

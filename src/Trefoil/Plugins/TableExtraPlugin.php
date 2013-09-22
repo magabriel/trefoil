@@ -33,7 +33,7 @@ class TableExtraPlugin implements EventSubscriberInterface
         $content = $tableExtra->processAllTables($content);
 
         $item['content'] = $content;
-        $event->setItem($this->item);
+        $event->setItem($item);
     }
 }
 

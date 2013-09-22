@@ -118,7 +118,8 @@ class TableExtra
                     // find the primary colspanned cell (same row)
                     $colspanCol = -1;
                     for ($j = $colIndex - 1; $j >= 0; $j--) {
-                        if (!isset($newRows[$rowIndex][$j]['ignore'])) {
+                        if (!isset($newRows[$rowIndex][$j]['ignore']) ||
+                            (isset($newRows[$rowIndex][$j]['ignore']) && $j == 0)) {
                             $colspanCol = $j;
                             break;
                         }
@@ -139,6 +140,7 @@ class TableExtra
                 }
 
                 // a cell with only '"' as contents => rowspanned cell (same column)
+                // consider several kind of double quote character
                 $quotes = array(
                         '"',
                         '&quot;',

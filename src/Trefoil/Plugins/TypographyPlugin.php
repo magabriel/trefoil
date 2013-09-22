@@ -8,8 +8,11 @@ use Easybook\Events\ParseEvent;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * This plugin replaces certain symbols with its typographic equivalents the book.
- *
+ * This plugin replaces certain symbols with its typographic equivalents.
+ * - Quotes ('".."'), backtick quotes ('``..'''), ellipsis('...')
+ * - Angle quotes ('<<' and '>>')
+ * - Checkboxes ('[ ]' and '[/]')
+ * @see http://daringfireball.net/projects/smartypants/
  */
 class TypographyPlugin implements EventSubscriberInterface
 {
@@ -29,13 +32,9 @@ class TypographyPlugin implements EventSubscriberInterface
     {
         $this->app = $event->app;
         $this->item = $event->getItem();
-
         $content = $event->getOriginal();
 
         $content = $this->preProcessAngleQuotesForSmartypants($content);
-
-        $content = $this->replaceSymbolsPreParse($content);
-
         $content = $this->smartyPantsPreParse($content);
 
         $event->setOriginal($content);
@@ -45,15 +44,12 @@ class TypographyPlugin implements EventSubscriberInterface
     {
         $this->app = $event->app;
         $this->item = $event->getItem();
-
         $content = $this->item['content'];
 
         $content = $this->smartyPantsPostParse($content);
-
         $content = $this->replaceSymbolsPostParse($content);
 
         $this->item['content'] = $content;
-
         $event->setItem($this->item);
     }
 
@@ -66,7 +62,7 @@ class TypographyPlugin implements EventSubscriberInterface
         $options.= 'qbe'; // quotes, backticks and ellipses
 
         // refinements for SmartyPants Typographer
-        $options.= 'g'; // angle quotes
+        $options.= 'g'; // angle quotes (needs preparation)
         $options.= 'f-'; // do not add space inside angle quotes
 
         // and go!!
@@ -90,7 +86,9 @@ class TypographyPlugin implements EventSubscriberInterface
     }
 
     /**
-     * Prepare angle quotes '<<' and '>>' to be processed by SmartyPants
+     * Prepare angle quotes '<<' and '>>' to be processed by SmartyPants:
+     * ensure there is a space before '>>' and  after '<<'
+     *
      * @param string $content
      * @return string
      */
@@ -129,110 +127,6 @@ class TypographyPlugin implements EventSubscriberInterface
         return $content;
     }
 
-    /*
-    protected function replaceEllipsis($content)
-    {
-        $regExp = '/';
-        $regExp .= '(?<prev>[^\.])'; // not a dot
-        $regExp .= '(?<sign>\.\.\.)'; // 3 dots
-        $regExp .= '(?<next>[^\.])'; // not a dot
-        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
-
-        $me = $this;
-        $content = preg_replace_callback($regExp,
-                                         function ($matches) use ($me)
-                                         {
-                                         // PRUEBAS
-                                         //print_r($matches);
-                                         return $matches['prev']."&hellip;".$matches['next'];
-                                         }, $content);
-
-        return $content;
-    }
-    */
-
-    /*
-    protected function replaceQuotes($content)
-    {
-        $regExp = '/';
-
-        $regExp .= '(?<prev>';
-        $regExp .= '[^=]'; // Not preceded by equal (to avoid picking up html attributes)
-        $regExp .= ')';
-
-        $regExp .= '(?<open>';
-        $regExp .= '"'; // Opening quote
-        $regExp .= ')';
-
-        $regExp .= '(?<stuff>';
-        $regExp .= '[^>]'; // Not followed by > (to avoid picking up an ending html attribute)
-        $regExp .= '[^="]*'; // In-between
-        $regExp .= '[^="]'; // Not ended by equal or quote (to avoid picking up html attributes)
-        $regExp .= ')';
-
-        $regExp .= '(?<close>';
-        $regExp .= '"'; // Closing quote
-        $regExp .= ')';
-
-        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
-
-        $me = $this;
-        $content = preg_replace_callback($regExp,
-                                         function ($matches) use ($me)
-                                         {
-                                         // PRUEBAS
-                                         //print_r($matches);
-                                         return $matches['prev'] . "&laquo;" . $matches['stuff']
-                                         . "&raquo;";
-                                         }, $content);
-
-        return $content;
-    }
-    */
-
-    /*
-    protected function replaceDashes($content)
-    {
-        $regExp = '/';
-        $regExp .= '(?<sign>';
-        $regExp .= '--'; // 2 dashes
-        $regExp .= ')';
-        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
-
-        $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    // PRUEBAS
-                    //print_r($matches);
-                    return "&mdash;";
-                }, $content);
-
-        return $content;
-    }
-    */
-
-    protected function replaceSymbolsPreParse($content)
-    {
-        return $content;
-        /*
-        $regExp = '/';
-        $regExp .= '(?<sign>';
-        $regExp .= ' --->'; //
-        $regExp .= ')';
-        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
-
-        $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    return "&rarr;"; // ballot sign (box with checkmark)
-                }, $content);
-
-        return $content;
-        */
-    }
-
     protected function replaceSymbolsPostParse($content)
     {
         $regExp = '/';
@@ -245,7 +139,20 @@ class TypographyPlugin implements EventSubscriberInterface
         $content = preg_replace_callback($regExp,
                 function ($matches) use ($me)
                 {
-                    return "&#9744;"; // ballot sign (box with checkmark)
+                    return "&#9744;"; // ballot box (box without checkmark)
+                }, $content);
+
+        $regExp = '/';
+        $regExp .= '(?<sign>';
+        $regExp .= '\[\/\]'; // open bracket + slash + close bracket
+        $regExp .= ')';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
+
+        $me = $this;
+        $content = preg_replace_callback($regExp,
+                function ($matches) use ($me)
+                {
+                    return "&#9745;"; // ballot box with checkmark
                 }, $content);
 
         return $content;
