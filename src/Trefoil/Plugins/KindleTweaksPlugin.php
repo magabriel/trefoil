@@ -1,7 +1,8 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Easybook\Util\Toolkit;
+use Trefoil\Util\Toolkit;
+
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents as Events;
@@ -98,14 +99,11 @@ class KindleTweaksPlugin implements EventSubscriberInterface
         // second path is the theme /Config dir
         $edition = $this->app['publishing.edition'];
         $theme = ucfirst($this->app->edition('theme'));
-        $format = Toolkit::camelize($this->app->edition('format'), true);
+        $format = Toolkit::getCurrentFormat($this->app);
 
         // get the source dir (inside theme)
         $themeDir = realpath(__DIR__ . '/../../Themes/' . $theme);
-        // TODO: fix the following hack
-        if ('Epub' == $format) {
-            $format = 'Epub2';
-        }
+
         $configDir = sprintf('%s/%s/Config', $themeDir, $format);
 
         // look for either one

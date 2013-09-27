@@ -10,8 +10,20 @@ use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
 /**
- * plugin to use images embedded into a them
+ * Plugin to use images included into a theme.
  *
+ * <theme_dir>/
+ *     my_theme/
+ *         <format>/
+ *             Resources/
+ *                 images/
+ *                     ...all image files
+ *
+ * The plugin works by copying the theme images into a temporary directory
+ * inside the book <i>Contents/images</i> directory called <i>theme_tmp</i>
+ * just before the book is published by easybook, and then removing the temp
+ * directory after the book has been published. I know it is a dirty hack
+ * but is the best I could come up without hacking easybook.
  */
 class ThemeImagesPlugin implements EventSubscriberInterface
 {
@@ -20,7 +32,8 @@ class ThemeImagesPlugin implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
+        return array(
+                TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
                 EasybookEvents::POST_PARSE => array('onItemPostParse', -600),
                 EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
@@ -39,15 +52,10 @@ class ThemeImagesPlugin implements EventSubscriberInterface
     {
         $edition = $this->app['publishing.edition'];
         $theme = ucfirst($this->app->edition('theme'));
-        $format = Toolkit::camelize($this->app->edition('format'), true);
+        $format = Toolkit::getCurrentFormat($this->app);
 
         // get the source dir (inside theme)
         $themeDir = Toolkit::getCurrentThemeDir($this->app);
-
-        // TODO: fix the following hack
-        if ('Epub' == $format) {
-            $format = 'Epub2';
-        }
         $sourceDir = sprintf('%s/%s/Resources/images', $themeDir, $format);
 
         if (!file_exists($sourceDir)) {

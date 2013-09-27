@@ -1,0 +1,615 @@
+{% extends '@theme_base/style.css.twig' %}
+
+{% block theme_name        'theme1' %}
+{% block theme_description 'test theme 1' %}
+{% block theme_updated_at  '01/october/2013' %}
+
+{# ==========================================================================
+   @items
+   ========================================================================== #}
+{% block body %}
+{{ parent() }}
+body {
+    margin: 0;
+}
+{% endblock %}
+
+{% block paragraphs %}
+{{ parent() }}
+p {
+    margin: .6em 0;
+}
+{% endblock %}
+
+{% block cover %}
+{{ parent() }}
+
+.item.cover h1 {
+    color: {{ color_black }};
+    font-size: 2em;
+    line-height: 1.1;
+    padding: 1.5em .25em .25em 0;
+    text-align: left;
+}
+.item.cover h2 {
+    color: {{ color_gray }};
+    font-size: 1em;
+    font-weight: normal;
+    margin-top: .5em;
+    text-align: left;
+}
+{% endblock %}
+
+{% block title %}
+{{ parent() }}
+
+.item.title h1,
+.item.title h2,
+.item.title h3 {
+    font-weight: normal;
+    text-align: center;
+}
+.item.title h1 {
+    font-size: 2em;
+    line-height: 1.1;
+    margin-top: 1em;
+    margin-bottom: 0;
+}
+.item.title h2 {
+    font-size: 1.5em;
+    margin-top: .5em;
+}
+.item.title h3 {
+    font-size: 1em;
+    font-style: italic;
+    margin-top: 1em;
+}
+{% endblock %}
+
+{% block dedication %}
+{{ parent() }}
+
+.item.dedication {
+    padding-top: 5em;
+}
+.item.dedication h1.title {
+    display: none;
+}
+.item.dedication p {
+    font-style: italic;
+    text-align: center;
+}
+{% endblock %}
+
+{% block appendix %}
+{{ parent() }}
+
+.item.appendix h1 {
+    margin: 5em 1em .25em 0;
+}
+
+.item.appendix h1 span {
+    color: {{ color_gray }};
+    display: block;
+    font-size: 90%;
+    font-weight: normal;
+    padding-bottom: .25em;
+}
+
+.item.appendix h1 + h2,
+.item.appendix h2 + h3,
+.item.appendix h3 + h4,
+.item.appendix h4 + h5,
+.item.appendix h5 + h6 {
+    margin-top: 1em;
+}
+{% endblock %}
+
+{% block part %}
+{{ parent() }}
+
+.item.part h1 {
+    font-size: 2em;
+    margin: 0 0 1em;
+    padding: 2em 0;
+    text-align: center;
+}
+.item.part h1 span {
+    border-bottom: 15px solid #88AABB;
+    color: #116688;
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+}
+{% endblock %}
+
+{% block links %}
+{{ parent() }}
+
+a {
+    background-image: url('../images/ico_external_link.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    padding-right: 23px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+}
+
+a[href*='pdf'] {
+    background-image: url('../images/ico_pdf.png');
+}
+
+a[href*='youtube'] {
+    background-image: url('../images/ico_youtube.png');
+}
+
+a.internal, .toc a {
+    background-image: none;
+    padding-right: 0;
+}
+
+a img {
+    text-decoration: none;
+}
+
+/* Icons and buttons */
+img.icon {
+    height: 2em;
+    width: auto;
+}
+
+img.button {
+    height: 2em;
+    width: auto;
+}
+
+h6 a {
+    font-size: 1em;
+    font-style: normal;
+    font-weight: normal;
+}
+{% endblock %}
+
+{% block headings %}
+{{ parent() }}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+	line-height: 1em;
+}
+
+h1, h2, h3, h4 {
+    clear: both;
+}
+
+h1 {
+	font-size: 1.8em;
+	margin-top: 0;
+}
+h2 {
+	font-size: 1.4em;
+}
+h3 {
+	font-size: 1.4em;
+}
+h4 {
+	font-size: 1.3em;
+}
+h5 {
+	font-size: 1.25em;
+}
+h6 {
+	font-size: 1.1em;
+}
+
+/* A h2 surrounded by hr's */
+hr + h2 { margin-top: 1em; }
+h2 + hr { margin-top: 1.5em; }
+
+{% endblock %}
+
+{% block lists %}
+{{ parent() }}
+
+ul, ol {
+    margin-left: 0;
+    margin-top: .5em;
+}
+
+ul li li {
+    list-style-type: circle;
+}
+
+ul li li li {
+    list-style-type: square;
+}
+
+dd+dt {
+    margin-top: 1em;
+}
+
+{% endblock %}
+
+{% block misc %}
+{{ parent() }}
+
+blockquote {
+    margin: 1em 0 1em 2.5em;
+}
+
+/* This is the only way to force a page-break for Kindle
+ * page-break-after, etc. do not work when assigned to another selector
+ */
+.page-break {
+  page-break-after: always;
+}
+
+.clearfix {
+    clear: both;
+}
+
+/*
+ * Kindle specific
+ */
+@media amzn-mobi {
+	.mobi {display: block;}
+	.kf8  {display: none;}
+	.not-mobi {display: none;}
+}
+
+@media not amzn-mobi {
+	.mobi {display: none;}
+    .kf8  {display: none;}
+    .not-mobi {display: block;}
+}
+
+@media amzn-kf8 {
+	.mobi {display: none;}
+    .kf8  {display: block;}
+    .not-mobi {display: block;}
+}
+
+{% endblock %}
+
+{% block images %}
+{{ parent() }}
+
+/* .image => images that are not figures
+ * div.image => style like a figure
+ * span.image => style like an inline image
+ */
+div.image.center,
+div.image.left,
+div.image.right {
+    display: inline-block;
+ }
+
+ div.image.center {
+    width: 100%;
+ }
+
+    /* only min-max size if has alignment */
+    div.image.center img,
+    div.image.left img,
+    div.image.right img   {
+         min-width: 50%;
+         max-width: 100%;
+         display: inline-block;
+    }
+
+span.image {
+}
+
+/* .figure => figures, with caption */
+.figure {
+    text-align: center;
+    page-break-inside: avoid;
+}
+
+    .figure img {
+        min-width: 50%;
+        max-width: 100%;
+    }
+
+/* caption for figures */
+p.caption {
+	font-style: italic;
+	font-size: .9em;
+}
+
+/*
+ * Image Extra
+ * ===========
+ */
+div.figure.left,
+div.figure.right,
+div.image.left,
+div.image.right {
+    Qdisplay: inherit;
+    display: inline;
+    float: inherit;
+}
+
+/* Normal = 2/3 */
+div.figure img,
+div.image img  {
+    min-width: 100px !important;
+    width: 64%;
+    display: inline-block;
+}
+
+div.figure img.narrow,
+div.image img.narrow {
+    min-width: 100px !important;
+    width: 31%;
+    display: inline-block;
+}
+    div.figure.left img.narrow,
+    div.image.left img.narrow {
+        margin-right: 3%;
+    }
+    div.figure.right img.narrow,
+    div.image.right img.narrow {
+        margin-left: 3%;
+    }
+    div.figure.left + div.figure.left + div.figure.left img.narrow
+    div.image.left + div.image.left + div.image.left img.narrow {
+        margin-right: 0;
+    }
+
+div.figure img.narrower,
+div.image img.narrower {
+    min-width: 100px !important;
+    width: 25%;
+    display: inline-block;
+}
+    div.figure.left img.narrower,
+    div.image.left img.narrower {
+        margin-right: 3%;
+    }
+    div.figure.right img.narrower,
+    div.image.right img.narrower {
+        margin-left: 3%;
+    }
+    div.figure.left + div.figure.left + div.figure.left img.narrower
+    div.image.left + div.image.left + div.image.left img.narrower {
+        margin-right: 0;
+    }
+
+div.figure img.half,
+div.image img.half {
+    min-width: 100px !important;
+    width: 48%;
+    display: inline-block;
+}
+    div.image.left img.half,
+    div.figure.left img.half  {
+        margin-right: 3%;
+    }
+    div.image.right img.half,
+    div.figure.right img.half {
+        margin-left: 3%;
+    }
+    div.image.left + div.image.left img.half,
+    div.figure.left + div.figure.left img.half  {
+        margin-right: 0;
+    }
+
+div.image img.wide,
+div.figure img.wide {
+    min-width: 100px !important;
+    width: 100%;
+    display: inline-block;
+}
+
+/*
+ * Image SFX
+ * ===========
+ */
+div.figure.left img,
+div.figure.right img {
+    border: 4px solid #DDDDDD;
+}
+
+div.figure p.caption {
+    font-size: 0.8em;
+    font-style: italic;
+    text-align: center;
+    line-height: 1;
+    margin: 1em 10%;
+}
+
+div.figure.left p.caption,
+div.figure.right p.caption {
+    background-color: #DDDDDD;
+    border: 8px solid #DDDDDD;
+    border-radius: 8px 8px 8px 8px;
+    padding: 2px;
+}
+
+div.figure.left p.caption,
+div.figure.right p.caption {
+    margin-top: 0;
+    margin-bottom: 2em;
+    text-align: left;
+}
+
+{% endblock %}
+
+{% block tables %}
+{{ parent() }}
+
+td[align="right"], th[align="right"] {
+    text-align: right;
+}
+
+td[align="center"], th[align="center"] {
+    text-align: center;
+}
+
+table, td, th {
+    border: 1px solid #ccc;
+    border-collapse:collapse;;
+}
+
+thead tr {
+    background-color: #E5EECC;
+    font-weight: bold;
+}
+
+{% endblock %}
+
+{% block chapter %}
+{{ parent() }}
+
+.item.chapter h1 + h2,
+.item.chapter h2 + h3,
+.item.chapter h3 + h4,
+.item.chapter h4 + h5,
+.item.chapter h5 + h6 {
+    margin-top: 1em;
+}
+
+.item.chapter h1 {
+    background: none repeat scroll 0 0 #E9E9E9;
+    border: 10px solid #335577;
+    display: block;
+    font-size: 1.8em;
+    line-height: 1.3em;
+    margin: 0 0 1em;
+    padding: 0 0.2em 1em;
+    text-align: center;
+}
+
+.item.chapter h1 span {
+    color: inherit;
+    display: block;
+    font-size: 2em;
+    font-weight: bold;
+    line-height: 1.3em;
+    margin-right: 0.1em;
+    padding-bottom: 0;
+}
+
+.item.chapter h2 {
+    color: #00f;
+    border-bottom: 10px solid #00a;
+    font-size: 1.8em;
+    margin: 0 0 1em;
+    padding-bottom: 0.2em;
+    text-align: left;
+}
+
+.item.chapter h3 {
+    border-bottom: 5px solid #666;
+    padding: 0.2em;
+}
+
+.item.chapter h4 {
+    border-bottom: 2px solid #888888;
+}
+
+.item.chapter h5 {
+    margin-bottom: .5em;
+    font-style: italic;
+    border-bottom: 2px solid #888888;
+}
+
+.item.chapter h6 {
+    margin-bottom: .5em;
+    color: #222;
+    font-style: italic;
+}
+
+.item.chapter p {
+}
+{% endblock %}
+
+{% block introduction %}
+{{ parent() }}
+
+.item.introduction h1 {
+	margin-top: 0;
+    border-bottom: 5px solid {{ color_h1_underline }};
+    margin: 0 0 1em;
+
+}
+
+.item.introduction h2 {
+	border-bottom: 5px solid {{ color_h2_underline }};
+	padding: .2em;
+}
+
+.item.introduction h3 {
+	border-bottom: 5px solid {{ color_h3_underline }};
+    color: #A0A;
+}
+
+.item.introduction h4 {
+}
+
+.item.introduction h5 {
+    color: #444;
+}
+{% endblock %}
+
+{% block toc %}
+{{ parent() }}
+
+/* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
+.item.toc div.level-1 {
+	margin-left: 1em;
+}
+.item.toc div.level-2 {
+	margin-left: 2em;
+}
+.item.toc div.level-3 {
+	margin-left: 3em;
+}
+.item.toc div.level-4 {
+	margin-left: 4em;
+}
+.item.toc div.level-5 {
+	margin-left: 5em;
+}
+.item.toc div.level-6 {
+	margin-left: 6em;
+}
+
+/* local toc */
+.local_toc li {
+    margin-bottom: 0.15em;
+    margin-top: 0.15em;
+}
+
+.local_toc li.level-1 {
+	margin-left: -2em;
+}
+.local_toc li.level-2 {
+	margin-left: -1em;
+}
+.local_toc li.level-3 {
+	margin-left: 0em;
+}
+.local_toc li.level-4 {
+	margin-left: 1em;
+}
+.local_toc li.level-5 {
+	margin-left: 2em;
+}
+.local_toc li.level-6 {
+	margin-left: 3em;
+}
+
+{% endblock %}
+
+{% block edition %}
+{{  parent() }}
+
+.item.edition p {
+    margin: .3em 0;
+}
+
+{% endblock %}

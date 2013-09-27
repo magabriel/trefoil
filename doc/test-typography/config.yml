@@ -10,6 +10,7 @@ book:
     contents:
         - { element: cover }
         - { element: toc   }
+        - { element: edition  }
         - { element: chapter, number: 1, content: chapter1.md }
 
     editions:
@@ -19,7 +20,7 @@ book:
             include_styles: true
             use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
-            theme:          ebook
+            theme:          theme1
             toc:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
@@ -45,4 +46,3 @@ book:
             plugins:        
                 - Typography
                             
-        

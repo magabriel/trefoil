@@ -57,8 +57,6 @@ class RegisterResources implements EventSubscriberInterface
 
     /**
      * Register our own plugins
-     *
-     * @param unknown $enabledPlugins
      */
     public function registerOwnPlugins()
     {
@@ -123,15 +121,12 @@ class RegisterResources implements EventSubscriberInterface
 
         $theme = ucfirst($this->app->edition('theme'));
         $edition = $this->app['publishing.edition'];
-        $format = Toolkit::camelize($this->app->edition('format'), true);
-        // TODO: fix the following hack
-        if ('Epub' == $format) {
-            $format = 'Epub2';
-        }
+        $format = Toolkit::getCurrentFormat($this->app);
 
         $themesDir = toolkit::getCurrentThemeDir($this->app);
         if (!file_exists($themesDir)) {
-            $this->output->writeLn(sprintf(" > <error>Theme %s not found, assuming standard Easybook theme</error>", $theme));
+            $this->output->writeLn(
+                    sprintf(" > <error>Theme %s not found in themes directory, using predefined or default theme</error>", $theme));
             return;
         }
 
@@ -168,6 +163,5 @@ class RegisterResources implements EventSubscriberInterface
                 $loader->prependPath($path, 'content');
             }
         }
-
     }
 }

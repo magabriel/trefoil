@@ -1,6 +1,12 @@
 <?php
 namespace Trefoil\Tests\Plugins;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
+use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
+
+use Symfony\Component\Console\Output\ConsoleOutput;
+
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
 use Easybook\Tests\TestCase;
@@ -51,13 +57,16 @@ class PluginTest extends TestCase
     {
         $console = new ConsoleApplication($this->app);
 
+        $booksDir = __DIR__.'/fixtures/';
+        $themesDir = __DIR__.'/fixtures/Themes';
+
         // find the test books
         $books = $this->app->get('finder')
                     ->directories()
                     ->name('book*')
                     ->depth(0)
                     ->sortByName()
-                    ->in(__DIR__.'/fixtures/')
+                    ->in($booksDir)
                     ;
 
         foreach ($books as $book) {
@@ -84,9 +93,17 @@ class PluginTest extends TestCase
                         'command' => 'publish',
                         'slug'    => $slug,
                         'edition' => $editionName,
-                        '--dir'   => $this->tmpDir
+                        '--dir'   => $this->tmpDir,
+                        '--themes_dir' => $themesDir
                 ));
-                $console->find('publish')->run($input, new NullOutput());
+
+                $output = new NullOutput();
+                if (getopt('', array('debug'))) {
+                    // we want the full output in debug mode
+                    $output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, true);
+                }
+
+                $console->find('publish')->run($input, $output);
 
                 // look for config.yml modification
                 $expectedBookConfigFile = __DIR__.'/fixtures/'.$slug.'/expected/config.yml';

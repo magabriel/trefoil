@@ -25,7 +25,7 @@ class ConsoleApplication extends EasybookConsoleApplication
         $help = parent::getHelp();
 
         $help .= "\n"
-            . '<info>trefoil</info> extends easybook providing additional features.'
+            . '<info>trefoil</info> extends <comment>easybook</comemnt> providing additional features.'
         ;
 
         return $help;

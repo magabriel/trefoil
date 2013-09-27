@@ -10,6 +10,7 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * This plugin replaces certain symbols with its typographic equivalents.
  * - Quotes ('".."'), backtick quotes ('``..'''), ellipsis('...')
+ * - Dashes ('--')
  * - Angle quotes ('<<' and '>>')
  * - Checkboxes ('[ ]' and '[/]')
  * @see http://daringfireball.net/projects/smartypants/

@@ -1,0 +1,39 @@
+================================================================================
+LinkCheckPlugin
+check_external_links: true
+================================================================================
+
+Type     Item Status               Link                                                                                                 
+-------- ---- -------------------- ---------------------------------------------------------------------------------------------------- 
+Internal 
+
+         chapter1.md 
+
+              OK                   Lorem ipsum in this chapter                                                                          
+                                   <#lorem-ipsum>                                                                                       
+              OK                   Link target in another chapter                                                                       
+                                   <#a-link-target>                                                                                     
+              Not found            Lorem ipsum bad                                                                                      
+                                   <#lorem-ipsum-bad-link>                                                                              
+         chapter2.md 
+
+              == No links ==       
+
+External 
+
+         chapter1.md 
+
+              OK                   Google                                                                                               
+                                   <http://google.com>                                                                                  
+              Invalid host         Google bad                                                                                           
+                                   <http://google-bad-link.com>                                                                         
+         chapter2.md 
+
+              == No links ==       
+
+
+    ==================================================
+    Total OK.........: 3
+    Total Error......: 2
+    Total Not checked: 0
+    ==================================================

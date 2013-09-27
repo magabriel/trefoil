@@ -1,0 +1,21 @@
+<info>==================</info>
+<comment>trefoil</comment> extensions
+<info>==================</info>
+
+<info>--themes_dir</info> option allows using a custom themes directory to be used 
+by <comment>easybook</comment> when searching for themes. 
+
+<info>$ ./book publish the-origin-of-species print --themes_dir=../any/other/directory</info>
+
+Its structure must be the same as the standard <info>Themes</info> directory of <comment>easybook</comment>:
+
+any/
+  other/
+    directory/
+      My_theme/
+          Common/
+              Templates
+          Epub2/
+              Contents
+              Resources
+              Templates
