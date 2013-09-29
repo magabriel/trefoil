@@ -30,8 +30,6 @@ use Easybook\Events\ParseEvent;
  */
 class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $item;
-
     protected static $links = array(
             'internal' => array(),
             'external' => array()
@@ -42,8 +40,8 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                Events::POST_PARSE => array('onItemPostParse', -1000), // the latest
-                Events::POST_PUBLISH => array('onPostPublish', -1000)  // latest possible
+                Events::POST_PARSE => array('onItemPostParse', -1000), // the latest possible
+                Events::POST_PUBLISH => array('onPostPublish', -1000)  // the latest possible
         );
     }
 

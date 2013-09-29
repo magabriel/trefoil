@@ -2,9 +2,9 @@
 namespace Trefoil\Plugins;
 
 use Easybook\Events\EasybookEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Util\Toolkit;
 use Easybook\Events\BaseEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
 
@@ -17,8 +17,8 @@ use Easybook\Events\ParseEvent;
  *         ...
  *         version: "1.0" # current version string, of form "version.revision"
  *         verson_options:
- *             increment_ver: false # don't increment the version part
- *             increment_rev: true  # increment the revision part
+ *             increment_ver: false # don't increment the version part (default)
+ *             increment_rev: true  # increment the revision part (default)
  *
  * After execution the book config.yml file will be updated with the
  * new version string:
@@ -31,11 +31,8 @@ use Easybook\Events\ParseEvent;
  * new version will be used the <i>next</i> time it gets published.
  *
  */
-class VersionUpdaterPlugin implements EventSubscriberInterface
+class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $app;
-    protected $output;
-
     public static function getSubscribedEvents()
     {
         return array(
@@ -46,8 +43,7 @@ class VersionUpdaterPlugin implements EventSubscriberInterface
 
     public function onPostPublish(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $this->app->get('console.output');
+        $this->init($event);
 
         $this->updateVersion();
     }

@@ -25,7 +25,7 @@ use Trefoil\Util\Toolkit;
  * directory after the book has been published. I know it is a dirty hack
  * but is the best I could come up without hacking easybook.
  */
-class ThemeImagesPlugin implements EventSubscriberInterface
+class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
 {
     protected $app;
     protected $output;
@@ -40,23 +40,19 @@ class ThemeImagesPlugin implements EventSubscriberInterface
 
     public function onPrePublishAndReady(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $event->app->get('console.output');
+        $this->init($event);
 
         $this->copyThemeImages();
-
         $this->copyCoverImage();
     }
 
     public function copyThemeImages()
     {
-        $edition = $this->app['publishing.edition'];
-        $theme = ucfirst($this->app->edition('theme'));
-        $format = Toolkit::getCurrentFormat($this->app);
+        //$format = Toolkit::getCurrentFormat($this->app);
 
         // get the source dir (inside theme)
         $themeDir = Toolkit::getCurrentThemeDir($this->app);
-        $sourceDir = sprintf('%s/%s/Resources/images', $themeDir, $format);
+        $sourceDir = sprintf('%s/%s/Resources/images', $themeDir, $this->format);
 
         if (!file_exists($sourceDir)) {
             return;
@@ -70,16 +66,13 @@ class ThemeImagesPlugin implements EventSubscriberInterface
 
         // and copy contents
         $this->app->get('filesystem')->mirror($sourceDir, $destDir, null, true);
-
     }
 
     protected function copyCoverImage()
     {
-        $edition = $this->app['publishing.edition'];
-        $theme = ucfirst($this->app->edition('theme'));
-        $format = Toolkit::camelize($this->app->edition('format'), true);
+        //$format = Toolkit::camelize($this->app->edition('format'), true);
 
-        if ('Epub' == $format) {
+        if ('Epub' == $this->format) {
             // the EPUB publisher will take care of it
             return;
         }

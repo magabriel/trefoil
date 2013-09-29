@@ -15,10 +15,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * - Checkboxes ('[ ]' and '[/]')
  * @see http://daringfireball.net/projects/smartypants/
  */
-class TypographyPlugin implements EventSubscriberInterface
+class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $app;
-    protected $item;
     protected $links = array();
 
     public static function getSubscribedEvents()
@@ -31,8 +29,8 @@ class TypographyPlugin implements EventSubscriberInterface
 
     public function onItemPreParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
+        $this->init($event);
+
         $content = $event->getOriginal();
 
         $content = $this->preProcessAngleQuotesForSmartypants($content);
@@ -43,8 +41,8 @@ class TypographyPlugin implements EventSubscriberInterface
 
     public function onItemPostParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
+        $this->init($event);
+
         $content = $this->item['content'];
 
         $content = $this->smartyPantsPostParse($content);

@@ -15,7 +15,7 @@ use Easybook\Events\ParseEvent;
  * - Cell with only a double quote => rowspanned
  *
  */
-class TableExtraPlugin implements EventSubscriberInterface
+class TableExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
@@ -26,6 +26,8 @@ class TableExtraPlugin implements EventSubscriberInterface
 
     public function onItemPostDecorate(BaseEvent $event)
     {
+        $this->init($event);
+
         $item = $event->getItem();
         $content = $item['content'];
 

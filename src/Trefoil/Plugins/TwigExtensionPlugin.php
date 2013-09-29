@@ -33,11 +33,8 @@ use Symfony\Component\DomCrawler\Crawler;
  * options {'nopagebreak': true} to the included file.
  *
  */
-class TwigExtensionPlugin implements EventSubscriberInterface
+class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $app;
-    protected $item;
-
     public static function getSubscribedEvents()
     {
         return array(
@@ -48,8 +45,7 @@ class TwigExtensionPlugin implements EventSubscriberInterface
 
     public function onItemPreParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
+        $this->init($event);
 
         $content = $event->getOriginal();
 
@@ -65,8 +61,7 @@ class TwigExtensionPlugin implements EventSubscriberInterface
 
     public function onItemPostParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
+        $this->init($event);
 
         $content = $event->getContent();
 
@@ -97,7 +92,7 @@ class TwigExtensionPlugin implements EventSubscriberInterface
         if (null != $this->app->get('publishing.book.config')['book']) {
             $twig->addGlobal('book', $this->app->get('publishing.book.config')['book']);
 
-            $publishingEdition = $this->app->get('publishing.edition');
+            $publishingEdition = $this->edition; // $this->app->get('publishing.edition');
             $editions = $this->app->book('editions');
             $twig->addGlobal('edition', $editions[$publishingEdition]);
         }

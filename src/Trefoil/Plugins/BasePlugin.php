@@ -1,6 +1,7 @@
 <?php
 namespace Trefoil\Plugins;
 
+use Trefoil\Util\Toolkit;
 use Easybook\Events\BaseEvent;
 
 abstract class BasePlugin
@@ -8,12 +9,18 @@ abstract class BasePlugin
     protected $app;
     protected $output;
     protected $edition;
+    protected $format;
+    protected $theme;
+    protected $item;
 
     public function init(BaseEvent $event)
     {
         $this->app = $event->app;
         $this->output = $this->app->get('console.output');
         $this->edition = $this->app['publishing.edition'];
+        $this->format = Toolkit::getCurrentFormat($this->app);
+        $this->theme = ucfirst($this->app->edition('theme'));
+        $this->item = $event->getItem();
     }
 
     public function writeLn($message, $usePrefix = true)

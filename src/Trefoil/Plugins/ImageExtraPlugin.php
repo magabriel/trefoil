@@ -19,11 +19,8 @@ use Easybook\Events\ParseEvent;
  * In the style specification all spaces must be replaced by "_" in order to work (this is because of
  * the way Markdown parses the image specification)
  */
-class ImageExtraPlugin implements EventSubscriberInterface
+class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $app;
-    protected $item;
-
     public static function getSubscribedEvents()
     {
         return array(
@@ -34,8 +31,8 @@ class ImageExtraPlugin implements EventSubscriberInterface
 
     public function onItemPreParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
+        $this->init($event);
+
         $content = $event->getOriginal();
 
         $content = $this->preProcessImages($content);
@@ -45,10 +42,8 @@ class ImageExtraPlugin implements EventSubscriberInterface
 
     public function onItemPostParse(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $this->app->get('console.output');
-        $edition = $this->app['publishing.edition'];
-        $this->item = $event->getItem();
+        $this->init($event);
+
         $content = $this->item['content'];
 
         $content = $this->processImages($content);
