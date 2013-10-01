@@ -34,8 +34,8 @@ abstract class BasePlugin
         $prefix = '';
         if ($usePrefix) {
             $class = join('',array_slice(explode('\\', get_called_class()), -1));
-            $prefix = sprintf(' > %s: ', $class);
+            $prefix = sprintf('%s: ', $class);
         }
-        $this->output->write($prefix.$message);
+        $this->output->write(' > '.$prefix.$message);
     }
 }
