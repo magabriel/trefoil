@@ -1,0 +1,15 @@
+glossary:
+    ####
+    # Defintions of terms:
+    #
+    #   "term": Term description
+    #
+    # Variants are allowed (singular, plural)
+    #
+    #   "term[s]": Desription which is applied to "term" and "terms"
+    #   "term [one|two]": Description which is applied to "term one" and "term twho"
+    ####
+    terms:
+        lectus: Definition of term "lectus".
+        sagittis: Definition of term "sagittis".
+ 

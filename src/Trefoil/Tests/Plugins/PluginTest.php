@@ -28,10 +28,20 @@ class PluginTest extends TestCase
     {
         $this->app = new Application();
 
-        // setup temp dir for generated files
-        $this->tmpDir = $this->app['app.dir.cache'].'/'.uniqid('phpunit_', true);
         $this->filesystem = new Filesystem();
-        $this->filesystem->mkdir($this->tmpDir);
+
+        // setup temp dir for generated files
+        if (getopt('', array('debug'))) {
+            // reuse the temp dir
+            $this->tmpDir = $this->app['app.dir.cache'].'/'.'phpunit_debug';
+            if ($this->filesystem->exists($this->tmpDir)) {
+                $this->filesystem->remove($this->tmpDir);
+            }
+        } else {
+            // create new temp dir
+            $this->tmpDir = $this->app['app.dir.cache'].'/'.uniqid('phpunit_', true);
+            $this->filesystem->mkdir($this->tmpDir);
+        }
 
         parent::setUp();
     }

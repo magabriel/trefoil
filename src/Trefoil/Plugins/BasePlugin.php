@@ -4,6 +4,10 @@ namespace Trefoil\Plugins;
 use Trefoil\Util\Toolkit;
 use Easybook\Events\BaseEvent;
 
+/**
+ * Base class for all plugins
+ *
+ */
 abstract class BasePlugin
 {
     protected $app;
@@ -12,7 +16,15 @@ abstract class BasePlugin
     protected $format;
     protected $theme;
     protected $item;
+    protected $internalLinksMapper = array();
 
+    /**
+     * Do some initialization tasks.
+     * Must be called explicitly for each plugin at the begining
+     * of each event handler method.
+     *
+     * @param BaseEvent $event
+     */
     public function init(BaseEvent $event)
     {
         $this->app = $event->app;
@@ -23,12 +35,24 @@ abstract class BasePlugin
         $this->item = $event->getItem();
     }
 
+    /**
+     * Write an output message line
+     *
+     * @param string $message
+     * @param string $usePrefix
+     */
     public function writeLn($message, $usePrefix = true)
     {
         $this->write($message, $usePrefix);
         $this->output->writeLn('');
     }
 
+    /**
+     * Write an output message (w/o a line break)
+     *
+     * @param string $message
+     * @param string $usePrefix
+     */
     public function write($message, $usePrefix = true)
     {
         $prefix = '';
@@ -38,4 +62,68 @@ abstract class BasePlugin
         }
         $this->output->write(' > '.$prefix.$message);
     }
+
+    /**
+     * Save an internal link target (or "anchor") from the current item
+     * in the internal link mappper, so later it can be fixed.
+     *
+     * @param string $id to save
+     */
+    protected function saveInternalLinkTarget($id)
+    {
+        $item = $this->item;
+
+        $itemSlug = $item['config']['element'];
+        if (array_key_exists('number', $item['config']) && $item['config']['number'] !== '') {
+            $itemSlug = $item['config']['element'] . '-' . $item['config']['number'];
+        }
+
+        $relativeUrl = '#' . $id;
+        $absoluteUrl = $itemSlug . '.html' . $relativeUrl;
+
+        if (!isset( $this->internalLinksMapper[$relativeUrl])) {
+            $this->internalLinksMapper[$relativeUrl] = $absoluteUrl;
+        }
+    }
+
+    /**
+     * Fix internal links ('#internal-link') with the correct internal url ('item.html#internal-link').
+     * Also assign a CSS class to invalid links for easy spotting in the book, mainly for debugging
+     * plugins that create internal links for advanced navigation (i.e. AutoGlossary).
+     *
+     * @param string $html to process
+     * @return string
+     */
+    protected function fixInternalLinks()
+    {
+        $html = $this->item['content'];
+
+        $internalLinksMapper = $this->internalLinksMapper;
+
+        $html = preg_replace_callback(
+                '/<a (?<prev>.*)href="(?<uri>#.*)"(?<post>.*)<\/a>/Us',
+                function($matches) use($internalLinksMapper) {
+
+                    $uri = $matches['uri'];
+                    $existing = false;
+
+                    if (isset($internalLinksMapper[$matches['uri']])) {
+                        $uri = $internalLinksMapper[$matches['uri']];
+                        $existing = true;
+                    }
+
+                    return sprintf(
+                            '<a %sclass="internal%s" href="./%s"%s</a>',
+                            $matches['prev'],
+                            $existing ? '' : ' invalid',
+                            $uri,
+                            $matches['post']
+                    );
+                },
+                $html
+        );
+
+        $this->item['content'] = $html;
+    }
+
 }

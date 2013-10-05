@@ -1,89 +1,34 @@
 <?php
 namespace Trefoil\Plugins;
-
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
 use Easybook\Util\Slugger;
 use Easybook\Util\Toolkit;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
-use Trefoil\Helpers\Glossary;
-use Trefoil\Helpers\GlossaryItem;
 
 /**
  * This plugin takes care of the automatic interactive glossary feature.
  */
-class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
+class AutoGlossaryOldPlugin extends EpubInteractivePluginBase implements EventSubscriberInterface
 {
+    protected $slugs = array();
+    protected $output;
+    protected $options = array();
+    protected $bookDefinitions = array();
+    protected $itemDefinitions = array();
 
-    /**
-     * The book-wide glossary
-     * @var Glossary
-     */
-    protected $bookGlossary;
-
-    /**
-     * The item-wide glossary
-     * @var Glossary
-     */
-    protected $itemGlossary;
-
-    /**
-     * The glossary to apply for the current item (book + item)
-     * @var Glossary
-     */
-    protected $glossary;
-
-    protected $processedGlossary;
-
-    /**
-     * Options that govern the glossary processing
-     * @var array
-     */
-    protected $glossaryOptions = array();
-
-    /**
-     * Book-wide term definitions
-     * @var array
-     */
-    //protected $bookDefinitions = array();
-
-    /**
-     * Current item term definitions ($bookDefinitions will be merged in)
-     * @var array
-     */
-    //protected $itemDefinitions = array();
-
-    /**
-     * Definitions that have been processed with its processing data (for reporting)
-     * @var array
-     */
-    //protected $processedDefinitions = array();
-
-    /**
-     * Terms already defined, to avoid defining them more than once if coverage mandates it
-     * @var array
-     */
-    protected $alreadyDefinedTerms = array();
-
-    /**
-     * Cross-references of replaced terms for reporting
-     * @var array
-     */
-    protected $xrefs = array();
-
-    /**
-     * Whether or not the glossary item has been generated
-     * @var bool
-     */
-    protected $generated = false;
+    protected static $definitions = array();
+    protected static $anchorLinks = array();
+    protected static $alreadyDefinedTerms = array();
+    protected static $xrefs = array();
+    protected static $generated = false;
 
     static public function getSubscribedEvents()
     {
-        return array(
-                TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
+        return array(TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
                 Events::POST_PARSE => array('onItemPostParse', -100),
                 Events::PRE_DECORATE => array('onItemPreDecorate', -500),
                 Events::POST_PUBLISH => 'onPostPublish');
@@ -91,87 +36,75 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
     public function onPrePublishAndReady(BaseEvent $event)
     {
-        $this->init($event);
+        $this->app = $event->app;
+        $this->output = $this->app->get('console.output');
 
-        // MAGS
-        $this->glossary = new Glossary();
-        $this->processedGlossary = new Glossary();
+        // reset static variables to allow for functional testing
+        static::$definitions = array();
+        static::$anchorLinks = array();
+        static::$alreadyDefinedTerms = array();
+        static::$xrefs = array();
+        static::$generated = false;
 
         // get all the glossary terms from file and create the definitions data structure
         $glossary = $this->readBookGlossary();
-
         if ($glossary) {
-            //$this->bookDefinitions = $this->extractDefinitions($glossary);
-            //$this->bookDefinitions = $this->explodePluralizedTerms($this->bookDefinitions);
-
-            $this->bookGlossary = $this->extractDefinitions($glossary);
+            $this->bookDefinitions = $this->extractDefinitions($glossary);
+            $this->bookDefinitions = $this->explodePluralizedTerms($this->bookDefinitions);
         }
     }
 
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
+        $this->app['book.logger']->debug('onItemPostParse:begin', get_class(), $this->item['config']['content']);
+
+        $this->output = $event->app->get('console.output');
 
         // read item glossary and merge it with book glossary
-        //$definitions = array();
+        $definitions = array();
         $itemGlossary = $this->readItemGlossary();
-
         if (isset($itemGlossary['glossary'])) {
-            //$definitions = $this->extractDefinitions($itemGlossary);
-            //$definitions = $this->explodePluralizedTerms($definitions);
-
-            $this->itemGlossary = $this->extractDefinitions($itemGlossary);
-            //$this->itemDefinitions = array_replace_recursive($this->bookDefinitions, $definitions);
-
-            $this->glossary = clone($this->bookGlossary);
-
-            // add the book-wide definitions
-            $this->glossary->merge($this->itemGlossary);
-
-            print_r($this->glossary);
+            $definitions = $this->extractDefinitions($itemGlossary);
+            $definitions = $this->explodePluralizedTerms($definitions);
         }
+        $this->itemDefinitions = array_replace_recursive($this->bookDefinitions, $definitions);
 
         // look type of processing
-        if (in_array($this->item['config']['element'], $this->glossaryOptions['elements'])) {
+        if (in_array($this->item['config']['element'], $this->options['elements'])) {
             // replace each term with a link to its definition
             $this->replaceTerms();
-
-            $this->processedGlossary->merge(clone($this->glossary));
-
         } elseif ('auto-glossary' == $this->item['config']['element']) {
             // generate the auto glossary
             $this->generateAutoGlossary();
         }
 
         $event->setItem($this->item);
+
+        $this->wrapUp();
+        $this->app['book.logger']->debug('onItemPostParse:end', get_class(), $this->item['config']['content']);
     }
 
     public function onItemPreDecorate(BaseEvent $event)
     {
-        $this->init($event);
+        $item = $event->getItem();
 
-        print_r( $this->internalLinksMapper);
+        $item['content'] = $this->fixLinks($item['content'], $event->app->get('publishing.links'));
 
-        $this->fixInternalLinks();
-
-        $event->setItem($this->item);
+        $event->setItem($item);
     }
 
     public function onPostPublish(BaseEvent $event)
     {
-        $this->init($event);
+        $this->app = $event->app;
+        $this->output = $event->app->get('console.output');
 
-        /*
-        if (!$this->processedDefinitions) {
+        $this->app['book.logger']->debug('onPostPublish:begin', get_class());
+
+        if (!static::$definitions) {
             // no definitions => do nothing
             return;
         }
-        */
-
-        echo("\n>PROCESSED==================================\n");
-        print_r($this->processedGlossary);
-        echo("\n<PROCESSED==================================\n");
-        $this->glossary = $this->processedGlossary;
 
         // create the xref report
         $outputDir = $this->app['publishing.dir.output'];
@@ -182,17 +115,19 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report .= "\n\n";
         $report .= $this->getNotUsedTermsReport();
 
-        if (!$this->generated) {
+        if (!static::$generated) {
             $this->output
                     ->write(
                             " <error>No glossary has been generated, check for missing 'auto-glosssary' contents element.</error>\n");
         }
 
         file_put_contents($reportFile, $report);
+
+        $this->app['book.logger']->debug('onPostPublish:end', get_class());
     }
 
     /**
-     * Read the book-wide glossary file
+     * Read the glossary file
      *
      * @return array
      */
@@ -203,14 +138,14 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $glossaryFile = $contentsDir . '/auto-glossary.yml';
 
         if (file_exists($glossaryFile)) {
-            $glossaryDefinition = Yaml::parse($glossaryFile);
+            $glossary = Yaml::parse($glossaryFile);
         } else {
             $this->output
                     ->write(
-                            sprintf(" <comment>No book glossary definition file '%s' found.</comment>\n",
+                            sprintf(" <comment>No glossary definition file '%s' found.</comment>\n",
                                     realpath($contentsDir) . '/auto-glossary.yml'));
             //return array();
-            $glossaryDefinition = array();
+            $glossary = array();
         }
 
         // defaults
@@ -225,19 +160,19 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
                         'terms' => array()
                         )
                 );
-        $glossaryDefinition = array_replace_recursive($default, $glossaryDefinition);
+        $glossary = array_replace_recursive($default, $glossary);
 
         // set source
-        $glossaryDefinition['source'] = basename($glossaryFile);
+        $glossary['source'] = basename($glossaryFile);
 
-        // set book glossary options
-        $this->glossaryOptions = $glossaryDefinition['glossary']['options'];
+        // set options
+        $this->options = $glossary['glossary']['options'];
 
-        return $glossaryDefinition;
+        return $glossary;
     }
 
     /**
-     * Read the item glossary file
+     * Read the glossary file
      *
      * @return array
      */
@@ -254,9 +189,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $glossaryFile = $contentsDir . '/' . $fileName . '-auto-glossary.yml';
 
         if (file_exists($glossaryFile)) {
-            $glossaryDefinition = Yaml::parse($glossaryFile);
+            $glossary = Yaml::parse($glossaryFile);
         } else {
-            $glossaryDefinition = array();
+            $glossary = array();
         }
 
         // defaults
@@ -266,66 +201,57 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
                 )
         );
 
-        $glossaryDefinition = array_replace_recursive($default, $glossaryDefinition);
+        $glossary = array_replace_recursive($default, $glossary);
 
         // set source
-        $glossaryDefinition['source'] = basename($glossaryFile);
+        $glossary['source'] = basename($glossaryFile);
 
-        return $glossaryDefinition;
+        return $glossary;
     }
 
     /**
      * Extract definitions from the glossary file contents
      */
-    protected function extractDefinitions($glossaryDefinition)
+    protected function extractDefinitions($glossary)
     {
-        $glossary = new Glossary();
+        $definitions = array();
+        foreach ($glossary['glossary']['terms'] as $term => $definition) {
 
-        //$definitions = array();
-        foreach ($glossaryDefinition['glossary']['terms'] as $term => $definition) {
-
-            /*
             // assign an unique slug for this term
             if (!isset($this->slugs[$term])) {
                 $slug = $this->app->get('slugger')->slugify($term);
                 $this->slugs[$term] = $slug;
             }
-            */
 
+            $forceIn = array();
+            $neverIn = array();
+            $onlyIn = array();
             $description = '';
             if (is_array($definition)) {
+                $forceIn = isset($definition['force-in']) ? $definition['force-in'] : array();
+                $neverIn = isset($definition['never-in']) ? $definition['never-in'] : array();
+                $onlyIn = isset($definition['only-in']) ? $definition['only-in'] : array();
                 $description = isset($definition['description']) ? $definition['description'] : '';
             } else {
                 $description = $definition;
             }
 
-            /*
             $definitions[$term] = array(
                     'slug' => $this->slugs[$term],
                     'description' => $description,
+                    'force-in' => $forceIn,
+                    'never-in' => $neverIn,
+                    'only-in' => $onlyIn,
                     'source' =>  $glossary['source']
                     );
-
-            */
-
-            // MAGS
-            $gi = new GlossaryItem();
-            $gi->setTerm($term);
-            $gi->setSlug($this->app->get('slugger')->slugify($term));
-            $gi->setSource($glossaryDefinition['source']);
-            $gi->setDescription($description);
-
-            $glossary->add($gi);
         }
 
-        return $glossary;
-        //return $definitions;
+        return $definitions;
     }
 
     /**
      * Explode pluralized terms
      */
-    /*
     protected function explodePluralizedTerms($definitions)
     {
         $newDefs = array();
@@ -363,32 +289,24 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         return $newDefs;
     }
-    */
 
     /**
      * Replace terms in item's content
      */
     protected function replaceTerms()
     {
-        /*
         if (!$this->itemDefinitions) {
-            return;
-        }
-        */
-        if (!$this->glossary->count()) {
             return;
         }
 
         // save new definitions preserving the anchorLinks
-        /*
         foreach ($this->itemDefinitions as $term => $data) {
-            $anchorLinks = isset($this->processedDefinitions[$term]['anchorLinks'])
-                        ? $this->processedDefinitions[$term]['anchorLinks']
+            $anchorLinks = isset(static::$definitions[$term]['anchorLinks'])
+                        ? static::$definitions[$term]['anchorLinks']
                         : array();
-            $this->processedDefinitions[$term] = $data;
-            $this->processedDefinitions[$term]['anchorLinks'] = $anchorLinks;
+            static::$definitions[$term] = $data;
+            static::$definitions[$term]['anchorLinks'] = $anchorLinks;
         }
-        */
 
         $content = $this->item['content'];
 
@@ -403,37 +321,39 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         $anchorLinks = array();
 
-        //foreach ($this->itemDefinitions as $term => $data) {
-        foreach ($this->glossary as $term => $data) {
-            foreach ($data->getVariants() as $variant) {
-                $contentMod = $this
-                        ->replaceTermVariant($content, $data, $variant, $savedStrings);
-                if ($contentMod != $content) {
-                    // at least a replacement ocurred
-                    if ('item' == $this->glossaryOptions['coverage']) {
-                        // already replaced once in this item, so ignore subsequent ocurrences and variants
+        foreach ($this->itemDefinitions as $term => $data) {
+
+            // look if the term must be ignored into this item
+            $name = substr($this->item['config']['content'], 0, -3);
+
+            if (!in_array($name, $data['never-in'])) {
+
+                // look if must be replaced only in this item (or in each item)
+                if (!$data['only-in'] || ($data['only-in'] && in_array($name, $data['only-in']))) {
+
+                    foreach ($data['variants'] as $variant) {
+                        $contentMod = $this
+                                ->replaceTermVariant($content, $term, $variant, $data['slug'],
+                                        $data['force-in'], $anchorLinks, $savedStrings);
+                        if ($contentMod != $content) {
+                            // at least a replacement ocurred
+                            if ('item' == $this->options['coverage']) {
+                                // already replaced once in this item, so ignore subsequent ocurrences and variants
+                                $content = $contentMod;
+                                break;
+                            }
+
+                        }
                         $content = $contentMod;
-                        break;
                     }
-
                 }
-                $content = $contentMod;
-            }
-
-            // register all anchor link for this item
-            foreach ($data->getAnchorLinks() as $anchorLink) {
-                $this->saveInternalLinkTarget($anchorLink);
             }
         }
 
-        print_r($this->internalLinksMapper);
-
-        /*
         // register all anchor link for this item
-        foreach ($data->getAnchorLinks() as $anchorLink) {
-            $this->saveInternalLinkTarget($anchorLink);
+        foreach ($anchorLinks as $anchorLink) {
+            $this->registerAnchorLink($anchorLink);
         }
-        */
 
         // replace back each ocurrence of the saved placeholders with the corresponding value
         $content = $this->restoreFromList($savedAttributes, $content);
@@ -458,7 +378,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      * @param array $savedStrings Lis of generated slugs and its replacements
      * @return string|mixed
      */
-    protected function replaceTermVariant($item, $data, $variant, array &$savedStrings)
+    protected function replaceTermVariant($item, $term, $variant, $slug, $forceIn,
+            array &$anchorLinks, array &$savedStrings)
     {
         // construct regexp to replace into certain tags
         $tags = array('p', 'li', 'dd');
@@ -474,7 +395,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         // replace all occurrences of $variant into text $item with a glossary link
         // return $anchorLinks and $savedStrings to be processed later
         $item = preg_replace_callback($patterns,
-                function ($matches) use ($data, $variant, $item, &$count, &$savedStrings)
+                function ($matches) use ($term, $variant, $slug, $item, $forceIn, &$count,
+                        &$anchorLinks, &$savedStrings)
                 {
                     // extract what to replace
                     $tag = $matches[1];
@@ -482,7 +404,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
                     // do the replacement
                     $newContent = $this
-                            ->replaceTermVariantIntoString($tagContent, $data, $variant, $count, $savedStrings);
+                            ->replaceTermVariantIntoString($tagContent, $term, $variant, $slug,
+                                    $forceIn, $count, $anchorLinks, $savedStrings);
 
                     // reconstruct the original tag with the modified text
                     return sprintf('<%s>%s</%s>', $tag, $newContent, $tag);
@@ -496,11 +419,13 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      * @param string $term The term to replace
      * @param string $variant Term variant to replace by a glossary link
      * @param string $slug The slug of the term
+     * @param array $forceIn List of items where replacement needs to be forced
      * @param int $count Number of replacements already made into this item
      * @param array $anchorLinks List of anchor links to be registered
      * @param array $savedStrings Lis of generated slugs and its replacements
      */
-    protected function replaceTermVariantIntoString($text, $data, $variant, &$count, &$savedStrings)
+    protected function replaceTermVariantIntoString($text, $term, $variant, $slug, $forceIn,
+            &$count, &$anchorLinks, &$savedStrings)
     {
 
         // construct the regexp to replace inside the tag content
@@ -513,35 +438,47 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         // replace all ocurrences of $variant into $tagContent with a glossary link
         // return $anchorLinks and $savedStrings to be processed later
         $par = preg_replace_callback($regExp,
-                function ($matches) use ($data, $variant, &$count, &$savedStrings)
+                function ($matches) use ($term, $variant, $slug, $forceIn, &$count, &$anchorLinks,
+                        &$savedStrings)
                 {
                     // look if already replaced once in this item, so just leave it unchanged
-                    if ('item' == $this->glossaryOptions['coverage'] && $count > 0) {
+                    if ('item' == $this->options['coverage'] && $count > 0) {
                         return $matches[0];
                     }
 
                     /* if coverage type is "first" and term is already defined,
-                     * don't replace the term
+                     * only replace the term if the current publishing item
                      */
-                    if ('first' == $this->glossaryOptions['coverage']
-                            && in_array($data->getTerm(), $this->alreadyDefinedTerms)) {
-                        // already replaced elsewhere, just leave it unchanged
-                        return $matches[0];
+                    if ('first' == $this->options['coverage']
+                            && in_array($term, static::$alreadyDefinedTerms)) {
+
+                        $name = substr($this->item['config']['content'], 0, -3);
+                        if (in_array($name, $forceIn)) {
+                            if ($count >= 0) {
+                                return $matches[0];
+                            }
+                        } else {
+                            // already replaced elsewhere, just leave it unchanged
+                            return $matches[0];
+                        }
                     }
 
                     // if not already defined, add it to array
-                    if (!in_array($data->getTerm(), $this->alreadyDefinedTerms)) {
-                        $this->alreadyDefinedTerms[] = $data->getTerm();
+                    if (!in_array($term, static::$alreadyDefinedTerms)) {
+                        static::$alreadyDefinedTerms[] = $term;
                     }
 
                     // create the anchor link from the slug
                     // and get the number given to the anchor link just created
                     list($anchorLink, $num) = $this
-                            ->saveProcessedDefinition($data, sprintf('auto-glossary-term-%s', $data->getSlug()));
+                            ->saveAnchorLink($term, sprintf('auto-glossary-term-%s', $slug));
+
+                    // get the number given to the anchor link just created
+                    //$count = count(static::$definitions[$term]['anchorLinks']) - 1;
 
                     // save the placeholder for this slug to be replaced later
                     $placeHolder = '#' . count($savedStrings) . '#';
-                    $savedStrings[$placeHolder] = $data->getSlug() . '-' . $num;
+                    $savedStrings[$placeHolder] = $slug . '-' . $num;
 
                     $count++;
 
@@ -556,10 +493,10 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
                                     . '</span>', $placeHolder, $placeHolder, $placeHolder2);
 
                     // save the anchor link to be registered later
-                    //$data->addAnchorLink($anchorLink);
+                    $anchorLinks[] = $anchorLink;
 
                     // save xref
-                    $this->saveXref($data->getTerm(), $variant);
+                    $this->saveXref($term, $variant);
 
                     // return reconstructed match
                     return $matches[1] . $repl . $matches[3];
@@ -577,25 +514,21 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function saveXref($term, $variant)
     {
-        /*
-        if (!isset($this->xrefs[$term])) {
-            $this->xrefs[$term] = array();
+        if (!isset(static::$xrefs[$term])) {
+            static::$xrefs[$term] = array();
         }
 
-        if (!isset($this->xrefs[$term][$variant])) {
-            $this->xrefs[$term][$variant] = array();
+        if (!isset(static::$xrefs[$term][$variant])) {
+            static::$xrefs[$term][$variant] = array();
         }
 
         $name = $this->item['config']['content'];
-        if (!isset($this->xrefs[$term][$variant][$name])) {
-            $this->xrefs[$term][$variant][$name] = 0;
+        if (!isset(static::$xrefs[$term][$variant][$name])) {
+            static::$xrefs[$term][$variant][$name] = 0;
         }
 
-        $this->xrefs[$term][$variant][$name]++;
-        */
+        static::$xrefs[$term][$variant][$name]++;
 
-        // MAGS
-        $this->glossary->get($term)->addXref($variant, $this->item['config']['content']);
     }
 
     /**
@@ -605,23 +538,16 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      * @param string $anchorLink
      * @return string The text of the anchor link saved
      */
-    protected function saveProcessedDefinition($data, $anchorLink)
+    protected function saveAnchorLink($term, $anchorLink)
     {
-        /*
-        if (!isset($this->processedDefinitions[$term]['anchorLinks'])) {
-            $this->processedDefinitions[$term]['anchorLinks'] = array();
+        if (!isset(static::$definitions[$term]['anchorLinks'])) {
+            static::$definitions[$term]['anchorLinks'] = array();
         }
 
-        $count = count($this->processedDefinitions[$term]['anchorLinks']);
+        $count = count(static::$definitions[$term]['anchorLinks']);
         $newAnchorLink = $anchorLink . '-' . $count;
 
-        $this->processedDefinitions[$term]['anchorLinks'][] = $newAnchorLink;
-        */
-
-        $count = count($data->getAnchorLinks());
-
-        $newAnchorLink = $anchorLink . '-' . $count;
-        $data->addAnchorLink($newAnchorLink);
+        static::$definitions[$term]['anchorLinks'][] = $newAnchorLink;
 
         return array($newAnchorLink, $count);
     }
@@ -705,44 +631,31 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function generateAutoGlossary()
     {
-        /*
-        if (!$this->processedDefinitions) {
+        if (!static::$definitions) {
             return;
         }
-        */
 
         //echo "==== generate =============\n";
-        //print_r($this->processedDefinitions);
+        //print_r(static::$definitions);
 
         $content = $this->item['content'];
 
-        $variables = array(
-                //'definitions' => $this->processedDefinitions,
-                'definitions' => $this->processedGlossary,
-                'item' => $this->item
-                );
+        $variables = array('definitions' => static::$definitions, 'item' => $this->item);
 
         $rendered = $this->app->get('twig')->render('auto-glossary-items.twig', $variables);
 
         // register all anchor links
-        //foreach ($this->processedDefinitions as $term => $data) {
-        foreach ($this->processedGlossary as $term => $data) {
-            /*
+        foreach (static::$definitions as $term => $data) {
             if (isset($data['anchorLinks'])) {
                 foreach ($data['anchorLinks'] as $index => $anchorLink) {
-                    $this->saveInternalLinkTarget('auto-glossary-' . $data['slug'] . '-' . $index);
+                    $this->registerAnchorLink('auto-glossary-' . $data['slug'] . '-' . $index);
                 }
-            }
-            */
-
-            foreach ($data->getAnchorLinks() as $index => $anchorLink) {
-                $this->saveInternalLinkTarget('auto-glossary-' . $data->getSlug() . '-' . $index);
             }
         }
 
-        $this->generated = true;
+        static::$generated = true;
 
-        // concat rendered string to content instead of replacing it to preserve user content
+        // concat rendered strint to content instead of replacing it
         $content .= $rendered;
 
         $this->item['content'] = $content;
@@ -754,25 +667,23 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         $report[] = 'Glossary terms X-Ref';
         $report[] = '====================';
-        $report[] = 'Coverage: ' . $this->glossaryOptions['coverage'];
-        $report[] = 'Elements: ' . '"' . join('", "', $this->glossaryOptions['elements']) . '"';
+        $report[] = 'Coverage: ' . $this->options['coverage'];
+        $report[] = 'Elements: ' . '"' . join('", "', $this->options['elements']) . '"';
         $report[] = '';
 
-        $report[] = $this->utf8Sprintf('%-30s %-30s %-30s %5s %-30s', 'Term', 'Variant', 'Item', 'Count', 'Source');
-        $report[] = $this->utf8Sprintf("%'--30s %'--30s %'--30s %'-5s %'--30s", '', '', '', '', '');
-
-        //print_r($this->glossary);
+        $report[] = $this->utf8Sprintf('%-30s %-30s %-30s %5s', 'Term', 'Variant', 'Item', 'Count');
+        $report[] = $this->utf8Sprintf("%'--30s %'--30s %'--30s %'-5s", '', '', '', '');
 
         $auxTerm = '';
         $auxVariant = '';
-        foreach ($this->glossary as $term => $data) {
+        foreach (static::$xrefs as $term => $variants) {
             $auxTerm = $term;
-            foreach ($data->getXref() as $variant => $items) {
+            foreach ($variants as $variant => $items) {
                 $auxVariant = $variant;
                 foreach ($items as $item => $count) {
                     $report[] = $this
-                            ->utf8Sprintf('%-30s %-30s %-30s %5u %-30s', $auxTerm, $auxVariant, $item,
-                                    $count, $data->getSource());
+                            ->utf8Sprintf('%-30s %-30s %-30s %5u', $auxTerm, $auxVariant, $item,
+                                    $count);
                     $auxTerm = '';
                     $auxVariant = '';
                 }
@@ -793,9 +704,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report[] = $this->utf8Sprintf('%-30s %-30s', 'Term', 'Source');
         $report[] = $this->utf8Sprintf("%'--30s %'--30s", '', '');
 
-        foreach ($this->glossary as $term => $data) {
-            if (!count($data->getXref($term))) {
-                $report[] = $this->utf8Sprintf('%-30s %-30s', $term, $data->getSource());
+        foreach (static::$definitions as $term => $data) {
+            if (!isset(static::$xrefs[$term])) {
+                $report[] = $this->utf8Sprintf('%-30s %-30s', $term, $data['source']);
             }
         }
 

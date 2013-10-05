@@ -1,0 +1,21 @@
+Glossary terms X-Ref
+====================
+Coverage: item
+Elements: "chapter"
+
+Term                           Variant                        Item                           Count
+------------------------------ ------------------------------ ------------------------------ -----
+dapibus                        dapibus                        chapter1.md                        1
+                                                              chapter2.md                        1
+lectus                         lectus                         chapter1.md                        1
+sagittis                       sagittis                       chapter1.md                        1
+sapien [mattis|turpis]         sapien mattis                  chapter2.md                        1
+tellu[s]                       tellu                          chapter2.md                        1
+
+
+Glossary terms not used
+=======================
+
+Term                           Source                        
+------------------------------ ------------------------------
+not used term                  auto-glossary.yml             

@@ -1,0 +1,39 @@
+tweaks:
+
+    onPreParse:
+        tweak-div-one:                                 
+            tag: 'div'
+            class: 'one'   
+            insert:
+                open:  '<div class="box1" markdown="1">'
+                close: '</div>'
+
+        tweak-div-two:                                 
+            tag: 'div'
+            class: 'two'   
+            surround: 
+                open:  '<div class="box2">'
+                close: '</div>'
+                
+        tweak-span-three: 
+            tag: 'span'
+            replace: 
+                tag:  'div'                  
+                    
+    onPostParse:
+        tweak-pre:                                 
+            tag: 'pre'   
+            insert:
+                open:  '======\n'
+                close: '\n------'
+        
+        tweak-table:
+            tag: 'table'
+            surround: 
+                open:  '<div class="box1">'
+                close: '</div>'
+                
+        tweak-ul:
+            tag: 'ul'
+            replace: 
+                tag:  'ol'                
