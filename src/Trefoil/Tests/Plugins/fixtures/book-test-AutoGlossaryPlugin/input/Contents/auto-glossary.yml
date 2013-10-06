@@ -1,7 +1,7 @@
 glossary:
     options: 
         # 'all' (default): all ocurrences
-        # 'item': only first ocurrence into an item (i.e. chapter)
+        # 'item': (default) only first ocurrence into an item (i.e. chapter)
         # 'first': first ocurrence in the whole book
         coverage: 'item'
         # Elements to process (default: "chapter")

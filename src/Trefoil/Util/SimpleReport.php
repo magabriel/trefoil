@@ -8,8 +8,10 @@ class SimpleReport
 {
     protected $title;
     protected $subtitle;
+    protected $intro = array();
     protected $headers = array();
-    protected $headersWidth = array();
+    protected $columnsWidth = array();
+    protected $columnsAlignment = array();
     protected $lines = array();
     protected $summary = array();
 
@@ -26,16 +28,32 @@ class SimpleReport
     public function setHeaders(array $headers)
     {
         $this->headers = $headers;
+
+        foreach ($headers as $index => $header)
+        {
+            $this->columnsWidth[$index] = 10;
+            $this->columnsAlignment[$index] = '';
+        }
     }
 
-    public function setHeadersWidth(array $headersWidth)
+    public function setColumnsWidth(array $columnsWidth)
     {
-        $this->headersWidth = $headersWidth;
+        $this->columnsWidth = $columnsWidth;
+    }
+
+    public function setColumnsAlignment(array $columnsAlignment)
+    {
+        $this->columnsAlignment = $columnsAlignment;
     }
 
     public function addLine(array $fields = array())
     {
         $this->lines[] = $fields;
+    }
+
+    public function addIntroLine($text)
+    {
+        $this->intro[] = $text;
     }
 
     public function addSummaryLine($text)
@@ -48,6 +66,7 @@ class SimpleReport
         $text = array();
 
         $text = array_merge($text, $this->formatTitle());
+        $text = array_merge($text, $this->formatIntro());
         $text = array_merge($text, $this->formatHeaders());
         $text = array_merge($text, $this->formatLines());
         $text = array_merge($text, $this->formatSummary());
@@ -82,17 +101,42 @@ class SimpleReport
 
         $line = '';
         foreach ($this->headers as $index => $header) {
-            $line.= str_pad($header, $this->headersWidth[$index] ?: 10).' ';
+            /*
+            $padType = STR_PAD_RIGHT;
+            if (isset($this->columnsAlignment[$index])) {
+                if ('right' == $this->columnsAlignment[$index]) {
+                    $padType = STR_PAD_LEFT;
+                } elseif ('center' == $this->columnsAlignment[$index]) {
+                    $padType = STR_PAD_BOTH;
+                }
+            }
+
+            $line.= str_pad($header, $this->columnsWidth[$index] ?: 10, ' ', $padType).' ';
+            */
+            $line.= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
         }
         $text[] = $line;
 
         $line = '';
-        foreach ($this->headersWidth as $headerWidth) {
+        foreach ($this->columnsWidth as $headerWidth) {
             $line.= str_repeat('-', $headerWidth ?: 10) .' ';
         }
         $text[] = $line;
 
         return $text;
+    }
+
+    protected function pad($str, $width = 10, $alignment = 'left')
+    {
+        $padType = STR_PAD_RIGHT;
+
+        if ('right' == $alignment) {
+            $padType = STR_PAD_LEFT;
+        } elseif ('center' == $alignment) {
+            $padType = STR_PAD_BOTH;
+        }
+
+        return str_pad($str, $width, ' ', $padType);
     }
 
     protected function formatLines()
@@ -102,10 +146,27 @@ class SimpleReport
         foreach ($this->lines as $lineFields) {
             $lineText = '';
             foreach ($lineFields as $index => $field) {
-                $lineText.= str_pad($field, $this->headersWidth[$index] ?: 10). ' ';
+                $lineText.= $this->pad($field, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
             }
             $text[] = $lineText;
         }
+
+        return $text;
+    }
+
+    protected function formatIntro()
+    {
+        if (!$this->intro) {
+            return array();
+        }
+
+        $text = array();
+
+        foreach ($this->intro as $line) {
+            $text[] = ' '. $line;
+        }
+
+        $text[] = '';
 
         return $text;
     }

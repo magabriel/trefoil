@@ -187,7 +187,6 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected function createReport()
     {
-
         $report = new SimpleReport();
         $report->setTitle('LinkCheckPlugin');
 
@@ -200,7 +199,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                 'Item',
                 'Status',
                 'Link'));
-        $report->setHeadersWidth(array(
+        $report->setColumnsWidth(array(
                 8,
                 4,
                 20,

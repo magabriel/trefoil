@@ -1,0 +1,26 @@
+================================================================================
+AutoGlossaryPlugin
+Used terms
+================================================================================
+
+ Coverage: item
+ Elements: "chapter"
+
+Term                           Variant                        Item                           Count Source                         
+------------------------------ ------------------------------ ------------------------------ ----- ------------------------------ 
+dapibus                        dapibus                        chapter1.md                        1 auto-glossary.yml              
+                                                              chapter2.md                        1 auto-glossary.yml              
+lectus                         lectus                         chapter1.md                        1 chapter1-auto-glossary.yml     
+sagittis                       sagittis                       chapter1.md                        1 chapter1-auto-glossary.yml     
+sapien [mattis|turpis]         sapien mattis                  chapter2.md                        1 chapter2-auto-glossary.yml     
+tellu[s]                       tellu                          chapter2.md                        1 chapter2-auto-glossary.yml     
+
+
+================================================================================
+AutoGlossaryPlugin
+Not used terms
+================================================================================
+
+Term                           Source                         
+------------------------------ ------------------------------ 
+not used term                  auto-glossary.yml              

@@ -1,6 +1,10 @@
 <?php
 namespace Trefoil\Helpers;
 
+/**
+ * An item of the Glossary
+ *
+ */
 class GlossaryItem
 {
     protected $term;
@@ -11,6 +15,11 @@ class GlossaryItem
     protected $xref = array();
     protected $anchorLinks = array();
 
+    /**
+     * Add a cross-reference to the list
+     * @param string $variant The term variant
+     * @param string $where The location where it was found
+     */
     public function addXref($variant, $where)
     {
         if (!isset($this->xref[$variant])) {
@@ -84,6 +93,10 @@ class GlossaryItem
         return $this->anchorLinks;
     }
 
+    /**
+     * Add an anchor link to the list
+     * @param string $anchorLink
+     */
     public function addAnchorLink($anchorLink)
     {
         $this->anchorLinks[] = $anchorLink;

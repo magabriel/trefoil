@@ -1,6 +1,10 @@
 <?php
 namespace Trefoil\Helpers;
 
+/**
+ * A Glossary object.
+ *
+ */
 class Glossary implements \IteratorAggregate
 {
     /**
