@@ -27,6 +27,7 @@ class GlossaryLoader
 
     /**
      * Load the definition file.
+     *
      * @param string $hasOptions Whether the file also has an 'options' section
      * @return Glossary
      */
@@ -40,6 +41,7 @@ class GlossaryLoader
 
     /**
      * True if the definition file could not been loaded (i.e. not found)
+     *
      * @return boolean
      */
     public function isLoaded()
@@ -49,6 +51,7 @@ class GlossaryLoader
 
     /**
      * Get the option
+     *
      * @return array
      */
     public function getOptions()
@@ -58,6 +61,7 @@ class GlossaryLoader
 
     /**
      * Read the options file
+     *
      * @param string $hasOptions Whether the file also has an 'options' section
      */
     protected function readFromFile($hasOptions = false)
@@ -98,6 +102,7 @@ class GlossaryLoader
 
     /**
      * Parse the loaded definitions into a Glossary object
+     *
      * @return \Trefoil\Helpers\Glossary
      */
     protected function parse()
@@ -124,5 +129,4 @@ class GlossaryLoader
 
         return $glossary;
     }
-
 }

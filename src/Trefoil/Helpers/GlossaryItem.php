@@ -17,6 +17,7 @@ class GlossaryItem
 
     /**
      * Add a cross-reference to the list
+     *
      * @param string $variant The term variant
      * @param string $where The location where it was found
      */
@@ -95,6 +96,7 @@ class GlossaryItem
 
     /**
      * Add an anchor link to the list
+     *
      * @param string $anchorLink
      */
     public function addAnchorLink($anchorLink)

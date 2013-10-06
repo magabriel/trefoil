@@ -1,6 +1,8 @@
 <?php
 namespace Trefoil\Plugins;
 
+use Trefoil\Helpers\GlossaryReplacer;
+
 use Trefoil\Helpers\TextPreserver;
 
 use Trefoil\Util\SimpleReport;
@@ -195,7 +197,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Performs either one of two processes:
-     * <li>For a content item to be processed, replace glossary terms in the text.
+     * <li>For a content item to be processed, replace glossary terms into the text.
      * <li>For 'auto-glossary' item, gernerate the glossary itself.
      */
     public function processItem()
@@ -217,275 +219,25 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         }
     }
 
-    /**
-     * Replace terms in item's content
-     */
     protected function replaceTerms()
     {
-        if (!$this->glossary->count()) {
-            // no glossary terms
-            return;
-        }
+        // instantiate the GlossaryReplacer object
+        $replacer = new GlossaryReplacer(
+                $this->glossary,
+                $this->item['content'],
+                $this->item['config']['content'],
+                $this->glossaryOptions);
 
-        $content = $this->item['content'];
+        // do the replacements (also modifies the glossary object)
+        $this->item['content'] = $replacer->replace();
 
-        // create the TextPeserver instance for this item processing
-        $this->textPreserver = new TextPreserver();
-        $this->textPreserver->setText($content);
-
-        // save existing values of tags contents we don't want to get modified into
-        $this->textPreserver->preserveHtmlTags(array('a'));
-
-        // save existing values of attributes we don't want to get modified into
-        $this->textPreserver->preserveHtmlTagAttributes(array('title', 'alt', 'src', 'href'));
-
-        $content = $this->textPreserver->getText();
-
-        // process each variant of each term
-        foreach ($this->glossary as $term => $data) {
-
-            $this->termReplaced = false;
-
-            foreach ($data->getVariants() as $variant) {
-                $contentMod = $this->replaceTermVariant($content, $data, $variant);
-
-                if ($this->termReplaced) {
-                    // at least a replacement ocurred
-                    if ('item' == $this->glossaryOptions['coverage']) {
-                        // already replaced once in this item, so ignore subsequent ocurrences and variants
-                        $content = $contentMod;
-                        break;
-                    }
-
-                }
-                $content = $contentMod;
-            }
-
-            // register all anchor link for this item
+        // register all anchor links for this item
+        // the GlossaryReplacer has added all the new anchor links to the GlossaryItems
+        foreach ($this->glossary as $term => $data /* @var $data GlossaryItem */ ) {
             foreach ($data->getAnchorLinks() as $anchorLink) {
                 $this->saveInternalLinkTarget($anchorLink);
             }
         }
-
-        $this->textPreserver->setText($content);
-        $content = $this->textPreserver->restore();
-
-        $this->item['content'] = $content;
-    }
-
-    /**
-     * Replace a term variant into the item text
-     *
-     * @param string $item The text to replace into
-     * @param string $term The term to replace
-     * @param string $variant Term variant to replace by a glossary link
-     * @param string $slug The slug of the term
-     * @param array $anchorLinks List of anchor links to be registered
-     * @return string|mixed
-     */
-    protected function replaceTermVariant($item, $data, $variant)
-    {
-        // construct regexp to replace only into certain tags
-        $tags = array('p', 'li', 'dd');
-
-        $patterns = array();
-        foreach ($tags as $tag) {
-            $patterns[] = sprintf('/<(?<tag>%s)>(?<content>.*)<\/%s>/Ums', $tag, $tag);
-        }
-
-        // replace all occurrences of $variant into text $item with a glossary link
-        $item = preg_replace_callback($patterns,
-                function ($matches) use ($data, $variant, $item)
-                {
-                    // extract what to replace
-                    $tag = $matches['tag'];
-                    $tagContent = $matches['content'];
-
-                    // do the replacement
-                    $newContent = $this->replaceTermVariantIntoString($tagContent, $data, $variant);
-
-                    // reconstruct the original tag with the modified text
-                    return sprintf('<%s>%s</%s>', $tag, $newContent, $tag);
-                }, $item);
-
-        return $item;
-    }
-
-    /**
-     * @param string $text The text to replace into
-     * @param string $term The term to replace
-     * @param string $variant Term variant to replace by a glossary link
-     * @param string $slug The slug of the term
-     * @param int $count Number of replacements already made into this item
-     * @param array $anchorLinks List of anchor links to be registered
-     */
-    protected function replaceTermVariantIntoString($text, $data, $variant)
-    {
-
-        // construct the regexp to replace inside the tag content
-        $regExp = '/';
-        $regExp .= '(^|\W)'; // $1 = previous delimiter or start of string
-        $regExp .= '(' . $variant . ')'; // $2 = the term to replace
-        $regExp .= '(\W|$)'; // $3 = following delimiter or end of string
-        $regExp .= '/ui'; // unicode, case-insensitive
-
-        // replace all ocurrences of $variant into $tagContent with a glossary link
-        $par = preg_replace_callback($regExp,
-                function ($matches) use ($data, $variant)
-                {
-                    // look if already replaced once in this item, so just leave it unchanged
-                    if ('item' == $this->glossaryOptions['coverage'] && $this->termReplaced ) {
-                        return $matches[0];
-                    }
-
-                    /* if coverage type is "first" and term is already defined,
-                     * don't replace the term
-                     */
-                    if ('first' == $this->glossaryOptions['coverage']
-                            && in_array($data->getTerm(), $this->alreadyDefinedTerms)) {
-                        // already replaced elsewhere, just leave it unchanged
-                        return $matches[0];
-                    }
-
-                    // if not already defined, add it to array
-                    if (!in_array($data->getTerm(), $this->alreadyDefinedTerms)) {
-                        $this->alreadyDefinedTerms[] = $data->getTerm();
-                    }
-
-                    // create the anchor link from the slug
-                    // and get the number given to the anchor link just created
-                    list($anchorLink, $num) = $this->saveProcessedDefinition(
-                            $data,
-                            sprintf('auto-glossary-term-%s',
-                                    $data->getSlug()
-                                    )
-                            );
-
-                    $this->termReplaced = true;
-
-                    // save the placeholder for this slug to be replaced later
-                    $placeHolder = $this->textPreserver->createPlacehoder($data->getSlug(). '-' . $num);
-
-                    // save the placeholder for this term (to avoid further matches)
-                    $placeHolder2 = $this->textPreserver->createPlacehoder($matches[2]);
-
-                    // create replacement
-                    $repl = sprintf(
-                            '<span class="auto-glossary-term">'
-                                    . '<a href="#auto-glossary-%s" id="auto-glossary-term-%s">%s</a>'
-                                    . '</span>', $placeHolder, $placeHolder, $placeHolder2);
-
-                    // save xref
-                    $this->saveXref($data->getTerm(), $variant);
-
-                    // return reconstructed match
-                    return $matches[1] . $repl . $matches[3];
-                }, $text);
-
-        return $par;
-    }
-
-    /**
-     * Saves the xref for the replaced term for future reference
-     *
-     * @param string $term
-     * @param string $variant
-     * @param string $count
-     */
-    protected function saveXref($term, $variant)
-    {
-        $this->glossary->get($term)->addXref($variant, $this->item['config']['content']);
-    }
-
-    /**
-     * Save an anchor link to be registered later
-     *
-     * @param string $term
-     * @param string $anchorLink
-     * @return string The text of the anchor link saved
-     */
-    protected function saveProcessedDefinition($data, $anchorLink)
-    {
-        $count = count($data->getAnchorLinks());
-
-        $newAnchorLink = $anchorLink . '-' . $count;
-        $data->addAnchorLink($newAnchorLink);
-
-        return array($newAnchorLink, $count);
-    }
-
-    /**
-     * Replace the contents of the atributes in item by a placeholder.
-     *
-     * @param array $attribute The attributes to save
-     * @param string &$item The item text to modify
-     * @return array $list of placeholders and original values
-     */
-    protected function saveAttributes(array $attribute, &$item)
-    {
-        $list = array();
-
-        // replace all the contents of the attribute with a placeholder
-        $regex = sprintf('/(%s)="(.*)"/Ums', implode('|', $attribute));
-
-        $item = preg_replace_callback($regex,
-                function ($matches) use (&$list, $attribute)
-                {
-                    $attr = $matches[1];
-                    $value = $matches[2];
-
-                    $placeHolder = '@' . md5($value . count($list)) . '@';
-                    $list[$placeHolder] = $value;
-                    return sprintf('%s="%s"', $attr, $placeHolder);
-                }, $item);
-
-        return $list;
-    }
-
-    /**
-     * Replace the contents of the tags in item by a placeholder.
-     *
-     * @param array $tag The attributes to save
-     * @param string &$item The item text to modify
-     * @return array $list of placeholders and original values
-     */
-    protected function saveTagContents(array $tag, &$item)
-    {
-        $list = array();
-
-        // replace all the contents of the tags with a placeholder
-        $regex = sprintf('/<(?<prev>(%s)[> ].*)>(?<content>.*)</Ums', implode('|', $tag));
-
-        $item = preg_replace_callback($regex,
-                function ($matches) use (&$list, $tag)
-                {
-                    $prev = $matches['prev'];
-                    $content = $matches['content'];
-
-                    $placeHolder = '@' . md5($content . count($list)) . '@';
-                    $list[$placeHolder] = $content;
-                    return sprintf('<%s>%s<', $prev, $placeHolder);
-
-                }, $item);
-
-        return $list;
-    }
-
-    /**
-     * Restore all attributes from the list of placeholders into item
-     *
-     * @param array $list of placeholders and its values
-     * @param string $item to replace into
-     * @return string $item with replacements
-     */
-    protected function restoreFromList(array $list, $item)
-    {
-        foreach ($list as $key => $value) {
-            $key = str_replace('/', '\/', $key);
-            $item = preg_replace('/' . $key . '/Ums', $value, $item);
-        }
-
-        return $item;
     }
 
     /**

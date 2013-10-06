@@ -64,6 +64,15 @@ class Glossary implements \IteratorAggregate
         return new \ArrayIterator($this->items);
     }
 
+    /**
+     * Explode all term variants so each one could be processed separately.
+     * Variants can be specified of the form 'root[suffix]', where suffix can be '[one]' or '[one|two|..]'
+     * Examples:
+     *   'cat[s]' => 'cat' and 'cats'
+     *   'star [wars|trek]' => 'star wars' and 'star trek'
+     *
+     * @param GlossaryItem $item
+     */
     protected function explodeVariants(GlossaryItem $item)
     {
         $regExp = '/';
