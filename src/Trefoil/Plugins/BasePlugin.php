@@ -91,12 +91,12 @@ abstract class BasePlugin
      * Also assign a CSS class to invalid links for easy spotting in the book, mainly for debugging
      * plugins that create internal links for advanced navigation (i.e. AutoGlossary).
      *
-     * @param string $html to process
+     * @param string $html to process (null => process item['content']
      * @return string
      */
-    protected function fixInternalLinks()
+    protected function fixInternalLinks($content = null)
     {
-        $html = $this->item['content'];
+        $html = $content ?: $this->item['content'];
 
         $internalLinksMapper = $this->internalLinksMapper;
 
@@ -110,10 +110,17 @@ abstract class BasePlugin
                     if (isset($internalLinksMapper[$matches['uri']])) {
                         $uri = $internalLinksMapper[$matches['uri']];
                         $existing = true;
+                    } else {
+                        // look if it is an already resolved internal url ('./chapter1.html#my-target')
+                        $parts = split('#', $matches['uri']);
+                        if (isset($parts[1])) {
+                            // if already resolved it should be valid
+                            $existing = true;
+                        }
                     }
 
                     return sprintf(
-                            '<a %sclass="internal%s" href="./%s"%s</a>',
+                            '<a %sclass="internal%s" href="%s"%s</a>',
                             $matches['prev'],
                             $existing ? '' : ' invalid',
                             $uri,
@@ -123,7 +130,12 @@ abstract class BasePlugin
                 $html
         );
 
+        if ($content) {
+            return $html;
+        }
+
         $this->item['content'] = $html;
+        return $html;
     }
 
 }

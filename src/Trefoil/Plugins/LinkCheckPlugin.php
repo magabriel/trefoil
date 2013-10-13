@@ -5,7 +5,7 @@ use Trefoil\Util\Toolkit;
 use Trefoil\Util\SimpleReport;
 use Trefoil\Helpers\LinkChecker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 
@@ -30,18 +30,18 @@ use Easybook\Events\ParseEvent;
  */
 class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected static $links = array(
+    protected $links = array(
             'internal' => array(),
             'external' => array()
             );
 
-    protected static $linkTargets = array();
+    protected $linkTargets = array();
 
     public static function getSubscribedEvents()
     {
         return array(
-                Events::POST_PARSE => array('onItemPostParse', -1000), // the latest possible
-                Events::POST_PUBLISH => array('onPostPublish', -1000)  // the latest possible
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1100), // the latest possible
+                EasybookEvents::POST_PUBLISH => array('onPostPublish', -1100)  // the latest possible
         );
     }
 
@@ -51,11 +51,11 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         // retrieve all the links for this item
         $links = $this->findLinks($event->getContent(),  $event->getItem()['config']['content']);
-        static::$links = array_merge_recursive(static::$links, $links);
+        $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
         $linkTargets = $this->findLinkTargets($event->getContent());
-        static::$linkTargets = array_merge_recursive(static::$linkTargets, $linkTargets);
+        $this->linkTargets = array_merge_recursive($this->linkTargets, $linkTargets);
     }
 
     public function onPostPublish(BaseEvent $event)
@@ -127,18 +127,18 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function checkInternalLinks()
     {
-        foreach (static::$links['internal'] as $xref => $links) {
+        foreach ($this->links['internal'] as $xref => $links) {
             foreach ($links as $index => $link) {
-                if (!in_array(substr($link['uri'], 1), static::$linkTargets)) {
+                if (!in_array(substr($link['uri'], 1), $this->linkTargets)) {
                     $this->writeLn(
                             sprintf(
                                     '<error>"%s": Internal link target "%s" => "%s" not found.</error>',
                                     $xref,
                                     $link['text'],
                                     $link['uri']));
-                    static::$links['internal'][$xref][$index]['status'] = 'Not found';
+                    $this->links['internal'][$xref][$index]['status'] = 'Not found';
                 } else {
-                    static::$links['internal'][$xref][$index]['status'] = 'OK';
+                    $this->links['internal'][$xref][$index]['status'] = 'OK';
                 }
             }
         }
@@ -157,7 +157,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         $checker = new LinkChecker();
 
-        foreach (static::$links['external'] as $xref => $links) {
+        foreach ($this->links['external'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 try {
                     $this->writeLn(sprintf(' > Checking link "%s" => ', $link['text']));
@@ -167,7 +167,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
                     $this->writeLn('<info>OK</info>', false);
 
-                    static::$links['external'][$xref][$index]['status'] = 'OK';
+                    $this->links['external'][$xref][$index]['status'] = 'OK';
 
                 } catch (\Exception $e) {
                     $this->writeLn('', false);
@@ -179,7 +179,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                                     $link['uri'],
                                     $e->getMessage()));
 
-                    static::$links['external'][$xref][$index]['status'] = $e->getMessage();
+                    $this->links['external'][$xref][$index]['status'] = $e->getMessage();
                 }
             }
         }
@@ -210,7 +210,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $countError = 0;
         $countNotChecked = 0;
 
-        foreach (static::$links as $type => $linksByType) {
+        foreach ($this->links as $type => $linksByType) {
 
             $report->addLine(array(ucfirst($type)));
             $report->addLine();
@@ -242,9 +242,9 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
             }
         }
 
-        $report->addSummaryLine(Toolkit::sprintfUTF8('Total OK.........: %s', $countOk));
-        $report->addSummaryLine(Toolkit::sprintfUTF8('Total Error......: %s', $countError));
-        $report->addSummaryLine(Toolkit::sprintfUTF8('Total Not checked: %s', $countNotChecked));
+        $report->addSummaryLine(sprintf('Total OK.........: %s', $countOk));
+        $report->addSummaryLine(sprintf('Total Error......: %s', $countError));
+        $report->addSummaryLine(sprintf('Total Not checked: %s', $countNotChecked));
 
         $text = $report->getText();
 

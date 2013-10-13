@@ -4,7 +4,7 @@ namespace Trefoil\Plugins;
 use Trefoil\Helpers\TableExtra;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 
@@ -20,7 +20,7 @@ class TableExtraPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                Events::POST_DECORATE => 'onItemPostDecorate'
+                EasybookEvents::POST_DECORATE => 'onItemPostDecorate'
         );
     }
 

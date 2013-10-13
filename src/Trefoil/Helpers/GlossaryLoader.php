@@ -6,6 +6,19 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Loader class for Glossary object from definition file.
+ *
+ * Expected format (yml):
+ *
+ *     glossary:
+ *         options: # optional section
+ *             <option..>: <value>
+ *         terms:
+ *             term1: description of term 1
+ *             ...
+ *             termn: description of term n
+ *
+ * @see GlossaryReplacer for allowed options
+ * @see Glossary for term syntax
  */
 class GlossaryLoader
 {
@@ -109,14 +122,7 @@ class GlossaryLoader
     {
         $glossary = new Glossary();
 
-        foreach ($this->terms as $term => $definition) {
-
-            $description = '';
-            if (is_array($definition)) {
-                $description = isset($definition['description']) ? $definition['description'] : '';
-            } else {
-                $description = $definition;
-            }
+        foreach ($this->terms as $term => $description) {
 
             $gi = new GlossaryItem();
             $gi->setTerm($term);

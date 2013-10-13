@@ -1,0 +1,88 @@
+<div class="title">
+{% spaceless %}
+
+    <h2>{{ book.title }}</h2>
+    {% if book.series is defined %}
+        <h3>Series {{ book.series }}</h3>
+    {% endif %}
+
+    {% if book.author %}
+        <h4>Author:</h4>
+        <p>&nbsp;&nbsp;{{ book.author }}</p>
+    {% endif %}
+    {% if book.authors is defined %}
+        <h4>Authors:</h4>
+        <p>
+        {% for author in book.authors %}
+            &nbsp;&nbsp;{{ author }}<br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if book.reviewer %}
+        <h4>Technical review:</h4>
+        <p>&nbsp;&nbsp;{{ book.reviewer }}</p>
+    {% endif %}
+    {% if book.reviewers is defined %}
+        <h4>Technical review:</h4>
+        <p>
+        {% for reviewer in book.reviewers %}
+            &nbsp;&nbsp;{{ reviewer }}<br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if book.editor %}
+        <h4>Editor:</h4>
+        <p>&nbsp;&nbsp;{{ book.editor }}</p>
+    {% endif %}
+    {% if book.editors is defined %}
+        <h4>Editor:</h4>
+        <p>
+        {% for editor in book.editors %}
+            &nbsp;&nbsp;{{ editor }}<br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+    {% if book.designer %}
+        <h4>Design:</h4>
+        <p>&nbsp;&nbsp;{{ book.designer }}</p>
+    {% endif %}
+    {% if book.designers is defined %}
+        <h4>Design:</h4>
+        <p>
+        {% for designer in book.designers %}
+            &nbsp;&nbsp;{{ designer }}<br/>
+        {% endfor %}
+        </p>
+    {% endif %}
+
+{% endspaceless %}
+</div>
+
+<br />
+
+![*](logo_publisher.png)
+
+<br />
+
+{% if edition.isbn %}
+ISBN {{ edition.isbn }}
+
+{% endif %}
+{% if book.version %}
+Version {{ book.edition }}.{{ book.version }} - {{ book.publication_date|default('now')|date('YmdHi') }}
+{% elseif book.edition %}
+Edition {{ book.edition }} - {{ book.publication_date|default('now')|date('YmdHi') }}
+{% else %}
+{{ book.publication_date|default('now')|date('YmdHi') }}
+{% endif %}
+
+&copy; {{ "now"|date("Y") }} {{ book.publisher ? '-'~book.publisher : '' }}
+
+*All rights reserved.*
+
+
+
+

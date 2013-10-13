@@ -1,6 +1,9 @@
 <?php
 namespace Trefoil\Helpers;
 
+/**
+ * Check external links
+ */
 class LinkChecker
 {
     public function check($url)

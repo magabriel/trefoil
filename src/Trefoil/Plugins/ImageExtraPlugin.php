@@ -3,7 +3,7 @@ namespace Trefoil\Plugins;
 
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 
@@ -16,16 +16,14 @@ use Easybook\Events\ParseEvent;
  *
  * ![this is an image](image.jpg?class="my-image-class"&style="border:_1px_solid_blue;_padding:_10px;")
  *
- * In the style specification all spaces must be replaced by "_" in order to work (this is because of
- * the way Markdown parses the image specification)
  */
 class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
         return array(
-                Events::PRE_PARSE => 'onItemPreParse',
-                Events::POST_PARSE => 'onItemPostParse'
+                EasybookEvents::PRE_PARSE => 'onItemPreParse',
+                EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
 
@@ -78,6 +76,9 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                         parse_str($parts[1], $args);
                         $args = str_replace('"', '', $args);
 
+                        /* all spaces must be replaced by "_" for this to work
+                         * (this is because of the way Markdown parses the image specification)
+                         */
                         if (isset($args['style'])) {
                             $args['style'] = str_replace(' ', '_', $args['style']);
                         }
@@ -146,6 +147,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         }
 
         if (isset($args['style'])) {
+            // replace back all '_' to spaces
             $args['style'] = str_replace('_', ' ', $args['style']);
             $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
             unset($args['style']);

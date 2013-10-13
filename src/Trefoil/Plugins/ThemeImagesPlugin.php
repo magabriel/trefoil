@@ -12,12 +12,28 @@ use Trefoil\Util\Toolkit;
 /**
  * Plugin to use images included into a theme.
  *
+ * Images can be in two places:
+ *
+ * 1.- The theme directory set as input argument when publishing the book (if set):
+ *
  * <theme_dir>/
  *     my_theme/
  *         <format>/
  *             Resources/
  *                 images/
  *                     ...all image files
+ *
+ * 2.- The theme directory inside trefoil:
+ *
+ * <trefoil_dir>/
+ *     app/
+ *         Resources/
+ *             Themes/
+ *                 my_theme/
+ *                     <format>/
+ *                         Resources/
+ *                             images/
+ *                                 ...all image files
  *
  * The plugin works by copying the theme images into a temporary directory
  * inside the book <i>Contents/images</i> directory called <i>theme_tmp</i>
@@ -48,13 +64,13 @@ class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
 
     public function copyThemeImages()
     {
-        //$format = Toolkit::getCurrentFormat($this->app);
+        // images into the "Common" format of theme into the default trefoil themes
+        $defaultCommonImagesDir = $this->app['trefoil.app.dir.resources'].'/Themes'.'/'.$this->theme.'/Common/Resources/images';
 
-        // get the source dir (inside theme)
-        $themeDir = Toolkit::getCurrentThemeDir($this->app);
-        $sourceDir = sprintf('%s/%s/Resources/images', $themeDir, $this->format);
+        // images into the format of the theme
+        $localImagesDir = Toolkit::getCurrentResourcesDir($this->app, $this->format).'/images';
 
-        if (!file_exists($sourceDir)) {
+        if (!file_exists($defaultCommonImagesDir) && !file_exists($localImagesDir)) {
             return;
         }
 
@@ -64,8 +80,13 @@ class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
             $this->app->get('filesystem')->mkdir($destDir);
         }
 
-        // and copy contents
-        $this->app->get('filesystem')->mirror($sourceDir, $destDir, null, true);
+        // first copy the default images, then the local images
+        if (file_exists($defaultCommonImagesDir) ) {
+            $this->app->get('filesystem')->mirror($defaultCommonImagesDir, $destDir, null, true);
+        }
+        if (file_exists($localImagesDir)) {
+            $this->app->get('filesystem')->mirror($localImagesDir, $destDir, null, true);
+        }
     }
 
     protected function copyCoverImage()

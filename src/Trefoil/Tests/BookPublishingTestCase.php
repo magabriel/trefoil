@@ -1,12 +1,9 @@
 <?php
-namespace Trefoil\Tests\Plugins;
+namespace Trefoil\Tests;
 
 use Symfony\Component\Console\Output\OutputInterface;
-
 use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
-
 use Symfony\Component\Console\Output\ConsoleOutput;
-
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
 use Easybook\Tests\TestCase;
@@ -18,11 +15,18 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Finder\SplFileInfo;
 
-class PluginTest extends TestCase
+abstract class BookPublishingTestCase extends TestCase
 {
     protected $app;
     protected $filesystem;
     protected $tmpDir;
+    protected $fixturesDir;
+
+    public function __construct()
+    {
+        // default, to be overriden by instantiator
+        $this->fixturesDir = __DIR__.'/fixtures/';
+    }
 
     public function setUp()
     {
@@ -33,7 +37,8 @@ class PluginTest extends TestCase
         // setup temp dir for generated files
         if (getopt('', array('debug'))) {
             // reuse the temp dir
-            $this->tmpDir = $this->app['app.dir.cache'].'/'.'phpunit_debug';
+            $className = basename(str_replace('\\', '/', get_called_class()));
+            $this->tmpDir = $this->app['app.dir.cache'].'/'.'phpunit_debug/'.$className;
             if ($this->filesystem->exists($this->tmpDir)) {
                 $this->filesystem->remove($this->tmpDir);
             }
@@ -67,8 +72,8 @@ class PluginTest extends TestCase
     {
         $console = new ConsoleApplication($this->app);
 
-        $booksDir = __DIR__.'/fixtures/';
-        $themesDir = __DIR__.'/fixtures/Themes';
+        $booksDir = $this->fixturesDir;
+        $themesDir = $this->fixturesDir.'Themes';
 
         // find the test books
         $books = $this->app->get('finder')
@@ -86,9 +91,11 @@ class PluginTest extends TestCase
                 echo sprintf("\n".'- Processing test "%s"'."\n", basename($book));
             }
 
+            $thisBookDir = $this->fixturesDir.$slug;
+
             // mirror test book contents in temp dir
             $this->filesystem->mirror(
-                    __DIR__.'/fixtures/'.$slug.'/input',
+                    $thisBookDir.'/input',
                     $this->tmpDir.'/'.$slug
             );
 
@@ -116,7 +123,7 @@ class PluginTest extends TestCase
                 $console->find('publish')->run($input, $output);
 
                 // look for config.yml modification
-                $expectedBookConfigFile = __DIR__.'/fixtures/'.$slug.'/expected/config.yml';
+                $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';
                 if (file_exists($expectedBookConfigFile)) {
                     $expectedBookConfig = Yaml::parse($expectedBookConfigFile);
                     $this->assertFileEquals($expectedBookConfigFile,
@@ -139,7 +146,7 @@ class PluginTest extends TestCase
                         $expected = $workDir.'/expected';
 
                         Toolkit::unzip($file->getRealPath(), $generated);
-                        Toolkit::unzip(__DIR__.'/fixtures/'.$slug.'/expected/'.
+                        Toolkit::unzip($thisBookDir.'/expected/'.
                                 $editionName.'/'.$file->getRelativePathname(), $expected);
 
                         // assert that generated files are exactly the same as expected
@@ -162,7 +169,7 @@ class PluginTest extends TestCase
 
                     } else {
                         $this->assertFileEquals(
-                                __DIR__.'/fixtures/'.$slug.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
+                                $thisBookDir.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
                                 $file->getPathname(),
                                 sprintf("'%s' file not properly generated", $file->getPathname())
                         );
@@ -171,7 +178,7 @@ class PluginTest extends TestCase
 
                 // assert that all required files are generated
                 $this->checkForMissingFiles(
-                        __DIR__.'/fixtures/'.$slug.'/expected/'.$editionName,
+                        $thisBookDir.'/expected/'.$editionName,
                         $this->tmpDir.'/'.$slug.'/Output/'.$editionName);
 
                 // assert than book publication took less than 5 seconds

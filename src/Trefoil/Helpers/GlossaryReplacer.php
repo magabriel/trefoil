@@ -14,6 +14,8 @@ namespace Trefoil\Helpers;
  *              instance received must be the that was passed to each of the GlossaryReplacer objects
  *              that process all the text pieces).
  *
+ * 'elements' ['chapter'] # items where global terms should be replaced.
+ *
  * Other options are ignored.
  */
 class GlossaryReplacer
@@ -48,6 +50,12 @@ class GlossaryReplacer
      */
     protected $textPreserver;
 
+    /**
+     * @param Glossary $glossary      The glossary object
+     * @param string $text            The text to replace into
+     * @param string $textId          The id of the text, for cross-reference
+     * @param array $glossaryOptions  The options to apply
+     */
     public function __construct(Glossary $glossary, $text, $textId, $glossaryOptions = array())
     {
         $this->glossary = $glossary;

@@ -3,7 +3,7 @@ namespace Trefoil\Plugins;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
@@ -25,7 +25,7 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                Events::POST_PARSE => array('onItemPostParse', -1000) // the latest possible
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1000) // the latest possible
                 );
     }
 

@@ -2,10 +2,9 @@
 namespace Trefoil\Plugins;
 
 use Easybook\DependencyInjection\Application;
-
 use Easybook\Events\BaseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Trefoil\Events\TrefoilEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\DomCrawler\Crawler;
@@ -38,8 +37,8 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                Events::PRE_PARSE => 'onItemPreParse',
-                Events::POST_PARSE => array('onItemPostParse', -1010) // after ParserPlugin
+                EasybookEvents::PRE_PARSE => 'onItemPreParse',
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010) // after ParserPlugin
         );
     }
 
@@ -173,6 +172,16 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $this->addTwigGlobals($twig);
 
         $rendered = $twig->render($template, array());
+
+        return $rendered;
+        // find all hrefs in the internal links in the just rendered itemtoc
+        preg_match_all('/<a .*href="#(?<uri>.*)".*>.*<\/a>/Ums', $rendered, $matches);
+        foreach ($matches['uri'] as $linkTarget) {
+            // register them as link targets
+            $this->saveInternalLinkTarget($linkTarget);
+        }
+        // and fix all the internal links in the rendered itemtoc
+        $rendered = $this->fixInternalLinks($rendered);
 
         return $rendered;
     }

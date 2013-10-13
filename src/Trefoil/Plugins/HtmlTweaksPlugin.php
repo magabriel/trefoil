@@ -3,7 +3,7 @@ namespace Trefoil\Plugins;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
@@ -61,8 +61,8 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
                 TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
-                Events::PRE_PARSE => array('onItemPreParse', -1000),
-                Events::POST_PARSE => array('onItemPostParse', -1000)
+                EasybookEvents::PRE_PARSE => array('onItemPreParse', -1000),
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1000)
                 );
     }
 

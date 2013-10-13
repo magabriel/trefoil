@@ -125,12 +125,14 @@ class RegisterResources implements EventSubscriberInterface
 
         $themesDir = toolkit::getCurrentThemeDir($this->app);
         if (!file_exists($themesDir)) {
+
             $this->output->writeLn(
-                    sprintf(" > <error>Theme %s not found in themes directory, using predefined or default theme</error>", $theme));
+                    sprintf(" > <error>Theme %s not found in themes directory, using default easybook theme</error>", $theme));
+
             return;
         }
 
-        $this->output->writeLn(sprintf(" > Using theme  %s", $theme));
+        $this->output->writeLn(sprintf(" > Using theme  %s from %s", $theme, $themesDir));
 
         // Theme common (common styles per edition theme)
         // <themes-dir>/Common/Templates/<template-name>.twig

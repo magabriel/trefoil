@@ -2,7 +2,7 @@
 namespace Trefoil\Plugins;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 
 use Symfony\Component\DomCrawler\Crawler;
@@ -22,8 +22,8 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                Events::PRE_PARSE => 'onItemPreParse',
-                Events::POST_PARSE => 'onItemPostParse'
+                EasybookEvents::PRE_PARSE => 'onItemPreParse',
+                EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
 

@@ -1,27 +1,38 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Helpers\GlossaryReplacer;
-
-use Trefoil\Helpers\TextPreserver;
-
-use Trefoil\Util\SimpleReport;
-
-use Trefoil\Helpers\GlossaryLoader;
-
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
-use Easybook\Util\Slugger;
-use Easybook\Util\Toolkit;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Helpers\Glossary;
 use Trefoil\Helpers\GlossaryItem;
+use Trefoil\Helpers\GlossaryReplacer;
+use Trefoil\Helpers\GlossaryLoader;
+use Trefoil\Util\SimpleReport;
 
 /**
  * This plugin takes care of the automatic interactive glossary feature.
+ *
+ * Configuration:
+ *
+ * - Global (per book):
+ *
+ *     <book_dir>/
+ *         Contents/
+ *             auto-glossary.yml
+ *
+ * - Per book item:
+ *
+ *     <book_dir>/
+ *         Contents/
+ *             <item_name>-auto-glossary.yml
+ *
+ * @see GlossaryLoader for format details
+ * @see GlossaryReplacer for contents detail
+ *
  */
 class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -75,12 +86,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     protected $generated = false;
 
     /**
-     *
-     * @var TextPreserver
-     */
-    protected $textPreserver;
-
-    /**
      * Whether a term has been replaced at least once into the current item
      * @var bool
      */
@@ -94,9 +99,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
                 TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
-                Events::POST_PARSE => array('onItemPostParse', -100),
-                Events::PRE_DECORATE => array('onItemPreDecorate', -500),
-                Events::POST_PUBLISH => 'onPostPublish');
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -100),
+                EasybookEvents::PRE_DECORATE => array('onItemPreDecorate', -500),
+                EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
     public function onPrePublishAndReady(BaseEvent $event)
@@ -219,6 +224,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         }
     }
 
+    /**
+     * Replace all glossary terms into the current item.
+     */
     protected function replaceTerms()
     {
         // instantiate the GlossaryReplacer object

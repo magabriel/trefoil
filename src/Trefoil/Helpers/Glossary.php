@@ -4,6 +4,18 @@ namespace Trefoil\Helpers;
 /**
  * A Glossary object.
  *
+ * A glossary item (a term and its description) can be a literal or a variant definition:
+ *
+ *     term => definition
+ *     or
+ *     term => variant
+ *
+ * Variants can be specified of the form 'root[suffix]', where suffix can be '[one]' or '[one|two|..]'
+ * Examples:
+ *   'cat[s]' => 'cat' and 'cats'
+ *   'star [wars|trek]' => 'star wars' and 'star trek'
+ *
+ *
  */
 class Glossary implements \IteratorAggregate
 {

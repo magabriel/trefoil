@@ -1,0 +1,45 @@
+book:
+    title:            'Test book - Lorem Ipsum'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-02-2013'
+
+    generator:        { name: trefoil, version: DEV }
+   
+    contents:
+        - { element: edition }
+        
+        - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2.md }
+        - { element: chapter, number: 3, content: chapter3.md }
+        - { element: chapter, number: 4, content: chapter4.md }
+        - { element: chapter, number: 5, content: chapter5.md }
+        - { element: chapter, number: 6, content: chapter6.md }
+                
+        - { element: auto-glossary }
+
+    editions:
+        ebook:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            use_html_toc:   true
+            labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
+            theme:          TrefoilOne
+            toc:
+                deep:       1
+                elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
+            isbn:           1234567890X
+            plugins:       
+                - LinkCheck
+                - ThemeImages
+                - AutoGlossary
+                - TableExtra
+                - ImageExtra
+                - Typography
+                - TwigExtension
+            
+            itemtoc:
+                deep:       3
+    

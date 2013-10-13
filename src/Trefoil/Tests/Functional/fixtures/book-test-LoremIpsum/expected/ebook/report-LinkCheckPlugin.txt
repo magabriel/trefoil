@@ -1,0 +1,101 @@
+================================================================================
+LinkCheckPlugin
+check_external_links: false
+================================================================================
+
+Type     Item Status               Link                                                                                                 
+-------- ---- -------------------- ---------------------------------------------------------------------------------------------------- 
+Internal 
+
+              
+
+              OK                   [Back]                                                                                               
+                                   <#auto-glossary-term-dapibus-0>                                                                      
+              OK                   [Back]                                                                                               
+                                   <#auto-glossary-term-dapibus-1>                                                                      
+              OK                   [Back]                                                                                               
+                                   <#auto-glossary-term-sapien-mattis-turpis-0>                                                         
+              OK                   [Back]                                                                                               
+                                   <#auto-glossary-term-tellus-0>                                                                       
+         chapter1.md 
+
+              OK                   dapibus                                                                                              
+                                   <#auto-glossary-dapibus-0>                                                                           
+         chapter2.md 
+
+              OK                   sapien mattis                                                                                        
+                                   <#auto-glossary-sapien-mattis-turpis-0>                                                              
+              OK                   dapibus                                                                                              
+                                   <#auto-glossary-dapibus-1>                                                                           
+              OK                   tellu                                                                                                
+                                   <#auto-glossary-tellus-0>                                                                            
+         chapter3.md 
+
+              Not found            Internal link                                                                                        
+                                   <#an-internal-link>                                                                                  
+         chapter4.md 
+
+              == No links ==       
+
+         chapter5.md 
+
+              == No links ==       
+
+         chapter6.md 
+
+              OK                   
+                             <span>6.1</span> - ItemToc
+                                            
+                                   <#itemtoc>                                                                                           
+              OK                   
+                             <span>6.2</span> - File function
+                                      
+                                   <#file-function>                                                                                     
+              OK                   
+                             <span>6.2.1</span> - This is chapter6.md part 1
+                       
+                                   <#this-is-chapter6md-part-1>                                                                         
+              OK                   
+                             <span>6.2.2</span> - This is chapter6.md part 2
+                       
+                                   <#this-is-chapter6md-part-2>                                                                         
+External 
+
+              
+
+              == No links ==       
+
+         chapter1.md 
+
+              == No links ==       
+
+         chapter2.md 
+
+              == No links ==       
+
+         chapter3.md 
+
+              Not checked          External link                                                                                        
+                                   <google.com>                                                                                         
+              Not checked          Youtube link                                                                                         
+                                   <http://youtube.com/example-video-link>                                                              
+              Not checked          PDF link                                                                                             
+                                   <http://example.com/a-pdf-file.pdf>                                                                  
+         chapter4.md 
+
+              == No links ==       
+
+         chapter5.md 
+
+              == No links ==       
+
+         chapter6.md 
+
+              == No links ==       
+
+
+    ==================================================
+    Total OK.........: 12
+    Total Error......: 1
+    Total Not checked: 3
+    ==================================================
