@@ -43,6 +43,30 @@ book:
                 deep:        1
                 elements:    ["appendix", "chapter"]
 
+        ebook-trefoil:
+            extends:         ebook
+            highlight_code:  true
+            theme:           TrefoilOne
+            
+            plugins:
+                #- LinkCheck
+                - ThemeImages
+                #- AutoGlossary
+                - TableExtra
+                - ImageExtra
+                - Typography
+                - TwigExtension
+                - DropCaps
+
+            itemtoc:
+                deep:       3
+
+            DropCaps:
+                levels:     [1, 2, 3]                          # 1 to 6 (default: 1)
+                mode:       letter                          # letter, word (default: letter)
+                length:     1                               # number of letters or words to highlight (default: 1)
+                elements:   ['chapter', 'introduction']     # which elements to process 
+                  
         print:
             format:          pdf
             highlight_cache: true

@@ -1,5 +1,5 @@
 book:
-    title:            'Test book - LinkCheckPlugin'
+    title:            'Test book - DropCapsPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -24,9 +24,12 @@ book:
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
             isbn:           1234567890X
             plugins:        
-                - LinkCheck
-            
-            LinkCheck: 
-                check_external_links: true
+                - DropCaps
+                
+            DropCaps:
+                levels:     [1, 2]  # 1 to 6 (default: 1)
+                mode:       letter    # letter, word (default: letter)
+                length:     1     # number of letters or words to highlight (default: 1)
+                coverage:   ['chapter']
                             
     

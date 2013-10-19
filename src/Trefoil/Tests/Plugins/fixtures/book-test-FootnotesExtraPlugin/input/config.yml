@@ -1,5 +1,5 @@
 book:
-    title:            'Test book - LinkCheckPlugin'
+    title:            'Test book - FootnotesExtraPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -10,6 +10,7 @@ book:
     contents:
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
+        - { element: footnotes, number: 1 }
         
     editions:
         ebook:
@@ -18,15 +19,12 @@ book:
             include_styles: true
             use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
-            theme:          ebook
+            theme:          Theme1
             toc:
                 deep:       1
-                elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
+                elements:   ["appendix", "chapter", "part", "footnotes"]
             isbn:           1234567890X
             plugins:        
-                - LinkCheck
-            
-            LinkCheck: 
-                check_external_links: true
-                            
+                - FootnotesExtra
+                
     

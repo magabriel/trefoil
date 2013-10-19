@@ -34,7 +34,6 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getOriginal();
 
         $content = $this->preProcessAngleQuotesForSmartypants($content);
-        $content = $this->smartyPantsPreParse($content);
 
         $event->setOriginal($content);
     }
@@ -52,31 +51,16 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
-    protected function smartyPantsPreParse($content)
-    {
-        $options = '';
-
-        // normal SmartyPants processing
-        // NOTE: dashes cannot be replaced on PreParse to avoid interfering with MarkDown
-        $options.= 'qbe'; // quotes, backticks and ellipses
-
-        // refinements for SmartyPants Typographer
-        $options.= 'g'; // angle quotes (needs preparation)
-        $options.= 'f-'; // do not add space inside angle quotes
-
-        // and go!!
-        $content = \SmartyPants($content, $options);
-
-        return $content;
-    }
-
     protected function smartyPantsPostParse($content)
     {
         $options = '';
 
         // normal SmartyPants processing
-        // NOTE: dashes cannot be replaced on PreParse to avoid interfering with MarkDown
-        $options.= 'd'; // dashes
+        $options.= 'qbed'; // quotes, backticks ellipses and dashes
+
+        // refinements for SmartyPants Typographer
+        $options.= 'g'; // angle quotes (needs preparation)
+        $options.= 'f-'; // do not add space inside angle quotes
 
         // and go!!
         $content = \SmartyPants($content, $options);

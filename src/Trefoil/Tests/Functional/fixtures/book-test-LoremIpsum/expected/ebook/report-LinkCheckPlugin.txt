@@ -17,6 +17,16 @@ Internal
                                    <#auto-glossary-term-sapien-mattis-turpis-0>                                                         
               OK                   [Back]                                                                                               
                                    <#auto-glossary-term-tellus-0>                                                                       
+         introduction.md 
+
+              OK                   1                                                                                                    
+                                   <#fn:1>                                                                                              
+              OK                   2                                                                                                    
+                                   <#fn:2>                                                                                              
+              OK                   &#8617;                                                                                              
+                                   <#fnref:1>                                                                                           
+              OK                   &#8617;                                                                                              
+                                   <#fnref:2>                                                                                           
          chapter1.md 
 
               OK                   dapibus                                                                                              
@@ -65,6 +75,10 @@ External
 
               == No links ==       
 
+         introduction.md 
+
+              == No links ==       
+
          chapter1.md 
 
               == No links ==       
@@ -95,7 +109,7 @@ External
 
 
     ==================================================
-    Total OK.........: 12
+    Total OK.........: 16
     Total Error......: 1
     Total Not checked: 3
     ==================================================

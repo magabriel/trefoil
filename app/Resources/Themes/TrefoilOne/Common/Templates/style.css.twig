@@ -97,6 +97,14 @@ a.internal.invalid {
 
 {% endblock %}
 
+{% block items %}
+{{ parent() }}
+
+{% include 'style.DropCaps.css.twig' %}
+
+{% endblock %}
+
+
 {% block chapter %}
 {{ parent() }}
 

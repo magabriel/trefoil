@@ -18,39 +18,26 @@ use Easybook\Events\ParseEvent;
  * plugin to uncompress the generated epub ebook
  *
  */
-class EpubUncompressPlugin implements EventSubscriberInterface
+class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $app;
-    protected $output;
 
     public static function getSubscribedEvents()
     {
         return array(
                 // runs later but before renaming
-                EasybookEvents::POST_PUBLISH => array(
-                        'onPostPublish',
-                        -900
-                )
+                EasybookEvents::POST_PUBLISH => array('onPostPublish',-900)
         );
     }
 
     public function onPostPublish(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $event->app->get('console.output');
-
-        $this->app['book.logger']->debug('onPostPublish:begin', get_class());
-
-        $edition = $this->app['publishing.edition'];
+        $this->init($event);
 
         $this->bookUncompress();
 
-        if (isset($this->app->book('editions')[$edition]['fix_compressed_epub'])
-            && isset($this->app->book('editions')[$edition]['fix_compressed_epub'])) {
+        if ($this->getEditionOption('fix_compressed_epub', false)) {
             $this->bookRecompress();
         }
-
-        $this->app['book.logger']->debug('onPostPublish:end', get_class());
     }
 
     protected function bookUncompress()
@@ -72,7 +59,6 @@ class EpubUncompressPlugin implements EventSubscriberInterface
 
         Toolkit::unzip($epubFile, $epubFolder);
     }
-
 
     protected function bookRecompress()
     {
@@ -108,7 +94,6 @@ class EpubUncompressPlugin implements EventSubscriberInterface
         );
 
         $this->app->get('filesystem')->remove($bookTempDir);
-
     }
 
     /**

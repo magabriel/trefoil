@@ -10,6 +10,8 @@ book:
     contents:
         - { element: edition }
         
+        - { element: introduction,       content: introduction.md }
+        
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
         - { element: chapter, number: 3, content: chapter3.md }
@@ -39,7 +41,14 @@ book:
                 - ImageExtra
                 - Typography
                 - TwigExtension
-            
+                - DropCaps
+                
             itemtoc:
                 deep:       3
-    
+
+            dropcaps:
+                levels:     [1, 2]                          # 1 to 6 (default: 1)
+                mode:       letter                          # letter, word (default: letter)
+                length:     1                               # number of letters or words to highlight (default: 1)
+                elements:   ['chapter', 'introduction']     # which elements to process 
+         

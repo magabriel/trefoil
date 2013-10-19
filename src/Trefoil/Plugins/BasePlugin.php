@@ -138,4 +138,29 @@ abstract class BasePlugin
         return $html;
     }
 
+    /**
+     * Retrieve the value of an edition option (from config.yml file)
+     *
+     * @param string $optionNane (as in 'one.two.three')
+     * @param string $default
+     * @return mixed
+     */
+    protected function getEditionOption($optionNane, $default = null)
+    {
+        $editionOptions = $this->app->book('editions')[$this->edition];
+
+        $keys = explode('.', $optionNane);
+
+        $option = $editionOptions;
+
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $option)) {
+                $option = $option[$key];
+            } else {
+                return $default;
+            }
+        }
+
+        return $option;
+    }
 }

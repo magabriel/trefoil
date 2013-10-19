@@ -12,28 +12,28 @@ use Trefoil\Util\Toolkit;
 /**
  * Plugin to use images included into a theme.
  *
- * Images can be in two places:
+ * For a theme called "the_theme", images will be copied from the following places:
  *
- * 1.- The theme directory set as input argument when publishing the book (if set):
+ * 1.- The "Common" directory of the trefoil-included theme (if it exists):
  *
- * <theme_dir>/
- *     my_theme/
- *         <format>/
- *             Resources/
- *                 images/
- *                     ...all image files
+ *     <trefoil_dir>/app/Resources/Themes/the_theme/Common/Resources/images/
  *
- * 2.- The theme directory inside trefoil:
+ * 2.- The <format> directory of the current theme (that can be set via command line argument).
  *
- * <trefoil_dir>/
- *     app/
- *         Resources/
- *             Themes/
- *                 my_theme/
- *                     <format>/
- *                         Resources/
- *                             images/
- *                                 ...all image files
+ *     <current_theme_dir>/the_theme/<format>/Resources/images/
+ *
+ *     Where <current_theme_dir> can be either
+ *
+ *         <trefoil_dir>/app/Resources/Themes/
+ *         or
+ *         <the path set with the "--dir" publish command line argument>
+ *
+ *
+ * 3.- Any of the user-overridable directories inside the book folder:
+ *
+ *     <book_dir>/Resources/images/
+ *     <book_dir>/Resources/images/<edition_type>/
+ *     <book_dir>/Resources/images/<edition_name>/
  *
  * The plugin works by copying the theme images into a temporary directory
  * inside the book <i>Contents/images</i> directory called <i>theme_tmp</i>
@@ -41,6 +41,7 @@ use Trefoil\Util\Toolkit;
  * directory after the book has been published. I know it is a dirty hack
  * but is the best I could come up without hacking easybook.
  */
+
 class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
 {
     protected $app;
@@ -67,33 +68,47 @@ class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
         // images into the "Common" format of theme into the default trefoil themes
         $defaultCommonImagesDir = $this->app['trefoil.app.dir.resources'].'/Themes'.'/'.$this->theme.'/Common/Resources/images';
 
-        // images into the format of the theme
+        // images into the format of the current theme
         $localImagesDir = Toolkit::getCurrentResourcesDir($this->app, $this->format).'/images';
 
-        if (!file_exists($defaultCommonImagesDir) && !file_exists($localImagesDir)) {
-            return;
-        }
+        // user-overridable directories
+        $userImagesDirs = array(
+                // <book-dir>/Resources/images/
+                sprintf('%s/images', $this->app['publishing.dir.resources']),
+                // <book-dir>/Resources/images/<edition-type>/
+                sprintf('%s/images/%s', $this->app['publishing.dir.resources'], Toolkit::getCurrentFormat($this->app)),
+                // <book-dir>/Resources/images/<edition-name>/
+                sprintf('%s/images/%s', $this->app['publishing.dir.resources'], $this->app['publishing.edition']),
+        );
 
-        // get the destination dir
+        // get and create the destination dir
         $destDir = $this->app['publishing.dir.contents'] . '/images/theme_tmp';
         if (!file_exists($destDir)) {
             $this->app->get('filesystem')->mkdir($destDir);
         }
 
-        // first copy the default images, then the local images
+        // first, copy the default 'Common' theme images
         if (file_exists($defaultCommonImagesDir) ) {
-            $this->app->get('filesystem')->mirror($defaultCommonImagesDir, $destDir, null, true);
+            $this->app->get('filesystem')->mirror($defaultCommonImagesDir, $destDir, null, array('override' => true));
         }
+
+        // second, copy the theme format images
         if (file_exists($localImagesDir)) {
-            $this->app->get('filesystem')->mirror($localImagesDir, $destDir, null, true);
+            $this->app->get('filesystem')->mirror($localImagesDir, $destDir, null, array('override' => true));
+        }
+
+        // last, copy each one of the user directories that override all of the above
+        foreach ($userImagesDirs as $dir) {
+            $dir = realpath($dir);
+            if (file_exists($dir)) {
+                $this->app->get('filesystem')->mirror($dir, $destDir, null, array('override' => true));
+            }
         }
     }
 
     protected function copyCoverImage()
     {
-        //$format = Toolkit::camelize($this->app->edition('format'), true);
-
-        if ('Epub' == $this->format) {
+        if ('Epub2' == $this->format) {
             // the EPUB publisher will take care of it
             return;
         }
@@ -110,8 +125,7 @@ class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
 
     public function onPostPublish(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $event->app->get('console.output');
+        $this->init($event);
 
         // remove the temp images directory
         $destDir = $this->app['publishing.dir.contents'] . '/images/theme_tmp';
@@ -123,11 +137,9 @@ class ThemeImagesPlugin extends BasePlugin implements EventSubscriberInterface
 
     public function onItemPostParse(ParseEvent $event)
     {
-        $this->app = $event->app;
-        $this->item = $event->getItem();
-        $format = Toolkit::camelize($this->app->edition('format'), true);
+        $this->init($event);
 
-        if ('Epub' != $format) {
+        if ('Epub2' != $this->format) {
             // correct image paths for formats other than EPUB
             $this->item['content'] = $this
                     ->correctImagePaths($this->item['content']);

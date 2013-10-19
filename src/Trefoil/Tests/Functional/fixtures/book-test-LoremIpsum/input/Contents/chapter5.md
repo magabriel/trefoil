@@ -14,6 +14,8 @@ Lorem ipsum "dolor sit amet", consectetuer adipiscing elit. ``Donec odio.'' Quis
 
 ## Ballot boxes
 
+Some ballot boxes:
+
 [ ] One.
 [/] Two.
 [ ] Three.

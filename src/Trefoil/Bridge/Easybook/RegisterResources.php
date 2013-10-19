@@ -155,6 +155,25 @@ class RegisterResources implements EventSubscriberInterface
             }
         }
 
+        /* need to register again the user template paths to ensure they
+         * are still picked with greater precedence than our own templates,
+         * so the user can still override them.
+         */
+        $userTemplatePaths = array(
+                // <book-dir>/Resources/Templates/<template-name>.twig
+                $this->app['publishing.dir.templates'],
+                // <book-dir>/Resources/Templates/<edition-type>/<template-name>.twig
+                sprintf('%s/%s', $this->app['publishing.dir.templates'], strtolower($format)),
+                // <book-dir>/Resources/Templates/<edition-name>/<template-name>.twig
+                sprintf('%s/%s', $this->app['publishing.dir.templates'], $this->app['publishing.edition']),
+        );
+
+        foreach ($userTemplatePaths as $path) {
+            if (file_exists($path)) {
+                $loader->prependPath($path);
+            }
+        }
+
         // Register content paths
         $ownContentPaths = array(
         // <themes-dir>/<edition-type>/Contents/<template-name>.twig

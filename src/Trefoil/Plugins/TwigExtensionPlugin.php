@@ -55,6 +55,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         // and the first pass of "itemtoc()"
         $content = $this->renderString($content);
 
+        # replace back "{#"
+        $content = str_replace('{@', '{#', $content);
+
         $event->setOriginal($content);
     }
 
@@ -63,6 +66,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $this->init($event);
 
         $content = $event->getContent();
+
+        // replace "{#" to avoid problems with markdown extra syntax for ids in headers
+        $content = str_replace('{#', '{@', $content);
 
         // replace also in PostParse to process the second pass of "itemtoc()" ("itemtoc_internal()")
         $content = $this->renderString($content);
