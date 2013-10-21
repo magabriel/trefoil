@@ -10,6 +10,7 @@ book:
     contents:
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
+        - { element: chapter, number: 3, content: chapter3.md }
         
     editions:
         ebook:
@@ -21,7 +22,7 @@ book:
             theme:          ebook
             toc:
                 deep:       1
-                elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
+                elements:   ["appendix", "chapter", "part", "introduction"]
             isbn:           1234567890X
             plugins:        
                 - DropCaps

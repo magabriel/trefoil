@@ -2,7 +2,12 @@
 namespace Trefoil\Helpers;
 
 /**
- * Add drop caps (HTML markup) to a give text.
+ * Add drop caps (HTML markup) to a given text:
+ *
+ *     <p class="has-dropcaps"><span class="dropcaps">T</span>his has dropcaps.</p>
+ *
+ * It can also process manually-added dropcaps markup (the <span>) adding the
+ * "has-dropcaps" class to the surrounding paragraph.
  *
  */
 class DropCaps
@@ -80,6 +85,31 @@ class DropCaps
                             $matches['level'],
                             $matches['whitespace'],
                             $ptext
+                    );
+                    return $html;
+                },
+                $this->text);
+
+        $this->text = $text;
+    }
+
+    /**
+     * Process manually-added dropcaps markup, adding additional markup to the containing paragraph.
+     *
+     * @return string
+     */
+    public function processManualMarkup()
+    {
+        $regex = '/';
+        $regex.= '<p>[^<]*<span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
+        $regex.= '/Ums'; // Ungreedy, multiline, dotall
+
+        $text = preg_replace_callback($regex,
+                function ($matches)
+                {
+                    $html = sprintf('<p class="has-dropcaps"><span class="dropcaps">%s</span>%s</p>',
+                            $matches['dropcapstext'],
+                            $matches['ptext']
                     );
                     return $html;
                 },

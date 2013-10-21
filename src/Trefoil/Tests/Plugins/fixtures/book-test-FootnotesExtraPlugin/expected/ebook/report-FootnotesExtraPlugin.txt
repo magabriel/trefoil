@@ -1,0 +1,10 @@
+================================================================================
+FootnotesExtraPlugin
+================================================================================
+
+Old reference New reference Text (fragment)                                                                               
+------------- ------------- --------------------------------------------------------------------------------------------- 
+    note1           1       This is the text of note1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.           
+    note2           2       This is the text of note2. Maecenas non venenatis turpis, nec bibendum urna.                  
+    noteA           3       This is the text of noteA. Phasellus at lectus quis magna commodo iaculis fermentum et leo... 
+    noteB           4       This is the text of noteB. Donec massa leo, sollicitudin sit amet sapien in, sodales sagit... 

@@ -35,7 +35,7 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
 
         $this->bookUncompress();
 
-        if ($this->getEditionOption('fix_compressed_epub', false)) {
+        if ($this->getEditionOption('EpubUncompress.fix_compressed_epub', false)) {
             $this->bookRecompress();
         }
     }

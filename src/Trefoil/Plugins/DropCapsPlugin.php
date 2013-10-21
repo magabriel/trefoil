@@ -75,6 +75,9 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
         // process the other paragraphs in the text that follow a heading tag
         $dropCaps->createForHeadings($levels);
 
+        // process the paragraphs with manually-added dropcaps markup
+        $dropCaps->processManualMarkup();
+
         $content = $dropCaps->getOutput();
 
         return $content;

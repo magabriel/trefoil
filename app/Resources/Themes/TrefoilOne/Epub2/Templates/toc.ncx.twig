@@ -10,16 +10,15 @@
         <navLabel><text>{{ item.title }}</text></navLabel>
     {% endif %}
     <content src="{{ item.page_name }}.html{{ hash }}" />
+
 {% endmacro %}
 
 {% macro navPointStart(level, id, order) %}
-    <!-- level {{ level }} -->
-    <navPoint class="chapter" id="{{ id }}" playOrder="{{ order }}">
+    <navPoint class="chapter" id="{{ id }}" playOrder="{{ order }}"> <!-- level {{ level }} -->
 {% endmacro %}
 
 {% macro navPointEnd(level) %}
-     </navPoint>
-     <!-- /level {{ level }} -->
+     </navPoint> <!-- level {{ level }} -->
 {% endmacro %}
 
 {% endspaceless %}
