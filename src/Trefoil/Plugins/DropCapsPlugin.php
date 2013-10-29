@@ -14,6 +14,8 @@ use Trefoil\Util\Toolkit;
 /**
  * Add drop caps to the book.
  *
+ * For formats: all
+ *
  * Options can be set in the book's config.yml:
  *
  *     editions:

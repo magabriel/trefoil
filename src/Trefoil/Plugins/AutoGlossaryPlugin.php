@@ -100,7 +100,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         return array(
                 TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
                 EasybookEvents::POST_PARSE => array('onItemPostParse', -100),
-                EasybookEvents::PRE_DECORATE => array('onItemPreDecorate', -500),
                 EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
@@ -123,16 +122,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $this->processItem();
 
         // reload changed item
-        $event->setItem($this->item);
-    }
-
-    public function onItemPreDecorate(BaseEvent $event)
-    {
-        $this->init($event);
-
-        // ensure all the generated internal links have the right format
-        $this->fixInternalLinks();
-
         $event->setItem($this->item);
     }
 
@@ -238,14 +227,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         // do the replacements (also modifies the glossary object)
         $this->item['content'] = $replacer->replace();
-
-        // register all anchor links for this item
-        // the GlossaryReplacer has added all the new anchor links to the GlossaryItems
-        foreach ($this->glossary as $term => $data /* @var $data GlossaryItem */ ) {
-            foreach ($data->getAnchorLinks() as $anchorLink) {
-                $this->saveInternalLinkTarget($anchorLink);
-            }
-        }
     }
 
     /**
@@ -261,13 +242,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
                 );
 
         $rendered = $this->app->get('twig')->render('auto-glossary-items.twig', $variables);
-
-        // register all anchor links
-        foreach ($this->processedGlossary as $term => $data) {
-            foreach ($data->getAnchorLinks() as $index => $anchorLink) {
-                $this->saveInternalLinkTarget('auto-glossary-' . $data->getSlug() . '-' . $index);
-            }
-        }
 
         $this->generated = true;
 

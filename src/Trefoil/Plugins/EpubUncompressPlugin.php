@@ -15,7 +15,16 @@ use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
 
 /**
- * plugin to uncompress the generated epub ebook
+ * Plugin to uncompress the generated epub ebook
+ *
+ * For formats: Epub
+ *
+ * Options can be set in the book's config.yml:
+ *
+ *     editions:
+ *         <edition-name>
+ *             EpubUncompress:
+ *                 fix_compressed_epub:    false  # Recompress the epub to fix some problems
  *
  */
 class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterface
@@ -32,6 +41,11 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
+
+        if ($this->format != 'Epub2') {
+            // not for this format
+            return;
+        }
 
         $this->bookUncompress();
 
@@ -60,6 +74,9 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
         Toolkit::unzip($epubFile, $epubFolder);
     }
 
+    /**
+     * Recompress the book, fixing some problems that make it fail EPUB validations.
+     */
     protected function bookRecompress()
     {
         $outputDir = $this->app['publishing.dir.output'];

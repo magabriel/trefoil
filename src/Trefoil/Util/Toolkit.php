@@ -75,4 +75,63 @@ class Toolkit extends EasybookToolkit
 
         return iconv('ISO-8859-15', 'UTF-8', call_user_func_array('sprintf', $args));
     }
+
+    /**
+     * Extract the attributes of an HTML tag
+     *
+     * @param string $string
+     * @return array of attributes
+     */
+    public static function parseHTMLAttributes($string)
+    {
+        $attributes = array();
+
+        $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
+        preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
+
+        $attributes = array();
+        foreach ($attrMatches as $attrMatch) {
+            $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Render the attributes of an HTML tag
+     *
+     * @param array $attributes
+     * @return string
+     */
+    public static function renderHTMLAttributes(array $attributes)
+    {
+        $html = '';
+
+        foreach ($attributes as $name => $value) {
+            $html .= sprintf('%s="%s" ', $name, $value);
+        }
+
+        return $html;
+    }
+
+    /**
+     * Render the HTML tag
+     *
+     * @param string $tag
+     * @param string $contents
+     * @param array $attributes
+     * @return string
+     */
+    public static function renderHTMLTag($tag, $contents = '', array $attributes = array())
+    {
+        $strAttributes = static::renderHTMLAttributes($attributes);
+        $strAttributes = $strAttributes ? ' '.$strAttributes : '';
+
+        if ($contents) {
+            return sprintf('<%s%s>%s</%s>', $tag, $strAttributes, $contents, $tag);
+        }
+
+        return sprintf('<%s%s/>', $tag, $strAttributes);
+    }
+
 }

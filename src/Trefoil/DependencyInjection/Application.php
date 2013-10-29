@@ -2,9 +2,10 @@
 
 namespace Trefoil\DependencyInjection;
 
-use Trefoil\Util\Toolkit;
-
 use Easybook\DependencyInjection\Application as EasybookApplication;
+use Trefoil\Util\Toolkit;
+use Trefoil\Publishers\Epub2Publisher;
+use Trefoil\Publishers\MobiPublisher;
 
 class Application extends EasybookApplication
 {
@@ -23,6 +24,33 @@ class Application extends EasybookApplication
         $this['app.dir.cache']             = $this['trefoil.app.dir.base'].'/app/Cache';
         $this['app.dir.doc']               = $this['trefoil.app.dir.base'].'/doc';
         $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'].'/app/Resources';
+
+        // -- own publisher ----------------------------------------------------
+        $this['publisher'] = $this->share(function ($app) {
+            $outputFormat = $app->edition('format');
+
+            switch (strtolower($outputFormat)) {
+
+                case 'epub':
+                case 'epub2':
+                    // use our epub2 publisher
+                    $publisher = new Epub2Publisher($app);
+                    break;
+
+                case 'mobi':
+                    // use our mobi publisher
+                    $publisher = new MobiPublisher($app);
+                    break;
+
+                default:
+                    // use the default publisher
+                    $publisher = $app['publisher'];
+            }
+
+            $publisher->checkIfThisPublisherIsSupported();
+
+            return $publisher;
+        });
     }
 
     public final function getMyVersion()

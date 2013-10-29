@@ -10,7 +10,7 @@ book:
     contents:
         - { element: edition }
         
-        - { element: introduction,       content: introduction.md }
+        - { element: introduction, content: introduction.md }
         
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
@@ -18,7 +18,8 @@ book:
         - { element: chapter, number: 4, content: chapter4.md }
         - { element: chapter, number: 5, content: chapter5.md }
         - { element: chapter, number: 6, content: chapter6.md }
-                
+        
+        - { element: footnotes }        
         - { element: auto-glossary }
 
     editions:
@@ -35,13 +36,15 @@ book:
             isbn:           1234567890X
             plugins:       
                 - LinkCheck
-                - ThemeImages
+                #- ThemeImages
                 - AutoGlossary
                 - TableExtra
                 - ImageExtra
                 - Typography
                 - TwigExtension
-                - DropCaps
+                #- DropCaps
+                - FootnotesExtra
+                - EpubUncompress
                 
             itemtoc:
                 deep:       3

@@ -31,6 +31,8 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
 
     public function onItemPostParse(BaseEvent $event)
     {
+        $this->init($event);
+
         $content = $event->getContent();
 
         $content = $this->paragraphsInsideLists($content);

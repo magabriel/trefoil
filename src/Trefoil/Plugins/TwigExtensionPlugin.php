@@ -180,15 +180,5 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $rendered = $twig->render($template, array());
 
         return $rendered;
-        // find all hrefs in the internal links in the just rendered itemtoc
-        preg_match_all('/<a .*href="#(?<uri>.*)".*>.*<\/a>/Ums', $rendered, $matches);
-        foreach ($matches['uri'] as $linkTarget) {
-            // register them as link targets
-            $this->saveInternalLinkTarget($linkTarget);
-        }
-        // and fix all the internal links in the rendered itemtoc
-        $rendered = $this->fixInternalLinks($rendered);
-
-        return $rendered;
     }
 }
