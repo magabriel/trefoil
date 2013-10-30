@@ -1,6 +1,8 @@
 <?php
 namespace Trefoil\Plugins;
 
+use Trefoil\Util\Toolkit;
+
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
@@ -103,22 +105,15 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
             $regExp,
             function ($matches) use ($me)
                       {
-                      $image = $this->parseImage($matches['image']);
+                      $image = Toolkit::parseHTMLAttributes($matches['image']);
                       $image = $this->processExtraImage($image);
-                      $html = $this->renderImage($image);
+                      $html = Toolkit::renderHTMLTag('img', null, $image);
 
                       return $html;
                       },
                       $content);
 
         return $content;
-    }
-
-    protected function parseImage($imageHtml)
-    {
-        $image = $this->extractAttributes($imageHtml);
-
-        return $image;
     }
 
     protected function processExtraImage(array $image)
@@ -156,46 +151,6 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $image = array_merge($image, $args);
 
         return $image;
-    }
-
-    protected function renderImage(array $image)
-    {
-        $html = '';
-
-        $attributes = $this->renderAttributes($image);
-        $html .= sprintf('<img %s/>', $attributes);
-
-        return $html;
-    }
-
-    /**
-     * @param string $string
-     * @return array of attribures
-     */
-    protected function extractAttributes($string)
-    {
-        $attributes = array();
-
-        $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
-        preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
-
-        $attributes = array();
-        foreach ($attrMatches as $attrMatch) {
-            $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
-        }
-
-        return $attributes;
-    }
-
-    protected function renderAttributes(array $attributes)
-    {
-        $html = '';
-
-        foreach ($attributes as $name => $value) {
-            $html .= sprintf('%s="%s" ', $name, $value);
-        }
-
-        return $html;
     }
 
     protected function renderArguments(array $arguments)

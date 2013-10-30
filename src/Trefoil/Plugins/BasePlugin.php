@@ -89,4 +89,37 @@ abstract class BasePlugin
 
         return $option;
     }
+
+    /**
+     * Retrieve the value of a book option (from config.yml file)
+     *
+     * @param string $optionNane (as in 'one.two.three')
+     * @param string $default
+     * @return mixed
+     */
+    protected function getConfigOption($optionNane, $default = null)
+    {
+        $configOptions = $this->app['publishing.book.config'];
+
+        $keys = explode('.', $optionNane);
+
+        $option = $configOptions;
+
+        foreach ($keys as $index=>$key) {
+            if (array_key_exists($key, $option)) {
+                $option = $option[$key];
+            } else {
+
+                $joinKeys = implode('.', array_slice($keys, $index));
+
+                if (array_key_exists($joinKeys, $option)) {
+                    return $option[$joinKeys];
+                } else {
+                    return $default;
+                }
+            }
+        }
+
+        return $option;
+    }
 }

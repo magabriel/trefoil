@@ -111,7 +111,7 @@ class Toolkit extends EasybookToolkit
             $html .= sprintf('%s="%s" ', $name, $value);
         }
 
-        return $html;
+        return trim($html);
     }
 
     /**
@@ -131,7 +131,7 @@ class Toolkit extends EasybookToolkit
             return sprintf('<%s%s>%s</%s>', $tag, $strAttributes, $contents, $tag);
         }
 
-        return sprintf('<%s%s/>', $tag, $strAttributes);
+        return sprintf('<%s%s />', $tag, $strAttributes);
     }
 
 }

@@ -12,8 +12,8 @@ use Trefoil\Util\Toolkit;
  * into clickable cross-section book links.
  *
  * -- This is Trefoil own implementation of this publisher --
- * It basically is the the original Easybook Epub2Publisher with some added functionality.
- *
+ * It is based on the original Easybook Epub2Publisher with some added functionality
+ * and fixes.
  */
 class Epub2Publisher extends HtmlPublisher
 {
