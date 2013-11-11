@@ -59,8 +59,9 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $epubcheckOptions = $this->getConfigOption('easybook.parameters.epubcheck.command_options');
 
         if (!$epubcheck || !file_exists($epubcheck)) {
-            $this->writeLn('<error>The EpubCheck library needed to check EPUB books cannot be found. "
-                    ." Check that you have set your custom Epubcheck path in the book\'s config.yml file.</error>');
+            $this->writeLn('<error>The EpubCheck library needed to check EPUB books cannot be found. '.
+                    'Check that you have set your custom Epubcheck path in the book\'s config.yml file.</error>');
+            return;
         }
 
         $epubFilePath = $this->app['publishing.dir.output'].'/book.epub';

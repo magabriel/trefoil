@@ -118,6 +118,10 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected function processExtraImage(array $image)
     {
+        // allow images to include 'images/' as path, for compatibility
+        // with Markdown editors like MdCharm
+        $image['src'] = str_replace('images/', '', $image['src']);
+
         // replace typographic quotes (just in case, may be set by SmartyPants)
         $src = str_replace(array('&#8221;', '&#8217;'), '"', $image['src']);
 

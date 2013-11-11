@@ -16,8 +16,11 @@ class Application extends EasybookApplication
         parent::__construct();
 
         // -- global generic parameters ---------------------------------------
-        $this['app.signature'] = substr($this['app.signature'], 0, -1)
-            ."  <comment>+ trefoil</comment>\n";
+        $this['app.signature'] = substr($this['app.signature'], 0, -1)."\n".
+        "     _     _            __     _ _ \n".
+        "   _| |_  | |_ _ _ ___ / _|___(_) |\n".
+        "  |_   _| |  _| '_/ -_)  _/ _ \ | |\n".
+        "    |_|    \__|_| \___|_| \___/_|_|\n";
 
         // -- global directories location -------------------------------------
         $this['trefoil.app.dir.base']      = realpath(__DIR__.'/../../../');
