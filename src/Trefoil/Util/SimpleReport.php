@@ -46,8 +46,11 @@ class SimpleReport
         $this->columnsAlignment = $columnsAlignment;
     }
 
-    public function addLine(array $fields = array())
+    public function addLine($fields = array())
     {
+        if (!is_array($fields)) {
+            $fields = array($fields);
+        }
         $this->lines[] = $fields;
     }
 
@@ -136,7 +139,15 @@ class SimpleReport
             $padType = STR_PAD_BOTH;
         }
 
-        return str_pad($str, $width, ' ', $padType);
+        return $this->mb_str_pad($str, $width, ' ', $padType);
+    }
+
+    /**
+     * @see http://www.php.net/manual/en/ref.mbstring.php#90611
+     */
+    protected function mb_str_pad ($input, $pad_length, $pad_string = '', $pad_style, $encoding="UTF-8") {
+        return str_pad($input,
+                strlen($input)-mb_strlen($input,$encoding)+$pad_length, $pad_string, $pad_style);
     }
 
     protected function formatLines()

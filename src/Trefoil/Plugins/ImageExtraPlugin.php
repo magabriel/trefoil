@@ -2,7 +2,6 @@
 namespace Trefoil\Plugins;
 
 use Trefoil\Util\Toolkit;
-
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
