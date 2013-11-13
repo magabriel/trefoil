@@ -10,14 +10,15 @@ chapter1.md
 
            image      images/image2.jpg              ".jpg" images not allowed. Use ".jpeg" instead.                                                      
            emphasis   adipiscing_                    Emphasis mark not processed                                                                          
-           emphasis   vitae**                        Emphasis mark not processed                                                                          
+           emphasis   <li><p>Curabitur**             Emphasis mark not processed                                                                          
            emphasis    **elit.                       Emphasis mark not processed                                                                          
+           emphasis   nunc*p                         Emphasis mark not processed                                                                          
            emphasis   eros._                         Emphasis mark not processed                                                                          
            emphasis   Nulla_                         Emphasis mark not processed                                                                          
            emphasis   <p>_                           Emphasis mark not processed                                                                          
 
     ==================================================
-    7 problems found
+    8 problems found
     ==================================================
 ================================================================================
 QualityControlPlugin

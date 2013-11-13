@@ -105,11 +105,15 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
 
     protected function extractEmphasis($string)
     {
+        $noBlanks = '[\w\.,\-\(\)\:;"]';
+
         // find all the Markdown emphasis marks that have made it out to HTML
         $regExp = '/(?<em>'; // start capturing group
-        $regExp.= '\s[_\*]+(?:[^\s_\*]+?)';
+        $regExp.= '\s[_\*]+(?:[^\s_\*]+?)'; // underscore or asterisk after a space
         $regExp.= '|';
-        $regExp.= '(?:[^\s_\*]+)[_\*]+\s';
+        $regExp.= '(?:[^\s_\*]+)[_\*]+\s'; // underscore or asterisk before a space
+        $regExp.= '|';
+        $regExp.= '(?:'.$noBlanks.'+\*+'.$noBlanks.'+)'; // asterisk between no spaces
         $regExp.= ')/Ums';
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 

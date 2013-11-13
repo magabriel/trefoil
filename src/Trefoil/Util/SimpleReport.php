@@ -104,18 +104,6 @@ class SimpleReport
 
         $line = '';
         foreach ($this->headers as $index => $header) {
-            /*
-            $padType = STR_PAD_RIGHT;
-            if (isset($this->columnsAlignment[$index])) {
-                if ('right' == $this->columnsAlignment[$index]) {
-                    $padType = STR_PAD_LEFT;
-                } elseif ('center' == $this->columnsAlignment[$index]) {
-                    $padType = STR_PAD_BOTH;
-                }
-            }
-
-            $line.= str_pad($header, $this->columnsWidth[$index] ?: 10, ' ', $padType).' ';
-            */
             $line.= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
         }
         $text[] = $line;

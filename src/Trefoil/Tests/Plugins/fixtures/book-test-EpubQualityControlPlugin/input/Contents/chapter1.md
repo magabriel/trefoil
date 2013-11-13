@@ -20,7 +20,7 @@ Errors:
 
 1. Lorem ipsum dolor sit amet, consectetur _ adipiscing_ elit. Maecenas non venenatis turpis, nec bibendum urna. 
 
-2. Curabitur vitae** hendrerit **elit. Quisque nec velit ut nunc pellentesque tincidunt. 
+2. Curabitur** vitae hendrerit **elit. Quisque nec velit ut nunc*pellentesque tincidunt. 
 
 More errors:
 
