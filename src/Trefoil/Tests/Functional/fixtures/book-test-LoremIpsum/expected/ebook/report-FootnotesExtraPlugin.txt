@@ -1,0 +1,8 @@
+================================================================================
+FootnotesExtraPlugin
+================================================================================
+
+Old reference New reference Text (fragment)                                                                               
+------------- ------------- --------------------------------------------------------------------------------------------- 
+      1             1       Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem.       
+      2             2       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero c... 

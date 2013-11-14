@@ -9,24 +9,24 @@ Internal
 
               
 
-              OK                   [Back]                                                                                               
+              OK                   &crarr;                                                                                              
+                                   <#fnref-1>                                                                                           
+              OK                   &crarr;                                                                                              
+                                   <#fnref-2>                                                                                           
+              OK                   [&crarr;]                                                                                            
                                    <#auto-glossary-term-dapibus-0>                                                                      
-              OK                   [Back]                                                                                               
+              OK                   [&crarr;]                                                                                            
                                    <#auto-glossary-term-dapibus-1>                                                                      
-              OK                   [Back]                                                                                               
+              OK                   [&crarr;]                                                                                            
                                    <#auto-glossary-term-sapien-mattis-turpis-0>                                                         
-              OK                   [Back]                                                                                               
+              OK                   [&crarr;]                                                                                            
                                    <#auto-glossary-term-tellus-0>                                                                       
          introduction.md 
 
               OK                   1                                                                                                    
-                                   <#fn:1>                                                                                              
+                                   <#fn-1>                                                                                              
               OK                   2                                                                                                    
-                                   <#fn:2>                                                                                              
-              OK                   &#8617;                                                                                              
-                                   <#fnref:1>                                                                                           
-              OK                   &#8617;                                                                                              
-                                   <#fnref:2>                                                                                           
+                                   <#fn-2>                                                                                              
          chapter1.md 
 
               OK                   dapibus                                                                                              

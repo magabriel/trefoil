@@ -118,6 +118,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 <div class="clearfix"></div> 
 
+### Narrower centered:
+
+![ Lorem ipsum ](php.jpg?class="narrower")
+
+<div class="clearfix"></div> 
+
 ### Narrow right:
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
@@ -136,6 +142,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 <div class="clearfix"></div> 
 
+### Narrow centered:
+
+![ Lorem ipsum ](php.jpg?class="narrow") 
+
+<div class="clearfix"></div> 
+
 ### Half left:
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
@@ -150,6 +162,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ![Lorem ipsum](php.jpg?class="half")
 ![Lorem ipsum](php.jpg?class="half")
+
+<div class="clearfix"></div> 
+
+### Half centered
+
+![ Lorem ipsum ](php.jpg?class="half")
 
 <div class="clearfix"></div> 
 
