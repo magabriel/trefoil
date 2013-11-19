@@ -2,7 +2,6 @@
 namespace Trefoil\Plugins;
 
 use Trefoil\Helpers\DropCaps;
-
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;

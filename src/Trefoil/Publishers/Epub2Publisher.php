@@ -314,6 +314,11 @@ class Epub2Publisher extends HtmlPublisher
      */
     private function prepareBookFonts($targetDir)
     {
+        // new in trefoil
+        if (!$this->app->edition('include_fonts')) {
+            return array();
+        }
+
         if (!file_exists($targetDir)) {
             throw new \RuntimeException(sprintf(
                 " ERROR: Books fonts couldn't be copied because \n"

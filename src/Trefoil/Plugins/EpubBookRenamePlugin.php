@@ -12,7 +12,7 @@ use Easybook\Events\ParseEvent;
  * plugin to rename the generated file book.epub to <book-slug>.epub
  *
  */
-class EpubBookRenamePlugin implements EventSubscriberInterface
+class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterface
 {
     /**
      * Default naming schema for epub book (Twig syntax BUT with single curly brackets).
@@ -24,9 +24,6 @@ class EpubBookRenamePlugin implements EventSubscriberInterface
      */
     const RENAME_SCHEMA_DEFAULT = "{publishing.book.slug}-{book.version}";
 
-    protected $app;
-    protected $output;
-
     public static function getSubscribedEvents()
     {
         return array(
@@ -36,41 +33,37 @@ class EpubBookRenamePlugin implements EventSubscriberInterface
 
     public function onPostPublish(BaseEvent $event)
     {
-        $this->app = $event->app;
-        $this->output = $this->app->get('console.output');
+        $this->init($event);
 
-        $edition = $this->app->get('publishing.edition');
-
-        // only for epub
-        if ('epub' == $this->app->book('editions')[$edition]['format']) {
-            $this->epubRename();
+        // only for epub or mobi
+        if (!in_array($this->format, array('Epub2', 'Mobi'))) {
+            return;
         }
+
+        $this->epubRename();
     }
 
     protected function epubRename()
     {
-        $this->app['book.logger']->debug('onPostPublish:begin', get_class());
-
         $outputDir = $this->app['publishing.dir.output'];
 
+        $extension = strtolower($this->format);
+        $extension = str_replace('epub2', 'epub', $extension);
+
         // check output file generated
-        $oldFile = $outputDir . '/book.epub';
+        $oldFile = $outputDir . '/book.'.$extension;
         if (!file_exists($oldFile)) {
             return;
         }
 
-        // get new name schema
-        $newNameSchema = static::RENAME_SCHEMA_DEFAULT;
-        $edition = $this->app['publishing.edition'];
-        if (isset($this->app->book('editions')[$edition]['epub_rename'])) {
-            $newNameSchema = $this
-                    ->app->book('editions')[$edition]['epub_rename'];
-        }
+        // get the parameters
+        $newNameSchema = $this->getEditionOption('EpubBookRename.schema', static::RENAME_SCHEMA_DEFAULT);
+        $keepOriginal = $this->getEditionOption('EpubBookRename.keep_original', true);
 
         // resolve it
         $newName = $this->resolveNamingSchema($newNameSchema);
 
-        $newFile = $outputDir . '/' . $newName . '.epub';
+        $newFile = $outputDir . '/' . $newName . '.'.$extension;
 
         if (file_exists($newFile)) {
             $this->app->get('filesystem')->remove($newFile);
@@ -81,16 +74,20 @@ class EpubBookRenamePlugin implements EventSubscriberInterface
         $this->app->get('filesystem')->rename($oldFile, $newFileAux);
 
         // delete other versions
-        $files = $this->app->get('finder')->files()->name('*.epub')
+        $files = $this->app->get('finder')->files()->name('*.'.$extension)
                 ->in($outputDir);
         $this->app->get('filesystem')->remove($files);
 
         // and let the new version with it real name
         $this->app->get('filesystem')->rename($newFileAux, $newFile);
-        // and with the default name for testing purposes
-        $this->app->get('filesystem')->copy($newFile, $oldFile);
 
-        $this->app['book.logger']->debug('onPostPublish:end', get_class());
+        $this->writeLn(sprintf('<comment>Output file renamed to "%s"</comment>', $newName));
+
+        // and with the default name for testing purposes
+        if ($keepOriginal) {
+            $this->app->get('filesystem')->copy($newFile, $oldFile);
+            $this->writeLn('<comment>Original output file kept</comment>');
+        }
     }
 
     protected function resolveNamingSchema($namingSchema)
