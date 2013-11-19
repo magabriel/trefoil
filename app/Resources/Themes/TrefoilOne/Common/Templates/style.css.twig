@@ -16,6 +16,7 @@
    @typography
    ========================================================================== #}
 {% block typography %}
+{% if edition.include_fonts %}
     /* Custom fonts
        ========================================================================= */
     /* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */
@@ -25,6 +26,7 @@
         font-weight: 400;
         src: url("{{ resources_dir }}/fonts/Inconsolata.ttf")
     }
+{% endif %}
 
 {# @body
    -------------------------------------------------------------------------- #}
@@ -166,6 +168,22 @@
 
     .clearfix {
         clear: both;
+    }
+
+    .big {
+        font-size: 1.2em;
+    }
+
+    .small {
+        font-size: .8em;
+    }
+
+    .tiny {
+        font-size: .7em;
+    }
+
+    .hidden {
+        display: none;
     }
 
 {% endblock %}
@@ -434,6 +452,61 @@
         font-weight: normal;
         margin-bottom: .5em;
     }
+{% endblock %}
+
+
+{% block toc %}
+{{ parent() }}
+
+    .item.toc h1 {
+        margin-bottom: .5em;
+    }
+
+    /* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
+    .item.toc div.level-1 {
+    	margin-left: 1em;
+    }
+    .item.toc div.level-2 {
+    	margin-left: 2em;
+    }
+    .item.toc div.level-3 {
+    	margin-left: 3em;
+    }
+    .item.toc div.level-4 {
+    	margin-left: 4em;
+    }
+    .item.toc div.level-5 {
+    	margin-left: 5em;
+    }
+    .item.toc div.level-6 {
+    	margin-left: 6em;
+    }
+
+    /* local toc */
+    .local_toc li {
+        margin-bottom: 0.15em;
+        margin-top: 0.15em;
+    }
+
+    .local_toc li.level-1 {
+    	margin-left: -2em;
+    }
+    .local_toc li.level-2 {
+    	margin-left: -1em;
+    }
+    .local_toc li.level-3 {
+    	margin-left: 0em;
+    }
+    .local_toc li.level-4 {
+    	margin-left: 1em;
+    }
+    .local_toc li.level-5 {
+    	margin-left: 2em;
+    }
+    .local_toc li.level-6 {
+    	margin-left: 3em;
+    }
+
 {% endblock %}
 
 {% endblock %} {# @items #}

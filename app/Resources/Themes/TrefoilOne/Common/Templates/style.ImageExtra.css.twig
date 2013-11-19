@@ -30,11 +30,7 @@ div.figure.default .box {
 div.figure.narrower,
 div.figure.narrow,
 div.figure.half,
-div.figure.wide,
-div.image.narrower,
-div.image.narrow,
-div.image.half,
-div.image.wide {
+div.figure.wide {
     float: left;
 }
 
@@ -48,6 +44,10 @@ div.figure.left img {
 
 div.figure.right img {
     margin-left: 0;
+}
+
+div.figure .box {
+    page-break-inside: avoid;
 }
 
 div.figure.center .box {
@@ -104,28 +104,54 @@ div.image.wide {
     display: inline-block;
 }
 
-/* centered with size */
+/* figures centered with size */
 
 div.figure.center.half,
-div.image.center.half,
 div.figure.center.narrow,
-div.image.center.narrow,
-div.figure.center.narrower,
-div.image.center.narrower {
+div.figure.center.narrower {
      width: 100%;
 }
 
-div.figure.center.half .box,
-div.image.center.half .box {
+div.figure.center.half .box {
     width: 50%;
+    min-width: 50%;
 }
 
-div.figure.center.narrow .box,
-div.image.center.narrow .box {
+div.figure.center.narrow .box {
     width: 33%%;
+    min-width: 33%;
 }
 
-div.figure.center.narrower .box,
-div.image.center.narrower .box {
+div.figure.center.narrower .box {
     width: 25%;
+    min-width: 25%;
+}
+
+div.image.narrower,
+div.image.narrow,
+div.image.half,
+div.image.wide {
+}
+
+/* images centered with size */
+
+div.image.center.half,
+div.image.center.narrow,
+div.image.center.narrower {
+    width: 100%;
+}
+
+div.image.center.half img {
+    width: 50%;
+    min-width: 50%;
+}
+
+div.image.center.narrow img {
+    width: 33%;
+    min-width: 33%;
+}
+
+div.image.center.narrower img {
+    width: 25%;
+    min-width: 25%;
 }

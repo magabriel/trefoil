@@ -19,53 +19,55 @@
 {% block title %}{{ item.title }}{% endblock %}
 
 {% block body %}
-<h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
 <div class="item toc">
-    {% set hasParts = false %}
-    {% for item in app.get('publishing.items') %}
-        {# editions define the *tocable* items #}
-        {% if item.config.element in edition.toc.elements|default([]) %}
+    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+    <div class="toc_data">
+        {% set hasParts = false %}
+        {% for item in app.get('publishing.items') %}
+            {# editions define the *tocable* items #}
+            {% if item.config.element in edition.toc.elements|default([]) %}
 
-            {% if item.config.element == 'part' %}
-                {% set hasParts = true %}
-            {% endif %}
-
-            {# item has several elements in its toc #}
-            {% if item.toc|length > 0 %}
-
-                {% set currentLevel = 0 %}
-                {% if item.config.element == 'chapter' and hasParts %}
-                    {% set currentLevel = 1 %}
+                {% if item.config.element == 'part' %}
+                    {% set hasParts = true %}
                 {% endif %}
 
-                {% for entry in item.toc %}
+                {# item has several elements in its toc #}
+                {% if item.toc|length > 0 %}
 
-                    {% set level = entry.level %}
+                    {% set currentLevel = 0 %}
                     {% if item.config.element == 'chapter' and hasParts %}
-                        {% set level = entry.level + 1 %}
+                        {% set currentLevel = 1 %}
                     {% endif %}
 
-                    {% if level <= edition.toc.deep %}
+                    {% for entry in item.toc %}
 
-                        {% if level > currentLevel %}
-                            {% if level == currentLevel+1 %}
-                                {{ helper.tocItem(item, entry, level) }}
-                            {% else %}
-                                {% set level = currentLevel %}
-                            {% endif %}
-                        {% else %}
-                             {{ helper.tocItem(item, entry, level) }}
+                        {% set level = entry.level %}
+                        {% if item.config.element == 'chapter' and hasParts %}
+                            {% set level = entry.level + 1 %}
                         {% endif %}
 
-                        {% set currentLevel = level %}
-                    {% endif %}
-                {% endfor %}
+                        {% if level <= edition.toc.deep %}
 
-            {# empty or special item (anything different from 'chapter' and 'appendix' #}
-            {% else %}
-                {{ helper.tocItem(item, '') }}
+                            {% if level > currentLevel %}
+                                {% if level == currentLevel+1 %}
+                                    {{ helper.tocItem(item, entry, level) }}
+                                {% else %}
+                                    {% set level = currentLevel %}
+                                {% endif %}
+                            {% else %}
+                                 {{ helper.tocItem(item, entry, level) }}
+                            {% endif %}
+
+                            {% set currentLevel = level %}
+                        {% endif %}
+                    {% endfor %}
+
+                {# empty or special item (anything different from 'chapter' and 'appendix' #}
+                {% else %}
+                    {{ helper.tocItem(item, '') }}
+                {% endif %}
             {% endif %}
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

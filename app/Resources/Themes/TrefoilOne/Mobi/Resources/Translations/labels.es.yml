@@ -59,4 +59,6 @@ label:
     designer:               'Diseñador'
     designers:              'Diseñadores'
     version:                'Versión'
-    
+    series:                 'Colección'
+    publisher:              'Editorial'
+    label:                  'Sello editorial'    

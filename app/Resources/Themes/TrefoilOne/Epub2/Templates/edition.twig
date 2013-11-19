@@ -67,10 +67,20 @@
             </p>
         {% endif %}
 
+        {% if book.publisher is defined %}
+            <h4>{{ app.labels.label.publisher | default('Publisher') }}:</h4>
+            <p>&nbsp;&nbsp;{{ book.publisher }}</p>
+        {% endif %}
+
+        {% if book.publishing_label is defined %}
+            <h4>{{ app.labels.label.publishing_label | default('Publishing label') }}:</h4>
+            <p>&nbsp;&nbsp; {{ book.publishing_label }}</p>
+        {% endif %}
+
     {% endspaceless %}
     </div>
 
-    <p><img src="images/logo_publisher.png" alt="{{ book.publisher }}" /></p>
+    <p><img class="logo" src="images/logo_publisher.gif" alt="{{ book.publisher }}" /></p>
 
     {% if edition.isbn %}
     <p>ISBN {{ edition.isbn }}</p>
