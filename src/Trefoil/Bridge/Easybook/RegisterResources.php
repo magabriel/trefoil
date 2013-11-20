@@ -31,8 +31,6 @@ class RegisterResources implements EventSubscriberInterface
 
         $this->registerOwnServices();
 
-        $this->app['book.logger']->init();
-
         $this->registerOwnPlugins();
 
         $this->registerOwnThemes();
@@ -49,10 +47,7 @@ class RegisterResources implements EventSubscriberInterface
      */
     public function registerOwnServices()
     {
-        $this->app['book.logger'] = $this->app->share(function ($app) {
-            $logFile = $app['publishing.dir.book'].'/publish.log';
-            return new Logger($logFile);
-        });
+        // nothing here
     }
 
     /**
