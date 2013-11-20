@@ -45,7 +45,7 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        if ($this->format != 'Epub2') {
+        if ($this->format != 'Epub') {
             // not for this format
             return;
         }

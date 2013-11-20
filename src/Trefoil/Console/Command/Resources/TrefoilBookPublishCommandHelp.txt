@@ -15,7 +15,7 @@ any/
       My_theme/
           Common/
               Templates
-          Epub2/
+          Epub/
               Contents
               Resources
               Templates

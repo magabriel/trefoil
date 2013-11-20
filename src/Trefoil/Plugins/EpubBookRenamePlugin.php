@@ -1,6 +1,8 @@
 <?php
 namespace Trefoil\Plugins;
 
+use Symfony\Component\Finder\Finder;
+
 use Easybook\Events\EasybookEvents;
 use Easybook\Util\Toolkit;
 use Easybook\Events\BaseEvent;
@@ -36,7 +38,7 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
         $this->init($event);
 
         // only for epub or mobi
-        if (!in_array($this->format, array('Epub2', 'Mobi'))) {
+        if (!in_array($this->format, array('Epub', 'Mobi'))) {
             return;
         }
 
@@ -48,7 +50,6 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
         $outputDir = $this->app['publishing.dir.output'];
 
         $extension = strtolower($this->format);
-        $extension = str_replace('epub2', 'epub', $extension);
 
         // check output file generated
         $oldFile = $outputDir . '/book.'.$extension;
@@ -74,7 +75,7 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
         $this->app->get('filesystem')->rename($oldFile, $newFileAux);
 
         // delete other versions
-        $files = $this->app->get('finder')->files()->name('*.'.$extension)
+        $files = Finder::create()->files()->name('*.'.$extension)
                 ->in($outputDir);
         $this->app->get('filesystem')->remove($files);
 
