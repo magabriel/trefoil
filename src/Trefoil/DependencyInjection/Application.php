@@ -29,7 +29,7 @@ class Application extends EasybookApplication
         $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'].'/app/Resources';
 
         // -- own publisher ----------------------------------------------------
-        $this['publisher'] = $this->share(function ($app) {
+        $this['publisher'] = $this->extend('publisher', function ($publisher, $app) {
             $outputFormat = $app->edition('format');
 
             switch (strtolower($outputFormat)) {
@@ -47,7 +47,7 @@ class Application extends EasybookApplication
 
                 default:
                     // use the default publisher
-                    $publisher = $app['publisher'];
+                    return $publisher;
             }
 
             $publisher->checkIfThisPublisherIsSupported();
