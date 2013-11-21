@@ -57,11 +57,6 @@ class Toolkit extends EasybookToolkit
     {
         $format = Toolkit::camelize($app->edition('format'), true);
 
-        // TODO: fix the following hack
-        if ('Epub' == $format) {
-            $format = 'Epub2';
-        }
-
         return $format;
     }
 

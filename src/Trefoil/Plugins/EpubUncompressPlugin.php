@@ -42,7 +42,7 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         $this->init($event);
 
-        if ($this->format != 'Epub2') {
+        if ($this->format != 'Epub') {
             // not for this format
             return;
         }

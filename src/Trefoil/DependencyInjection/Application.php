@@ -35,7 +35,6 @@ class Application extends EasybookApplication
             switch (strtolower($outputFormat)) {
 
                 case 'epub':
-                case 'epub2':
                     // use our epub2 publisher
                     $publisher = new Epub2Publisher($app);
                     break;
