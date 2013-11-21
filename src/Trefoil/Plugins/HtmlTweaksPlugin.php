@@ -78,26 +78,26 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content =  $event->getOriginal();
+        $content =  $event->getItemProperty('original');
 
         if (isset($this->tweaks['tweaks']['onPreParse'])) {
             $content = $this->processTweaks($content, $this->tweaks['tweaks']['onPreParse']);
         }
 
-        $event->setOriginal($content);
+        $event->setItemProperty('original', $content);
     }
 
-    public function onItemPostParse(BaseEvent $event)
+    public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
-        $content = $event->getContent();
+        $content = $event->getItemProperty('content');
 
         if (isset($this->tweaks['tweaks']['onPostParse'])) {
             $content = $this->processTweaks($content, $this->tweaks['tweaks']['onPostParse']);
         }
 
-        $event->setContent($content);
+        $event->setItemProperty('content', $content);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace Trefoil\Publishers;
 
+use Symfony\Component\Finder\Finder;
+
 use Easybook\Publishers\HtmlPublisher;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
@@ -248,7 +250,7 @@ class Epub2Publisher extends HtmlPublisher
 
             if (file_exists($imagesDir)) {
 
-                $images = $this->app['finder']->files()->in($imagesDir);
+                $images = Finder::create()->files()->in($imagesDir);
 
                 foreach ($images as $image) {
 
@@ -332,7 +334,7 @@ class Epub2Publisher extends HtmlPublisher
         $fontsData = array();
 
         if (file_exists($fontsDir)) {
-            $fonts = $this->app['finder']->files()->name('*.ttf')->in($fontsDir);
+            $fonts = Finder::create()->files()->name('*.ttf')->in($fontsDir);
 
             $i = 1;
             foreach ($fonts as $font) {
@@ -454,7 +456,7 @@ class Epub2Publisher extends HtmlPublisher
      */
     private function fixInternalLinks($chunksDir)
     {
-        $generatedChunks = $this->app['finder']->files()->name('*.html')->in($chunksDir);
+        $generatedChunks = Finder::create()->files()->name('*.html')->in($chunksDir);
 
         // maps the original internal links (e.g. #new-content-types)
         // with the correct absolute URL needed for a website

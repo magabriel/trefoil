@@ -2,7 +2,7 @@
 namespace Trefoil\Util;
 
 use Easybook\Util\Toolkit as EasybookToolkit;
-use Easybook\DependencyInjection\Application;
+use Trefoil\DependencyInjection\Application;
 
 class Toolkit extends EasybookToolkit
 {
@@ -56,11 +56,6 @@ class Toolkit extends EasybookToolkit
     public static function getCurrentFormat(Application $app)
     {
         $format = Toolkit::camelize($app->edition('format'), true);
-
-        // TODO: fix the following hack
-        if ('Epub' == $format) {
-            $format = 'Epub2';
-        }
 
         return $format;
     }

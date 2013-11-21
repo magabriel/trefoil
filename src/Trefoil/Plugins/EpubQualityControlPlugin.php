@@ -30,7 +30,7 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
     {
         $this->init($event);
 
-        $content = $event->getContent();
+        $content = $event->getItemProperty('content');
 
         $this->checkImages($content);
         $this->checkEmphasis($content);

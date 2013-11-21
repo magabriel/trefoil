@@ -31,8 +31,10 @@ class TrefoilBookPublishCommand extends EasybookBookPublishCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // get and save the themes_dir option
-        $themesDir = $input->getOption('themes_dir' ?: $this->app['trefoil.app.dir.resources'].'/Themes');
-        $this->app['trefoil.publishing.dir.themes'] = $themesDir;
+        $themesDir = $input->getOption('themes_dir');
+        if ($themesDir) {
+            $this->app['trefoil.publishing.dir.themes'] = $themesDir;
+        }
 
         // register our resources
         $this->app['dispatcher']->addSubscriber(new RegisterResources());

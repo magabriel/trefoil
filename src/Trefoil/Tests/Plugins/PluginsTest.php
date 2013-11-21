@@ -1,13 +1,13 @@
 <?php
 namespace Trefoil\Tests\Plugins;
 
-use Trefoil\Tests\BookPublishingTestCase;
+use Trefoil\Tests\BookPublishingAllTestCase;
 
-class PluginsTest extends BookPublishingTestCase
+class PluginsTest extends BookPublishingAllTestCase
 {
-    public function __construct()
+    public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
-        parent::__construct();
+        parent::__construct($name, $data, $dataName);
 
         // __DIR__ is the directory containing THIS file
         $this->fixturesDir = __DIR__.'/fixtures/';

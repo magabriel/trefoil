@@ -32,11 +32,11 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content = $event->getOriginal();
+        $content = $event->getItemProperty('original');
 
         $content = $this->preProcessImages($content);
 
-        $event->setOriginal($content);
+        $event->setItemProperty('original', $content);
     }
 
     public function onItemPostParse(BaseEvent $event)
