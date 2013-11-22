@@ -177,6 +177,16 @@ class DropCaps
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
 
+        // look if it starts with a non-word character(s)
+        if (preg_match('/^(\W+)/U', $text, $matches)) {
+
+            // isolate the first "$length" letters but skipping the non-word char(s)
+            $dropCaps = $matches[1] . mb_substr($text, mb_strlen($matches[1]), $this->length);
+            $rest = mb_substr($text, mb_strlen($matches[1])+$this->length);
+
+            return $this->renderDropCaps($skip, $dropCaps, $rest);
+        }
+
         // normal case, isolate the first "$length" letters
         $dropCaps = substr($text, 0, $this->length);
         $rest = substr($text, $this->length);
