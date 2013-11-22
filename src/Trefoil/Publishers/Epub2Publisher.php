@@ -3,7 +3,7 @@
 namespace Trefoil\Publishers;
 
 use Symfony\Component\Finder\Finder;
-
+use Symfony\Component\Finder\SplFileInfo;
 use Easybook\Publishers\HtmlPublisher;
 use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\BaseEvent;
@@ -240,7 +240,7 @@ class Epub2Publisher extends HtmlPublisher
         $sourceDirs[] = sprintf('%s/images/%s', $this->app['publishing.dir.resources'], $edition);
 
         // the normal book images:
-        //     <book-dir>/Resources/images/
+        //     <book-dir>/images/
         $sourceDirs[] = $this->app['publishing.dir.contents'].'/images';
 
         // process each directory in sequence, so each one will override the previously copied images
@@ -330,24 +330,50 @@ class Epub2Publisher extends HtmlPublisher
             ));
         }
 
-        $fontsDir = $this->app['app.dir.resources'].'/Fonts/Inconsolata';
+        $sourceDirs = array();
+        // the standard easybook fonts dir
+        //     <easybook>/app/Resources/Fonts/
+        $sourceDirs[] = $this->app['app.dir.resources'].'/Fonts';
+        // the fonts inside the book
+        //     <book-dir>/Fonts/
+        $sourceDirs[] = $this->app['publishing.dir.resources'].'/Fonts';
+
+        // new in trefoil
+        $allowedFonts = $this->app->edition('fonts');
+
         $fontsData = array();
+        $i = 1;
+        foreach ($sourceDirs as $fontDir) {
+            if (file_exists($fontDir)) {
 
-        if (file_exists($fontsDir)) {
-            $fonts = Finder::create()->files()->name('*.ttf')->in($fontsDir);
+                $fonts = Finder::create()
+                            ->files()
+                            ->name('*.ttf')
+                            ->name('*.otf')
+                            ->in($fontDir);
 
-            $i = 1;
-            foreach ($fonts as $font) {
-                $this->app['filesystem']->copy(
-                    $font->getPathName(),
-                    $targetDir.'/'.$font->getFileName()
-                );
+                foreach ($fonts as $font) {
+                    /*@var $font SplFileInfo */
 
-                $fontsData[] = array(
-                    'id'        => 'font-'.$i++,
-                    'filePath'  => 'fonts/'.$font->getFileName(),
-                    'mediaType' => finfo_file(finfo_open(FILEINFO_MIME_TYPE), $font->getPathName())
-                );
+                    $fontName = $font->getBasename('.'.$font->getExtension());
+
+                    if (is_array($allowedFonts)) {
+                        if (!in_array($fontName, $allowedFonts)) {
+                            continue;
+                        }
+                    }
+
+                    $this->app['filesystem']->copy(
+                            $font->getPathName(),
+                            $targetDir.'/'.$font->getFileName()
+                    );
+
+                    $fontsData[] = array(
+                            'id'        => 'font-'.$i++,
+                            'filePath'  => 'fonts/'.$font->getFileName(),
+                            'mediaType' => finfo_file(finfo_open(FILEINFO_MIME_TYPE), $font->getPathName())
+                    );
+                }
             }
         }
 
