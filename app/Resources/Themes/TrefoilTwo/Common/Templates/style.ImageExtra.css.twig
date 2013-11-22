@@ -1,0 +1,157 @@
+/*
+ * Image Extra
+ * ===========
+ */
+
+/* override this for styling the figure box */
+div.figure .box {
+    border: 1px solid #aaa;
+    padding: 10px 10px 0;
+}
+
+/* margins for left and right aligned figures */
+div.figure.left {
+    margin-right: 1em;
+}
+div.figure.right {
+    margin-left: 1em;
+}
+
+/* width of a default figure (i.e. without alignment or class */
+div.figure.default .box {
+    width: 80%;
+}
+
+/* **************************
+ * nothing to customize below
+ * **************************
+ */
+
+div.figure.narrower,
+div.figure.narrow,
+div.figure.half,
+div.figure.wide {
+    float: left;
+}
+
+div.figure.default .box img {
+    width: 100%;
+}
+
+div.figure.left img {
+    margin-right: 0;
+}
+
+div.figure.right img {
+    margin-left: 0;
+}
+
+div.figure .box {
+    page-break-inside: avoid;
+}
+
+div.figure.center .box {
+    display: inline-block;
+    width: 80%;
+}
+
+div.figure.center .box > img {
+    width: 100%;
+}
+
+div.figure.center .box,
+div.figure.default .box {
+    max-width: 800px;
+}
+
+div.figure.narrower img,
+div.figure.narrow img,
+div.figure.half img,
+div.figure.wide img,
+div.image.narrower img,
+div.image.narrow img,
+div.image.half img,
+div.image.wide img  {
+    display: inline-block;
+    width: 100%;
+    float: none;
+}
+
+div.figure.narrower,
+div.image.narrower {
+    width: 23%;
+    margin-right: 1%;
+    display: inline-block;
+}
+
+div.figure.narrow,
+div.image.narrow {
+    width: 31%;
+    margin-right: 1%;
+    display: inline-block;
+}
+
+div.figure.half,
+div.image.half {
+    width: 48%;
+    margin-right: 1%;
+    display: inline-block;
+}
+
+div.figure.wide,
+div.image.wide {
+    width: 100%;
+    display: inline-block;
+}
+
+/* figures centered with size */
+
+div.figure.center.half,
+div.figure.center.narrow,
+div.figure.center.narrower {
+     width: 100%;
+}
+
+div.figure.center.half .box {
+    width: 50%;
+    min-width: 50%;
+}
+
+div.figure.center.narrow .box {
+    width: 33%%;
+    min-width: 33%;
+}
+
+div.figure.center.narrower .box {
+    width: 25%;
+    min-width: 25%;
+}
+
+div.image.narrower,
+div.image.narrow,
+div.image.half,
+div.image.wide {
+}
+
+/* images centered with size */
+
+div.image.center.half,
+div.image.center.narrow,
+div.image.center.narrower {
+    width: 100%;
+}
+
+div.image.center.half img {
+    width: 50%;
+    min-width: 50%;
+}
+
+div.image.center.narrow img {
+    width: 33%;
+    min-width: 33%;
+}
+
+div.image.center.narrower img {
+    width: 25%;
+    min-width: 25%;
+}

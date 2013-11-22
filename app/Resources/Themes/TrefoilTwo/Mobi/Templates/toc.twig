@@ -1,0 +1,73 @@
+{% extends 'layout.twig' %}
+
+{% import _self as helper %}
+
+{% macro tocItem(item, entry, level) %}
+    {% set level = level ? level : 1 %}
+    {% set hash = entry ? '#' ~ (level == 1 ? item.slug : entry.slug ) : '' %}
+    <div class="{{ item.config.element }} level-{{ level }}">
+        <a href="{{ item.page_name }}.html{{ hash }}">
+            {% if entry %}
+                 {{ entry.label ? ('<span>'~entry.label~'</span> - '~entry.title) : entry.title }}
+            {% else %}
+                {{ item.title }}
+            {% endif %}
+        </a>
+    </div>
+{% endmacro %}
+
+{% block title %}{{ item.title }}{% endblock %}
+
+{% block body %}
+<div class="item toc">
+    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+    <div class="toc_data">
+        {% set hasParts = false %}
+        {% for item in app.get('publishing.items') %}
+            {# editions define the *tocable* items #}
+            {% if item.config.element in edition.toc.elements|default([]) %}
+
+                {% if item.config.element == 'part' %}
+                    {% set hasParts = true %}
+                {% endif %}
+
+                {# item has several elements in its toc #}
+                {% if item.toc|length > 0 %}
+
+                    {% set currentLevel = 0 %}
+                    {% if item.config.element == 'chapter' and hasParts %}
+                        {% set currentLevel = 1 %}
+                    {% endif %}
+
+                    {% for entry in item.toc %}
+
+                        {% set level = entry.level %}
+                        {% if item.config.element == 'chapter' and hasParts %}
+                            {% set level = entry.level + 1 %}
+                        {% endif %}
+
+                        {% if level <= edition.toc.deep %}
+
+                            {% if level > currentLevel %}
+                                {% if level == currentLevel+1 %}
+                                    {{ helper.tocItem(item, entry, level) }}
+                                {% else %}
+                                    {% set level = currentLevel %}
+                                {% endif %}
+                            {% else %}
+                                 {{ helper.tocItem(item, entry, level) }}
+                            {% endif %}
+
+                            {% set currentLevel = level %}
+                        {% endif %}
+                    {% endfor %}
+
+                {# empty or special item (anything different from 'chapter' and 'appendix' #}
+                {% else %}
+                    {{ helper.tocItem(item, '') }}
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
