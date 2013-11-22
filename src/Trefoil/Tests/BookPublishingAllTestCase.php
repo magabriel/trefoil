@@ -23,6 +23,7 @@ abstract class BookPublishingAllTestCase extends TestCase
     protected $app;
     protected $filesystem;
     protected $console;
+    protected $isDebug;
 
     public function __construct($name = NULL, array $data = array(), $dataName = '')
     {
@@ -35,8 +36,10 @@ abstract class BookPublishingAllTestCase extends TestCase
 
     public function setUp()
     {
+        $this->isDebug = getopt('', array('debug'));
+
         // setup temp dir for generated files
-        if (getopt('', array('debug'))) {
+        if ($this->isDebug) {
             // reuse the temp dir
             $className = basename(str_replace('\\', '/', get_called_class()));
             $this->tmpDir = $this->app['app.dir.cache'].'/'.'phpunit_debug/'.$className;
@@ -58,7 +61,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         $delete = true;
 
         if ($this->hasFailed()) {
-            if (getopt('', array('debug'))) {
+            if ($this->isDebug) {
                 echo ">>> Actual and expected results not deleted: ".$this->tmpDir;
                 $delete = false;
             }
@@ -80,7 +83,7 @@ abstract class BookPublishingAllTestCase extends TestCase
             throw new \Exception('[ERROR] Please provide a value for $this->fixturesDir');
         }
 
-        if (getopt('', array('debug'))) {
+        if ($this->isDebug) {
             echo '> Using fixtures from '.$this->fixturesDir."\n";
         }
 
@@ -137,7 +140,7 @@ abstract class BookPublishingAllTestCase extends TestCase
     {
         $slug = $bookName;
 
-        if (getopt('', array('debug'))) {
+        if ($this->isDebug) {
             echo sprintf("\n".'- Processing test "%s"'."\n", $slug);
         }
 
@@ -164,7 +167,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         ));
 
         $output = new NullOutput();
-        if (getopt('', array('debug'))) {
+        if ($this->isDebug) {
             // we want the full output in debug mode
             $output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, true);
         }
@@ -200,23 +203,11 @@ abstract class BookPublishingAllTestCase extends TestCase
                 Toolkit::unzip($thisBookDir.'/expected/'.
                         $editionName.'/'.$file->getRelativePathname(), $expected);
 
-                // assert that generated files are exactly the same as expected
-                $genFiles = Finder::create()
-                    ->files()
-                    ->notName('.gitignore')
-                    ->in($generated);
+                // assert that generated files insize EPUB are exactly the same as expected
+                $this->checkGeneratedFiles($expected, $generated, $file->getPathName());
 
-                foreach ($genFiles as $genFile) {
-                    $this->assertFileEquals(
-                            $expected.'/'.$genFile->getRelativePathname(),
-                            $genFile->getPathname(),
-                            sprintf("'%s' file (into ZIP file '%s') not properly generated",
-                                    $genFile->getRelativePathname(), $file->getPathName())
-                    );
-                }
-
-                // assert that all required files are generated
-                $this->checkForMissingFiles($expected,$generated);
+                // assert that all required files inside EPUB are generated
+                $this->checkForMissingFiles($expected, $generated);
 
             } else {
                 $this->assertFileEquals(
@@ -226,7 +217,7 @@ abstract class BookPublishingAllTestCase extends TestCase
                 );
             }
 
-            // assert that all required files are generated
+            // assert that all required files for this edition are generated
             $this->checkForMissingFiles(
                     $thisBookDir.'/expected/'.$editionName,
                     $this->tmpDir.'/'.$slug.'/Output/'.$editionName);
@@ -240,9 +231,36 @@ abstract class BookPublishingAllTestCase extends TestCase
         }
     }
 
-    /*
+    /**
+     * Assert that all generated files have the expected contents
+     *
+     * @param string $dirExpected
+     * @param string $dirGenerated
+     * @apram string $zipName
+     */
+    protected function checkGeneratedFiles($dirExpected, $dirGenerated, $zipName)
+    {
+        $genFiles = Finder::create()
+                    ->files()
+                    ->notName('.gitignore')
+                    ->in($dirGenerated);
+
+        foreach ($genFiles as $genFile) {
+            $this->assertFileEquals(
+                    $dirExpected.'/'.$genFile->getRelativePathname(),
+                    $genFile->getPathname(),
+                    sprintf("'%s' file (into ZIP file '%s') not properly generated",
+                            $genFile->getRelativePathname(), $zipName)
+            );
+        }
+    }
+
+    /**
      * Assert that all expected files were generated
-    */
+     *
+     * @param string $dirExpected
+     * @param string $dirGenerated
+     */
     protected function checkForMissingFiles($dirExpected, $dirGenerated)
     {
         $expectedFiles = Finder::create()
