@@ -1,0 +1,53 @@
+<!--
+========================================
+Solution for:
+QuestionSet: {{ questionSet.id }}
+========================================
+-->
+<div class="questions questions-solutions">
+{% for qindex, question in questionSet.questions if question.solution %}
+
+    {% set qid = 'q-'~questionSet.id ~ '_' ~ qindex %}
+
+    {# mext question id #}
+    {% set nextqid = null %}
+    {% if questionSet.questions[qindex+1]|default(null) %}
+        {% set nextqid = 'q-'~questionSet.id ~ '_' ~ (qindex+1) %}
+    {% endif %}
+
+    <h5 id="{{ qid }}-solution" class="{{ questionSet.heading.class }}">{{ questionSet.heading.text }}</h5>
+
+    <div class="question"><span class="mobi">[</span><span class="number">{{ qindex+1 }}</span><span class="mobi">]</span> {{ question.text }}</div>
+
+    <hr class="not-mobi"/><img class="mobi" src="images/sep_1_open.gif" alt="*"  />
+        <div class="response">
+            <h6>{{ question.solution.heading }}</h6>
+            {{ question.solution.text }}
+        </div>
+    <hr class="not-mobi"/><img class="mobi" src="images/sep_1_close.gif" alt="*"  />
+
+    {# next and return buttons #}
+    <p>
+        <a href="#{{ qid }}">
+            <span class="image"><img src="btn_back.jpeg" class="button" width="80" height="30" alt="*"  /></span>
+        </a>
+        {% if nextqid %}
+            <a href="#{{ nextqid }}">
+                <span class="image"><img src="btn_next.jpeg" class="button" width="80" height="30" alt="*"  /></span>
+            </a>
+        {% else %}
+            <a href="#skip-q-{{ questionSet.id }}"><span class="image"><img src="btn_finish.jpeg" class="button" width="80" height="30" alt="*"  /></span></a>
+        {% endif %}
+    </p>
+    <div class="page-break"></div>
+
+    {# second page break
+     # just in case viewer is in two-pages mode
+     #}
+    <hr/>
+    <p><span style="font-size: 3em; font-weight: bold;vertical-align: middle;">&larr;</span>
+        Pulsa para continuar.</p>
+    <hr/>
+    <div class="page-break"></div>
+{% endfor %}
+</div>

@@ -1,0 +1,23 @@
+<div class="title">
+    <h2>{{ book.title }}</h2>
+    <h3>{{ book.collection }}</h3>
+    <h4>{{ book.author}}</h4>
+</div>
+    
+<br />
+    
+![*](logo_ediciones2010-peq.png)
+
+<br />
+
+{% if edition.isbn %} 
+ISBN {{ edition.isbn }} 
+{% endif %}
+{% if book.version %} 
+Versión {{ book.version }} - {{ book.publication_date|default('now')|date('YmdHi') }}
+{% endif %}
+
+&copy; {{ "now"|date("Y") }} - Ediciones 2010
+
+*Todos los derechos reservados*
+ 

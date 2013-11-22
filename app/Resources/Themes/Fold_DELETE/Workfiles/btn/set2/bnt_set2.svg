@@ -1,0 +1,1807 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="bnt_set2.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient3905">
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0"
+         id="stop3907" />
+      <stop
+         style="stop-color:#a19494;stop-opacity:0;"
+         offset="1"
+         id="stop3909" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3813">
+      <stop
+         style="stop-color:#fff9f9;stop-opacity:0.45454547;"
+         offset="0"
+         id="stop3815" />
+      <stop
+         id="stop3821"
+         offset="0.5"
+         style="stop-color:#c8c8bc;stop-opacity:0.65454543;" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.43636364;"
+         offset="1"
+         id="stop3817" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3761">
+      <stop
+         style="stop-color:#fff240;stop-opacity:0.24705882;"
+         offset="0"
+         id="stop3771" />
+      <stop
+         style="stop-color:#fff128;stop-opacity:0;"
+         offset="1"
+         id="stop3765" />
+    </linearGradient>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3761-3"
+       id="linearGradient3767-0"
+       x1="142.85715"
+       y1="159.50504"
+       x2="141.42857"
+       y2="105.21932"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.49393461,0,0,0.52132217,31.563547,85.487533)" />
+    <linearGradient
+       id="linearGradient3761-3">
+      <stop
+         style="stop-color:#fff458;stop-opacity:1;"
+         offset="0"
+         id="stop3763-0" />
+      <stop
+         id="stop3769-8"
+         offset="0.5"
+         style="stop-color:#fff458;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#fff240;stop-opacity:0.24705882;"
+         offset="0.75"
+         id="stop3771-3" />
+      <stop
+         style="stop-color:#fff128;stop-opacity:0;"
+         offset="1"
+         id="stop3765-8" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3813"
+       id="linearGradient3819"
+       x1="108.78571"
+       y1="178.07646"
+       x2="108.60714"
+       y2="141.82646"
+       gradientUnits="userSpaceOnUse" />
+    <filter
+       id="filter3827"
+       inkscape:label="Button"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3829"
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0" />
+      <feMorphology
+         id="feMorphology3831"
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1" />
+      <feGaussianBlur
+         id="feGaussianBlur3833"
+         stdDeviation="8.9"
+         in="result1" />
+      <feColorMatrix
+         id="feColorMatrix3835"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91" />
+      <feComposite
+         id="feComposite3837"
+         in2="result91"
+         in="result0"
+         operator="out"
+         result="result2" />
+      <feGaussianBlur
+         id="feGaussianBlur3839"
+         stdDeviation="1.7"
+         result="result4" />
+      <feDiffuseLighting
+         id="feDiffuseLighting3841"
+         surfaceScale="10"
+         result="result92">
+        <feDistantLight
+           id="feDistantLight3843"
+           azimuth="225"
+           elevation="45" />
+      </feDiffuseLighting>
+      <feBlend
+         id="feBlend3845"
+         in2="SourceGraphic"
+         mode="multiply"
+         result="result93" />
+      <feComposite
+         id="feComposite3847"
+         in2="SourceAlpha"
+         operator="in"
+         result="result3" />
+      <feSpecularLighting
+         id="feSpecularLighting3849"
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         result="result94">
+        <feDistantLight
+           id="feDistantLight3851"
+           azimuth="225"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3853"
+         in2="result3"
+         operator="atop" />
+    </filter>
+    <filter
+       id="filter3857"
+       inkscape:label="Button"
+       x="0"
+       y="0"
+       width="1"
+       height="1"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Soft bevel, slightly depressed middle"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3859"
+         stdDeviation="2.3"
+         in="SourceAlpha"
+         result="result0" />
+      <feMorphology
+         id="feMorphology3861"
+         in="SourceAlpha"
+         radius="6.6"
+         result="result1" />
+      <feGaussianBlur
+         id="feGaussianBlur3863"
+         stdDeviation="8.9"
+         in="result1" />
+      <feColorMatrix
+         id="feColorMatrix3865"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.3 0"
+         result="result91" />
+      <feComposite
+         id="feComposite3867"
+         in2="result91"
+         in="result0"
+         operator="out"
+         result="result2" />
+      <feGaussianBlur
+         id="feGaussianBlur3869"
+         stdDeviation="1.7"
+         result="result4" />
+      <feDiffuseLighting
+         id="feDiffuseLighting3871"
+         surfaceScale="10"
+         result="result92">
+        <feDistantLight
+           id="feDistantLight3873"
+           azimuth="225"
+           elevation="45" />
+      </feDiffuseLighting>
+      <feBlend
+         id="feBlend3875"
+         in2="SourceGraphic"
+         mode="multiply"
+         result="result93" />
+      <feComposite
+         id="feComposite3877"
+         in2="SourceAlpha"
+         operator="in"
+         result="result3" />
+      <feSpecularLighting
+         id="feSpecularLighting3879"
+         in="result4"
+         surfaceScale="5"
+         specularExponent="17.9"
+         result="result94">
+        <feDistantLight
+           id="feDistantLight3881"
+           azimuth="225"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3883"
+         in2="result3"
+         operator="atop" />
+    </filter>
+    <filter
+       id="filter4113"
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Drop Shadow">
+      <feFlood
+         id="feFlood4115"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         id="feComposite4117"
+         in2="SourceGraphic"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur4119"
+         in="composite"
+         stdDeviation="1"
+         result="blur" />
+      <feOffset
+         id="feOffset4121"
+         dx="1"
+         dy="1"
+         result="offset" />
+      <feComposite
+         id="feComposite4123"
+         in2="offset"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter4113-9"
+       inkscape:label="Drop Shadow">
+      <feFlood
+         id="feFlood4115-9"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         id="feComposite4117-0"
+         in2="SourceGraphic"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur4119-1"
+         stdDeviation="1"
+         result="blur" />
+      <feOffset
+         id="feOffset4121-9"
+         dx="1"
+         dy="1"
+         result="offset" />
+      <feComposite
+         id="feComposite4123-0"
+         in2="offset"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-8"
+       id="linearGradient3917-5"
+       gradientUnits="userSpaceOnUse"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893"
+       gradientTransform="translate(-0.7142857,-4.9793604e-7)" />
+    <linearGradient
+       id="linearGradient3905-8">
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0"
+         id="stop3907-5" />
+      <stop
+         style="stop-color:#a19494;stop-opacity:0;"
+         offset="1"
+         id="stop3909-7" />
+    </linearGradient>
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter4113-3"
+       inkscape:label="Drop Shadow">
+      <feFlood
+         id="feFlood4115-8"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         id="feComposite4117-8"
+         in2="SourceGraphic"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur4119-9"
+         stdDeviation="1"
+         result="blur" />
+      <feOffset
+         id="feOffset4121-6"
+         dx="1"
+         dy="1"
+         result="offset" />
+      <feComposite
+         id="feComposite4123-5"
+         in2="offset"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-9"
+       id="linearGradient4194-2"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0.12500006,0.08928522)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       id="linearGradient3905-9">
+      <stop
+         style="stop-color:#808080;stop-opacity:1;"
+         offset="0"
+         id="stop3907-6" />
+      <stop
+         style="stop-color:#a19494;stop-opacity:0;"
+         offset="1"
+         id="stop3909-0" />
+    </linearGradient>
+    <filter
+       color-interpolation-filters="sRGB"
+       id="filter4113-39"
+       inkscape:label="Drop Shadow">
+      <feFlood
+         id="feFlood4115-3"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)"
+         result="flood" />
+      <feComposite
+         id="feComposite4117-3"
+         in2="SourceGraphic"
+         in="flood"
+         operator="in"
+         result="composite1" />
+      <feGaussianBlur
+         id="feGaussianBlur4119-93"
+         stdDeviation="1"
+         result="blur" />
+      <feOffset
+         id="feOffset4121-60"
+         dx="1"
+         dy="1"
+         result="offset" />
+      <feComposite
+         id="feComposite4123-3"
+         in2="offset"
+         in="SourceGraphic"
+         operator="over"
+         result="composite2" />
+    </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0"
+       id="linearGradient4194-20"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(0.12500006,0.08928522)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       id="linearGradient3905-0">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.5030303;"
+         offset="0"
+         id="stop3907-1" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3905-0-7">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.5030303;"
+         offset="0"
+         id="stop3907-1-0" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1-4" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3905-0-0">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.5030303;"
+         offset="0"
+         id="stop3907-1-4" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1-2" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3905-0-0-6">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.5030303;"
+         offset="0"
+         id="stop3907-1-4-4" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1-2-8" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3905-0-0-6-1">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.5030303;"
+         offset="0"
+         id="stop3907-1-4-4-2" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1-2-8-6" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3905-0-2">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.32727271;"
+         offset="0"
+         id="stop3907-1-9" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop3909-1-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-7"
+       id="linearGradient5069"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.3412403,0,0,1,-44.075581,48.705386)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-7"
+       id="linearGradient5081"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.92359631,0,0,1,135.76614,48.705386)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-7"
+       id="linearGradient5087"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.96414304,0,0,1,245.00597,48.705386)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-7"
+       id="linearGradient5103"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.2268889,0,0,1,-37.000084,48.705386)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-7"
+       id="linearGradient5121"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99475978,0,0,0.9878891,91.399694,129.11129)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0"
+       id="linearGradient5569"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-0"
+       id="linearGradient5574"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-0-6"
+       id="linearGradient5580"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-0-6-1"
+       id="linearGradient5589"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0"
+       id="linearGradient5663"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0"
+       id="linearGradient5671"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.679803,-107.28435)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5705"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5727"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5749"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5775"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99217243,0,0,0.99298935,209.93559,316.43527)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5792"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient5806"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3522"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3524"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3526"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.99217243,0,0,0.99298935,209.93559,316.43527)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3528"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3530"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3905-0-2"
+       id="linearGradient3532"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59085009,0,0,1,2.507285,315.18277)"
+       x1="104.5"
+       y1="182.61591"
+       x2="104.5"
+       y2="158.27893" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.22392"
+     inkscape:cx="289.5524"
+     inkscape:cy="587.4022"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1615"
+     inkscape:window-height="1026"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <sodipodi:guide
+       orientation="0,1"
+       position="178.797,981.86827"
+       id="guide4447" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="157.5838,902.06622"
+       id="guide4621" />
+    <sodipodi:guide
+       orientation="1,0"
+       position="-41.416254,902.06622"
+       id="guide4665" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-28.284271,825.29463"
+       id="guide4789" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="-15,747.14286"
+       id="guide4813" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="92.857143,661.42857"
+       id="guide4968" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="33.508886,994.28952"
+       id="guide5024" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="65.284553,825.29463"
+       id="guide5089" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="25.420534,837.72214"
+       id="guide5091" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="65.862292,760.30506"
+       id="guide5105" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="32.931146,674.22189"
+       id="guide5158" />
+    <sodipodi:guide
+       orientation="0,1"
+       position="169.94576,571.11579"
+       id="guide5190" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Capa 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g5595"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_start.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(0.99516387,0,0,0.98686253,-2.2947052,0.44454333)"
+         id="g4342">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3751-2-7"
+           width="99.492554"
+           height="36.492558"
+           x="48.195198"
+           y="34.495991"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="34.58527"
+           x="48.320183"
+           height="36.492558"
+           width="99.492554"
+           id="rect3895-8"
+           style="color:#000000;fill:url(#linearGradient5569);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351"
+         y="58.072662"
+         x="93.890633"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="58.072662"
+           x="93.890633"
+           id="tspan4353"
+           sodipodi:role="line">Iniciar</tspan></text>
+    </g>
+    <g
+       id="g5835"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_verdadero.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(0.74298903,0,0,0.98271806,9.8537058,3.9326331)"
+         id="g5065">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#05c703;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1.15811932;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3751-2-7-6"
+           width="133.44342"
+           height="36.492558"
+           x="38.913666"
+           y="190.48573"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="190.575"
+           x="39.081299"
+           height="36.492558"
+           width="133.44342"
+           id="rect3895-8-1"
+           style="color:#000000;fill:url(#linearGradient5069);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50700003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351-4"
+         y="214.0623"
+         x="88.534187"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;letter-spacing:-0.77999997px;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="214.0623"
+           x="88.144188"
+           id="tspan4353-0"
+           sodipodi:role="line">Verdadero</tspan></text>
+    </g>
+    <g
+       id="g5602"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_finish.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g4346-2"
+         transform="matrix(0.99600771,0,0,0.98691512,108.34571,0.44077018)">
+        <g
+           id="g4342-7">
+          <rect
+             ry="4.6816978"
+             y="34.495991"
+             x="48.195198"
+             height="36.492558"
+             width="99.492554"
+             id="rect3751-2-7-5"
+             style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <rect
+             style="color:#000000;fill:url(#linearGradient5574);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             id="rect3895-8-10"
+             width="99.492554"
+             height="36.492558"
+             x="48.320183"
+             y="34.58527"
+             ry="4.6816978" />
+        </g>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351-2"
+         y="58.072662"
+         x="205.64612"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="58.072662"
+           x="205.64612"
+           id="tspan4353-3"
+           sodipodi:role="line">Finalizar</tspan></text>
+    </g>
+    <g
+       id="g5610"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_view_solution.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(0.89094655,0,0,0.98090526,-4.82424,1.3583976)"
+         id="g5032">
+        <g
+           transform="matrix(1.6568239,0,0,1,225.00154,-0.49463566)"
+           id="g4346-2-7">
+          <g
+             id="g4342-7-7">
+            <rect
+               style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               id="rect3751-2-7-5-1"
+               width="99.492554"
+               height="36.492558"
+               x="48.195198"
+               y="34.495991"
+               ry="4.6816978" />
+            <rect
+               ry="4.6816978"
+               y="34.58527"
+               x="48.320183"
+               height="36.492558"
+               width="99.492554"
+               id="rect3895-8-10-9"
+               style="color:#000000;fill:url(#linearGradient5580);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          </g>
+        </g>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351-2-4"
+         y="58.072662"
+         x="340.62219"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="58.072662"
+           x="340.62219"
+           id="tspan4353-3-2"
+           sodipodi:role="line">Ver solución</tspan></text>
+    </g>
+    <g
+       id="g5619"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_skip_activity.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g4346-2-7-6"
+         transform="matrix(1.4773337,0,0,0.97552475,354.99531,1.2603972)">
+        <g
+           id="g4342-7-7-6">
+          <rect
+             ry="4.6816978"
+             y="34.495991"
+             x="48.195198"
+             height="36.492558"
+             width="99.492554"
+             id="rect3751-2-7-5-1-2"
+             style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <rect
+             style="color:#000000;fill:url(#linearGradient5589);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             id="rect3895-8-10-9-7"
+             width="99.492554"
+             height="36.492558"
+             x="48.320183"
+             y="34.58527"
+             ry="4.6816978" />
+        </g>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351-2-4-2"
+         y="58.072662"
+         x="499.34927"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           dx="0"
+           style="font-size:16px;font-weight:bold;letter-spacing:-0.63px;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="58.072662"
+           x="499.03427"
+           id="tspan4353-3-2-5"
+           sodipodi:role="line">Saltar actividad</tspan></text>
+    </g>
+    <g
+       id="g5813"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_a.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.6792287,0,0,0.99298935,-26.274707,3.4621377)"
+         id="g5182">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3751-2-7-7"
+           width="58.785183"
+           height="36.492558"
+           x="39.066139"
+           y="456.9631"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="457.05237"
+           x="39.139984"
+           height="36.492558"
+           width="58.785183"
+           id="rect3895-8-7"
+           style="color:#000000;fill:url(#linearGradient5806);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4351-8"
+         y="481.2464"
+         x="88.210907"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="88.210907"
+           id="tspan4353-1"
+           sodipodi:role="line">A</tspan></text>
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4707"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:32px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"><flowRegion
+         id="flowRegion4709"><rect
+           id="rect4711"
+           width="118.18785"
+           height="100.0051"
+           x="345.47217"
+           y="92.717262" /></flowRegion><flowPara
+         id="flowPara4713" /></flowRoot>    <g
+       id="g4733">
+      <flowRoot
+         style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:32px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"
+         id="flowRoot4725"
+         xml:space="preserve"><flowRegion
+           id="flowRegion4727"><rect
+             y="87.666504"
+             x="30.304577"
+             height="98.994949"
+             width="90.913727"
+             id="rect4729" /></flowRegion><flowPara
+           id="flowPara4731" /></flowRoot>    </g>
+    <g
+       id="g4747">
+      <flowRoot
+         style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:32px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"
+         id="flowRoot4739"
+         xml:space="preserve"><flowRegion
+           id="flowRegion4741"><rect
+             y="77.56498"
+             x="103.03556"
+             height="121.21831"
+             width="98.994949"
+             id="rect4743" /></flowRegion><flowPara
+           id="flowPara4745" /></flowRoot>    </g>
+    <g
+       id="g5842"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_falso.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.0770504,0,0,0.9878891,-52.827283,2.7547309)"
+         id="g5077">
+        <rect
+           ry="4.6816978"
+           y="190.48573"
+           x="192.91367"
+           height="36.492558"
+           width="91.890961"
+           id="rect4799"
+           style="opacity:0.93525175;color:#000000;fill:#c7031c;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:0.96103925;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           style="color:#000000;fill:url(#linearGradient5081);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50700003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect4801"
+           width="91.890961"
+           height="36.492558"
+           x="193.02911"
+           y="190.575"
+           ry="4.6816978" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="203.4229"
+         y="214.0623"
+         id="text4803"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4805"
+           x="203.4229"
+           y="214.0623"
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold">Falso</tspan></text>
+    </g>
+    <g
+       id="g5324"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_si.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.1108695,0,0,0.98828013,-4.3408729,3.5816296)"
+         id="g5098">
+        <g
+           transform="matrix(0.72975842,0,0,1,11.225747,78.151768)"
+           id="g4836">
+          <rect
+             style="opacity:0.93525175;color:#000000;fill:#05c703;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1.10765016;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             id="rect4838"
+             width="122.06631"
+             height="36.492558"
+             x="38.913666"
+             y="190.48573"
+             ry="4.6816978" />
+          <rect
+             ry="4.6816978"
+             y="190.575"
+             x="39.067009"
+             height="36.492558"
+             width="122.06631"
+             id="rect4840"
+             style="color:#000000;fill:url(#linearGradient5103);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50700003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="86.448128"
+         y="292.05713"
+         id="text4842"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4844"
+           x="86.448128"
+           y="292.05713"
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold">Si</tspan></text>
+    </g>
+    <g
+       id="g5332"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_no.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5124">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#c7031c;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:0.99131852;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect4848"
+           width="98.971199"
+           height="36.050598"
+           x="152.95045"
+           y="269.17456"
+           ry="4.6249981" />
+        <rect
+           ry="4.6249981"
+           y="269.26273"
+           x="153.0748"
+           height="36.050598"
+           width="98.971199"
+           id="rect4850"
+           style="color:#000000;fill:url(#linearGradient5121);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50700003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4852"
+         y="292.05713"
+         x="202.00063"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="292.05713"
+           x="202.00063"
+           id="tspan4854"
+           sodipodi:role="line">No</tspan></text>
+    </g>
+    <g
+       id="g5849"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_ambas.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.031984,0,0,0.98733897,-45.728712,2.8799955)"
+         id="g5083">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#504fb5;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:0.9819079;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect4876"
+           width="95.925056"
+           height="36.492558"
+           x="304.66232"
+           y="190.48573"
+           ry="4.6816978"
+           inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_ambas.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <rect
+           ry="4.6816978"
+           y="190.575"
+           x="304.78284"
+           height="36.492558"
+           width="95.925056"
+           id="rect4878"
+           style="color:#000000;fill:url(#linearGradient5087);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50700003;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_ambas.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_ambas.png"
+         sodipodi:linespacing="125%"
+         id="text4880"
+         y="214.0623"
+         x="318.00058"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="214.0623"
+           x="318.00058"
+           id="tspan4882"
+           sodipodi:role="line">Ambas</tspan></text>
+    </g>
+    <g
+       id="g5680"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_back.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.0478305,0,0,0.98753638,-1.9376319,4.8774073)"
+         id="g5150">
+        <g
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_back.png"
+           transform="matrix(0.94948767,0,0,1,-4.7662427,319.85578)"
+           id="g4954">
+          <g
+             id="g4956">
+            <rect
+               ry="4.6816978"
+               y="34.495991"
+               x="48.195198"
+               height="36.492558"
+               width="99.492554"
+               id="rect4958"
+               style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+            <rect
+               style="color:#000000;fill:url(#linearGradient5671);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+               id="rect4960"
+               width="99.492554"
+               height="36.492558"
+               x="48.320183"
+               y="34.58527"
+               ry="4.6816978" />
+          </g>
+        </g>
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="86.764175"
+         y="378.14029"
+         id="text4962"
+         sodipodi:linespacing="125%"
+         inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_back.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90"><tspan
+           sodipodi:role="line"
+           id="tspan4964"
+           x="86.764175"
+           y="378.14029"
+           style="font-size:16px;font-weight:bold;-inkscape-font-specification:Bitstream Vera Sans Bold">Volver</tspan></text>
+    </g>
+    <g
+       id="g5689"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_next.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(0.99611661,0,0,0.98409192,110.88501,320.99386)"
+         id="g4970">
+        <g
+           id="g4972">
+          <rect
+             ry="4.6816978"
+             y="34.495991"
+             x="48.195198"
+             height="36.492558"
+             width="99.492554"
+             id="rect4974"
+             style="opacity:0.93525175;color:#000000;fill:#0018ff;fill-opacity:1;fill-rule:nonzero;stroke:#04109f;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+          <rect
+             style="color:#000000;fill:url(#linearGradient5663);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50744367;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             id="rect4976"
+             width="99.492554"
+             height="36.492558"
+             x="48.320183"
+             y="34.58527"
+             ry="4.6816978" />
+        </g>
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text4978"
+         y="378.14029"
+         x="207.3419"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           dx="0"
+           style="font-size:16px;font-weight:bold;letter-spacing:-0.74000001px;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="378.14029"
+           x="206.97191"
+           id="tspan4980"
+           sodipodi:role="line">Siguiente</tspan></text>
+    </g>
+    <g
+       id="g5799"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_b.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5192"
+         transform="matrix(1.6792287,0,0,0.99298935,89.725293,3.4621377)">
+        <rect
+           ry="4.6816978"
+           y="456.9631"
+           x="39.066139"
+           height="36.492558"
+           width="58.785183"
+           id="rect5194"
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           style="color:#000000;fill:url(#linearGradient5792);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect5196"
+           width="58.785183"
+           height="36.492558"
+           x="39.139984"
+           y="457.05237"
+           ry="4.6816978" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="205.02795"
+         y="481.2464"
+         id="text5198"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5200"
+           x="205.02795"
+           y="481.2464"
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold">B</tspan></text>
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5204"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:32px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"><flowRegion
+         id="flowRegion5206"><rect
+           id="rect5208"
+           width="157.69005"
+           height="84.972878"
+           x="143.80026"
+           y="432.22357" /></flowRegion><flowPara
+         id="flowPara5210" /></flowRoot>    <flowRoot
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:32px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"
+       id="flowRoot5212"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5214"><rect
+           y="432.22357"
+           x="143.80026"
+           height="84.972878"
+           width="157.69005"
+           id="rect5216" /></flowRegion><flowPara
+         id="flowPara5218" /></flowRoot>    <g
+       id="g5778"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_c.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         ry="4.6488762"
+         y="457.22162"
+         x="271.32626"
+         height="36.236721"
+         width="98.713768"
+         id="rect5222"
+         style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.99258083;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         style="color:#000000;fill:url(#linearGradient5775);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect5224"
+         width="98.713768"
+         height="36.236721"
+         x="271.45029"
+         y="457.31027"
+         ry="4.6488762" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text5226"
+         y="481.2464"
+         x="319.39386"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="319.39386"
+           id="tspan5228"
+           sodipodi:role="line">C</tspan></text>
+    </g>
+    <g
+       id="g5712"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_d.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5232"
+         transform="matrix(1.6792287,0,0,0.99298935,323.72529,3.4621377)">
+        <rect
+           ry="4.6816978"
+           y="456.9631"
+           x="39.066139"
+           height="36.492558"
+           width="58.785183"
+           id="rect5234"
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           style="color:#000000;fill:url(#linearGradient5705);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect5236"
+           width="58.785183"
+           height="36.492558"
+           x="39.139984"
+           y="457.05237"
+           ry="4.6816978" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="438.21091"
+         y="481.2464"
+         id="text5238"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5240"
+           x="438.21091"
+           y="481.2464"
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold">D</tspan></text>
+    </g>
+    <g
+       id="g5756"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_e.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="matrix(1.6792287,0,0,0.99298935,437.72529,3.4621377)"
+         id="g5244">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect5246"
+           width="58.785183"
+           height="36.492558"
+           x="39.066139"
+           y="456.9631"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="457.05237"
+           x="39.139984"
+           height="36.492558"
+           width="58.785183"
+           id="rect5248"
+           style="color:#000000;fill:url(#linearGradient5749);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text5250"
+         y="481.2464"
+         x="551.3938"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="551.3938"
+           id="tspan5252"
+           sodipodi:role="line">E</tspan></text>
+    </g>
+    <g
+       id="g5734"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_f.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         id="g5256"
+         transform="matrix(1.6792287,0,0,0.99298935,551.72529,3.4621377)">
+        <rect
+           ry="4.6816978"
+           y="456.9631"
+           x="39.066139"
+           height="36.492558"
+           width="58.785183"
+           id="rect5258"
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           style="color:#000000;fill:url(#linearGradient5727);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect5260"
+           width="58.785183"
+           height="36.492558"
+           x="39.139984"
+           y="457.05237"
+           ry="4.6816978" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="667.02783"
+         y="481.2464"
+         id="text5262"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan5264"
+           x="667.02783"
+           y="481.2464"
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold">F</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+       x="243.80603"
+       y="-107.73854"
+       id="text5399"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5401"
+         x="243.80603"
+         y="-107.73854">º</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5477"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Bitstream Vera Sans;font-style:normal;font-weight:normal;font-size:16px;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;text-align:center"><flowRegion
+         id="flowRegion5479"><rect
+           id="rect5481"
+           width="49.022816"
+           height="55.559189"
+           x="22.877314"
+           y="447.74747" /></flowRegion><flowPara
+         id="flowPara5483" /></flowRoot>    <g
+       id="g3534"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_g.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <g
+         transform="translate(0,66)"
+         id="g3452"
+         inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_a.png"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90">
+        <g
+           transform="matrix(1.6792287,0,0,0.99298935,-26.274707,3.4621377)"
+           id="g3454">
+          <rect
+             style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+             id="rect3456"
+             width="58.785183"
+             height="36.492558"
+             x="39.066139"
+             y="456.9631"
+             ry="4.6816978" />
+          <rect
+             ry="4.6816978"
+             y="457.05237"
+             x="39.139984"
+             height="36.492558"
+             width="58.785183"
+             id="rect3458"
+             style="color:#000000;fill:url(#linearGradient3522);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        </g>
+        <text
+           sodipodi:linespacing="125%"
+           id="text3460"
+           y="481.2464"
+           x="88.210907"
+           style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+           xml:space="preserve"><tspan
+             style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+             y="481.2464"
+             x="88.210907"
+             id="tspan3462"
+             sodipodi:role="line">G</tspan></text>
+      </g>
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_h.png"
+       id="g3464"
+       transform="translate(0,66)">
+      <g
+         transform="matrix(1.6792287,0,0,0.99298935,89.725293,3.4621377)"
+         id="g3466">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3468"
+           width="58.785183"
+           height="36.492558"
+           x="39.066139"
+           y="456.9631"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="457.05237"
+           x="39.139984"
+           height="36.492558"
+           width="58.785183"
+           id="rect3470"
+           style="color:#000000;fill:url(#linearGradient3524);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3472"
+         y="481.2464"
+         x="205.02795"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="205.02795"
+           id="tspan3474"
+           sodipodi:role="line">H</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_i.png"
+       id="g3476"
+       transform="translate(0,66)">
+      <rect
+         style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.99258083;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect3478"
+         width="98.713768"
+         height="36.236721"
+         x="271.32626"
+         y="457.22162"
+         ry="4.6488762" />
+      <rect
+         ry="4.6488762"
+         y="457.31027"
+         x="271.45029"
+         height="36.236721"
+         width="98.713768"
+         id="rect3480"
+         style="color:#000000;fill:url(#linearGradient3526);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="319.39386"
+         y="481.2464"
+         id="text3482"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3484"
+           x="319.39386"
+           y="481.2464"
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold">I</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_j.png"
+       id="g3486"
+       transform="translate(0,66)">
+      <g
+         transform="matrix(1.6792287,0,0,0.99298935,323.72529,3.4621377)"
+         id="g3488">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3490"
+           width="58.785183"
+           height="36.492558"
+           x="39.066139"
+           y="456.9631"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="457.05237"
+           x="39.139984"
+           height="36.492558"
+           width="58.785183"
+           id="rect3492"
+           style="color:#000000;fill:url(#linearGradient3528);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3494"
+         y="481.2464"
+         x="438.21091"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="438.21091"
+           id="tspan3496"
+           sodipodi:role="line">J</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_k.png"
+       id="g3498"
+       transform="translate(0,66)">
+      <g
+         id="g3500"
+         transform="matrix(1.6792287,0,0,0.99298935,437.72529,3.4621377)">
+        <rect
+           ry="4.6816978"
+           y="456.9631"
+           x="39.066139"
+           height="36.492558"
+           width="58.785183"
+           id="rect3502"
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+        <rect
+           style="color:#000000;fill:url(#linearGradient3530);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3504"
+           width="58.785183"
+           height="36.492558"
+           x="39.139984"
+           y="457.05237"
+           ry="4.6816978" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:21.23183823px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         x="551.3938"
+         y="481.2464"
+         id="text3506"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3508"
+           x="551.3938"
+           y="481.2464"
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold">K</tspan></text>
+    </g>
+    <g
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="/home/miguelangel/desarrollo/workspace/easybook-books/app/Resources/Themes/Fold/Workfiles/btn/set2/btn_l.png"
+       id="g3510"
+       transform="translate(0,66)">
+      <g
+         transform="matrix(1.6792287,0,0,0.99298935,551.72529,3.4621377)"
+         id="g3512">
+        <rect
+           style="opacity:0.93525175;color:#000000;fill:#ffec00;fill-opacity:1;fill-rule:nonzero;stroke:#9f6e04;stroke-width:0.76866776;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+           id="rect3514"
+           width="58.785183"
+           height="36.492558"
+           x="39.066139"
+           y="456.9631"
+           ry="4.6816978" />
+        <rect
+           ry="4.6816978"
+           y="457.05237"
+           x="39.139984"
+           height="36.492558"
+           width="58.785183"
+           id="rect3516"
+           style="color:#000000;fill:url(#linearGradient3532);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50737137;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      </g>
+      <text
+         sodipodi:linespacing="125%"
+         id="text3518"
+         y="481.2464"
+         x="667.02783"
+         style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Bitstream Vera Sans"
+         xml:space="preserve"><tspan
+           style="font-size:16px;font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Bitstream Vera Sans Bold"
+           y="481.2464"
+           x="667.02783"
+           id="tspan3520"
+           sodipodi:role="line">L</tspan></text>
+    </g>
+  </g>
+</svg>
