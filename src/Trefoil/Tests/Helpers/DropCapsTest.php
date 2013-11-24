@@ -192,4 +192,46 @@ class DropCapsTest extends \PHPUnit_Framework_TestCase
                 implode("", $expected),
                 $dropCaps->getOutput());
     }
+
+    public function testProcessManualMarkup()
+    {
+        $input = array(
+                 '<p><span class="dropcaps">This</span> has dropcaps.</p>',
+        );
+
+        $expected = array(
+                '<p class="has-dropcaps"><span class="dropcaps">This</span> has dropcaps.</p>',
+        );
+
+        $dropCaps = new DropCaps(implode("", $input));
+
+        // must change
+        $dropCaps->processManualMarkup();
+        $this->assertEquals(
+                implode("", $expected),
+                $dropCaps->getOutput());
+    }
+
+    public function testMarkdownStyle()
+    {
+        $input = array(
+                '<p>Normal paragraph.</p>',
+                '<p>[[D]]rop caps paragraph.</p>',
+                '<p>[[Another]] drop caps paragraph.</p>',
+        );
+
+        $expected = array(
+                '<p>Normal paragraph.</p>',
+                '<p class="has-dropcaps"><span class="dropcaps">D</span>rop caps paragraph.</p>',
+                '<p class="has-dropcaps"><span class="dropcaps">Another</span> drop caps paragraph.</p>',
+        );
+
+        $dropCaps = new DropCaps(implode("", $input));
+
+        // must change
+        $dropCaps->createForMarkdownStyleMarkup();
+        $this->assertEquals(
+                implode("", $expected),
+                $dropCaps->getOutput());
+    }
 }

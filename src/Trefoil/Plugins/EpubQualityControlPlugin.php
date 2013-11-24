@@ -58,10 +58,13 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
             // start checks
             $extension = pathinfo($image['src'], PATHINFO_EXTENSION);
 
+            // TODO OBSOLETE, to be removed
             // CHECK: No jpg extension allowed (EPUB validation)
+            /*
             if ('jpg' == $extension) {
                 $this->saveProblem($image['src'], 'image', '".jpg" images not allowed. Use ".jpeg" instead.');
             }
+            */
         }
     }
 

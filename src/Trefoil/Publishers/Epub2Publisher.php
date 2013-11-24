@@ -260,10 +260,14 @@ class Epub2Publisher extends HtmlPublisher
                         true // overwrite
                     );
 
+                    // The right mediatype for jpeg images is jpeg, not jpg
+                    $mediaType = pathinfo($image->getFilename(), PATHINFO_EXTENSION);
+                    $mediaType = str_replace('jpg', 'jpeg', $mediaType);
+
                     $imagesData[$image->getFileName()] = array(
                         'id'        => 'image-'.$i++,
                         'filePath'  => 'images/'.$image->getFileName(),
-                        'mediaType' => 'image/'.pathinfo($image->getFilename(), PATHINFO_EXTENSION)
+                        'mediaType' => 'image/'.$mediaType
                     );
                 }
             }

@@ -8,7 +8,6 @@ Element    Type       Object                         Message
 
 chapter1.md 
 
-           image      images/image2.jpg              ".jpg" images not allowed. Use ".jpeg" instead.                                                      
            emphasis   adipiscing_                    Emphasis mark not processed                                                                          
            emphasis   <li><p>Curabitur**             Emphasis mark not processed                                                                          
            emphasis    **elit.                       Emphasis mark not processed                                                                          
@@ -18,7 +17,7 @@ chapter1.md
            emphasis   <p>_                           Emphasis mark not processed                                                                          
 
     ==================================================
-    8 problems found
+    7 problems found
     ==================================================
 ================================================================================
 QualityControlPlugin
