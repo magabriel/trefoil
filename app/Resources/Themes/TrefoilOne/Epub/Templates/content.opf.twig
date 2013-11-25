@@ -2,7 +2,11 @@
 <package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId">
 
     <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+{% if book.version and edition.debug %}
+        <dc:title>{{ book.title }} ({{ book.version }})</dc:title>
+{% else %}
         <dc:title>{{ book.title }}</dc:title>
+{% endif %}
         <dc:language>{{ book.language }}</dc:language>
         <dc:identifier id="BookId" opf:scheme="{{ app.get('publishing.edition.id').scheme }}">{{ app.get('publishing.edition.id').value }}</dc:identifier>
         <dc:creator opf:role="aut">{{ book.author | default(book.authors|join(',')) }}</dc:creator>
