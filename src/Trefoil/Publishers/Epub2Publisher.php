@@ -93,6 +93,18 @@ class Epub2Publisher extends HtmlPublisher
                 $bookTmpDir.'/book/OEBPS/css/styles.css',
                 true
             );
+        } else {
+            // new in Trefoil:
+            // generate custom CSS file from template
+            $customCss = $this->app->getCustomTemplate('style.css.twig');
+            $hasCustomCss = file_exists($customCss);
+            if ($hasCustomCss) {
+                $this->app->render(
+                        'style.css.twig',
+                        array(),
+                        $bookTmpDir.'/book/OEBPS/css/styles.css'
+                );
+            }
         }
 
         $bookItems = $this->app['publishing.items'];
