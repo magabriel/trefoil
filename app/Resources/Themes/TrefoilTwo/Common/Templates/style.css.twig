@@ -157,6 +157,10 @@
     .right  { float: right; }
     .center { text-align: center; }
 
+    .center p {
+        text-align: center;
+    }
+
     .text-right {
         text-align: right;
     }
@@ -276,6 +280,12 @@
    ========================================================================== #}
 {% block layout %}
 {{ parent() }}
+
+    div.container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
 {% endblock %}
 
 {# ==========================================================================
@@ -308,6 +318,10 @@
         font-style: italic;
         margin-top: 1em;
         margin-bottom: 3em;
+    }
+
+    div.item p {
+        text-indent: 0;
     }
 
     {% include 'style.DropCaps.css.twig' %}
@@ -447,7 +461,7 @@
 
     .item.part h1 {
         font-size: 2em;
-        margin: 3em 0;
+        margin: 2em 0;
         text-align: center;
         color: #44f;
         border-bottom: 4px solid #ABC;
@@ -464,6 +478,9 @@
 
 {% block toc %}
 {{ parent() }}
+
+    .item.toc .toc_data {
+    }
 
     .item.toc h1 {
         margin-bottom: .5em;
