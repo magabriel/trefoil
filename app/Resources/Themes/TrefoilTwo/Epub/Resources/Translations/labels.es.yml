@@ -62,4 +62,5 @@ label:
     series:                 'Colección'
     publisher:              'Editorial'
     publishing_label:       'Sello editorial'
+    local_toc:              'En este capítulo:'
     

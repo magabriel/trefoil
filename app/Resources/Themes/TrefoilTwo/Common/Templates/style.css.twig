@@ -83,6 +83,10 @@
         margin: 1em 0 .25em 0;
     }
 
+    h1, h2, h3 {
+        clear: both;
+    }
+
     h1 { font-size: 2em; }
     h2 { font-size: 1.41667em; }
     h3 { font-size: 1.125em; }
@@ -333,18 +337,24 @@
 {{ parent() }}
 
     .item.cover h1 {
-        color: {{ color_black }};
-        font-size: 2em;
+        font-size: 2.5em;
         line-height: 1.1;
         padding: 1.5em .25em .25em 0;
-        text-align: left;
+        text-align: center;
     }
     .item.cover h2 {
-        color: {{ color_gray }};
-        font-size: 1em;
+        color: #888;
+        font-size: 1.8em;
         font-weight: normal;
-        margin-top: .5em;
-        text-align: left;
+        margin-top: 0;
+        text-align: center;
+    }
+    .item.cover h3 {
+        color: #666;
+        font-size: 1.2em;
+        font-weight: normal;
+        margin-top: 2em;
+        text-align: center;
     }
 {% endblock %}
 
@@ -412,11 +422,12 @@
 
     .item.chapter h1 span {
         display: block;
-        font-size: 2em;
+        font-size: 1.3em;
         font-weight: bold;
         line-height: 1.3em;
         margin-right: 0.1em;
         padding-bottom: 0;
+        color: #888;
     }
 
     .item.chapter h1 + h2,
@@ -472,6 +483,7 @@
         font-size: 1.5em;
         font-weight: normal;
         margin-bottom: .5em;
+        color: #888;
     }
 {% endblock %}
 
@@ -507,6 +519,13 @@
     }
 
     /* local toc */
+    .local_toc {
+        border: 1px solid #AAA;
+        padding: 0 1em;
+        margin: 0 auto;
+        min-width: 10em;
+    }
+
     .local_toc li {
         margin-bottom: 0.15em;
         margin-top: 0.15em;
