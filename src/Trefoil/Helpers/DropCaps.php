@@ -159,7 +159,7 @@ class DropCaps
     public function processManualMarkup()
     {
         $regex = '/';
-        $regex.= '<p>[^<]*<span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
+        $regex.= '<p><span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
         $text = preg_replace_callback($regex,
