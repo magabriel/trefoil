@@ -49,9 +49,9 @@ class TwigServiceProvider implements ServiceProviderInterface
                 // Theme common (common styles per edition theme)
                 // <themes-dir>/Common/Templates/<template-name>.twig
                 $baseThemeDir = sprintf('%s/Common/Templates', $themesDir);
-                $loader->addPath($baseThemeDir);
-                $loader->addPath($baseThemeDir, 'theme');
-                $loader->addPath($baseThemeDir, 'theme_common');
+                $loader->prependPath($baseThemeDir);
+                $loader->prependPath($baseThemeDir, 'theme');
+                $loader->prependPath($baseThemeDir, 'theme_common');
 
                 // Register template paths
                 $ownTemplatePaths = array(
