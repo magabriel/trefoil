@@ -2,7 +2,7 @@
 namespace Trefoil\Util;
 
 use Easybook\Util\Toolkit as EasybookToolkit;
-use Easybook\DependencyInjection\Application;
+use Trefoil\DependencyInjection\Application;
 
 class Toolkit extends EasybookToolkit
 {

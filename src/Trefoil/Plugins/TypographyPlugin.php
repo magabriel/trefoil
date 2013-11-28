@@ -31,11 +31,11 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content = $event->getOriginal();
+        $content = $event->getItemProperty('original');
 
         $content = $this->preProcessAngleQuotesForSmartypants($content);
 
-        $event->setOriginal($content);
+        $event->setItemProperty('original', $content);
     }
 
     public function onItemPostParse(ParseEvent $event)

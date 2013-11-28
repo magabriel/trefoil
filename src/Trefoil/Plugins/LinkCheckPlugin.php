@@ -46,16 +46,18 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         );
     }
 
-    public function onItemPostParse(BaseEvent $event)
+    public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
+        $content = $event->getItemProperty('content');
+
         // retrieve all the links for this item
-        $links = $this->findLinks($event->getContent(),  $event->getItem()['config']['content']);
+        $links = $this->findLinks($content,  $event->getItem()['config']['content']);
         $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
-        $linkTargets = $this->findLinkTargets($event->getContent());
+        $linkTargets = $this->findLinkTargets($content);
         $this->linkTargets = array_merge_recursive($this->linkTargets, $linkTargets);
     }
 

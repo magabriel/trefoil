@@ -33,12 +33,12 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content = $event->getContent();
+        $content = $event->getItemProperty('content');
 
         $content = $this->paragraphsInsideLists($content);
         $content = $this->tableCellsAlignment($content);
 
-        $event->setContent($content);
+        $event->setItemProperty('content', $content);
     }
 
     /**

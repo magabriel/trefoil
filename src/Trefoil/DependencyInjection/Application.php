@@ -2,6 +2,8 @@
 
 namespace Trefoil\DependencyInjection;
 
+use Trefoil\Providers\TwigServiceProvider;
+
 use Easybook\DependencyInjection\Application as EasybookApplication;
 use Trefoil\Util\Toolkit;
 use Trefoil\Publishers\Epub2Publisher;
@@ -9,7 +11,7 @@ use Trefoil\Publishers\MobiPublisher;
 
 class Application extends EasybookApplication
 {
-    const MY_VERSION = '0.1 DEV';
+    const MY_VERSION = '0.2 DEV';
 
     public function __construct()
     {
@@ -23,10 +25,11 @@ class Application extends EasybookApplication
         "    |_|    \__|_| \___|_| \___/_|_|\n";
 
         // -- global directories location -------------------------------------
-        $this['trefoil.app.dir.base']      = realpath(__DIR__.'/../../../');
-        $this['app.dir.cache']             = $this['trefoil.app.dir.base'].'/app/Cache';
-        $this['app.dir.doc']               = $this['trefoil.app.dir.base'].'/doc';
-        $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'].'/app/Resources';
+        $this['trefoil.app.dir.base']          = realpath(__DIR__.'/../../../');
+        $this['app.dir.cache']                 = $this['trefoil.app.dir.base'].'/app/Cache';
+        $this['app.dir.doc']                   = $this['trefoil.app.dir.base'].'/doc';
+        $this['trefoil.app.dir.resources']     = $this['trefoil.app.dir.base'].'/app/Resources';
+        $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'].'/Themes';
 
         // -- own publisher ----------------------------------------------------
         $this['publisher'] = $this->extend('publisher', function ($publisher, $app) {
@@ -53,6 +56,9 @@ class Application extends EasybookApplication
 
             return $publisher;
         });
+
+        // -- own services -----------------------------------------------------
+        $this->register(new TwigServiceProvider());
     }
 
     public final function getMyVersion()

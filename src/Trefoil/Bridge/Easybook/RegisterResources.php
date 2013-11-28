@@ -1,6 +1,8 @@
 <?php
 namespace Trefoil\Bridge\Easybook;
 
+use Symfony\Component\Finder\Finder;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Publishers\BasePublisher;
 use Easybook\Events\BaseEvent;
@@ -31,8 +33,6 @@ class RegisterResources implements EventSubscriberInterface
 
         $this->registerOwnServices();
 
-        $this->app['book.logger']->init();
-
         $this->registerOwnPlugins();
 
         $this->registerOwnThemes();
@@ -49,10 +49,7 @@ class RegisterResources implements EventSubscriberInterface
      */
     public function registerOwnServices()
     {
-        $this->app['book.logger'] = $this->app->share(function ($app) {
-            $logFile = $app['publishing.dir.book'].'/publish.log';
-            return new Logger($logFile);
-        });
+        // nothing here
     }
 
     /**
@@ -79,7 +76,7 @@ class RegisterResources implements EventSubscriberInterface
             return;
         }
 
-        $files = $this->app->get('finder')->files()->name('*Plugin.php')
+        $files = Finder::create()->files()->name('*Plugin.php')
                 ->in($dir);
 
         $registered = array();
@@ -115,74 +112,24 @@ class RegisterResources implements EventSubscriberInterface
         }
     }
 
-    protected function registerOwnThemes()
-    {
-        $loader = $this->app['twig.loader'];
+     protected function registerOwnThemes()
+     {
+         // themes get actually registered in the TwigServiceProvider class
+         // here we only tell the user what's being used
 
-        $theme = ucfirst($this->app->edition('theme'));
-        $edition = $this->app['publishing.edition'];
-        $format = Toolkit::getCurrentFormat($this->app);
+         $theme = ucfirst($this->app->edition('theme'));
+         $edition = $this->app['publishing.edition'];
+         $format = Toolkit::getCurrentFormat($this->app);
 
-        $themesDir = toolkit::getCurrentThemeDir($this->app);
-        if (!file_exists($themesDir)) {
+         $themesDir = toolkit::getCurrentThemeDir($this->app);
+         if (!file_exists($themesDir)) {
+             $this->output->writeLn(
+                     sprintf(" > <bg=yellow;fg=black> WARNING </> ".
+                             "Theme %s not found in themes directory, assuming default easybook theme", $theme));
 
-            $this->output->writeLn(
-                    sprintf(" > <error>Theme %s not found in themes directory, using default easybook theme</error>", $theme));
+             return;
+         }
 
-            return;
-        }
-
-        $this->output->writeLn(sprintf(" > Using theme  %s from %s", $theme, $themesDir));
-
-        // Theme common (common styles per edition theme)
-        // <themes-dir>/Common/Templates/<template-name>.twig
-        $baseThemeDir = sprintf('%s/Common/Templates', $themesDir);
-        $loader->addPath($baseThemeDir);
-        $loader->addPath($baseThemeDir, 'theme');
-        $loader->addPath($baseThemeDir, 'theme_common');
-
-        // Register template paths
-        $ownTemplatePaths = array(
-                // <themes-dir>/<template-name>.twig
-                $themesDir,
-                // <themes-dir>/<edition-type>/Templates/<template-name>.twig
-                sprintf('%s/%s/Templates', $themesDir, $format));
-
-        foreach ($ownTemplatePaths as $path) {
-            if (file_exists($path)) {
-                $loader->prependPath($path);
-                $loader->prependPath($path, 'theme');
-            }
-        }
-
-        /* need to register again the user template paths to ensure they
-         * are still picked with greater precedence than our own templates,
-         * so the user can still override them.
-         */
-        $userTemplatePaths = array(
-                // <book-dir>/Resources/Templates/<template-name>.twig
-                $this->app['publishing.dir.templates'],
-                // <book-dir>/Resources/Templates/<edition-type>/<template-name>.twig
-                sprintf('%s/%s', $this->app['publishing.dir.templates'], strtolower($format)),
-                // <book-dir>/Resources/Templates/<edition-name>/<template-name>.twig
-                sprintf('%s/%s', $this->app['publishing.dir.templates'], $this->app['publishing.edition']),
-        );
-
-        foreach ($userTemplatePaths as $path) {
-            if (file_exists($path)) {
-                $loader->prependPath($path);
-            }
-        }
-
-        // Register content paths
-        $ownContentPaths = array(
-        // <themes-dir>/<edition-type>/Contents/<template-name>.twig
-        sprintf('%s/%s/Contents', $themesDir, $format));
-
-        foreach ($ownContentPaths as $path) {
-            if (file_exists($path)) {
-                $loader->prependPath($path, 'content');
-            }
-        }
-    }
+         $this->output->writeLn(sprintf(" > Using theme  %s from %s", $theme, $themesDir));
+     }
 }

@@ -46,7 +46,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content = $event->getOriginal();
+        $content = $event->getItemProperty('original');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
         $content = str_replace('{#', '{@', $content);
@@ -58,14 +58,14 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         # replace back "{#"
         $content = str_replace('{@', '{#', $content);
 
-        $event->setOriginal($content);
+        $event->setItemProperty('original', $content);
     }
 
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
-        $content = $event->getContent();
+        $content = $event->getItemProperty('content');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
         $content = str_replace('{#', '{@', $content);
@@ -76,7 +76,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         # replace back "{#"
         $content = str_replace('{@', '{#', $content);
 
-        $event->setContent($content);
+        $event->setItemProperty('content', $content);
     }
 
     protected function renderString($string, $variables = array())
@@ -97,7 +97,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         if (null != $this->app->get('publishing.book.config')['book']) {
             $twig->addGlobal('book', $this->app->get('publishing.book.config')['book']);
 
-            $publishingEdition = $this->edition; // $this->app->get('publishing.edition');
+            $publishingEdition = $this->edition;
             $editions = $this->app->book('editions');
             $twig->addGlobal('edition', $editions[$publishingEdition]);
         }

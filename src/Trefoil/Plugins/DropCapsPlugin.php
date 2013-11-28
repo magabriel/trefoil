@@ -34,15 +34,15 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
                 );
     }
 
-    public function onItemPostParse(BaseEvent $event)
+    public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
-        $content = $event->getContent();
+        $content = $event->getItemProperty('content');
 
         $content = $this->addDropCaps($content);
 
-        $event->setContent($content);
+        $event->setItemProperty('content', $content);
     }
 
     /**
