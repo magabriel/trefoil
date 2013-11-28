@@ -15,7 +15,10 @@ use Trefoil\Util\Toolkit;
  *
  * For formats: all
  *
- * Options can be set in the book's config.yml:
+ * It provides two working modes:
+ *
+ * 1.- Automatic dropcaps: Depending on the options set in the plugins configuration
+ *     section inside the book's config.yml:
  *
  *     editions:
  *         <edition-name>
@@ -24,6 +27,14 @@ use Trefoil\Util\Toolkit;
  *                 mode:       letter        # letter, word (default: letter)
  *                 length:     1             # number of letters or words to highlight (default: 1)
  *                 coverage:   ['chapter']   # book elements to process
+ *
+ * 2. Manual dropcaps: Besides adding the HTML markup directly, which off course is still
+ *    possible, a Markdown-like markup is provided for greater convenience:
+ *
+ *    [[T]]his text has first-letter dropcaps.
+ *
+ *    [[But]] this text has first-word dropcaps.
+ *
  */
 class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -64,6 +75,9 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
         }
 
         $dropCaps = new DropCaps($content, $mode, $length);
+
+        // first of all, process the Markdown-style markup
+        $dropCaps->createForMarkdownStyleMarkup();
 
         /* the paragraph that starts the text must be treated separately
          * because it doesn't have a preceding heading tag (it will be under

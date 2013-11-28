@@ -1,0 +1,43 @@
+{% import _self as helper %}
+
+{% macro tocItem(item, entry, level) %}
+    {% set level = level ? level : 1 %}
+    {% set hash = entry ? '#' ~ (level == 1 ? item.slug : entry.slug ) : '' %}
+    <li class="{{ item.config.element }} level-{{ level }}">
+        <a href="{{ hash }}">
+            {% if entry %}
+                 {{ entry.label ? ('<span>'~entry.label~'</span> - '~entry.title) : entry.title }}
+            {% else %}
+                {{ item.title }}
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}
+
+{% block body %}
+<div class="local_toc">
+    {% set itemtoc_deep = edition.itemtoc.deep | default(edition.toc.deep + 1) %}
+    {% set currentLevel = 0 %}
+    <h5>{{ app.labels.label.local_toc | default('In this chapter:') }}</h5>
+    <ul class="unstyled">
+    {% for entry in item.toc %}
+        {% set level = entry.level %}
+        {% if level <= itemtoc_deep%}
+            {% if level > 1 %}
+                {% if level > currentLevel %}
+                    {% if level == currentLevel+1 %}
+                        {{ helper.tocItem(item, entry, level) }}
+                    {% else %}
+                        {% set level = currentLevel %}
+                    {% endif %}
+                {% else %}
+                     {{ helper.tocItem(item, entry, level) }}
+                {% endif %}
+            {% endif %}
+            {% set currentLevel = level %}
+        {% endif %}
+    {% endfor %}
+    </ul>
+
+</div>
+{% endblock %}

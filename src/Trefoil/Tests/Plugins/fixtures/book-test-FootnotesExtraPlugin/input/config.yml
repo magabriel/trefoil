@@ -17,7 +17,6 @@ book:
             format:         epub
             highlight_code: false
             include_styles: true
-            use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
             theme:          Theme1
             toc:

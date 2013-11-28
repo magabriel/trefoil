@@ -13,6 +13,16 @@ use Symfony\Component\DomCrawler\Crawler;
  * - Dashes ('--')
  * - Angle quotes ('<<' and '>>')
  * - Checkboxes ('[ ]' and '[/]')
+ *
+ * Options are specified on an per-edition basis:
+ *
+ *     editions:
+ *         <edition-name>
+ *             Typography:
+ *                 fix_spanish_style_dialog: false
+ *
+ * - fix_spanish_style_dialog: Convert starting '-' (dash) in paragraphs to em-dash.
+ *
  * @see http://daringfireball.net/projects/smartypants/
  */
 class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
@@ -46,6 +56,10 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $this->smartyPantsPostParse($content);
         $content = $this->replaceSymbolsPostParse($content);
+
+        if ($this->getEditionOption('Typography.fix_spanish_style_dialog')) {
+            $content = $this->fixSpanishStyleDialog($content);
+        }
 
         $this->item['content'] = $content;
         $event->setItem($this->item);
@@ -139,5 +153,66 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
                 }, $content);
 
         return $content;
+    }
+
+    /**
+     * Fix Spanish-style dialog for content
+     *
+     * @param string $content
+     * @return string
+     */
+    protected function fixSpanishStyleDialog($content)
+    {
+        // process all paragraphs begining with a dash
+        $regExp = '/';
+        $regExp .= '<p>-(?<text>[^ ].*)<\/p>';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
+
+        $content = preg_replace_callback($regExp,
+                function ($matches)
+                {
+                    // replace the dialog inside the paragraph
+                    $text = $this->replaceSpanishStyleDialog($matches['text']);
+
+                    // return the paragraph replacing the starting dash by an em-dash
+                    return sprintf('<p>&#8212;%s</p>', $text);
+                }, $content);
+
+        return $content;
+    }
+
+    /**
+     * Replace Spanish-style dialog inside a paragraph's text
+     *
+     * @param string $text
+     * @return string
+     */
+    protected function replaceSpanishStyleDialog($text)
+    {
+        // replace "space and dash followed by something" by
+        //         "space and em-dash followed by something"
+        $regExp = '/';
+        $regExp .= ' -(?<char>[^ -])';
+        $regExp .= '/U'; // Ungreedy
+
+        $text = preg_replace_callback($regExp,
+                function ($matches)
+                {
+                    return sprintf(' &#8212;%s', $matches['char']);
+                }, $text);
+
+        // replace "something followed by dash" by
+        //         "something followed by em-dash"
+        $regExp = '/';
+        $regExp .= '(?<char>[^ -])-(?<next>[\W])';
+        $regExp .= '/U'; // Ungreedy
+
+        $text = preg_replace_callback($regExp,
+                function ($matches)
+                {
+                    return sprintf('%s&#8212;%s', $matches['char'], $matches['next']);
+                }, $text);
+
+        return $text;
     }
 }

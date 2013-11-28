@@ -1,0 +1,59 @@
+book:
+    title:            'Trefoil documentation'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-12-2013'
+
+    generator:        { name: trefoil, version: DEV }
+   
+    contents:
+        - { element: edition }
+        
+        - { element: introduction, content: introduction.md }
+        
+        - { element: part,        number: 1,    content: part-1.md }
+        - { element: chapter,     number:   1,  content: chapter1.md }
+            
+        - { element: part,        number: 2,    content: part-2.md }
+        - { element: chapter,     number:   2,  content: chapter2.md }
+        - { element: chapter,     number:   3,  content: chapter3.md } 
+                               
+        - { element: footnotes }    
+        - { element: auto-glossary }
+
+    editions:
+        ebook:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            use_html_toc:   true
+            labels:         ['appendix', 'chapter', 'figure', 'part'] 
+            theme:          TrefoilTwo
+            toc:
+                deep:       2
+                elements:   ["appendix", "chapter", "part", "introduction"]
+            isbn:           1234567890X
+            plugins:       
+                - AutoGlossary
+                - DropCaps
+                - EpubBookRename
+                - EpubCheck
+                - EpubQualityControl
+                - EpubUncompress
+                - FootnotesExtra
+                - HtmlTweaks
+                - ImageExtra
+                - KindleTweaks
+                - LinkCheck
+                - TableExtra
+                - TwigExtension
+                - Typography
+                - VersionUpdater
+
+            DropCaps: 
+                levels:     [1]                             # 1 to 6 (default: 1)
+                mode:       letter                          # letter, word (default: letter)
+                length:     1                               # number of letters or words to highlight (default: 1)
+                elements:   ['chapter', 'introduction']     # which elements to process 
+

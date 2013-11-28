@@ -77,6 +77,7 @@
 {{ parent() }}
 
     h1, h2, h3, h4, h5, h6 {
+	    font-family: serif;
         font-weight: bold;
         line-height: 1;
         margin: 1em 0 .25em 0;
@@ -101,6 +102,7 @@
 
     p {
         margin: 0.3em 0;
+        text-align: justify;
     }
 {% endblock %}
 
@@ -154,6 +156,10 @@
     .left   { float: left;  }
     .right  { float: right; }
     .center { text-align: center; }
+
+    .center p {
+        text-align: center;
+    }
 
     .text-right {
         text-align: right;
@@ -274,6 +280,12 @@
    ========================================================================== #}
 {% block layout %}
 {{ parent() }}
+
+    div.container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
 {% endblock %}
 
 {# ==========================================================================
@@ -308,6 +320,16 @@
         margin-top: 1em;
         margin-bottom: 3em;
     }
+
+    div.item p {
+        text-indent: 0;
+    }
+
+    div.item p+p,
+    div.item blockquote+p {
+        text-indent: 1.5em;
+    }
+
 
     {% include 'style.DropCaps.css.twig' %}
 {% endblock %}
@@ -360,6 +382,18 @@
         margin-top: 1em;
         margin-bottom: 3em;
     }
+{% endblock %}
+
+
+{# @edition
+   -------------------------------------------------------------------------- #}
+{% block edition %}
+{{ parent() }}
+
+    div.item.edition p {
+        text-indent: 0;
+    }
+
 {% endblock %}
 
 {# @dedication

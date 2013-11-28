@@ -24,5 +24,8 @@ book:
             isbn:           1234567890X
             plugins:        
                 - Typography
+                
+            Typography:
+                fix_spanish_style_dialog: true
                             
     

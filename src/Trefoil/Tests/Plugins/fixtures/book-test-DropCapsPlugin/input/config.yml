@@ -17,7 +17,6 @@ book:
             format:         epub
             highlight_code: false
             include_styles: true
-            use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
             theme:          clean
             toc:
@@ -28,7 +27,7 @@ book:
                 - DropCaps
                 
             DropCaps:
-                levels:     [1, 2]  # 1 to 6 (default: 1)
+                levels:     [1, 2]  # 1 to 6 (default: 1) 
                 mode:       letter    # letter, word (default: letter)
                 length:     1     # number of letters or words to highlight (default: 1)
                 coverage:   ['chapter']

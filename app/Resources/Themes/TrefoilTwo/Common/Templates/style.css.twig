@@ -1,0 +1,567 @@
+{% extends '@theme_base/style.css.twig' %}
+
+{% block theme_name        'TrefoilTwo' %}
+{% block theme_description 'Trefoil theme 2, based on Easybook Clean Theme' %}
+{% block theme_author      'magabriel@gmail.com' %}
+{% block theme_updated_at  '01/november/2013' %}
+
+{# ==========================================================================
+   @normalize
+   ========================================================================== #}
+{% block normalize %}
+{{ parent() }}
+{% endblock %}
+
+{# ==========================================================================
+   @typography
+   ========================================================================== #}
+{% block typography %}
+{% if edition.include_fonts %}
+    /* Custom fonts
+       ========================================================================= */
+    /* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */
+    @font-face {
+        font-family: inconsolata;
+        font-style: normal;
+        font-weight: 400;
+        src: url("{{ resources_dir }}/fonts/Inconsolata.ttf")
+    }
+{% endif %}
+
+{# @body
+   -------------------------------------------------------------------------- #}
+{% block body %}
+{{ parent() }}
+{% endblock %}
+
+{# @links
+   -------------------------------------------------------------------------- #}
+{% block links %}
+{{ parent() }}
+
+    a {
+        background-image: url('../images/ico_external_link.png');
+        background-position: right;
+        background-repeat: no-repeat;
+        padding-right: 23px;
+        padding-top: 3px;
+        padding-bottom: 2px;
+    }
+
+    a[href*='pdf'] {
+        background-image: url('../images/ico_pdf.png');
+    }
+
+    a[href*='youtube'] {
+        background-image: url('../images/ico_youtube.png');
+    }
+
+    a.internal, .toc a {
+        background-image: none;
+        padding-right: 0;
+    }
+
+    a img {
+        text-decoration: none;
+    }
+
+    a.internal.invalid {
+        background: #faa;
+    }
+
+{% endblock %}
+
+{# @headings
+   -------------------------------------------------------------------------- #}
+{% block headings %}
+{{ parent() }}
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: sans-serif;
+        font-weight: bold;
+        line-height: 1;
+        margin: 1em 0 .25em 0;
+    }
+
+    h1, h2, h3 {
+        clear: both;
+    }
+
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.41667em; }
+    h3 { font-size: 1.125em; }
+    h4 { font-size: 1em; }
+    h5 { font-size: 1em; }
+    h6 { font-size: 1em; }
+
+    h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+        margin-top: .25em;
+    }
+{% endblock %}
+
+{# @paragraphs
+   -------------------------------------------------------------------------- #}
+{% block paragraphs %}
+{{ parent() }}
+
+    p {
+        margin: 0.3em 0;
+        text-align: justify;
+    }
+{% endblock %}
+
+{# @lists
+   -------------------------------------------------------------------------- #}
+{% block lists %}
+{{ parent() }}
+
+    ul, ol {
+        list-style-type: disc;
+        margin: 1em 0 1em 1em;
+        padding: 0 0 0 1.5em;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    ul li, ol li {
+        margin: .5em 0;
+    }
+
+    ul.unstyled,
+    ol.unstyled {
+      margin-left: 0;
+      list-style: none;
+    }
+
+    dl {
+      margin-bottom: 1em;
+    }
+
+    dt {
+      font-weight: bold;
+    }
+
+    dd {
+      margin-left: 1em;
+    }
+{% endblock %}
+
+{# @misc
+   -------------------------------------------------------------------------- #}
+{% block misc %}
+{{ parent() }}
+
+    blockquote {
+        margin: 1em 0 1em 2.5em;
+    }
+
+    .left   { float: left;  }
+    .right  { float: right; }
+    .center { text-align: center; }
+
+    .center p {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    /* This is the only way to force a page-break for Kindle
+     * page-break-after, etc. do not work when assigned to another selector
+     */
+    .page-break {
+      page-break-after: always;
+    }
+
+    .clearfix {
+        clear: both;
+    }
+
+    .big {
+        font-size: 1.2em;
+    }
+
+    .small {
+        font-size: .8em;
+    }
+
+    .tiny {
+        font-size: .7em;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+{% endblock %}
+
+{% endblock %} {# @typography #}
+
+{# ==========================================================================
+   @images
+   ========================================================================== #}
+{% block images %}
+{{ parent() }}
+
+    /* .image => images that are not figures
+     * div.image => style like a figure
+     * span.image => style like an inline image
+     */
+    div.image.center,
+    div.image.left,
+    div.image.right {
+        display: inline-block;
+     }
+
+    .center img {
+        display: inline-block;
+    }
+
+     div.image.center {
+        width: 100%;
+     }
+
+        /* only min-max size if has alignment */
+        div.image.center img,
+        div.image.left img,
+        div.image.right img   {
+             min-width: 50%;
+             max-width: 100%;
+             display: inline-block;
+        }
+
+    span.image {
+    }
+
+    /* .figure => figures, with caption */
+    .figure {
+        text-align: center;
+        page-break-inside: avoid;
+    }
+
+        .figure img {
+            min-width: 50%;
+            max-width: 100%;
+        }
+
+    /* caption for figures */
+    p.caption {
+    	font-style: italic;
+    	font-size: .9em;
+    	text-align: center;
+    }
+
+    {% include 'style.ImageExtra.css.twig' %}
+
+{% endblock %}
+
+{# ==========================================================================
+   @tables
+   ========================================================================== #}
+{% block tables %}
+{{ parent() }}
+
+    {% include 'style.TableExtra.css.twig' %}
+
+{% endblock %}
+
+{# ==========================================================================
+   @code
+   ========================================================================== #}
+{% block code %}
+{{ parent() }}
+
+    code, pre, pre span, pre * {
+        font-family: inconsolata, monospace !important;
+    }
+{% endblock %}
+
+{# ==========================================================================
+   @layout
+   ========================================================================== #}
+{% block layout %}
+{{ parent() }}
+
+    div.container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+{% endblock %}
+
+{# ==========================================================================
+   @items
+   ========================================================================== #}
+{% block items %}
+
+{# @common
+   -------------------------------------------------------------------------- #}
+{% block common %}
+{{ parent() }}
+
+    .item h1.title,
+    .item h2.title,
+    .item h3.title {
+        text-align: right;
+    }
+    .item h1.title {
+        font-size: 2em;
+        line-height: 1.1;
+        margin-top: .1em;
+        margin-bottom: 2.5em;
+    }
+    .item h2.title {
+        font-size: 1.5em;
+        margin-top: .5em;
+    }
+    .item h3.title {
+        font-size: 1em;
+        font-style: italic;
+        margin-top: 1em;
+        margin-bottom: 3em;
+    }
+
+    div.item p {
+        text-indent: 0;
+    }
+
+    {% include 'style.DropCaps.css.twig' %}
+{% endblock %}
+
+{# @cover
+   -------------------------------------------------------------------------- #}
+{% block cover %}
+{{ parent() }}
+
+    .item.cover h1 {
+        font-size: 2.5em;
+        line-height: 1.1;
+        padding: 1.5em .25em .25em 0;
+        text-align: center;
+    }
+    .item.cover h2 {
+        color: #888;
+        font-size: 1.8em;
+        font-weight: normal;
+        margin-top: 0;
+        text-align: center;
+    }
+    .item.cover h3 {
+        color: #666;
+        font-size: 1.2em;
+        font-weight: normal;
+        margin-top: 2em;
+        text-align: center;
+    }
+{% endblock %}
+
+{# @title
+   -------------------------------------------------------------------------- #}
+{% block title %}
+{{ parent() }}
+
+    .item.title h1,
+    .item.title h2,
+    .item.title h3 {
+        font-weight: normal;
+        text-align: center;
+    }
+    .item.title h1 {
+        font-size: 2em;
+        line-height: 1.1;
+        margin-top: 1em;
+        margin-bottom: .5em;
+    }
+    .item.title h2 {
+        font-size: 1.5em;
+        margin-top: .5em;
+    }
+    .item.title h3{
+        font-size: 1em;
+        font-style: italic;
+        margin-top: 1em;
+        margin-bottom: 3em;
+    }
+{% endblock %}
+
+{# @dedication
+   -------------------------------------------------------------------------- #}
+{% block dedication %}
+{{ parent() }}
+
+    .item.dedication {
+    }
+    .item.dedication h1 {
+        font-size: 2em;
+        line-height: 1.1;
+        margin-bottom: 2em;
+    }
+    .item.dedication p {
+        font-style: italic;
+        text-align: center;
+    }
+{% endblock %}
+
+{# @chapter
+   -------------------------------------------------------------------------- #}
+{% block chapter %}
+{{ parent() }}
+
+    .item.chapter h1 {
+        display: block;
+        font-size: 1.8em;
+        line-height: 1.3em;
+        margin: 0 0 1em;
+        padding: 0 0.2em 1em;
+        color: #444;
+        border-bottom: 4px solid #ccc;
+    }
+
+    .item.chapter h1 span {
+        display: block;
+        font-size: 1.3em;
+        font-weight: bold;
+        line-height: 1.3em;
+        margin-right: 0.1em;
+        padding-bottom: 0;
+        color: #888;
+    }
+
+    .item.chapter h1 + h2,
+    .item.chapter h2 + h3,
+    .item.chapter h3 + h4,
+    .item.chapter h4 + h5,
+    .item.chapter h5 + h6 {
+        margin-top: 1em;
+    }
+{% endblock %}
+
+{# @appendix
+   -------------------------------------------------------------------------- #}
+{% block appendix %}
+{{ parent() }}
+
+    .item.appendix h1 {
+        margin: 5em 1em .25em 0;
+    }
+
+    .item.appendix h1 span {
+        color: {{ color_gray }};
+        display: block;
+        font-size: 90%;
+        font-weight: normal;
+        padding-bottom: .25em;
+    }
+
+    .item.appendix h1 + h2,
+    .item.chapter h2 + h3,
+    .item.chapter h3 + h4,
+    .item.chapter h4 + h5,
+    .item.chapter h5 + h6 {
+        margin-top: 1em;
+    }
+{% endblock %}
+
+{# @part
+   -------------------------------------------------------------------------- #}
+{% block part %}
+{{ parent() }}
+
+    .item.part h1 {
+        font-size: 2em;
+        margin: 2em 0;
+        text-align: center;
+        color: #44f;
+        border-bottom: 4px solid #ABC;
+        padding-bottom: 1em;
+    }
+    .item.part h1 span {
+        display: block;
+        font-size: 1.5em;
+        font-weight: normal;
+        margin-bottom: .5em;
+        color: #888;
+    }
+{% endblock %}
+
+
+{% block toc %}
+{{ parent() }}
+
+    .item.toc .toc_data {
+    }
+
+    .item.toc h1 {
+        margin-bottom: .5em;
+    }
+
+    /* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
+    .item.toc div.level-1 {
+    	margin-left: 1em;
+    }
+    .item.toc div.level-2 {
+    	margin-left: 2em;
+    }
+    .item.toc div.level-3 {
+    	margin-left: 3em;
+    }
+    .item.toc div.level-4 {
+    	margin-left: 4em;
+    }
+    .item.toc div.level-5 {
+    	margin-left: 5em;
+    }
+    .item.toc div.level-6 {
+    	margin-left: 6em;
+    }
+
+    /* local toc */
+    .local_toc {
+        border: 1px solid #AAA;
+        padding: 0 1em;
+        margin: 0 auto;
+        min-width: 10em;
+    }
+
+    .local_toc li {
+        margin-bottom: 0.15em;
+        margin-top: 0.15em;
+    }
+
+    .local_toc li.level-1 {
+    	margin-left: -2em;
+    }
+    .local_toc li.level-2 {
+    	margin-left: -1em;
+    }
+    .local_toc li.level-3 {
+    	margin-left: 0em;
+    }
+    .local_toc li.level-4 {
+    	margin-left: 1em;
+    }
+    .local_toc li.level-5 {
+    	margin-left: 2em;
+    }
+    .local_toc li.level-6 {
+    	margin-left: 3em;
+    }
+
+{% endblock %}
+
+{% endblock %} {# @items #}
+
+
+
+
+
+
+
+
+
+
+
+

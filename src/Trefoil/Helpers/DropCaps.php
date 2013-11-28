@@ -2,23 +2,53 @@
 namespace Trefoil\Helpers;
 
 /**
- * Add drop caps (HTML markup) to a given text:
+ * Add drop caps (HTML markup) to a given HTML text:
  *
  *     <p class="has-dropcaps"><span class="dropcaps">T</span>his has dropcaps.</p>
  *
- * It can also process manually-added dropcaps markup (the <span>) adding the
- * "has-dropcaps" class to the surrounding paragraph.
+ * Features:
  *
+ * 1.- Add automatic dropcaps to the first paragraph in the text.
+ *
+ * 2.- Add automatic dropcaps to the first paragraph after each heading of selected levels.
+ *
+ * 3.- Process Markdown-like markup for dropcaps:
+ *
+ *      [[T]]his text has first-letter dropcaps.
+ *
+ *      [[But]] this text has first-word dropcaps.
+ *
+ * 4.- Process manually-added dropcaps markup (the <span>) adding the "has-dropcaps" class
+ *     to the surrounding paragraph.
  */
 class DropCaps
 {
+    /**
+     * The first "length" letters are transformed into drop caps
+     * @var string
+     */
     const MODE_LETTER = 'letter';
+
+    /**
+     * The first "length" words are transformed into drop caps
+     * @var string
+     */
     const MODE_WORD = 'word';
 
+    /**  @var string */
     protected $text;
+
+    /**  @var string */
     protected $mode = self::MODE_LETTER;
+
+    /**  @var int */
     protected $length = 1;
 
+    /**
+     * @param string $text  The input text
+     * @param string $mode  The working mode (default = MODE_LETTER)
+     * @param int $length   The length (default = 1)
+     */
     public function __construct($text, $mode = self::MODE_LETTER, $length = 1)
     {
         $this->text = $text;
@@ -26,9 +56,37 @@ class DropCaps
         $this->length = $length;
     }
 
+    /**
+     * Get the processed text
+     * @return string
+     */
     public function getOutput()
     {
         return $this->text;
+    }
+
+    /**
+     * Create drop caps for Markdown-style markup, as in "[[He]]llo"
+     */
+    public function createForMarkdownStyleMarkup()
+    {
+        $regex = '/';
+        $regex.= '\s*<p>\[\[(?<first>.*)\]\](?<rest>.*)<\/p>';
+        $regex.= '/Ums'; // Ungreedy, multiline, dotall
+
+        $text = preg_replace_callback($regex,
+                function ($matches)
+                {
+                    $ptext = $this->renderDropCaps('', $matches['first'], $matches['rest']);
+                    $html = sprintf('<p class="has-dropcaps">%s</p>',
+                            $ptext
+                    );
+
+                    return $html;
+                },
+                $this->text);
+
+        $this->text = $text;
     }
 
     /**
@@ -101,7 +159,7 @@ class DropCaps
     public function processManualMarkup()
     {
         $regex = '/';
-        $regex.= '<p>[^<]*<span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
+        $regex.= '<p><span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
         $text = preg_replace_callback($regex,
@@ -173,6 +231,16 @@ class DropCaps
 
             $dropCaps = substr($text, strlen($skip), $dropCapsLength);
             $rest = substr($text, strlen($skip) + $dropCapsLength);
+
+            return $this->renderDropCaps($skip, $dropCaps, $rest);
+        }
+
+        // look if it starts with a non-word character(s)
+        if (preg_match('/^(\W+)/U', $text, $matches)) {
+
+            // isolate the first "$length" letters but skipping the non-word char(s)
+            $dropCaps = $matches[1] . mb_substr($text, mb_strlen($matches[1]), $this->length);
+            $rest = mb_substr($text, mb_strlen($matches[1])+$this->length);
 
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
