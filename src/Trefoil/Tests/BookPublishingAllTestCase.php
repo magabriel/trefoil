@@ -18,6 +18,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 abstract class BookPublishingAllTestCase extends TestCase
 {
+    protected $tmpDirBase;
     protected $tmpDir;
     protected $fixturesDir;
     protected $app;
@@ -32,27 +33,19 @@ abstract class BookPublishingAllTestCase extends TestCase
         $this->app = new Application();
         $this->filesystem = new Filesystem();
         $this->console = new ConsoleApplication($this->app);
+
+        $this->isDebug = array_key_exists('debug', getopt('', array('debug')));
+
+        $className = basename(str_replace('\\', '/', get_called_class()));
+        $this->tmpDirBase = $this->app['app.dir.cache'].'/'.'phpunit_debug/'.$className;
+
+        if ($this->filesystem->exists($this->tmpDirBase)) {
+            $this->filesystem->remove($this->tmpDirBase);
+        }
     }
 
     public function setUp()
     {
-        $this->isDebug = getopt('', array('debug'));
-
-        // setup temp dir for generated files
-        if ($this->isDebug) {
-            // reuse the temp dir
-            $className = basename(str_replace('\\', '/', get_called_class()));
-            $this->tmpDir = $this->app['app.dir.cache'].'/'.'phpunit_debug/'.$className;
-
-            if ($this->filesystem->exists($this->tmpDir)) {
-                $this->filesystem->remove($this->tmpDir);
-            }
-        } else {
-            // create new temp dir
-            $this->tmpDir = $this->app['app.dir.cache'].'/'.uniqid('phpunit_', true);
-            $this->filesystem->mkdir($this->tmpDir);
-        }
-
         parent::setUp();
     }
 
@@ -140,6 +133,8 @@ abstract class BookPublishingAllTestCase extends TestCase
     {
         $slug = $bookName;
 
+        $this->tmpDir = $this->tmpDirBase.'/'.$slug;
+
         if ($this->isDebug) {
             echo sprintf("\n".'- Processing test "%s"'."\n", $slug);
         }
@@ -149,11 +144,11 @@ abstract class BookPublishingAllTestCase extends TestCase
         // mirror test book contents in temp dir
         $this->filesystem->mirror(
                 $thisBookDir.'/input',
-                $this->tmpDir.'/'.$slug
+                $this->tmpDir
         );
 
         // look for and publish the book edition
-        $bookConfigFile = $this->tmpDir.'/'.$slug.'/config.yml';
+        $bookConfigFile = $this->tmpDir.'/config.yml';
         $bookConfig = Yaml::parse($bookConfigFile);
         $editions = $bookConfig['book']['editions'];
 
@@ -162,7 +157,7 @@ abstract class BookPublishingAllTestCase extends TestCase
                 'command' => 'publish',
                 'slug'    => $slug,
                 'edition' => $editionName,
-                '--dir'   => $this->tmpDir,
+                '--dir'   => $this->tmpDirBase,
                 '--themes_dir' => $this->fixturesDir.'Themes'
         ));
 
@@ -187,7 +182,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         $generatedFiles = Finder::create()
             ->files()
             ->notName('.gitignore')
-            ->in($this->tmpDir.'/'.$slug.'/Output/'.$editionName)
+            ->in($this->tmpDir.'/Output/'.$editionName)
             ;
 
         foreach ($generatedFiles as $file) {
@@ -195,7 +190,7 @@ abstract class BookPublishingAllTestCase extends TestCase
 
             if ('epub' == $file->getExtension()) {
                 // unzip both files to compare its contents
-                $workDir = $this->tmpDir.'/'.$slug.'/unzip/'.$editionName;
+                $workDir = $this->tmpDir.'/unzip/'.$editionName;
                 $generated = $workDir.'/generated';
                 $expected = $workDir.'/expected';
 
@@ -220,7 +215,7 @@ abstract class BookPublishingAllTestCase extends TestCase
             // assert that all required files for this edition are generated
             $this->checkForMissingFiles(
                     $thisBookDir.'/expected/'.$editionName,
-                    $this->tmpDir.'/'.$slug.'/Output/'.$editionName);
+                    $this->tmpDir.'/Output/'.$editionName);
 
             // assert that book publication took less than 5 seconds
             $this->assertLessThan(
