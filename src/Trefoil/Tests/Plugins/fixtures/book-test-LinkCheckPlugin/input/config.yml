@@ -22,10 +22,11 @@ book:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
             isbn:           1234567890X
-            plugins:        
-                - LinkCheck
-            
-            LinkCheck: 
-                check_external_links: true
+            plugins:    
+                enabled:    
+                    - LinkCheck 
+                options:
+                    LinkCheck: 
+                        check_external_links: true
                             
     

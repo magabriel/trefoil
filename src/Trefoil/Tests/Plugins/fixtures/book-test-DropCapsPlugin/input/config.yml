@@ -23,13 +23,15 @@ book:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction"]
             isbn:           1234567890X
-            plugins:        
-                - DropCaps
+            plugins: 
+                enabled:       
+                    - DropCaps
                 
-            DropCaps:
-                levels:     [1, 2]  # 1 to 6 (default: 1) 
-                mode:       letter    # letter, word (default: letter)
-                length:     1     # number of letters or words to highlight (default: 1)
-                coverage:   ['chapter']
+                options:
+                    DropCaps:
+                        levels:     [1, 2]  # 1 to 6 (default: 1) 
+                        mode:       letter    # letter, word (default: letter)
+                        length:     1     # number of letters or words to highlight (default: 1)
+                        coverage:   ['chapter']
                             
     

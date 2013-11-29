@@ -16,14 +16,17 @@ book:
             highlight_code: false
             include_styles: true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
-            theme:          theme1
+            theme:          Theme1
             toc:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
             isbn:           1234567890X
             plugins:        
-                - TwigExtension
-            itemtoc:
-                deep:       3
+                enabled: 
+                    - TwigExtension
+                options:
+                    TwigExtension:
+                        itemtoc:
+                            deep:       3
                             
     

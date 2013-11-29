@@ -157,7 +157,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         if (!$loader->isLoaded()) {
             $this->output->write(
-                    sprintf(" <comment>No book glossary definition file '%s' found in '%s' directory.</comment>\n",
+                    sprintf(" <comment>WARNING</comment>No book glossary definition file '%s' found in '%s' directory.\n",
                             basename($glossaryFile), realpath($contentsDir)));
         }
     }

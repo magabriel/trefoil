@@ -16,8 +16,9 @@
 
 {% block body %}
 <div class="local_toc">
-    {% set itemtoc_deep = edition.itemtoc.deep | default(edition.toc.deep + 1) %}
+    {% set itemtoc_deep = itemtoc_deep | default(edition.toc.deep + 1) %}
     {% set currentLevel = 0 %}
+    <h5>{{ app.labels.label.local_toc | default('In this chapter:') }}</h5>
     <ul class="unstyled">
     {% for entry in item.toc %}
         {% set level = entry.level %}

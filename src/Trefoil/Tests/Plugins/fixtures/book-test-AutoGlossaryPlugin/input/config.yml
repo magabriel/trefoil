@@ -23,7 +23,8 @@ book:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
             isbn:           1234567890X
-            plugins:        
-                - AutoGlossary
+            plugins:
+                enabled:        
+                    - AutoGlossary
                             
     

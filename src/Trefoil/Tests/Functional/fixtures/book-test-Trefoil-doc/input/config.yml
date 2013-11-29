@@ -34,26 +34,30 @@ book:
                 deep:       2
                 elements:   ["appendix", "chapter", "part", "introduction"]
             isbn:           1234567890X
+
             plugins:       
-                - AutoGlossary
-                - DropCaps
-                - EpubBookRename
-                - EpubCheck
-                - EpubQualityControl
-                - EpubUncompress
-                - FootnotesExtra
-                - HtmlTweaks
-                - ImageExtra
-                - KindleTweaks
-                - LinkCheck
-                - TableExtra
-                - TwigExtension
-                - Typography
-                - VersionUpdater
+                enabled: 
+                    - AutoGlossary
+                    - DropCaps
+                    - EpubBookRename
+                    - EpubCheck
+                    - EpubQualityControl
+                    - EpubUncompress
+                    - FootnotesExtra
+                    - HtmlTweaks
+                    - ImageExtra
+                    - KindleTweaks
+                    - LinkCheck
+                    - TableExtra
+                    - TwigExtension
+                    - Typography
+                    - VersionUpdater
+                    
+                options:
+                    DropCaps: 
+                        levels:     [1]                             # 1 to 6 (default: 1)
+                        mode:       letter                          # letter, word (default: letter)
+                        length:     1                               # number of letters or words to highlight (default: 1)
+                        elements:   ['chapter', 'introduction']     # which elements to process 
 
-            DropCaps: 
-                levels:     [1]                             # 1 to 6 (default: 1)
-                mode:       letter                          # letter, word (default: letter)
-                length:     1                               # number of letters or words to highlight (default: 1)
-                elements:   ['chapter', 'introduction']     # which elements to process 
-
+                        

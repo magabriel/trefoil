@@ -16,12 +16,13 @@ book:
             highlight_code: false
             include_styles: true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
-            theme:          TrefoilOne
+            theme:          Theme1
             toc:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
             isbn:           1234567890X
             plugins:        
-                - ImageExtra
+                enabled: 
+                    - ImageExtra
                             
     

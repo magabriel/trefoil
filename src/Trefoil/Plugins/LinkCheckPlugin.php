@@ -22,8 +22,11 @@ use Easybook\Events\ParseEvent;
  *
  *     editions:
  *         <edition-name>
- *             LinkCheck:
- *                 check_external_links: true
+ *             plugins:
+ *                 ...
+ *                 options:
+ *                     LinkCheck:
+ *                         check_external_links: true
  *
  * The plugin will generate a report in the output directory for all the external links
  * in the book with its status from the check (OK or error).
@@ -152,7 +155,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function checkExternalLinks()
     {
-        if (!$this->getEditionOption('LinkCheck.check_external_links')) {
+        if (!$this->getEditionOption('plugins.options.LinkCheck.check_external_links')) {
             return;
         }
 
@@ -191,7 +194,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $report = new SimpleReport();
         $report->setTitle('LinkCheckPlugin');
 
-        $checkExternalLinks = $this->getEditionOption('LinkCheck.check_external_links');
+        $checkExternalLinks = $this->getEditionOption('plugins.options.LinkCheck.check_external_links');
         $report->setSubtitle(sprintf('check_external_links: %s', $checkExternalLinks?'true':'false'));
 
         $report->setHeaders(array(

@@ -60,11 +60,16 @@ class RegisterResources implements EventSubscriberInterface
         $edition = $this->app['publishing.edition'];
 
         if (!isset($this->app->book('editions')[$edition]['plugins'])) {
+            // no 'plugins' section
+            return;
+        }
+
+        if (!isset($this->app->book('editions')[$edition]['plugins']['enabled'])) {
             // no plugins to register
             return;
         }
 
-        $enabledPlugins = $this->app->book('editions')[$edition]['plugins'];
+        $enabledPlugins = $this->app->book('editions')[$edition]['plugins']['enabled'];
 
         $this->registerEventSubscribers(__DIR__.'/../../Plugins', 'Trefoil\Plugins', $enabledPlugins);
     }
