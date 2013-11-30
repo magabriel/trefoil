@@ -208,12 +208,16 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
 
         // check existing images
         $imagesDir =  $this->app['publishing.dir.contents'].'/images';
-        $existingFiles= Finder::create()->files()->exclude('theme_tmp')->in($imagesDir)->sortByName();
 
         $existingImages = array();
-        foreach ($existingFiles as $image) {
-            $name = str_replace($this->app['publishing.dir.contents'].'/', '', $image->getPathname());
-            $existingImages[] = $name;
+
+        if (file_exists($imagesDir)) {
+            $existingFiles= Finder::create()->files()->exclude('theme_tmp')->in($imagesDir)->sortByName();
+
+            foreach ($existingFiles as $image) {
+                $name = str_replace($this->app['publishing.dir.contents'].'/', '', $image->getPathname());
+                $existingImages[] = $name;
+            }
         }
 
         $count = 0;
