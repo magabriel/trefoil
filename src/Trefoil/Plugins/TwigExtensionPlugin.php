@@ -38,7 +38,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
                 EasybookEvents::PRE_PARSE => 'onItemPreParse',
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010) // after ParserPlugin
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
         );
     }
 
@@ -49,14 +49,14 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('original');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
-        $content = str_replace('{#', '{@', $content);
+        $content = str_replace('{#', '@%@&', $content);
 
         // replace configuration options on PreParse to take care of normal replacements
         // and the first pass of "itemtoc()"
         $content = $this->renderString($content);
 
         # replace back "{#"
-        $content = str_replace('{@', '{#', $content);
+        $content = str_replace('@%@&', '{#', $content);
 
         $event->setItemProperty('original', $content);
     }
@@ -68,13 +68,13 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('content');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
-        $content = str_replace('{#', '{@', $content);
+        $content = str_replace('{#', '@%@&', $content);
 
         // replace also in PostParse to process the second pass of "itemtoc()" ("itemtoc_internal()")
         $content = $this->renderString($content);
 
         # replace back "{#"
-        $content = str_replace('{@', '{#', $content);
+        $content = str_replace('@%@&', '{#', $content);
 
         $event->setItemProperty('content', $content);
     }
