@@ -1,69 +1,23 @@
-# TableExtra
+Themes
+======
 
-## Normal table
+Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
 
-Column 1 | Column 2 | Column 3
-----------|-----------|------------
-One       | Two       | Three
-One       | Two       | Three
+{{ itemtoc() }}
+ 
+Trefoil themes enhancements
+---------------------------
 
-## With aligment
+Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
 
-Column 1 | Column 2 | Column 3
----------:|:----------|:----------:
-One       | Two       | Three
-One       | Two       | Three
+### General
 
-## Rowspan
+Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
 
-Column 1 | Column 2 | Column 3
-----------|-----------|------------
-One       | Two       | Three
-"         | Two       | Three
-One       | Two       | Three
-"         | Two       | Three
+### Trefoil themes
 
-## Rowspan x3
+Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
 
-Column 1 | Column 2 | Column 3
-----------|-----------|------------
-One       | Two       | Three
-"         | Two       | Three
-"         | Two       | Three
-One       | Two       | Three
-"         | Two       | Three
+### Custom themes
 
-## Rowspan in the middle
-
-Column 1 | Column 2 | Column 3
----------:|:----------|:----------:
-One       | Two       | Three
-One       | "         | Three
-One       | Two       | Three
-One       | Two       | "
-
-## Colspan
-
-Column 1 | Column 2 | Column 3
----------:|:----------|:----------:
-One                  || Three
-One       | Two       | Three
-One                  || Three
-
-## Colspan x3
-
-Column 1 | Column 2 | Column 3
-:--------:|:----------|:----------:
-One                             ||| 
-One       | Two       | Three
-One                  || Three
-
-## Rowspan + colspan
-
-Column 1 | Column 2 | Column 3
----------:|:----------|:----------:
-One                  || Three
-"                    || Three
-One       | Two       | Three
-One       | Two       | Three
-
+Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
