@@ -1,16 +1,92 @@
 Plugins
 =======
 
-Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
+Plugins are the core of `easybook` extensibilty. But I found its implementation a bit lacking on the side of flexibylity, so the first task was to get a more flexible plugin's system. And then, implement as many new features as possible in the form of new plugins. 
 
 {{ itemtoc() }}
 
-Plugins system enhancements
----------------------------
+Plugin system enhancements
+--------------------------
 
-In pretium arcu eget felis lacinia suscipit. Nunc interdum rhoncus nibh quis auctor. Integer facilisis nisl sit amet diam pellentesque, a elementum nisi scelerisque. Pellentesque non eleifend mauris, vel sodales massa. Duis rutrum dignissim aliquet. Aliquam eget euismod sapien. In blandit velit sit amet lorem hendrerit, id bibendum velit porttitor. Duis libero nisi, porta eget erat ac, tempor placerat velit. Pellentesque ultrices placerat ultrices. Nullam varius faucibus arcu. Sed non fringilla mauris. In blandit luctus aliquam. Proin sagittis porta lorem in vulputate. 
+The things that were troubling me most and I wanted to fix (or, rather, "enhance") were: 
 
-Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. Suspendisse elit nisi, suscipit id vehicula non, posuere pellentesque quam. Quisque sapien risus, molestie non ipsum ut, porta mattis nunc. Donec odio enim, molestie a viverra quis, laoreet eget lacus. Nam egestas metus lacus, in vestibulum metus placerat vel. Nunc tempor dolor in justo ullamcorper posuere. Donec ipsum felis, cursus non tempus ornare, pellentesque a nisi. Nam vitae dui eu elit condimentum pharetra facilisis vitae justo.
+- There is no way of reusing user-created plugins other than copying the code from one book to another.
+- Plugins are not namespaced, precluding autoloading and extensibility.
+
+### Namespaces for plugins
+
+All of `trefoil` plugins are namespaced, in the namespace (you guess) `Trefoil\Plugins`. 
+
+So a typical plugin now looks like:
+
+~~~~~~~~~~~~~~~~~~~~ .php
+<?php
+// trefoil\src\Trefoil\Plugins\AwesomePlugin.php
+namespace Trefoil\Plugins;
+
+use ...;
+
+class AwesomePlugin extends BasePlugin implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        //....
+    }
+
+    //...
+}
+
+~~~~~~~~~~~~~~~~~~~~
+
+`BasePlugin` is a base class that provides some utility methods to other plugins:
+
+~~~~~~~~~~~~~~~~~~~~ .php
+<?php
+// trefoil\src\Trefoil\Plugins\BasePlugin.php
+namespace Trefoil\Plugins;
+
+use Trefoil\Util\Toolkit;
+use Easybook\Events\BaseEvent;
+
+/**
+ * Base class for all plugins
+ *
+ */
+abstract class BasePlugin
+{
+    protected $app;
+    protected $output;
+    protected $edition;
+    protected $format;
+    protected $theme;
+    protected $item;
+
+    /**
+     * Do some initialization tasks.
+     * Must be called explicitly for each plugin at the begining
+     * of each event handler method.
+     *
+     * @param BaseEvent $event
+     */
+    public function init(BaseEvent $event)
+    {
+        $this->event = $event;
+        $this->app = $event->app;
+        $this->output = $this->app->get('console.output');
+        $this->edition = $this->app['publishing.edition'];
+        $this->format = Toolkit::getCurrentFormat($this->app);
+        $this->theme = ucfirst($this->app->edition('theme'));
+        $this->item = $event->getItem();
+    }
+
+    //... more methods
+
+}
+
+~~~~~~~~~~~~~~~~~~~~
+
+In the `init()` method a bunch of useful properties are defined so they are available for the plugins.
+
 
 The Trefoil plugins
 -------------------

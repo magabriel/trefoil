@@ -1,3 +1,8 @@
+easybook:
+    parameters:
+        parser.options: 
+            code_block_type: fenced
+            
 book:
     title:            'Trefoil documentation'
     author:           'trefoil'
@@ -25,15 +30,13 @@ book:
     editions:
         ebook:
             format:         epub
-            highlight_code: false
+            highlight_code: true
             include_styles: true
-            use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure', 'part'] 
             theme:          TrefoilTwo
             toc:
                 deep:       2
                 elements:   ["appendix", "chapter", "part", "introduction"]
-            isbn:           1234567890X
 
             plugins:       
                 enabled: 
