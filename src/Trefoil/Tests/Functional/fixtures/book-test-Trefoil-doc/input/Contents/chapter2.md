@@ -1,25 +1,22 @@
-Plugins
-=======
+# Plugin system enhancements
 
-Plugins are the core of `easybook` extensibilty. But I found its implementation a bit lacking on the side of flexibylity, so the first task was to get a more flexible plugin's system. And then, implement as many new features as possible in the form of new plugins. 
+Plugins are the core of `easybook` [extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
+But its implementation is a bit lacking on the side of flexibility, so the first task was to get a more flexible plugin's system. And then, implement as many new features as possible in the form of new plugins. 
+ 
+The first things to be fixed (or, rather, "enhanced") were: 
+
+- There was no way of reusing user-created plugins other than copying the code from one book to another.
+- Plugins are not namespaced, precluding autoloading and extensibility.
 
 {{ itemtoc() }}
 
-Plugin system enhancements
---------------------------
-
-The things that were troubling me most and I wanted to fix (or, rather, "enhance") were: 
-
-- There is no way of reusing user-created plugins other than copying the code from one book to another.
-- Plugins are not namespaced, precluding autoloading and extensibility.
-
-### Namespaces for plugins
+## Namespaces for plugins
 
 All of `trefoil` plugins are namespaced, in the namespace (you guess) `Trefoil\Plugins`. 
 
 So a typical plugin now looks like:
 
-~~~~~~~~~~~~~~~~~~~~ .php
+~~~ .php
 <?php
 // trefoil\src\Trefoil\Plugins\AwesomePlugin.php
 namespace Trefoil\Plugins;
@@ -35,12 +32,11 @@ class AwesomePlugin extends BasePlugin implements EventSubscriberInterface
 
     //...
 }
+~~~
 
-~~~~~~~~~~~~~~~~~~~~
+`BasePlugin` is a base class that provides some utility methods and properties to plugins:
 
-`BasePlugin` is a base class that provides some utility methods to other plugins:
-
-~~~~~~~~~~~~~~~~~~~~ .php
+~~~ .php
 <?php
 // trefoil\src\Trefoil\Plugins\BasePlugin.php
 namespace Trefoil\Plugins;
@@ -82,13 +78,23 @@ abstract class BasePlugin
     //... more methods
 
 }
+~~~
 
-~~~~~~~~~~~~~~~~~~~~
-
-In the `init()` method a bunch of useful properties are defined so they are available for the plugins.
+The `init()` method defines a bunch of useful properties to make them available for the plugins.
 
 
-The Trefoil plugins
--------------------
 
-Suspendisse et pretium tellus. Nam suscipit ut lectus quis consequat. Sed ut neque odio. Phasellus nec erat id sem fermentum ornare id vel libero. Mauris sed felis in est tincidunt imperdiet nec vel velit. Sed dictum tincidunt nisi sed rutrum. Quisque in dapibus neque. Sed et nisl quis justo sagittis sodales euismod sed mi. Aenean accumsan sit amet erat eu facilisis. Proin facilisis, mi in imperdiet varius, libero tortor eleifend sem, pellentesque fringilla metus tellu sed erat. Ut id sapien vestibulum, posuere turpis non, semper diam. 
+## Selectively enabling plugins
+
+Plugins can be enabled for each book edition:
+
+~~~.yaml
+book:
+    ....
+    editions:
+        <edition-name>
+            plugins:
+                enabled: [ plugin1, plugin2, ...]
+                options:
+                    ... 
+~~~ 

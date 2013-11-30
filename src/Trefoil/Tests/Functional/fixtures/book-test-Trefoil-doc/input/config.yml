@@ -23,10 +23,11 @@ book:
         - { element: part,        number: 2,    content: part-2.md }
         - { element: chapter,     number:   2,  content: chapter2.md }
         - { element: chapter,     number:   3,  content: chapter3.md } 
+        - { element: chapter,     number:   4,  content: chapter4.md } 
                                
         - { element: footnotes }    
         - { element: auto-glossary }
-
+ 
     editions:
         ebook:
             format:         epub
@@ -35,7 +36,7 @@ book:
             labels:         ['appendix', 'chapter', 'figure', 'part'] 
             theme:          TrefoilTwo
             toc:
-                deep:       2
+                deep:       3
                 elements:   ["appendix", "chapter", "part", "introduction"]
 
             plugins:       
@@ -63,4 +64,7 @@ book:
                         length:     1                               # number of letters or words to highlight (default: 1)
                         elements:   ['chapter', 'introduction']     # which elements to process 
 
+                    TwigExtension: 
+                        itemtoc:
+                            deep:       3
                         
