@@ -29,19 +29,7 @@ book:
             isbn:           1234567890X
             plugins:        
                 enabled: 
-                    #- AutoGlossary
-                    #- DropCaps
-                    #- EpubBookRename
-                    #- EpubCheck
-                    #- EpubQualityControl
-                    #- EpubUncompress
-                    #- FootnotesExtra
-                    #- HtmlTweaks
-                    #- ImageExtra
-                    #- KindleTweaks
-                    #- LinkCheck
-                    #- TableExtra                
-                    #- TwigExtension
+                    - TwigExtension
                 options:
                     TwigExtension:
                         itemtoc:
