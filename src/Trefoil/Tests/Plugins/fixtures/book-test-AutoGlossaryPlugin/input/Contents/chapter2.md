@@ -1,4 +1,4 @@
-# AutoPlugin test chapter 2
+# AutoGlossaryPlugin test chapter 2
 
 ## Terms 'dapibus' and 'sapien mattis'
 
