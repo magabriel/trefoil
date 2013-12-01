@@ -80,7 +80,7 @@
         font-family: sans-serif;
         font-weight: bold;
         line-height: 1;
-        margin: 1em 0 .25em 0;
+        margin: 1.2em 0 0.6em 0;
     }
 
     h1, h2, h3 {
@@ -196,6 +196,67 @@
         display: none;
     }
 
+    /* Admonitions
+     */
+    .admonition {
+        margin: 10px 0 !important;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        font-size: 90%;
+        padding: 10px 8px 20px 8px !important;
+        page-break-inside: avoid;
+    }
+
+        .admonition.aside {}
+        .admonition.note {}
+        .admonition.tip {}
+        .admonition.error {}
+        .admonition.information {}
+        .admonition.question {}
+        .admonition.discussion {}
+
+        .admonition.aside {
+            display: block;
+            float: right;
+            width: 50%;
+            min-width: 200px;
+            margin-left: 1em !important;
+            border: 1px solid #6cafd0;
+            background-color: transparent;
+        }
+
+        .admonition.tip, .admonition.note {
+            border: 1px solid #6cafd0;
+            background-color: transparent;
+        }
+
+        .admonition.error {
+            border: 1px solid #8e0012;
+            background-color: #fce5e8;
+        }
+
+        .admonition.information {
+            background-color: #FFF68F;
+            border: 1px solid #615E3F;
+        }
+
+        .admonition h5 {
+            font-family: sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 4px 0 6px !important;
+            color: #000;
+        }
+
+        .admonition h6 {
+            font-family: sans-serif;
+            text-align: left;
+            margin: 4px 0 6px !important;
+            color: #444;
+        }
+
 {% endblock %}
 
 {% endblock %} {# @typography #}
@@ -282,6 +343,7 @@
         border: 1px solid #666;
         margin: 1em 0;
         padding: .2em;
+        font-size: .9em;
     }
 
     div.code pre {
@@ -290,11 +352,14 @@
     }
 
     code {
+        font-size: .9em;
         font-weight: bold;
         border: 1px solid #ccc;
         padding: .1em;
         background: #eee;
     }
+
+    {% include 'style.code.css.twig' %}
 
 {% endblock %}
 
@@ -345,6 +410,14 @@
 
     div.item p {
         text-indent: 0;
+    }
+
+    .item h2 {
+        color: #8e0012;
+    }
+
+    .item h4 {
+        color: #555;
     }
 
     {% include 'style.DropCaps.css.twig' %}
@@ -540,6 +613,8 @@
     /* local toc */
     .local_toc {
         border: 1px solid #AAA;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
         padding: 0 1em;
         margin: 1em auto;
         min-width: 10em;

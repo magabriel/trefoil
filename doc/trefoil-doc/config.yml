@@ -2,7 +2,8 @@ easybook:
     parameters:
         parser.options: 
             code_block_type: fenced
-            
+        kindlegen.path: '/home/miguelangel/bin/kindlegen'
+        epubcheck.path: '/home/miguelangel/bin/epubcheck.jar'            
 book:
     title:            'Trefoil documentation'
     author:           'trefoil'
@@ -14,7 +15,7 @@ book:
    
     contents:
         - { element: edition }
-        
+        - { element: toc }
         - { element: introduction, content: introduction.md }
         
         - { element: part,        number: 1,    content: part-1.md }
@@ -29,10 +30,20 @@ book:
         - { element: auto-glossary }
  
     editions:
+        kindle:
+            extends: ebook
+            format:  mobi
+            include_styles: true
+             
         ebook:
             format:         epub
             highlight_code: true
             include_styles: true
+ 
+            include_fonts:  true
+            fonts: 
+                - Inconsolata
+ 
             labels:         ['appendix', 'chapter', 'figure', 'part'] 
             theme:          TrefoilTwo
             toc:

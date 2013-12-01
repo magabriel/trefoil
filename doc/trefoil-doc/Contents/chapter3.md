@@ -19,6 +19,11 @@ It provides three working modes:
 
 Drop caps can be automatically added to the first paragraph after a heading. This behaviour can be influenced on a per-edition base setting options in the `plugins` configuration section inside the book's `config.yml`.
  
+N> ##### Note
+N> This book has automatic drop caps applied with the default options.
+
+
+ 
 ~~~.yaml
 book:
     ....
@@ -39,22 +44,20 @@ where the options are:
 - `levels`: The heading levels to add drop caps to. Values 1 to 6 (default: 1).
 - `mode`: Values `letter` or `word` (default: `letter`).
 - `length`: Number of letters or words to highlight (default: 1).
-- `coverage`: Array of book elements to process (default: ['chapter']).
-    
-   
+- `coverage`: Array of book elements to process (default: ['chapter']).   
         
 ### Manual drop caps HTML markup
 
 HTML can be freely mixed into Markdown. So a way to manually add drop caps to the text is:
 
 ~~~.html
-<span class="dropcaps">T</span>his is a paragraph that starts with a manually-added dropcap.
+<span class="dropcaps">T</span>his is a paragraph that starts with a manually-added drop cap.
 ~~~
 
-*trefoil* will produce the following HTML code that can be easily styled:
+**trefoil** will produce the following HTML code that can be easily styled:
 
 ~~~.html
-<p class="has-dropcaps"><span class="dropcaps">T</span>his is a paragraph that starts with a manually-added dropcap.</p>
+<p class="has-dropcaps"><span class="dropcaps">T</span>his is a paragraph that starts with a manually-added drop cap.</p>
 ~~~
 
 
@@ -74,3 +77,13 @@ will produce the following HTML:
 <p class="has-dropcaps"><span class="dropcaps">T</span>his text has first-letter drop caps.</p>
 <p class="has-dropcaps"><span class="dropcaps">But</span> this text has first-word drop caps.</p>
 ~~~
+
+and will be shown in the book as (with some dummy text added):
+
+[[T]]his text has first-letter drop caps. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua. 
+
+[[But]] this text has first-word drop caps. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua. 
+
+
+
+
