@@ -260,7 +260,10 @@ class Epub2Publisher extends HtmlPublisher
 
             if (file_exists($imagesDir)) {
 
-                $images = Finder::create()->files()->in($imagesDir);
+                $images = Finder::create()
+                            ->files()
+                            ->sortByName()
+                            ->in($imagesDir);
 
                 foreach ($images as $image) {
 
@@ -377,6 +380,7 @@ class Epub2Publisher extends HtmlPublisher
                             ->files()
                             ->name('*.ttf')
                             ->name('*.otf')
+                            ->sortByName()
                             ->in($fontDir);
 
                 foreach ($fonts as $font) {
