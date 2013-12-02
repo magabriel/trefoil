@@ -22,9 +22,12 @@
     /* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */
     @font-face {
         font-family: inconsolata;
-        font-style: normal;
-        font-weight: 400;
-        src: url("{{ resources_dir }}/fonts/Inconsolata.ttf")
+        src: url("{{ resources_dir }}/fonts/Inconsolata-Regular.ttf")
+    }
+    @font-face {
+        font-family: inconsolata;
+        font-weight: bold;
+        src: url("{{ resources_dir }}/fonts/Inconsolata-Bold.ttf")
     }
 {% endif %}
 
@@ -336,7 +339,7 @@
 {{ parent() }}
 
     code, pre, pre span, pre * {
-        font-family: inconsolata, monospace !important;
+        font-family: inconsolata, monospace;
     }
 
     div.code {
@@ -353,7 +356,6 @@
 
     code {
         font-size: .9em;
-        font-weight: bold;
         border: 1px solid #ccc;
         padding: .1em;
         background: #eee;
