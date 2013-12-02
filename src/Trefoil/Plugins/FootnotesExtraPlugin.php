@@ -199,9 +199,8 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         }
 
         if (!$this->generated) {
-            $this->output
-            ->write(
-                    " <error>No footnotes element has been generated, check for missing 'footnotes' contents element.</error>\n");
+            $this->writeLn(
+                    "No footnotes element has been generated, check for missing 'footnotes' contents element.", 'error');
         }
 
         $outputDir = $this->app['publishing.dir.output'];

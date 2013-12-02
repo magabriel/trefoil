@@ -16,7 +16,11 @@ use Easybook\Events\ParseEvent;
  *     book:
  *         ...
  *         version: "1.0" # current version string, of form "version.revision"
- *         verson_options:
+ *
+ *     <edition>:
+ *         plugins:
+ *             ...
+ *         VersionUpdater:
  *             increment_ver: false # don't increment the version part (default)
  *             increment_rev: true  # increment the revision part (default)
  *
@@ -51,13 +55,14 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
     protected function updateVersion()
     {
         if (!$this->app->book('version')) {
-            $this->output->writeLn(
-                  ' <error>No "book.version" option found. Cannot update version.</error>' . "\n");
+            $this->writeLn('No "book.version" option found. Cannot update version.', 'error');
             return;
         }
 
         $newVersionString = $this->calculateNewVersion();
         $this->updateConfigFile($newVersionString);
+
+        $this->writeLn(sprintf('Book version updated to "%s"', $newVersionString));
     }
 
     /**
@@ -71,26 +76,22 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
         $versionString = $this->app->book('version');
 
         // read version options
-        $versionIncrementVer = false;
-        $versionIncrementRev = true;
-        if ($this->app->book('version_options')) {
-            $versionOptions = $this->app->book('version_options');
-            $versionIncrementVer = isset($versionOptions['increment_ver']) ? $versionOptions['increment_ver'] : false;
-            $versionIncrementRev = isset($versionOptions['increment_rev']) ? $versionOptions['increment_rev'] : true;
-        }
+        $versionIncrementVer = $this->getEditionOption('plugins.options.VersionUpdater.increment_ver', false);
+        $versionIncrementRev = $this->getEditionOption('plugins.options.VersionUpdater.increment_rev', true);
 
         // analize parts
         $parts = explode('.', $versionString);
 
         // check for correctness
         if (count($parts) <> 2) {
-            throw new \Exception(
-                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString));
+            $this->writeLn(
+                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString), 'error');
+            return $versionString;
         }
         if (!ctype_digit($parts[0]) || !ctype_digit($parts[1])) {
-            throw new \Exception(
-                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString));
-
+           $this->writeLn(
+                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString), 'error');
+            return $versionString;
         }
 
         if ($versionIncrementRev) {
@@ -129,14 +130,14 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp = '/';
         $regExp .= '(?<label>version:)';
         $regExp .= '(?<spaces>[^\w]*)';
-        $regExp .= '"(?<version>.*)"';
+        $regExp .= '(?<delim>["\'])(?<version>.*)["\']';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $config = preg_replace_callback(
                 $regExp,
                 function ($matches) use ($newVersionString)
                           {
-                          $new = $matches['label'] . $matches['spaces'] . '"' . $newVersionString . '"';
+                          $new = $matches['label'] . $matches['spaces'] . $matches['delim'] . $newVersionString . $matches['delim'];
                           return $new;
                           },
                           $config);

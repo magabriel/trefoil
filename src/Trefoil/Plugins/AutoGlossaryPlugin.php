@@ -156,9 +156,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $this->glossaryOptions = $loader->getOptions();
 
         if (!$loader->isLoaded()) {
-            $this->output->write(
-                    sprintf(" <comment>WARNING</comment>No book glossary definition file '%s' found in '%s' directory.\n",
-                            basename($glossaryFile), realpath($contentsDir)));
+            $this->writeLn(
+                    sprintf("No book glossary definition file '%s' found in the book's \"Contents\" directory.",
+                            basename($glossaryFile)), 'warning');
         }
     }
 
@@ -262,9 +262,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report .= $this->getNotUsedTermsReport();
 
         if (!$this->generated) {
-            $this->output
-            ->write(
-                    " <error>No glossary has been generated, check for missing 'auto-glosssary' contents element.</error>\n");
+            $this->writeLn(
+                    "No glossary has been generated, check for missing 'auto-glosssary' contents element.", "error");
         }
 
         $outputDir = $this->app['publishing.dir.output'];

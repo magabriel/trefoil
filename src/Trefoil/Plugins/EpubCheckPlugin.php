@@ -59,8 +59,8 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $epubcheckOptions = $this->getConfigOption('easybook.parameters.epubcheck.command_options');
 
         if (!$epubcheck || !file_exists($epubcheck)) {
-            $this->writeLn('<error>The EpubCheck library needed to check EPUB books cannot be found. '.
-                    'Check that you have set your custom Epubcheck path in the book\'s config.yml file.</error>');
+            $this->writeLn('The EpubCheck library needed to check EPUB books cannot be found. '.
+                    'Check that you have set your custom Epubcheck path in the book\'s config.yml file.', 'error');
             return;
         }
 
@@ -72,7 +72,7 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
                 $epubcheckOptions
         );
 
-        $this->write(' Running EpubCheck...');
+        $this->writeLn('Running EpubCheck...');
 
         $process = new Process($command);
         $process->run();
@@ -80,16 +80,14 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $outputText = $process->getOutput() . $process->getErrorOutput();
 
         if ($process->isSuccessful()) {
-            $this->writeLn('No errors', false);
+            $this->writeLn('No errors');
         } else {
             if (preg_match('/^ERROR:/Um', $outputText)) {
-                $this->writeLn('<error>Some errors detected.</error>'."\n", false);
+                $this->writeLn('Some errors detected.</error>', 'error');
             } else {
-                $this->writeLn('<comment>Some warnings detected.</comment>'."\n", false);
+                $this->writeLn('Some warnings detected.', "warning");
             }
         }
-
-
 
         $reportFile = $this->app['publishing.dir.output'] . '/report-EpubCheckPlugin.txt';
         file_put_contents($reportFile, $outputText);

@@ -82,12 +82,12 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
         // and let the new version with it real name
         $this->app->get('filesystem')->rename($newFileAux, $newFile);
 
-        $this->writeLn(sprintf('<comment>Output file renamed to "%s"</comment>', $newName));
+        $this->writeLn(sprintf('Output file renamed to "%s"', basename($newFile)));
 
         // and with the default name for testing purposes
         if ($keepOriginal) {
             $this->app->get('filesystem')->copy($newFile, $oldFile);
-            $this->writeLn('<comment>Original output file kept</comment>');
+            $this->writeLn('Original output file kept.');
         }
     }
 

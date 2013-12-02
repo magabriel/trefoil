@@ -133,20 +133,21 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function checkInternalLinks()
     {
+        $errors = false;
+
         foreach ($this->links['internal'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 if (!in_array(substr($link['uri'], 1), $this->linkTargets)) {
-                    $this->writeLn(
-                            sprintf(
-                                    '<error>"%s": Internal link target "%s" => "%s" not found.</error>',
-                                    $xref,
-                                    $link['text'],
-                                    $link['uri']));
                     $this->links['internal'][$xref][$index]['status'] = 'Not found';
+                    $errors = true;
                 } else {
                     $this->links['internal'][$xref][$index]['status'] = 'OK';
                 }
             }
+        }
+
+        if ($errors) {
+            $this->writeLn('Some internal links are not correct.', 'error');
         }
     }
 
@@ -161,31 +162,26 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         $checker = new LinkChecker();
 
+        $this->writeLn('Checking external links....');
+
+        $errors = false;
+
         foreach ($this->links['external'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 try {
-                    $this->writeLn(sprintf(' > Checking link "%s" => ', $link['text']));
-                    $this->write(sprintf('     %s ...', $link['uri']));
-
                     $checker->check($link['uri']);
-
-                    $this->writeLn('<info>OK</info>', false);
-
                     $this->links['external'][$xref][$index]['status'] = 'OK';
-
                 } catch (\Exception $e) {
-                    $this->writeLn('', false);
-                    $this->writeLn(
-                            sprintf(
-                                    '<error>"%s": External link target "%s" => "%s" error "%s".</error>',
-                                    $xref,
-                                    $link['text'],
-                                    $link['uri'],
-                                    $e->getMessage()));
-
                     $this->links['external'][$xref][$index]['status'] = $e->getMessage();
+                    $errors = true;
                 }
             }
+        }
+
+        if ($errors) {
+            $this->writeLn('Some external links are not correct.', 'error');
+        } else {
+            $this->writeLn('All external links are correct.');
         }
     }
 

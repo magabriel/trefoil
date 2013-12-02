@@ -132,7 +132,10 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $file = $dir.'/'.$filename;
 
         if (!file_exists($file)) {
-            throw new \Exception(sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content'] ));
+            $this->writeLn(
+                    sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content'] ),
+                    'error');
+            return $fileName;
         }
 
         $rendered = $this->renderString(file_get_contents($file), $variables);
