@@ -17,12 +17,14 @@ use Easybook\Events\ParseEvent;
  *         ...
  *         version: "1.0" # current version string, of form "version.revision"
  *
- *     <edition>:
- *         plugins:
- *             ...
- *         VersionUpdater:
- *             increment_ver: false # don't increment the version part (default)
- *             increment_rev: true  # increment the revision part (default)
+ *         editions:
+ *             <edition>:
+ *                 plugins:
+ *                     ...
+ *                     options:
+ *                         VersionUpdater:
+ *                             increment_ver: false # don't increment the version part (default)
+ *                             increment_rev: true  # increment the revision part (default)
  *
  * After execution the book config.yml file will be updated with the
  * new version string:
