@@ -277,6 +277,25 @@
     code, pre, pre span, pre * {
         font-family: inconsolata, monospace !important;
     }
+
+    div.code {
+        border: 1px solid #666;
+        margin: 1em 0;
+        padding: .2em;
+    }
+
+    div.code pre {
+        padding: 0;
+        margin: 0;
+    }
+
+    code {
+        font-weight: bold;
+        border: 1px solid #ccc;
+        padding: .1em;
+        background: #eee;
+    }
+
 {% endblock %}
 
 {# ==========================================================================
@@ -522,7 +541,7 @@
     .local_toc {
         border: 1px solid #AAA;
         padding: 0 1em;
-        margin: 0 auto;
+        margin: 1em auto;
         min-width: 10em;
     }
 

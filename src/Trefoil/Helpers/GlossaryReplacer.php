@@ -75,7 +75,7 @@ class GlossaryReplacer
     {
         if (!$this->glossary->count()) {
             // no glossary terms
-            return;
+            return $this->text;
         }
 
         // create the TextPeserver instance for this text processing
@@ -83,7 +83,7 @@ class GlossaryReplacer
         $this->textPreserver->setText($this->text);
 
         // save existing values of tags contents we don't want to get modified into
-        $this->textPreserver->preserveHtmlTags(array('a'));
+        $this->textPreserver->preserveHtmlTags(array('a', 'pre'));
 
         // save existing values of attributes we don't want to get modified into
         $this->textPreserver->preserveHtmlTagAttributes(array('title', 'alt', 'src', 'href'));

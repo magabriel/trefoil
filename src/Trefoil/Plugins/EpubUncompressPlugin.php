@@ -23,8 +23,11 @@ use Easybook\Events\ParseEvent;
  *
  *     editions:
  *         <edition-name>
- *             EpubUncompress:
- *                 fix_compressed_epub:    false  # Recompress the epub to fix some problems
+ *             plugins:
+ *                 ....
+ *                 options:
+ *                     EpubUncompress:
+ *                         fix_compressed_epub:    false  # Recompress the epub to fix some problems
  *
  */
 class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterface
@@ -49,7 +52,7 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
 
         $this->bookUncompress();
 
-        if ($this->getEditionOption('EpubUncompress.fix_compressed_epub', false)) {
+        if ($this->getEditionOption('plugins.options.EpubUncompress.fix_compressed_epub', false)) {
             $this->bookRecompress();
         }
     }

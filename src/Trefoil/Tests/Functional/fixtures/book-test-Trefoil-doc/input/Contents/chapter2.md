@@ -1,18 +1,100 @@
-Plugins
-=======
+# Plugin system enhancements
 
-Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. 
+Plugins are the core of `easybook` [extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
+But its implementation is a bit lacking on the side of flexibility, so the first task was to get a more flexible plugin's system. And then, implement as many new features as possible in the form of new plugins. 
+ 
+The first things to be fixed (or, rather, "enhanced") were: 
+
+- There was no way of reusing user-created plugins other than copying the code from one book to another.
+- Plugins are not namespaced, precluding autoloading and extensibility.
 
 {{ itemtoc() }}
 
-Plugins system enhancements
----------------------------
+## Namespaces for plugins
 
-In pretium arcu eget felis lacinia suscipit. Nunc interdum rhoncus nibh quis auctor. Integer facilisis nisl sit amet diam pellentesque, a elementum nisi scelerisque. Pellentesque non eleifend mauris, vel sodales massa. Duis rutrum dignissim aliquet. Aliquam eget euismod sapien. In blandit velit sit amet lorem hendrerit, id bibendum velit porttitor. Duis libero nisi, porta eget erat ac, tempor placerat velit. Pellentesque ultrices placerat ultrices. Nullam varius faucibus arcu. Sed non fringilla mauris. In blandit luctus aliquam. Proin sagittis porta lorem in vulputate. 
+All of `trefoil` plugins are namespaced, in the namespace (you guess) `Trefoil\Plugins`. 
 
-Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien turpis, tristique a ultrices sit amet, condimentum vel risus. Quisque eu lorem massa. Nunc lacinia tortor sit amet libero pharetra, vel pretium ligula tincidunt. Pellentesque auctor nibh nec volutpat fermentum. Suspendisse elit nisi, suscipit id vehicula non, posuere pellentesque quam. Quisque sapien risus, molestie non ipsum ut, porta mattis nunc. Donec odio enim, molestie a viverra quis, laoreet eget lacus. Nam egestas metus lacus, in vestibulum metus placerat vel. Nunc tempor dolor in justo ullamcorper posuere. Donec ipsum felis, cursus non tempus ornare, pellentesque a nisi. Nam vitae dui eu elit condimentum pharetra facilisis vitae justo.
+So a typical plugin now looks like:
 
-The Trefoil plugins
--------------------
+~~~ .php
+<?php
+// trefoil\src\Trefoil\Plugins\AwesomePlugin.php
+namespace Trefoil\Plugins;
 
-Suspendisse et pretium tellus. Nam suscipit ut lectus quis consequat. Sed ut neque odio. Phasellus nec erat id sem fermentum ornare id vel libero. Mauris sed felis in est tincidunt imperdiet nec vel velit. Sed dictum tincidunt nisi sed rutrum. Quisque in dapibus neque. Sed et nisl quis justo sagittis sodales euismod sed mi. Aenean accumsan sit amet erat eu facilisis. Proin facilisis, mi in imperdiet varius, libero tortor eleifend sem, pellentesque fringilla metus tellu sed erat. Ut id sapien vestibulum, posuere turpis non, semper diam. 
+use ...;
+
+class AwesomePlugin extends BasePlugin implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        //....
+    }
+
+    //...
+}
+~~~
+
+`BasePlugin` is a base class that provides some utility methods and properties to plugins:
+
+~~~ .php
+<?php
+// trefoil\src\Trefoil\Plugins\BasePlugin.php
+namespace Trefoil\Plugins;
+
+use Trefoil\Util\Toolkit;
+use Easybook\Events\BaseEvent;
+
+/**
+ * Base class for all plugins
+ *
+ */
+abstract class BasePlugin
+{
+    protected $app;
+    protected $output;
+    protected $edition;
+    protected $format;
+    protected $theme;
+    protected $item;
+
+    /**
+     * Do some initialization tasks.
+     * Must be called explicitly for each plugin at the begining
+     * of each event handler method.
+     *
+     * @param BaseEvent $event
+     */
+    public function init(BaseEvent $event)
+    {
+        $this->event = $event;
+        $this->app = $event->app;
+        $this->output = $this->app->get('console.output');
+        $this->edition = $this->app['publishing.edition'];
+        $this->format = Toolkit::getCurrentFormat($this->app);
+        $this->theme = ucfirst($this->app->edition('theme'));
+        $this->item = $event->getItem();
+    }
+
+    //... more methods
+
+}
+~~~
+
+The `init()` method defines a bunch of useful properties to make them available for the plugins.
+
+
+
+## Selectively enabling plugins
+
+Plugins can be enabled for each book edition:
+
+~~~.yaml
+book:
+    ....
+    editions:
+        <edition-name>
+            plugins:
+                enabled: [ plugin1, plugin2, ...]
+                options:
+                    ... 
+~~~ 

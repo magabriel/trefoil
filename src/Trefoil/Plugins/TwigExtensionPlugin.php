@@ -38,7 +38,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
                 EasybookEvents::PRE_PARSE => 'onItemPreParse',
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010) // after ParserPlugin
+                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
         );
     }
 
@@ -49,14 +49,14 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('original');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
-        $content = str_replace('{#', '{@', $content);
+        $content = str_replace('{#', '@%@&', $content);
 
         // replace configuration options on PreParse to take care of normal replacements
         // and the first pass of "itemtoc()"
         $content = $this->renderString($content);
 
         # replace back "{#"
-        $content = str_replace('{@', '{#', $content);
+        $content = str_replace('@%@&', '{#', $content);
 
         $event->setItemProperty('original', $content);
     }
@@ -68,13 +68,13 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('content');
 
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
-        $content = str_replace('{#', '{@', $content);
+        $content = str_replace('{#', '@%@&', $content);
 
         // replace also in PostParse to process the second pass of "itemtoc()" ("itemtoc_internal()")
         $content = $this->renderString($content);
 
         # replace back "{#"
-        $content = str_replace('{@', '{#', $content);
+        $content = str_replace('@%@&', '{#', $content);
 
         $event->setItemProperty('content', $content);
     }
@@ -148,8 +148,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Twig function: <b>itemtoc()</b>
-     * @uses Configuration option <i>edition.itemtoc.deep</i> (default: <i>edition.toc.deep - 1 </i>
-     * @return string The item toc
+     * @return string The _itemtoc_internal() function call
      *
      * Generating the item toc requires two phases to ensure that included files got parsed after being
      * included (with file()). The second phase does the actual rendering of the itemtoc
@@ -165,6 +164,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      * <b>This is an internal function so is not to be used directly in content files.</b>
      * It will be invoked on itemPostParse, after all the file() functions have been resolved and all
      * the included item contents have been parsed.
+
+     * @uses Configuration option <i>edition.plugins.TwigExtension.itemtoc.deep</i>
+     *       (default: <i>edition.toc.deep + 1 </i>
      *
      * @return string The item toc rendered
      * @internal
@@ -177,7 +179,10 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $twig = $this->app->get('twig');
         $this->addTwigGlobals($twig);
 
-        $rendered = $twig->render($template, array());
+        $itemtoc_deep = $this->getEditionOption('plugins.options.TwigExtension.itemtoc.deep',
+                        $this->getEditionOption('toc.deep') + 1);
+
+        $rendered = $twig->render($template, array('itemtoc_deep' => $itemtoc_deep));
 
         return $rendered;
     }

@@ -1,3 +1,8 @@
+easybook:
+    parameters:
+        parser.options: 
+            code_block_type: fenced
+            
 book:
     title:            'Trefoil documentation'
     author:           'trefoil'
@@ -18,42 +23,48 @@ book:
         - { element: part,        number: 2,    content: part-2.md }
         - { element: chapter,     number:   2,  content: chapter2.md }
         - { element: chapter,     number:   3,  content: chapter3.md } 
+        - { element: chapter,     number:   4,  content: chapter4.md } 
                                
         - { element: footnotes }    
         - { element: auto-glossary }
-
+ 
     editions:
         ebook:
             format:         epub
-            highlight_code: false
+            highlight_code: true
             include_styles: true
-            use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure', 'part'] 
             theme:          TrefoilTwo
             toc:
-                deep:       2
+                deep:       3
                 elements:   ["appendix", "chapter", "part", "introduction"]
-            isbn:           1234567890X
+
             plugins:       
-                - AutoGlossary
-                - DropCaps
-                - EpubBookRename
-                - EpubCheck
-                - EpubQualityControl
-                - EpubUncompress
-                - FootnotesExtra
-                - HtmlTweaks
-                - ImageExtra
-                - KindleTweaks
-                - LinkCheck
-                - TableExtra
-                - TwigExtension
-                - Typography
-                - VersionUpdater
+                enabled: 
+                    - AutoGlossary
+                    - DropCaps
+                    - EpubBookRename
+                    - EpubCheck
+                    - EpubQualityControl
+                    - EpubUncompress
+                    - FootnotesExtra
+                    - HtmlTweaks
+                    - ImageExtra
+                    - KindleTweaks
+                    - LinkCheck
+                    - TableExtra
+                    - TwigExtension
+                    - Typography
+                    - VersionUpdater
+                    
+                options:
+                    DropCaps: 
+                        levels:     [1]                             # 1 to 6 (default: 1)
+                        mode:       letter                          # letter, word (default: letter)
+                        length:     1                               # number of letters or words to highlight (default: 1)
+                        elements:   ['chapter', 'introduction']     # which elements to process 
 
-            DropCaps: 
-                levels:     [1]                             # 1 to 6 (default: 1)
-                mode:       letter                          # letter, word (default: letter)
-                length:     1                               # number of letters or words to highlight (default: 1)
-                elements:   ['chapter', 'introduction']     # which elements to process 
-
+                    TwigExtension: 
+                        itemtoc:
+                            deep:       3
+                        

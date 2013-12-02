@@ -1,4 +1,4 @@
-# AutoPlugin test
+# AutoGlossaryPlugin test
 
 ## Links and images should not be affected
 

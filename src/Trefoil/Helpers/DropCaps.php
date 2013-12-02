@@ -148,7 +148,10 @@ class DropCaps
                 },
                 $this->text);
 
-        $this->text = $text;
+        // only set if no errors (i.e. no <p> tag after a heading)
+        if (null !== $text ) {
+            $this->text = $text;
+        }
     }
 
     /**

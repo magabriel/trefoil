@@ -22,11 +22,14 @@ use Trefoil\Util\Toolkit;
  *
  *     editions:
  *         <edition-name>
- *             DropCaps:
- *                 levels:     [1]           # 1 to 6 (default: 1)
- *                 mode:       letter        # letter, word (default: letter)
- *                 length:     1             # number of letters or words to highlight (default: 1)
- *                 coverage:   ['chapter']   # book elements to process
+ *             plugins:
+ *                 ...
+ *                 options:
+ *                     DropCaps:
+ *                         levels:     [1]           # 1 to 6 (default: 1)
+ *                         mode:       letter        # letter, word (default: letter)
+ *                         length:     1             # number of letters or words to highlight (default: 1)
+ *                         coverage:   ['chapter']   # book elements to process
  *
  * 2. Manual dropcaps: Besides adding the HTML markup directly, which off course is still
  *    possible, a Markdown-like markup is provided for greater convenience:
@@ -64,10 +67,10 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function addDropCaps($content)
     {
-        $length = $this->getEditionOption('DropCaps.length', 1);
-        $mode = $this->getEditionOption('DropCaps.mode', 'letter');
-        $levels = $this->getEditionOption('DropCaps.levels', array(1));
-        $elements = $this->getEditionOption('DropCaps.elements', array('chapter'));
+        $length = $this->getEditionOption('plugins.options.DropCaps.length', 1);
+        $mode = $this->getEditionOption('plugins.options.DropCaps.mode', 'letter');
+        $levels = $this->getEditionOption('plugins.options.DropCaps.levels', array(1));
+        $elements = $this->getEditionOption('plugins.options.DropCaps.elements', array('chapter'));
 
         if (!in_array($this->item['config']['element'], $elements)) {
             // not for this element

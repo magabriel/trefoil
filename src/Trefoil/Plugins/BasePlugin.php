@@ -16,7 +16,6 @@ abstract class BasePlugin
     protected $format;
     protected $theme;
     protected $item;
-    protected $internalLinksMapper = array();
 
     /**
      * Do some initialization tasks.

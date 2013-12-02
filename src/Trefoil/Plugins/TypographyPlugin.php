@@ -18,8 +18,11 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  *     editions:
  *         <edition-name>
- *             Typography:
- *                 fix_spanish_style_dialog: false
+ *             plugins:
+ *                 ...
+ *                 options:
+ *                     Typography:
+ *                         fix_spanish_style_dialog: false
  *
  * - fix_spanish_style_dialog: Convert starting '-' (dash) in paragraphs to em-dash.
  *
@@ -57,7 +60,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $this->smartyPantsPostParse($content);
         $content = $this->replaceSymbolsPostParse($content);
 
-        if ($this->getEditionOption('Typography.fix_spanish_style_dialog')) {
+        if ($this->getEditionOption('plugins.options.Typography.fix_spanish_style_dialog')) {
             $content = $this->fixSpanishStyleDialog($content);
         }
 

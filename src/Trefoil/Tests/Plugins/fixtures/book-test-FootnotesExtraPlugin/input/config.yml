@@ -23,7 +23,8 @@ book:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "footnotes"]
             isbn:           1234567890X
-            plugins:        
-                - FootnotesExtra
+            plugins:  
+                enabled:      
+                    - FootnotesExtra
                 
     
