@@ -343,10 +343,11 @@
     }
 
     div.code {
-        border: 1px solid #666;
         margin: 1em 0;
-        padding: .2em;
+        padding: .4em;
         font-size: .9em;
+        background: #F6F6F6;
+        border: 1px solid #CCC;
     }
 
     div.code pre {
@@ -359,6 +360,10 @@
         border: 1px solid #ccc;
         padding: .1em;
         background: #eee;
+    }
+
+    h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+        font: inherit;
     }
 
     {% include 'style.code.css.twig' %}
