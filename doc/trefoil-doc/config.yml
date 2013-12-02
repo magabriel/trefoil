@@ -33,7 +33,6 @@ book:
         kindle:
             extends: ebook
             format:  mobi
-            include_styles: true
              
         ebook:
             format:         epub
@@ -42,7 +41,8 @@ book:
  
             include_fonts:  true
             fonts: 
-                - Inconsolata
+                - Inconsolata-Regular
+                - Inconsolata-Bold
  
             labels:         ['appendix', 'chapter', 'figure', 'part'] 
             theme:          TrefoilTwo
@@ -55,7 +55,7 @@ book:
                     - AutoGlossary
                     - DropCaps
                     - EpubBookRename
-                    - EpubCheck
+                    #- EpubCheck
                     - EpubQualityControl
                     - EpubUncompress
                     - FootnotesExtra
