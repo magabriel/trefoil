@@ -1,5 +1,4 @@
 {% import _self as helper %}
-
 {% macro tocItem(item, entry, level) %}
     {% set level = level ? level : 1 %}
     {% set hash = entry ? '#' ~ (level == 1 ? item.slug : entry.slug ) : '' %}
