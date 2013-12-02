@@ -1,6 +1,24 @@
 <?php
 namespace Trefoil\Helpers;
 
+/**
+ * This class transforms a "simple" HTML table into a "complex" table,
+ * where "simple" means "without rowspan or colspan cells".
+ *
+ * It is designed to allow HTML tables generated from Markdown content
+ * to have the extra funcionality of rowspan or colspan without having
+ * to modify the parser.
+ *
+ * For the transformations to work, cell contents must follow some simple
+ * rules:
+ *
+ * - A cell containing only '"' (a single double quote) => rowspanned cell
+ *   (meaning it is joined with the same cell of the preceding row).
+ *
+ * - An empty cell => colspanned cell (meaning it is joined with the same
+ *   cell of the preceding column.
+ *
+ */
 class TableExtra
 {
     /**
@@ -19,9 +37,6 @@ class TableExtra
                 $regExp,
                 function ($matches) use ($me)
                 {
-                    // PRUEBAS
-                    //print_r($matches['table']);
-
                     $table = $this->parseTable($matches['table']);
                     if (!$table) {
                         return $matches[0];
