@@ -230,10 +230,6 @@ class Epub2Publisher extends HtmlPublisher
         // they will be used sequentially, so images inside each one will override previous images.
         $sourceDirs = array();
 
-        // images into the "Common" format of current theme into the default trefoil themes
-        //     <trefoil-dir>/app/Resources/Themes/<current-theme>/Common/Resources/images/
-        $sourceDirs[] = $this->app['trefoil.app.dir.resources'].'/Themes'.'/'.$theme.'/Common/Resources/images';
-
         // images into the Resources directory of the <format> directory of the current theme
         // (which can be set via command line argument):
         //     <current-theme-dir>/<current-theme>/<format>/Resources/images/
@@ -241,7 +237,9 @@ class Epub2Publisher extends HtmlPublisher
         //        <trefoil-dir>/app/Resources/Themes/
         //         or
         //        <the path set with the "--dir" publish command line argument>
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, $format).'/images';
+        // 'Common' format takes precedence
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common').'/images';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app).'/images';
 
         // theme images can be overriden by the book:
         //     <book-dir>/Resources/images/
@@ -350,6 +348,19 @@ class Epub2Publisher extends HtmlPublisher
         // the standard easybook fonts dir
         //     <easybook>/app/Resources/Fonts/
         $sourceDirs[] = $this->app['app.dir.resources'].'/Fonts';
+
+        // new in trefoil
+        // fonts inside the Resources directory of the <format> directory of the current theme
+        // (which can be set via command line argument):
+        //     <current-theme-dir>/<current-theme>/<format>/Resources/images/
+        // where <current_theme_dir> can be either
+        //        <trefoil-dir>/app/Resources/Themes/
+        //         or
+        //        <the path set with the "--dir" publish command line argument>
+        // 'Common' format takes precedence
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common').'/Fonts';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app).'/Fonts';
+
         // the fonts inside the book
         //     <book-dir>/Fonts/
         $sourceDirs[] = $this->app['publishing.dir.resources'].'/Fonts';
