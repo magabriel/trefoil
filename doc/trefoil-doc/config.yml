@@ -10,6 +10,8 @@ book:
     edition:          '0'
     language:         en
     publication_date: '01-12-2013'
+    
+    version:          '0.8'
 
     generator:        { name: trefoil, version: DEV }
    
@@ -55,7 +57,7 @@ book:
                     - AutoGlossary
                     - DropCaps
                     - EpubBookRename
-                    #- EpubCheck
+                    - EpubCheck
                     - EpubQualityControl
                     - EpubUncompress
                     - FootnotesExtra
@@ -77,5 +79,7 @@ book:
 
                     TwigExtension: 
                         itemtoc:
-                            deep:       3
-                        
+                            deep:   2
+                    
+                    LinkCheck:
+                        check_external_links: true                        
