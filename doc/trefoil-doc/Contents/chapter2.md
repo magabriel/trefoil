@@ -98,3 +98,17 @@ book:
                 options:
                     ... 
 ~~~ 
+
+`enabled` is a list of all the enabled plugins without the `Plugin` suffix, so if you wanted to enable plugins `DropCapsPlugin` and `TableExtraPluigin` for edition `ebook` you would write:
+
+~~~.yaml
+book:
+    ....
+    editions:
+        ebook:
+            plugins:
+                enabled: [ DropCaps, TableExtra ]
+~~~ 
+ 
+
+

@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
     
-    version:          '0.8'
+    version:          '0.37'
 
     generator:        { name: trefoil, version: DEV }
    
@@ -57,7 +57,7 @@ book:
                     - AutoGlossary
                     - DropCaps
                     - EpubBookRename
-                    - EpubCheck
+                    #- EpubCheck                # Uncomment to run the check
                     - EpubQualityControl
                     - EpubUncompress
                     - FootnotesExtra
