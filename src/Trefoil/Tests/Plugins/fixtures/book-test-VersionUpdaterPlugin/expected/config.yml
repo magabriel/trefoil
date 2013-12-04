@@ -5,15 +5,12 @@ book:
     language:         en
     publication_date: '01-02-2013'
 
-    generator:        { name: trefoil, version: DEV }
-   
+    version:          "1.1"
+
+    generator:        { name: trefoil, version: "DEV" }
+
     contents:
         - { element: chapter, number: 1, content: chapter1.md }
-
-    version:          "1.1"
-    #version_options:
-    #  increment_ver:  false
-    #  increment_rev:  true
     
     editions:
         ebook:

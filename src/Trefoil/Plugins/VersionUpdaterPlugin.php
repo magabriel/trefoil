@@ -130,6 +130,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // capture the current version
         $regExp = '/';
+        $regExp .= '^(?<indent> +)';
         $regExp .= '(?<label>version:)';
         $regExp .= '(?<spaces>[^\w]*)';
         $regExp .= '(?<delim>["\'])(?<version>.*)["\']';
@@ -139,7 +140,10 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
                 $regExp,
                 function ($matches) use ($newVersionString)
                           {
-                          $new = $matches['label'] . $matches['spaces'] . $matches['delim'] . $newVersionString . $matches['delim'];
+                          $new = $matches['indent'] .
+                                 $matches['label'] .
+                                 $matches['spaces'] .
+                                 $matches['delim'] . $newVersionString . $matches['delim'];
                           return $new;
                           },
                           $config);
