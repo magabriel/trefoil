@@ -11,13 +11,13 @@ use Easybook\Events\EasybookEvents as Events;
 use Easybook\Events\ParseEvent;
 
 /**
- * plugin to rename the generated file book.epub to <book-slug>.epub
+ * plugin to rename the generated file book.<ext> to <something-else>.<ext>
  *
  */
-class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterface
+class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
 {
     /**
-     * Default naming schema for epub book (Twig syntax BUT with single curly brackets).
+     * Default naming schema for ebook file (Twig syntax BUT with single curly brackets).
      * Allowed variables are:
      * - 'publishing.book.slug'
      * - any 'book' or 'edition' config variable
@@ -58,8 +58,8 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
         }
 
         // get the parameters
-        $newNameSchema = $this->getEditionOption('EpubBookRename.schema', static::RENAME_SCHEMA_DEFAULT);
-        $keepOriginal = $this->getEditionOption('EpubBookRename.keep_original', true);
+        $newNameSchema = $this->getEditionOption('plugins.options.EbookRename.schema', static::RENAME_SCHEMA_DEFAULT);
+        $keepOriginal = $this->getEditionOption('plugins.options.EbookRename.keep_original', true);
 
         // resolve it
         $newName = $this->resolveNamingSchema($newNameSchema);
@@ -79,7 +79,7 @@ class EpubBookRenamePlugin extends BasePlugin implements EventSubscriberInterfac
                 ->in($outputDir);
         $this->app->get('filesystem')->remove($files);
 
-        // and let the new version with it real name
+        // and let the new version with its real name
         $this->app->get('filesystem')->rename($newFileAux, $newFile);
 
         $this->writeLn(sprintf('Output file renamed to "%s"', basename($newFile)));
