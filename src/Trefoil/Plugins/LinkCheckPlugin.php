@@ -28,7 +28,7 @@ use Easybook\Events\ParseEvent;
  *                     LinkCheck:
  *                         check_external_links: true
  *
- * The plugin will generate a report in the output directory for all the external links
+ * The plugin will generate a report in the output directory for all the links
  * in the book with its status from the check (OK or error).
  *
  */
