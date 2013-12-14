@@ -27,6 +27,7 @@ book:
                     - Typography
                 options:
                     Typography:
+                        checkboxes: true
                         fix_spanish_style_dialog: true
                             
     

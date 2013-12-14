@@ -32,7 +32,7 @@ Lorem ipsum "dolor sit amet", consectetuer adipiscing elit. ``Donec odio.'' Quis
 
 --No sabes lo contenta que estoy. 
 
---No sabes lo contenta que estoy —-dijo Ana.
+--No sabes lo contenta que estoy --dijo Ana.
 
 --No sabes lo contenta que estoy --dijo Ana--. No me imaginaba que ibas a venir a verme.
 
@@ -60,15 +60,14 @@ Lorem ipsum dolor sit amet, consectetuer adipiscing elit.Donec odio. Quisque vol
 
 -Hola María.
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit.Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+### Test Spanish dialog with mixed errors
 
--Hola Marta.
+—No sabes lo contenta que estoy -dijo Ana--. No me imaginaba que ibas a venir a verme.
 
--¿Cómo estás?
+—No sabes lo contenta que estoy --dijo Ana-. No me imaginaba que ibas a venir a verme.
 
--Bien.
+-No sabes lo contenta que estoy -dijo Ana--. No me imaginaba que ibas a venir a verme.
 
--Hola Ana.
+-No sabes lo contenta que estoy --dijo Ana-. No me imaginaba que ibas a venir a verme.
 
--Hola María, ¿qué tal?
 
