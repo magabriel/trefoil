@@ -23,7 +23,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => 'onItemPreParse',
+                EasybookEvents::PRE_PARSE => array('onItemPreParse', -100), // after TwigExtensionPlugin
                 EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
