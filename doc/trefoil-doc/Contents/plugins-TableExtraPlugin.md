@@ -2,6 +2,11 @@
 
 This plugin provides extra functionality to Markdown tables, adding the ability to "colspan" or "rowspan" cells.
 
+### Availability
+
+This plugin is available for all editions.
+
+
 ### Usage
 
 ~~~.yaml

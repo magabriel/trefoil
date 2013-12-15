@@ -5,7 +5,7 @@ The original `book.<ext>` file can be optionally kept.
 
 ### Availability
 
-This plugin is available for `epub` and `mobi`editions.
+This plugin is available for `epub` and `mobi` editions.
 
 ### Usage
 
@@ -19,7 +19,7 @@ book:
                 enabled: [ EbookRename ]
                 options:
                     EbookRename:
-                        schema:         '{publishing.book.slug}-{book.version}' 
+                        schema:  '{publishing.book.slug}-{book.version}' 
                         keep_original:  true                
 ~~~ 
 

@@ -2,6 +2,10 @@
 
 This plugin handles adding drop caps to the book, either automatically or manually.
 
+### Availability
+
+This plugin is available for all editions.
+
 ### Usage
 
 ~~~.yaml
