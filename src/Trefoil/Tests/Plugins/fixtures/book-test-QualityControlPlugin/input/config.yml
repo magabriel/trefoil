@@ -1,5 +1,5 @@
 book:
-    title:            'Test book - EpubQualityControlPlugin'
+    title:            'Test book - QualityControlPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -24,6 +24,6 @@ book:
             isbn:           1234567890X
             plugins:   
                 enabled:     
-                    - EpubQualityControl
+                    - QualityControl
                             
     

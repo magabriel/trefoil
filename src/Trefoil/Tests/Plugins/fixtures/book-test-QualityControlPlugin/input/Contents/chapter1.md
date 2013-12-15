@@ -1,4 +1,4 @@
-# EpubQualityControl test
+# QualityControl test
 
 ## Missing images
 

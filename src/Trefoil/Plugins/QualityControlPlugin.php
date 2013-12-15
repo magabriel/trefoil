@@ -9,7 +9,14 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 
-class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInterface
+/**
+ * This plugin performs several checks on the finished book to help
+ * fixing common problems.
+ *
+ * - Markdown emphasis marks (_ and *) not processed.
+ * - Unused images.
+ */
+class QualityControlPlugin extends BasePlugin implements EventSubscriberInterface
 {
     protected $images = array();
     protected $problems = array();
@@ -147,7 +154,7 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
     {
         // create the report
         $outputDir = $this->app['publishing.dir.output'];
-        $reportFile = $outputDir . '/report-EpubQualityControlPlugin.txt';
+        $reportFile = $outputDir . '/report-QualityControlPlugin.txt';
 
         $report = '';
         $report.= $this->getProblemsReport();
