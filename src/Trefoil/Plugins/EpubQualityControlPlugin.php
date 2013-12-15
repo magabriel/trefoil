@@ -54,17 +54,6 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
         foreach ($images as $image) {
             // save it for later check
             $this->saveImage($image);
-
-            // start checks
-            $extension = pathinfo($image['src'], PATHINFO_EXTENSION);
-
-            // TODO OBSOLETE, to be removed
-            // CHECK: No jpg extension allowed (EPUB validation)
-            /*
-            if ('jpg' == $extension) {
-                $this->saveProblem($image['src'], 'image', '".jpg" images not allowed. Use ".jpeg" instead.');
-            }
-            */
         }
     }
 
@@ -212,7 +201,7 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
         $existingImages = array();
 
         if (file_exists($imagesDir)) {
-            $existingFiles= Finder::create()->files()->exclude('theme_tmp')->in($imagesDir)->sortByName();
+            $existingFiles= Finder::create()->files()->in($imagesDir)->sortByName();
 
             foreach ($existingFiles as $image) {
                 $name = str_replace($this->app['publishing.dir.contents'].'/', '', $image->getPathname());
