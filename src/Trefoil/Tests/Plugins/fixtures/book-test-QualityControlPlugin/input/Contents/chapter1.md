@@ -27,3 +27,29 @@ More errors:
 Donec ac fermentum eros._ Nulla_ quis sapien vitae mauris sagittis consequat. Phasellus lectus odio, fringilla eget leo et, venenatis sodales ante. 
 
 _ Duis hendrerit molestie massa in euismod. Maecenas quis varius felis.
+
+
+Code must not be flaged as error:
+
+~~~ .php
+<?php
+// trefoil\src\Trefoil\Plugins\AwesomePlugin.php
+namespace Trefoil\Plugins;
+
+/* This is a comment */
+
+use ...;
+
+/** This is another comment 
+ */
+
+class AwesomePlugin extends BasePlugin implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        //....
+    }
+
+    //...
+}
+~~~

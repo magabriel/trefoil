@@ -95,10 +95,18 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
 
     public function checkEmphasis($content)
     {
-        $emphasis = $this->extractEmphasis($content);
 
-        foreach ($emphasis as $emph) {
-            $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
+        // process all the paragraphs
+        $regExp = '/';
+        $regExp.= '<p>(?<par>.*)<\/p>';
+        $regExp.= '/Ums'; // Ungreedy, multiline, dotall
+        preg_match_all($regExp, $content, $matches, PREG_SET_ORDER);
+
+        foreach ($matches as $match) {
+            $emphasis = $this->extractEmphasis($match['par']);
+            foreach ($emphasis as $emph) {
+                $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
+            }
         }
     }
 
@@ -112,8 +120,12 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp.= '|';
         $regExp.= '(?:[^\s_\*]+)[_\*]+\s'; // underscore or asterisk before a space
         $regExp.= '|';
+        $regExp.= '(?:\s(?:_|\*{1,2})\s)'; // underscore or asterisk or double asterisk surrounded by spaces
+        $regExp.= '|';
+        $regExp.= '^(?:[_\*]+\s.*$)'; // underscore or asterisk before a space at start of line
+        $regExp.= '|';
         $regExp.= '(?:'.$noBlanks.'+\*+'.$noBlanks.'+)'; // asterisk between no spaces
-        $regExp.= ')/Ums';
+        $regExp.= ')/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 
         $emphasis = array();
@@ -180,7 +192,11 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             $report->addLine();
             foreach ($problems as $problem) {
                 $count++;
-                $report->addLine(array('', $problem['type'], $problem['object'], $problem['message']));
+                $report->addLine(array(
+                        '',
+                        $problem['type'],
+                        substr($problem['object'], 0, 30),
+                        $problem['message']));
             }
         }
 
