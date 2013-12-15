@@ -179,3 +179,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
+### Class and style:
+
+![Lorem ipsum](php.jpg?class="half my-class"&style="background: #cde; padding-right: 2em;")
+
+

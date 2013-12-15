@@ -77,11 +77,15 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                         parse_str($parts[1], $args);
                         $args = str_replace('"', '', $args);
 
-                        /* all spaces must be replaced by "_" for this to work
+                        /* replace all spaces by "¬" for this to work
                          * (this is because of the way Markdown parses the image specification)
                          */
+                        if (isset($args['class'])) {
+                            $args['class'] = str_replace(' ', '¬', $args['class']);
+                        }
+
                         if (isset($args['style'])) {
-                            $args['style'] = str_replace(' ', '_', $args['style']);
+                            $args['style'] = str_replace(' ', '¬', $args['style']);
                         }
 
                         $arguments = $this->renderArguments($args);
@@ -140,13 +144,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
         // assign them
         if (isset($args['class'])) {
+            $args['class'] = str_replace('¬', ' ', $args['class']);
             $image['class'] = isset($image['class']) ? $image['class'].' '.$args['class'] : $args['class'];
             unset($args['class']);
         }
 
         if (isset($args['style'])) {
-            // replace back all '_' to spaces
-            $args['style'] = str_replace('_', ' ', $args['style']);
+            // replace back all '¬' to spaces
+            $args['style'] = str_replace('¬', ' ', $args['style']);
             $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
             unset($args['style']);
         }
