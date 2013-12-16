@@ -19,6 +19,9 @@ A lot of the functionality of **trefoil** is implemented into the included plugi
 {{ file('plugins-HtmlTweaksPlugin.md') }}
 
 {pagebreak}
+{{ file('plugins-ImageExtraPlugin.md') }}
+
+{pagebreak}
 {{ file('plugins-LinkCheckPlugin.md') }}
 
 {pagebreak}

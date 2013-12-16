@@ -35,15 +35,15 @@ tweaks:
 
             # either one of 'insert', 'surround' or 'replace' operations
 
-            insert:         # insert HTML code inside the tag (surround content)
+            insert:    # insert HTML code inside the tag (surround content)
                 open:  'some html text'  # opening text
                 close: 'more html text'  # closing text
 
-            surround:       # surround the tag with HTML code (surround the tag)
+            surround:  # surround tag with HTML code (surround the tag)
                 open:  'some html text'  # opening text
                 close: 'more html text'  # closing text
 
-            replace:        # replace tag with another one
+            replace:   # replace tag with another one
                 tag:  'another html tag' # replacement tag
 
     # replacements to be made at onPostParse time
