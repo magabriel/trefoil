@@ -183,4 +183,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ![Lorem ipsum](php.jpg?class="half my-class"&style="background: #cde; padding-right: 2em;")
 
+<div class="clearfix"></div> 
+
+Not processed within a code block:
+
+    ![Lorem ipsum](php.jpg?class="half my-class"&style="background: #cde; padding-right: 2em;")
 
