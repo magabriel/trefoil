@@ -9,7 +9,14 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
 
-class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInterface
+/**
+ * This plugin performs several checks on the finished book to help
+ * fixing common problems.
+ *
+ * - Markdown emphasis marks (_ and *) not processed.
+ * - Unused images.
+ */
+class QualityControlPlugin extends BasePlugin implements EventSubscriberInterface
 {
     protected $images = array();
     protected $problems = array();
@@ -54,17 +61,6 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
         foreach ($images as $image) {
             // save it for later check
             $this->saveImage($image);
-
-            // start checks
-            $extension = pathinfo($image['src'], PATHINFO_EXTENSION);
-
-            // TODO OBSOLETE, to be removed
-            // CHECK: No jpg extension allowed (EPUB validation)
-            /*
-            if ('jpg' == $extension) {
-                $this->saveProblem($image['src'], 'image', '".jpg" images not allowed. Use ".jpeg" instead.');
-            }
-            */
         }
     }
 
@@ -99,10 +95,18 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
 
     public function checkEmphasis($content)
     {
-        $emphasis = $this->extractEmphasis($content);
 
-        foreach ($emphasis as $emph) {
-            $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
+        // process all the paragraphs
+        $regExp = '/';
+        $regExp.= '<p>(?<par>.*)<\/p>';
+        $regExp.= '/Ums'; // Ungreedy, multiline, dotall
+        preg_match_all($regExp, $content, $matches, PREG_SET_ORDER);
+
+        foreach ($matches as $match) {
+            $emphasis = $this->extractEmphasis($match['par']);
+            foreach ($emphasis as $emph) {
+                $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
+            }
         }
     }
 
@@ -116,8 +120,12 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
         $regExp.= '|';
         $regExp.= '(?:[^\s_\*]+)[_\*]+\s'; // underscore or asterisk before a space
         $regExp.= '|';
+        $regExp.= '(?:\s(?:_|\*{1,2})\s)'; // underscore or asterisk or double asterisk surrounded by spaces
+        $regExp.= '|';
+        $regExp.= '^(?:[_\*]+\s.*$)'; // underscore or asterisk before a space at start of line
+        $regExp.= '|';
         $regExp.= '(?:'.$noBlanks.'+\*+'.$noBlanks.'+)'; // asterisk between no spaces
-        $regExp.= ')/Ums';
+        $regExp.= ')/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 
         $emphasis = array();
@@ -158,7 +166,7 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
     {
         // create the report
         $outputDir = $this->app['publishing.dir.output'];
-        $reportFile = $outputDir . '/report-EpubQualityControlPlugin.txt';
+        $reportFile = $outputDir . '/report-QualityControlPlugin.txt';
 
         $report = '';
         $report.= $this->getProblemsReport();
@@ -184,7 +192,11 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
             $report->addLine();
             foreach ($problems as $problem) {
                 $count++;
-                $report->addLine(array('', $problem['type'], $problem['object'], $problem['message']));
+                $report->addLine(array(
+                        '',
+                        $problem['type'],
+                        substr($problem['object'], 0, 30),
+                        $problem['message']));
             }
         }
 
@@ -212,7 +224,7 @@ class EpubQualityControlPlugin extends BasePlugin implements EventSubscriberInte
         $existingImages = array();
 
         if (file_exists($imagesDir)) {
-            $existingFiles= Finder::create()->files()->exclude('theme_tmp')->in($imagesDir)->sortByName();
+            $existingFiles= Finder::create()->files()->in($imagesDir)->sortByName();
 
             foreach ($existingFiles as $image) {
                 $name = str_replace($this->app['publishing.dir.contents'].'/', '', $image->getPathname());

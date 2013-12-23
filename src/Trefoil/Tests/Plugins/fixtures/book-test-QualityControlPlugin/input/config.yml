@@ -1,5 +1,10 @@
+easybook:
+    parameters:
+        parser.options: 
+            code_block_type: fenced
+            
 book:
-    title:            'Test book - EpubQualityControlPlugin'
+    title:            'Test book - QualityControlPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -13,9 +18,8 @@ book:
     editions:
         ebook:
             format:         epub
-            highlight_code: false
+            highlight_code: true
             include_styles: true
-            use_html_toc:   true
             labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
             theme:          clean
             toc:
@@ -24,6 +28,6 @@ book:
             isbn:           1234567890X
             plugins:   
                 enabled:     
-                    - EpubQualityControl
+                    - QualityControl
                             
     

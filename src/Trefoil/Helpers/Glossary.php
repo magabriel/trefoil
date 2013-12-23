@@ -88,7 +88,7 @@ class Glossary implements \IteratorAggregate
     protected function explodeVariants(GlossaryItem $item)
     {
         $regExp = '/';
-        $regExp .= '(?<root>[\w\s]*)'; // root of the term (can contain in-between spaces)
+        $regExp .= '(?<root>[\w\s-]*)'; // root of the term (can contain in-between spaces or dashes)
         $regExp .= '(\['; // opening square bracket
         $regExp .= '(?<suffixes>.+)'; // suffixes
         $regExp .= '\])?'; // closing square bracket

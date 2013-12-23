@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
     
-    version:          '0.37'
+    version:          '0.218'
 
     generator:        { name: trefoil, version: DEV }
    
@@ -56,9 +56,9 @@ book:
                 enabled: 
                     - AutoGlossary
                     - DropCaps
-                    - EpubBookRename
+                    - EbookRename
                     #- EpubCheck                # Uncomment to run the check
-                    - EpubQualityControl
+                    - QualityControl
                     - EpubUncompress
                     - FootnotesExtra
                     - HtmlTweaks
@@ -83,3 +83,13 @@ book:
                     
                     LinkCheck:
                         check_external_links: true                        
+
+                    EbookRename:
+                        schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
+                        keep_original:  true
+
+                    Typography:
+                        checkboxes: true
+                        fix_spanish_style_dialog: false                        
+                        
+                        

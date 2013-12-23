@@ -6,9 +6,9 @@ glossary:
     #
     # Variants are allowed (singular, plural)
     #
-    #   "term[s]": Desription which is applied to "term" and "terms"
+    #   "term[s]": Description which is applied to "term" and "terms"
     #   "term [one|two]": Description which is applied to "term one" and "term twho"
     ####
     terms:
-        "sapien [mattis|turpis]": Description of term "sapien mattis" and "sapien turpis"
-        "tellu[s]": Description of terms "tellu" and "tellus".
+        "example term 1": Description of term 1.
+        "example term 2": Description of term 2.

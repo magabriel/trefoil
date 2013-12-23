@@ -4,6 +4,10 @@ This plugin uncompresses the geneated `book.epub` file to make it easy looking a
 
 This can be useful when debugging templates, to make it sure the final HTML inside the EPUB file is correct.  
 
+### Availability
+
+This plugin is available for `epub` editions.
+
 ### Usage
 
 ~~~.yaml

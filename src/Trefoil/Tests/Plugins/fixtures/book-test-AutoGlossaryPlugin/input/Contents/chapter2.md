@@ -8,4 +8,9 @@ Mauris facilisis metus sed sapien mattis dapibus. Nam quis leo nisl. Nunc sapien
 
 ## Term 'tellu'
 
-Suspendisse et pretium tellus. Nam suscipit ut lectus quis consequat. Sed ut neque odio. Phasellus nec erat id sem fermentum ornare id vel libero. Mauris sed felis in est tincidunt imperdiet nec vel velit. Sed dictum tincidunt nisi sed rutrum. Quisque in dapibus neque. Sed et nisl quis justo sagittis sodales euismod sed mi. Aenean accumsan sit amet erat eu facilisis. Proin facilisis, mi in imperdiet varius, libero tortor eleifend sem, pellentesque fringilla metus tellu sed erat. Ut id sapien vestibulum, posuere turpis non, semper diam. 
+Suspendisse et pretium tellus. Nam suscipit ut lectus quis consequat. Sed ut neque odio. Phasellus nec erat id sem fermentum ornare id vel libero. Mauris sed felis in est tincidunt imperdiet nec vel velit. Sed dictum tincidunt nisi sed rutrum. Quisque in dapibus neque. Sed et nisl quis justo sagittis sodales euismod sed mi. Aenean accumsan sit amet erat eu facilisis. Proin facilisis, mi in imperdiet varius, libero tortor eleifend sem, pellentesque fringilla metus tellu sed erat. Ut id sapien vestibulum, posuere turpis non, semper diam.
+
+## Term 'lorem-ipsum' 
+
+Lorem ipsum in pretium arcu eget felis lacinia suscipit. Lorem-ipsum nunc interdum rhoncus nibh quis auctor. Integer facilisis nisl sit amet diam pellentesque, a elementum nisi scelerisque. 
+  

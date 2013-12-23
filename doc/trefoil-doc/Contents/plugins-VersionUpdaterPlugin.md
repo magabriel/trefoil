@@ -4,6 +4,10 @@ This plugin updates an optional version string from `config.yml`.
 
 The format of the version string must be `"<version>.<revision>"`, where each component is an integer and the separator is a single dot.
 
+### Availability
+
+This plugin is available for all editions.
+
 ### Usage
 ~~~.yaml
 # <book-dir>/config.yml 

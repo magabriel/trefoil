@@ -4,16 +4,30 @@ A lot of the functionality of **trefoil** is implemented into the included plugi
  
 {{ itemtoc() }}
 
+{{ file('plugins-AutoGlossaryPlugin.md') }}
+
 {{ file('plugins-DropCapsPlugin.md') }}
 
-{pagebreak}
+{{ file('plugins-EbookRenamePlugin.md') }}
+
+{{ file('plugins-EpubCheckPlugin.md') }}
 
 {{ file('plugins-EpubUncompressPlugin.md') }}
 
-{pagebreak}
+{{ file('plugins-HtmlTweaksPlugin.md') }}
+
+{{ file('plugins-ImageExtraPlugin.md') }}
+
+{{ file('plugins-KindleTweaksPlugin.md') }}
+
+{{ file('plugins-LinkCheckPlugin.md') }}
+
+{{ file('plugins-QualityControlPlugin.md') }}
 
 {{ file('plugins-TableExtraPlugin.md') }}
 
-{pagebreak}
+{{ file('plugins-TypographyPlugin.md') }}
 
+{{ file('plugins-TwigExtensionPlugin.md') }}
+ 
 {{ file('plugins-VersionUpdaterPlugin.md') }}

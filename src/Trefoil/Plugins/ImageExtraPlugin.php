@@ -20,10 +20,16 @@ use Easybook\Events\ParseEvent;
  */
 class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
+    /**
+     * String to replace spaces into images specifications
+     * @var string
+     */
+    const SPACE_REPLACEMENT = '¬|{^';
+
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => 'onItemPreParse',
+                EasybookEvents::PRE_PARSE => array('onItemPreParse', -100), // after TwigExtensionPlugin
                 EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
@@ -77,11 +83,15 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                         parse_str($parts[1], $args);
                         $args = str_replace('"', '', $args);
 
-                        /* all spaces must be replaced by "_" for this to work
+                        /* replace all spaces for this to work
                          * (this is because of the way Markdown parses the image specification)
                          */
+                        if (isset($args['class'])) {
+                            $args['class'] = str_replace(' ', self::SPACE_REPLACEMENT, $args['class']);
+                        }
+
                         if (isset($args['style'])) {
-                            $args['style'] = str_replace(' ', '_', $args['style']);
+                            $args['style'] = str_replace(' ', self::SPACE_REPLACEMENT, $args['style']);
                         }
 
                         $arguments = $this->renderArguments($args);
@@ -112,6 +122,11 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                       },
                       $content);
 
+        // ensure there is no space replacements left (it can happen if
+        // some of the image tags were not rendered because they were
+        // into '<pre>' or '<code>' tags)
+        $content = str_replace(self::SPACE_REPLACEMENT, ' ', $content);
+
         return $content;
     }
 
@@ -140,13 +155,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
         // assign them
         if (isset($args['class'])) {
+            $args['class'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['class']);
             $image['class'] = isset($image['class']) ? $image['class'].' '.$args['class'] : $args['class'];
             unset($args['class']);
         }
 
         if (isset($args['style'])) {
-            // replace back all '_' to spaces
-            $args['style'] = str_replace('_', ' ', $args['style']);
+            // replace back all spaces
+            $args['style'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['style']);
             $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
             unset($args['style']);
         }
