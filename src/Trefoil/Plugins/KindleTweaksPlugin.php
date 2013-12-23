@@ -33,6 +33,11 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
+        // only for epub or mobi
+        if (!in_array($this->format, array('Epub', 'Mobi'))) {
+            return;
+        }
+
         $content = $event->getItemProperty('content');
 
         $content = $this->paragraphsInsideLists($content);
