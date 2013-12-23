@@ -20,8 +20,44 @@ book:
 
 ### Description
 
-This plugin brings support to extended image syntax:
+Features:
 
+- Explicit image path.
+- Extended image syntax.
+- Extended styles in themes.
+
+#### Explicit image path
+
+Some Markdown editors provice a live preview of the rendered HTML result. Some of them even
+provide live preview for images (like the fabulous [MdCharm](http://www.mdcharm.com/)), but 
+for this to work the image path must point to the relative location of the image:
+
+~~~.markdown
+# This is the easybook way, 
+# but the preview won't work:
+![This is image 1](image1.jpeg)
+
+# You can write it this way,
+# an the preview will work:
+![This is image 1](images/image1.jpeg)
+~~~
+
+Both ways will render exactly the same, but only the second one will produce a preview in
+editors like *MdCharm*.  
+
+
+#### Extended image syntax
+
+**trefoil** extends the Markdown syntax for images providing a `class` and `style` arguments
+with similar syntax than the HTML counterparts. 
+
+- **class:** You can provide one or several classes to be applied to the image markup.
+- **style:** You can even apply any CSS style specification.
+
+N> ##### Tip
+N> The included **trefoil** templates are ready to make use the extended markup.
+N> The standard **easybook** templates, on the other hand, are not.
+ 
 ~~~.markdown
 ![caption](image.name?class="myclass"&style="any_css_style_specification")
 ~~~
@@ -39,7 +75,7 @@ N> `![ Left aligned](php.jpg?class="narrower")`
 N> 
  
 
-#### Extended styles
+#### Extended styles in themes
 
 **trefoil** themes come with some predefined image classes:
 
