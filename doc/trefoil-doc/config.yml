@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
     
-    version:          '0.218'
+    version:          '0.223'
 
     generator:        { name: trefoil, version: DEV }
    

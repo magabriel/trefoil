@@ -67,7 +67,7 @@ The glossary definitions for each book item are named after the item it applies 
 # Glossary definitions for chapter 1 
 glossary:
     ####
-    # Global definitions of terms:
+    # Definitions of terms for chapter-1:
     #
     #   "term": Term definition
     #
@@ -124,14 +124,14 @@ that affect how the glossary terms are processed:
 
 N> ##### Note
 N> While this autoglossary implementation can *potentially* work for every edition type, 
-N> whether it does really work depends mostly on the *reader platform* capabilities:
+N> whether it really does work depends mostly on the *reader platform* capabilities:
 N> 
 N> - **Epub:**: Some readers can follow hyperliks, but most do not.
 N> - **Kindle:** The Kindle readers can follow hyperlinks and do page breaks. It works OK.
 N> - **PDF:** It depends. The official *Adobe Reader* is OK, but other implementations may vary.
 N> - **HTML:** No problems.
 N> 
-N> But, as this implementation is mostly focused on **Ebooks**, even if it produces a clickable 
+N> But, as this implementation is mostly focused on **ebooks**, even if it produces a clickable 
 N> autoglossary it may not give the best results on a printed edition.    
 
 

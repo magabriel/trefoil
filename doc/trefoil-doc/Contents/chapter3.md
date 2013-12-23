@@ -14,6 +14,8 @@ A lot of the functionality of **trefoil** is implemented into the included plugi
 
 {{ file('plugins-EpubUncompressPlugin.md') }}
 
+{{ file('plugins-FootnotesExtraPlugin.md') }}
+
 {{ file('plugins-HtmlTweaksPlugin.md') }}
 
 {{ file('plugins-ImageExtraPlugin.md') }}
