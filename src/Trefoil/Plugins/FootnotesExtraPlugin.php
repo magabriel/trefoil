@@ -53,6 +53,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     static public function getSubscribedEvents()
     {
         return array(
+                EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
                 EasybookEvents::POST_PARSE => array('onItemPostParse'),
                 EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
@@ -65,6 +66,15 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // reload changed item
         $event->setItem($this->item);
+    }
+
+    public function onItemPreParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        if ('footnotes' == $this->item['config']['element']) {
+            $this->saveFootnotes();
+        }
     }
 
     public function onPostPublish(BaseEvent $event)
@@ -81,15 +91,11 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      */
 
     /**
-     * Performs either one of two processes:
-     * <li>For a content item to be processed, extract generated footnotes.
-     * <li>For 'footnotes' item, generate the footnotes content.
+     * For a content item to be processed, extract generated footnotes.
      */
     protected function processItem()
     {
-        if ('footnotes' == $this->item['config']['element']) {
-            $this->generateFootnotes();
-        } else {
+        if ('footnotes' != $this->item['config']['element']) {
             $this->extractFootnotes();
             $this->renumberReferences();
         }
@@ -159,20 +165,9 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $this->item['content'] = $content;
     }
 
-    protected function generateFootnotes()
+    protected function saveFootnotes()
     {
-        $content = $this->item['content'];
-
-        $variables = array(
-                'footnotes' => $this->footnotes
-        );
-
-        $rendered = $this->app->get('twig')->render('footnotes-items.twig', $variables);
-
-        // concat rendered string to content instead of replacing it to preserve user content
-        $content .= $rendered;
-
-        $this->item['content'] = $content;
+        $this->app['publishing.footnotes.items'] = $this->footnotes;
 
         $this->generated = true;
     }
