@@ -18,15 +18,15 @@ use Easybook\Events\ParseEvent;
  */
 class QualityControlPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected $images = array();
-    protected $problems = array();
+    protected $images = [];
+    protected $problems = [];
 
     public static function getSubscribedEvents()
     {
-        return array(
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -9999), // Latest
+        return [
+                EasybookEvents::POST_PARSE => ['onItemPostParse', -9999], // Latest
                 EasybookEvents::POST_PUBLISH => 'onPostPublish'
-        );
+        ];
     }
 
     /* ********************************************************************************
@@ -76,13 +76,13 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp = '/<img(.*)\/?>/Us';
         preg_match_all($regExp, $string, $imagesMatch, PREG_SET_ORDER);
 
-        $images = array();
+        $images = [];
         foreach ($imagesMatch as $imageMatch) {
             // get all attributes
             $regExp2 = '/(?<attr>.*)="(?<value>.*)"/Us';
             preg_match_all($regExp2, $imageMatch[1], $attrMatches, PREG_SET_ORDER);
 
-            $attributes = array();
+            $attributes = [];
             foreach ($attrMatches as $attrMatch) {
                 $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
             }
@@ -128,7 +128,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp.= ')/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 
-        $emphasis = array();
+        $emphasis = [];
         foreach ($matches as $match) {
             $emphasis[] = $match['em'];
         }
@@ -138,7 +138,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
 
     protected function saveProblem($object, $type, $message)
     {
-        $problem = array();
+        $problem = [];
 
         $problem['object'] = $object;
         $problem['type'] = $type;
@@ -147,7 +147,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $element = $this->item['config']['content'];
         $element = $element ? $element : $this->item['config']['element'];
         if (!isset($this->problems[$element])) {
-            $this->problems[$element] = array();
+            $this->problems[$element] = [];
         }
 
         $this->problems[$element][] = $problem;
@@ -182,8 +182,8 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $report->setTitle('QualityControlPlugin');
         $report->setSubtitle('Problems found');
 
-        $report->setHeaders(array('Element', 'Type', 'Object', 'Message'));
-        $report->setColumnsWidth(array(10, 10, 30, 100));
+        $report->setHeaders(['Element', 'Type', 'Object', 'Message']);
+        $report->setColumnsWidth([10, 10, 30, 100]);
 
         $count = 0;
         foreach ($this->problems as $element => $problems) {
@@ -192,11 +192,11 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             $report->addLine();
             foreach ($problems as $problem) {
                 $count++;
-                $report->addLine(array(
+                $report->addLine([
                         '',
                         $problem['type'],
                         substr($problem['object'], 0, 30),
-                        $problem['message']));
+                        $problem['message']]);
             }
         }
 
@@ -215,13 +215,13 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $report->setTitle('QualityControlPlugin');
         $report->setSubtitle('Images not used');
 
-        $report->setHeaders(array('Image'));
-        $report->setColumnsWidth(array(100));
+        $report->setHeaders(['Image']);
+        $report->setColumnsWidth([100]);
 
         // check existing images
         $imagesDir =  $this->app['publishing.dir.contents'].'/images';
 
-        $existingImages = array();
+        $existingImages = [];
 
         if (file_exists($imagesDir)) {
             $existingFiles= Finder::create()->files()->in($imagesDir)->sortByName();
@@ -236,7 +236,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         foreach ($existingImages as $image) {
             if (!isset($this->images[$image])) {
                 $count++;
-                $report->addLine(array($image));
+                $report->addLine([$image]);
             }
         }
 
