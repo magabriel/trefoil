@@ -2,7 +2,6 @@
 namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\DropCaps;
-
 use Trefoil\Helpers\TableExtra;
 
 class DropCapsTest extends \PHPUnit_Framework_TestCase
