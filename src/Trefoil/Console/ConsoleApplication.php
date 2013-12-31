@@ -13,7 +13,10 @@ class ConsoleApplication extends EasybookConsoleApplication
     public function __construct(Application $app)
     {
         parent::__construct($app);
-
+        
+        $this->setName('trefoil');
+        $this->setVersion($app->getMyVersion());
+        
         $this->add(new TrefoilVersionCommand());
         $this->add(new TrefoilBookPublishCommand());
     }

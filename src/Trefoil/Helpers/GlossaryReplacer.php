@@ -56,9 +56,10 @@ class GlossaryReplacer
      * @param string $textId          The id of the text, for cross-reference
      * @param array $glossaryOptions  The options to apply
      */
-    public function __construct(Glossary $glossary, $text, $textId, $glossaryOptions = array())
+    public function __construct(Glossary $glossary, TextPreserver $textPreserver, $text, $textId, $glossaryOptions = array())
     {
         $this->glossary = $glossary;
+        $this->textPreserver = $textPreserver;
         $this->text = $text;
         $this->textId = $textId;
         $this->glossaryOptions = $glossaryOptions;
@@ -78,8 +79,7 @@ class GlossaryReplacer
             return $this->text;
         }
 
-        // create the TextPeserver instance for this text processing
-        $this->textPreserver = new TextPreserver();
+        // set the TextPeserver instance for this text processing
         $this->textPreserver->setText($this->text);
 
         // save existing values of tags contents we don't want to get modified into

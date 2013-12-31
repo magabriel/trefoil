@@ -1,14 +1,11 @@
 <?php
 namespace Trefoil\Console\Command;
 
-use Easybook\Console\Command\BaseCommand as EasybookBaseCommand;
-
-use Symfony\Component\Console\Input\InputArgument;
+use Easybook\Console\Command\EasybookVersionCommand;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TrefoilVersionCommand extends EasybookBaseCommand
+class TrefoilVersionCommand extends EasybookVersionCommand
 {
     protected function configure()
     {

@@ -1,16 +1,14 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\Glossary;
-use Trefoil\Helpers\GlossaryItem;
-use Trefoil\Helpers\GlossaryReplacer;
 use Trefoil\Helpers\GlossaryLoader;
+use Trefoil\Helpers\GlossaryReplacer;
+use Trefoil\Helpers\TextPreserver;
 use Trefoil\Util\SimpleReport;
 
 /**
@@ -231,6 +229,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         // instantiate the GlossaryReplacer object
         $replacer = new GlossaryReplacer(
                 $this->glossary,
+                new TextPreserver(),
                 $this->item['content'],
                 $this->item['config']['content'],
                 $this->glossaryOptions);
