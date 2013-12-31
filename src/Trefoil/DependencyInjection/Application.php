@@ -2,12 +2,11 @@
 
 namespace Trefoil\DependencyInjection;
 
-use Trefoil\Providers\TwigServiceProvider;
-
 use Easybook\DependencyInjection\Application as EasybookApplication;
-use Trefoil\Util\Toolkit;
+use Trefoil\Providers\TwigServiceProvider;
 use Trefoil\Publishers\Epub2Publisher;
 use Trefoil\Publishers\MobiPublisher;
+use Trefoil\Util\Toolkit;
 
 class Application extends EasybookApplication
 {
@@ -56,7 +55,7 @@ class Application extends EasybookApplication
 
             return $publisher;
         });
-
+        
         // -- own services -----------------------------------------------------
         $this->register(new TwigServiceProvider());
     }
@@ -67,7 +66,7 @@ class Application extends EasybookApplication
     }
 
     /**
-     * @see \Easybook\DependencyInjection\Application::getCustomLabelsFile()
+     * @see Application::getCustomLabelsFile()
      */
     public function getCustomLabelsFile()
     {
@@ -91,7 +90,7 @@ class Application extends EasybookApplication
     }
 
     /**
-     * @see \Easybook\DependencyInjection\Application::getCustomTitlesFile()
+     * @see Application::getCustomTitlesFile()
      */
     public function getCustomTitlesFile()
     {

@@ -204,6 +204,11 @@ abstract class BookPublishingAllTestCase extends TestCase
                 // assert that all required files inside EPUB are generated
                 $this->checkForMissingFiles($expected, $generated);
 
+            } elseif ('mobi' == $file->getExtension()) {
+                // mobi files cannot be compared to expected results
+                // because kindlegen does funny things with the contents
+                // so do nothing
+                
             } else {
                 $this->assertFileEquals(
                         $thisBookDir.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
