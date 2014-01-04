@@ -51,10 +51,11 @@ class GlossaryReplacer
     protected $textPreserver;
 
     /**
-     * @param Glossary $glossary      The glossary object
-     * @param string $text            The text to replace into
-     * @param string $textId          The id of the text, for cross-reference
-     * @param array $glossaryOptions  The options to apply
+     * @param Glossary $glossary            The glossary object
+     * @param TextPreserver $textPreserver  A TextPreserver instance
+     * @param string $text                  The text to replace into
+     * @param string $textId                The id of the text, for cross-reference
+     * @param array $glossaryOptions        The options to apply
      */
     public function __construct(Glossary $glossary, TextPreserver $textPreserver, $text, $textId, $glossaryOptions = array())
     {
