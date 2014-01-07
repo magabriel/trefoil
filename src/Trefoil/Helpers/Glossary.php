@@ -1,4 +1,5 @@
 <?php
+
 namespace Trefoil\Helpers;
 
 /**
@@ -19,6 +20,7 @@ namespace Trefoil\Helpers;
  */
 class Glossary implements \IteratorAggregate
 {
+
     /**
      * @var GlossaryItem[]
      */
@@ -34,7 +36,7 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * @param string $term
+     * @param  string       $term
      * @return GlossaryItem
      */
     public function get($term)
@@ -117,4 +119,5 @@ class Glossary implements \IteratorAggregate
 
         $item->setVariants($variants);
     }
+
 }

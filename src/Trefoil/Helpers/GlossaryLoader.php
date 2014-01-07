@@ -1,4 +1,5 @@
 <?php
+
 namespace Trefoil\Helpers;
 
 use Easybook\Util\Slugger;
@@ -22,6 +23,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class GlossaryLoader
 {
+
     protected $fileName;
     protected $terms;
     protected $options;
@@ -35,7 +37,7 @@ class GlossaryLoader
     public function __construct($fileName, Slugger $slugger)
     {
         $this->fileName = $fileName;
-        $this->slugger = $slugger;
+        $this->slugger  = $slugger;
     }
 
     /**
@@ -83,26 +85,25 @@ class GlossaryLoader
 
         if (file_exists($this->fileName)) {
             $glossaryDefinition = Yaml::parse($this->fileName);
-            $this->loaded = true;
+            $this->loaded       = true;
         } else {
             $glossaryDefinition = array();
         }
 
         // defaults
         $default = array(
-                'glossary' => array(
-                        'terms' => array()
-                )
+            'glossary' => array(
+                'terms' => array()
+            )
         );
 
         if ($hasOptions) {
-            $default['glossary']['options'] =
-                                array(
-                                    'coverage' => 'item',
-                                    'elements' => array(
-                                            'chapter'
-                                    )
-                            );
+            $default['glossary']['options'] = array(
+                    'coverage' => 'item',
+                    'elements' => array(
+                        'chapter'
+                    )
+            );
         }
 
         $glossaryDefinition = array_replace_recursive($default, $glossaryDefinition);
@@ -135,4 +136,5 @@ class GlossaryLoader
 
         return $glossary;
     }
+
 }

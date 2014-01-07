@@ -4,13 +4,10 @@ namespace Trefoil\Bridge\Easybook;
 use Symfony\Component\Finder\Finder;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Publishers\BasePublisher;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
-use Trefoil\Util\Logger;
 
 /**
  * Register our own resources into easybook

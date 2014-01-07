@@ -138,8 +138,7 @@ class GlossaryReplacer
 
         // replace all occurrences of $variant into text $item with a glossary link
         $text = preg_replace_callback($patterns,
-                function ($matches) use ($glossaryItem, $variant)
-                {
+                function ($matches) use ($glossaryItem, $variant) {
                     // extract what to replace
                     $tag = $matches['tag'];
                     $tagContent = $matches['content'];
@@ -173,8 +172,7 @@ class GlossaryReplacer
 
         // replace all ocurrences of $variant into $tagContent with a glossary link
         $text = preg_replace_callback($regExp,
-                function ($matches) use ($glossaryItem, $variant)
-                {
+                function ($matches) use ($glossaryItem, $variant) {
                     // look if already replaced once in this item, so just leave it unchanged
                     if ('item' == $this->glossaryOptions['coverage']) {
                         foreach ($glossaryItem->getXref() as $variant => $xRefs) {

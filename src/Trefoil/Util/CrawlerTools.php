@@ -16,7 +16,7 @@ class CrawlerTools
      * @param Crawler $node
      * @return string
      */
-    static protected function getNodeName(Crawler $node)
+    protected static function getNodeName(Crawler $node)
     {
         foreach ($node as $i => $n) {
             $domNode = $n;
@@ -32,7 +32,7 @@ class CrawlerTools
      * @param Crawler $node
      * @return string
      */
-    static protected function getNodeHtml(Crawler $node)
+    protected static function getNodeHtml(Crawler $node)
     {
         $domNode = null;
 
@@ -50,8 +50,7 @@ class CrawlerTools
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $html = preg_replace_callback($regExp,
-                function ($matches)
-                {
+                function ($matches) {
                     $clean = mb_substr($matches['html'], 0, -mb_strlen('</' . $matches['tag'] . '>', 'utf8'), 'utf8');
                     return $clean;
                 }, $html);

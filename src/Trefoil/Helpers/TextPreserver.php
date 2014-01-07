@@ -35,8 +35,7 @@ class TextPreserver
         $regex = sprintf('/<(?<tag>(%s)[> ].*)>(?<content>.*)</Ums', implode('|', $tags));
 
         $this->text = preg_replace_callback($regex,
-                function ($matches)
-                {
+                function ($matches) {
                     $tag = $matches['tag'];
                     $content = $matches['content'];
 
@@ -53,8 +52,7 @@ class TextPreserver
         $regex = sprintf('/(?<attr>%s)="(?<value>.*)"/Ums', implode('|', $attributes));
 
         $this->text = preg_replace_callback($regex,
-                function ($matches)
-                {
+                function ($matches) {
                     $attr = $matches['attr'];
                     $value = $matches['value'];
 

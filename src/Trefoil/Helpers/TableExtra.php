@@ -1,4 +1,5 @@
 <?php
+
 namespace Trefoil\Helpers;
 
 /**
@@ -21,6 +22,7 @@ namespace Trefoil\Helpers;
  */
 class TableExtra
 {
+
     /**
      * Processes all tables in the html string
      * @param string  $htmlString
@@ -32,21 +34,18 @@ class TableExtra
         $regExp .= '(?<table><table.*<\/table>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $me = $this;
-        $output = preg_replace_callback(
-                $regExp,
-                function ($matches) use ($me)
-                {
-                    $table = $this->parseTable($matches['table']);
-                    if (!$table) {
-                        return $matches[0];
-                    }
-                    $table = $this->processExtraTable($table);
-                    $html = $this->renderTable($table);
+        $callback = function ($matches) {
+            $table = $this->parseTable($matches['table']);
+            if (!$table) {
+                return $matches[0];
+            }
+            $table = $this->processExtraTable($table);
+            $html  = $this->renderTable($table);
 
-                    return $html;
-                },
-                $htmlString);
+            return $html;
+        };
+
+        $output = preg_replace_callback($regExp, $callback, $htmlString);
 
         return $output;
     }
@@ -76,7 +75,7 @@ class TableExtra
         }
 
         // extract all rows from section
-        $thead = $matches[0]['contents'];
+        $thead  = $matches[0]['contents'];
         $regExp = '/<tr>(?<contents>.*)<\/tr>/Ums';
         preg_match_all($regExp, $thead, $matches, PREG_SET_ORDER);
 
@@ -88,21 +87,20 @@ class TableExtra
         $rows = array();
         foreach ($matches as $matchRow) {
 
-            $tr = $matchRow['contents'];
+            $tr     = $matchRow['contents'];
             $regExp = '/<(?<tag>t[hd])(?<attr>.*)>(?<contents>.*)<\/t[hd]>/Ums';
             preg_match_all($regExp, $tr, $matchesCol, PREG_SET_ORDER);
 
             $cols = array();
             foreach ($matchesCol as $matchCol) {
                 $cols[] = array(
-                        'tag' => $matchCol['tag'],
-                        'attributes' => $this->extractAttributes($matchCol['attr']),
-                        'contents' => $matchCol['contents']
+                    'tag'        => $matchCol['tag'],
+                    'attributes' => $this->extractAttributes($matchCol['attr']),
+                    'contents'   => $matchCol['contents']
                 );
             }
 
             $rows[] = $cols;
-
         }
         return $rows;
     }
@@ -145,7 +143,7 @@ class TableExtra
                         if (!isset($newRows[$rowIndex][$colspanCol]['colspan'])) {
                             $newRows[$rowIndex][$colspanCol]['colspan'] = 1;
                         }
-                        $newRows[$rowIndex][$colspanCol]['colspan']++;
+                        $newRows[$rowIndex][$colspanCol]['colspan'] ++;
 
                         // ignore this cell
                         $newRows[$rowIndex][$colIndex]['ignore'] = true;
@@ -157,14 +155,14 @@ class TableExtra
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
                 $quotes = array(
-                        '"',
-                        '&quot;',
-                        '&#34;',
-                        '&ldquo;',
-                        '&#8220;',
-                        '&rdquo;',
-                        '&#8221;'
-                        );
+                    '"',
+                    '&quot;',
+                    '&#34;',
+                    '&ldquo;',
+                    '&#8220;',
+                    '&rdquo;',
+                    '&#8221;'
+                );
                 if (in_array($col['contents'], $quotes)) {
 
                     // find the primary rowspanned cell
@@ -189,7 +187,7 @@ class TableExtra
                             }
                             $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
                         }
-                        $newRows[$rowspanRow][$colIndex]['rowspan']++;
+                        $newRows[$rowspanRow][$colIndex]['rowspan'] ++;
 
                         $newRows[$rowIndex][$colIndex]['ignore'] = true;
                     }
@@ -239,13 +237,14 @@ class TableExtra
                     $attributes = $this->renderAttributes($col['attributes']);
 
                     $html .= sprintf(
-                            '<%s %s %s %s>%s</%s>',
-                            $col['tag'],
-                            $rowspan,
-                            $colspan,
-                            $attributes,
-                            $col['contents'],
-                            $col['tag']);
+                        '<%s %s %s %s>%s</%s>',
+                        $col['tag'],
+                        $rowspan,
+                        $colspan,
+                        $attributes,
+                        $col['contents'],
+                        $col['tag']
+                    );
                 }
             }
             $html .= '</tr>';
@@ -283,6 +282,4 @@ class TableExtra
 
         return $html;
     }
-
-
 }
