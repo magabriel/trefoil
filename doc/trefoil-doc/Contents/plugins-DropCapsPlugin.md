@@ -43,7 +43,9 @@ There are several ways to add crop caps to the book:
 
 #### Automatic drop caps
 
-Drop caps can be automatically added to the first paragraph after a heading. This behaviour can be influenced on a per-edition base setting options in the `plugins` configuration section inside the book's `config.yml`.
+Drop caps can be automatically added to the first paragraph after a heading. 
+This behaviour can be influenced on a per-edition base setting options in 
+the `plugins` configuration section inside the book's `config.yml`.
  
 N> ##### Note
 N> This book has automatic drop caps applied with the default options.
@@ -51,7 +53,8 @@ N> This book has automatic drop caps applied with the default options.
         
 #### Manual drop caps HTML markup
 
-HTML can be freely mixed into Markdown. So a way to manually add drop caps to the text is:
+HTML can be freely mixed into Markdown. So a way to manually add drop caps 
+to the text is:
 
 ~~~.html
 <span class="dropcaps">T</span>his is a paragraph that starts with a manually-added drop cap.
@@ -66,7 +69,8 @@ HTML can be freely mixed into Markdown. So a way to manually add drop caps to th
 
 #### Markdown-like manual drop caps
 
-Besides adding the HTML markup directly, a Markdown-like markup is provided for greater convenience.
+Besides adding the HTML markup directly, a Markdown-like markup is provided for 
+greater convenience.
 
 ~~~.markdown
 [[T]]his text has first-letter drop caps.
@@ -84,9 +88,13 @@ will produce the following HTML:
 
 and will be shown in the book as (with some dummy text added):
 
-[[T]]his text has first-letter drop caps. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua. 
+[[T]]his text has first-letter drop caps. Lorem ipsum dolor sit amet, consetetur 
+sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore 
+magna aliquyam erat, sed diamvoluptua. 
 
-[[But]] this text has first-word drop caps. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua. 
+[[But]] this text has first-word drop caps. Lorem ipsum dolor sit amet, consetetur 
+sadipscing elitr, sed diam nonumyeirmod tempor invidunt ut labore et dolore magna 
+aliquyam erat, sed diamvoluptua. 
 
 
 

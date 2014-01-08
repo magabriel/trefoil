@@ -1,6 +1,7 @@
 # The Trefoil plugins
 
-A lot of the functionality of **trefoil** is implemented into the included plugins. 
+The biggest part of **trefoil** functionality of is implemented into 
+the included plugins. 
  
 {{ itemtoc() }}
 

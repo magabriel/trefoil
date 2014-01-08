@@ -1,6 +1,7 @@
 ## TypographyPlugin
 
-This plugin replaces certain symbols with its typographic equivalents. It makes use of the `SmartyPants` library: <http://daringfireball.net/projects/smartypants/>
+This plugin replaces certain symbols with its typographic equivalents. 
+It makes use of the `SmartyPants` library: <http://daringfireball.net/projects/smartypants/>
 
 ### Availability
 

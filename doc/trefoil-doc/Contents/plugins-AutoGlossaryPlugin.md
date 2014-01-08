@@ -1,7 +1,7 @@
 ## AutoGlossaryPlugin
 
-This auto-glossary plugin handles the generation of a glossary of terms that are automatically
-hyperlinked to its definitions.
+This auto-glossary plugin handles the generation of a glossary of terms 
+that are automatically hyperlinked to its definitions.
 
 ### Availability
 

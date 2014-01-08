@@ -1,6 +1,7 @@
 ## TableExtraPlugin
 
-This plugin provides extra functionality to Markdown tables, adding the ability to "colspan" or "rowspan" cells.
+This plugin provides extra functionality to Markdown tables, adding the 
+ability to "colspan" or "rowspan" cells.
 
 ### Availability
 
@@ -41,7 +42,8 @@ Column 1  | Column 2  | Column 3
 
 #### Adding rowspanned cells
 
-A cell containig only `"` (a double quote) will be joined with the above cell in the previous row:
+A cell containig only `"` (a double quote) will be joined with the 
+above cell in the previous row:
  
 ~~~
 Column 1  | Column 2  | Column 3
@@ -77,7 +79,8 @@ Column 1  | Column 2  | Column 3
 2.One     | 2.Two     | 2.Three
 
 T> ##### Tip
-T> To avoid a blank cell to be interpreted as colspanned, enter `&nbsp;` as its contents, as in the following example.
+T> To avoid a blank cell to be interpreted as colspanned, enter `&nbsp;` 
+as its contents, as in the following example.
 
 Column 1  | Column 2  | Column 3
 ----------|-----------|------------
@@ -87,7 +90,8 @@ Column 1  | Column 2  | Column 3
 
 #### A more complex example
 
-The following example mixes rowspanned and colspanned cells and makes use of table column alignment syntax:
+The following example mixes rowspanned and colspanned cells and makes use 
+of table column alignment syntax:
 
 ~~~
 Column 1  | Column 2  | Column 3

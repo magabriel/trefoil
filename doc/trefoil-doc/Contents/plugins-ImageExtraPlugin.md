@@ -90,7 +90,12 @@ N>
 
 ![Lorem ipsum ](php.jpg?class="narrower")
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero 
+congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. 
+Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. 
+Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus 
+augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. 
+Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
 <div class="clearfix"></div> 
 
@@ -161,6 +166,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 ##### Wide
 
 ![Lorem ipsum](php.jpg?class="wide")
+
+<div class="clearfix"></div> 
 
 ##### Class and style
 

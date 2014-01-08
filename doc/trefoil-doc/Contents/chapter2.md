@@ -1,18 +1,24 @@
 # Plugin system enhancements
 
-Plugins are the core of **easybook** [extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
-But its implementation is a bit lacking on the side of flexibility, so the first task was to get a more flexible plugin's system. And then, implement as many new features as possible in the form of new plugins. 
+Plugins are the core of **easybook** 
+[extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
+But its implementation is a bit lacking on the side of flexibility, 
+so the first task was to get a more flexible plugin's system. And then, 
+implement as many new features as possible in the form of new plugins. 
  
 The first things to be fixed (or, rather, "enhanced") were: 
 
-- There was no way of reusing user-created plugins other than copying the code from one book to another.
+- There are no way of reusing user-created plugins other than copying
+  the code from one book to another.
+
 - Plugins are not namespaced, precluding autoloading and extensibility.
 
 {{ itemtoc() }}
 
 ## Namespaces for plugins
 
-All of `trefoil` plugins are namespaced, in the namespace (you guess) `Trefoil\Plugins`. 
+All of `trefoil` plugins are namespaced, in the namespace (you guess)
+`Trefoil\Plugins`. 
 
 So a typical plugin now looks like:
 
@@ -34,7 +40,8 @@ class AwesomePlugin extends BasePlugin implements EventSubscriberInterface
 }
 ~~~
 
-`BasePlugin` is a base class that provides some utility methods and properties to plugins:
+`BasePlugin` is a base class that provides some utility methods and
+properties to plugins:
 
 ~~~ .php
 <?php
@@ -80,8 +87,8 @@ abstract class BasePlugin
 }
 ~~~
 
-The `init()` method defines a bunch of useful properties to make them available for the plugins.
-
+The `init()` method defines a bunch of useful properties to make them
+available for the plugins.
 
 
 ## Selectively enabling plugins
@@ -99,7 +106,9 @@ book:
                     ... 
 ~~~ 
 
-`enabled` is a list of all the enabled plugins without the `Plugin` suffix, so if you wanted to enable plugins `DropCapsPlugin` and `TableExtraPluigin` for edition `ebook` you would write:
+`enabled` is a list of all the enabled plugins without the `Plugin` suffix,
+so if you wanted to enable plugins `DropCapsPlugin` and `TableExtraPluigin` 
+for edition `ebook` you would write:
 
 ~~~.yaml
 book:
