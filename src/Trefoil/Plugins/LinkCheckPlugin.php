@@ -1,13 +1,12 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Util\Toolkit;
-use Trefoil\Util\SimpleReport;
-use Trefoil\Helpers\LinkChecker;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\LinkChecker;
+use Trefoil\Util\SimpleReport;
 
 /**
  * Plugin to check internal and external links in book.
@@ -56,7 +55,8 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('content');
 
         // retrieve all the links for this item
-        $links = $this->findLinks($content,  $event->getItem()['config']['content']);
+        $item = $event->getItem();
+        $links = $this->findLinks($content, $item['config']['content']);
         $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
