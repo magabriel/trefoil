@@ -28,7 +28,7 @@
 <ncx version="2005-1" xml:lang="{{ book.language }}" xmlns="http://www.daisy.org/z3986/2005/ncx/">
 
     <head>
-        <meta name="dtb:uid" content="{{ app.get('publishing.edition.id').value }}" />
+        <meta name="dtb:uid" content="{{ app['publishing.edition.id'].value }}" />
         <meta name="dtb:depth" content="{{ edition.toc.deep }}" />
         <meta name="dtb:totalPageCount" content="0" /> <!-- must be 0 -->
         <meta name="dtb:maxPageNumber" content="0" />  <!-- must be 0 -->
@@ -47,7 +47,7 @@
 {% set hasParts = false %}
 {% set partStarted = false %}
 {% set playOrder = 0 %}
-{% for item in app.get('publishing.items') %}
+{% for item in app['publishing.items'] %}
 
     {# editions define the *tocable* items #}
     {% if item.config.element in edition.toc.elements|default([]) %}

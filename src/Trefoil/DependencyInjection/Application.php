@@ -3,9 +3,8 @@
 namespace Trefoil\DependencyInjection;
 
 use Easybook\DependencyInjection\Application as EasybookApplication;
+use Trefoil\Providers\PublisherServiceProvider;
 use Trefoil\Providers\TwigServiceProvider;
-use Trefoil\Publishers\Epub2Publisher;
-use Trefoil\Publishers\MobiPublisher;
 use Trefoil\Util\Toolkit;
 
 class Application extends EasybookApplication
@@ -29,34 +28,9 @@ class Application extends EasybookApplication
         $this['app.dir.doc']                   = $this['trefoil.app.dir.base'].'/doc';
         $this['trefoil.app.dir.resources']     = $this['trefoil.app.dir.base'].'/app/Resources';
         $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'].'/Themes';
-
-        // -- own publisher ----------------------------------------------------
-        $this['publisher'] = $this->extend('publisher', function ($publisher, $app) {
-            $outputFormat = $app->edition('format');
-
-            switch (strtolower($outputFormat)) {
-
-                case 'epub':
-                    // use our epub2 publisher
-                    $publisher = new Epub2Publisher($app);
-                    break;
-
-                case 'mobi':
-                    // use our mobi publisher
-                    $publisher = new MobiPublisher($app);
-                    break;
-
-                default:
-                    // use the default publisher
-                    return $publisher;
-            }
-
-            $publisher->checkIfThisPublisherIsSupported();
-
-            return $publisher;
-        });
-        
+       
         // -- own services -----------------------------------------------------
+        $this->register(new PublisherServiceProvider());
         $this->register(new TwigServiceProvider());
     }
 

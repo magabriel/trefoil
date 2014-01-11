@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
     
-    version:          '0.236'
+    version:          '0.376'
 
     generator:        { name: trefoil, version: DEV }
    
@@ -39,6 +39,7 @@ book:
         ebook:
             format:         epub
             highlight_code: true
+            highlight_cache: true
             include_styles: true
  
             include_fonts:  true
@@ -91,7 +92,94 @@ book:
                     Typography:
                         checkboxes: true
                         fix_spanish_style_dialog: false                        
+                
+        ###########################################
+        
+        base-edition:
+            highlight_code: true
+            highlight_cache: true
+            include_styles: true
+ 
+            include_fonts:  true
+            fonts: 
+                - Inconsolata-Regular
+                - Inconsolata-Bold
+ 
+            labels:         ['appendix', 'chapter', 'figure', 'part'] 
+            theme:          TrefoilTwo
+            toc:
+                deep:       3
+                elements:   ["appendix", "chapter", "part", "introduction"]
+
+            plugins:       
+                enabled: 
+                    - AutoGlossary
+                    - DropCaps
+                    - EbookRename
+                    #- EpubCheck                # Uncomment to run the check
+                    - QualityControl
+                    - EpubUncompress
+                    - FootnotesExtra
+                    - HtmlTweaks
+                    - ImageExtra
+                    - KindleTweaks
+                    - LinkCheck
+                    - TableExtra
+                    - TwigExtension
+                    - Typography
+                    - VersionUpdater
+                    
+                options:
+                    DropCaps: 
+                        levels:     [1]                             # 1 to 6 (default: 1)
+                        mode:       letter                          # letter, word (default: letter)
+                        length:     1                               # number of letters or words to highlight (default: 1)
+                        elements:   ['chapter', 'introduction']     # which elements to process 
+
+                    TwigExtension: 
+                        itemtoc:
+                            deep:   2
+                    
+                    LinkCheck:
+                        check_external_links: true                        
+
+                    EbookRename:
+                        schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
+                        keep_original:  true
+
+                    Typography:
+                        checkboxes: true
+                        fix_spanish_style_dialog: false         
                         
+        print:
+            extends:         base-edition
+            format:          pdf
+
+            margin:
+                top:         25mm
+                bottom:      25mm
+                inner:       30mm
+                outer:       20mm
+            page_size:       A4
+            #theme:           clean
+            two_sided:       true
+
         web:
-            extends: ebook
-            format:  html
+            extends:         base-edition
+            format:          html
+            #theme:           clean
+
+        website:
+            extends:         base-edition
+            format:          html_chunked
+            chunk_level:     1
+            #images_base_dir: /img/doc-en/
+            
+        trefoil-project.org:
+            extends:         base-edition
+            format:          html_chunked
+            chunk_level:     2
+            #images_base_dir: /images/doc-en/
+            include_styles:  false
+            highlight_cache: false
+            highlight_code:  true

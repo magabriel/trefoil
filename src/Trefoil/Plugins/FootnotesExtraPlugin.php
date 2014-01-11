@@ -62,7 +62,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         $this->init($event);
 
-        if (!in_array($this->format, array('Epub', 'Mobi'))) {
+        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
             // not for this format
             return;
         }
@@ -77,7 +77,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         $this->init($event);
 
-        if (!in_array($this->format, array('Epub', 'Mobi'))) {
+        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
             // not for this format
             return;
         }
@@ -91,7 +91,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         $this->init($event);
 
-        if (!in_array($this->format, array('Epub', 'Mobi'))) {
+        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
             // not for this format
             return;
         }

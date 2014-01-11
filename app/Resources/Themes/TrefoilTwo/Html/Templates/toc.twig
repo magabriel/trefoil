@@ -1,29 +1,25 @@
-{% extends 'layout.twig' %}
+<div class="item toc">
+
+<h1>{{ app.getTitle('toc') }}</h1>
 
 {% import _self as helper %}
 
 {% macro tocItem(item, entry, level) %}
     {% set level = level ? level : 1 %}
     {% set hash = entry ? '#' ~ (level == 1 ? item.slug : entry.slug ) : '' %}
-    <div class="{{ item.config.element }} level-{{ level }}">
-        <a href="{{ item.page_name }}.html{{ hash }}">
-            {% if entry %}
-                 {{ entry.label ? ('<span>'~entry.label~'</span> - '~entry.title) : entry.title }}
-            {% else %}
-                {{ item.title }}
-            {% endif %}
-        </a>
-    </div>
+    <li class="{{ item.config.element }} level-{{ level }}">
+        {% if entry %}
+             {{ entry.label ? ('<span>'~entry.label~'</span> - ') : ''}}
+        {% else %}
+            {{ item.title }}
+        {% endif %}
+        <a href="{{ hash }}">{{ entry.title }}</a>
+    </li>
 {% endmacro %}
 
-{% block title %}{{ item.title }}{% endblock %}
-
-{% block body %}
-<div class="item toc">
-    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
-    <div class="toc_data">
+    <ul class="unstyled toc_data">
         {% set hasParts = false %}
-        {% for item in app.get('publishing.items') %}
+        {% for item in app['publishing.items'] %}
             {# editions define the *tocable* items #}
             {% if item.config.element in edition.toc.elements|default([]) %}
 
@@ -68,6 +64,6 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
-    </div>
+    </ul>
+    
 </div>
-{% endblock %}

@@ -41,39 +41,8 @@
    -------------------------------------------------------------------------- #}
 {% block links %}
 {{ parent() }}
-
-    a {
-        background-image: url('../images/ico_external_link.png');
-        background-position: right;
-        background-repeat: no-repeat;
-        padding-right: 23px;
-        padding-top: 3px;
-        padding-bottom: 2px;
-    }
-
-    a[href*='pdf'] {
-        background-image: url('../images/ico_pdf.png');
-    }
-
-    a[href*='youtube'] {
-        background-image: url('../images/ico_youtube.png');
-    }
-
-    a.internal, .toc a {
-        background-image: none;
-        padding-right: 0;
-    }
-
-    a img {
-        text-decoration: none;
-    }
-
-    a.internal.invalid {
-        background: #faa;
-    }
-
 {% endblock %}
-
+    
 {# @headings
    -------------------------------------------------------------------------- #}
 {% block headings %}
