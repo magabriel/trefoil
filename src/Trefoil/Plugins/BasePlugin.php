@@ -39,11 +39,11 @@ abstract class BasePlugin
      * Write an output message line
      *
      * @param string $message
-     * @param string $usePrefix
+     * $param string $type of message ('error', 'warning', 'info')
      */
-    public function writeLn($message, $usePrefix = true)
+    public function writeLn($message, $type = 'info')
     {
-        $this->write($message, $usePrefix);
+        $this->write($message, $type);
         $this->output->writeLn('');
     }
 
@@ -51,16 +51,26 @@ abstract class BasePlugin
      * Write an output message (w/o a line break)
      *
      * @param string $message
-     * @param string $usePrefix
+     * $param string $type of message ('error', 'warning', 'info')
      */
-    public function write($message, $usePrefix = true)
+    public function write($message, $type = 'info')
     {
-        $prefix = '';
-        if ($usePrefix) {
-            $class = join('',array_slice(explode('\\', get_called_class()), -1));
-            $prefix = sprintf('%s: ', $class);
+        $class = join('',array_slice(explode('\\', get_called_class()), -1));
+        $prefix = sprintf('%s: ', $class);
+
+        $msgType = '';
+
+        switch (strtolower($type)) {
+            case 'warning':
+                $msgType = '<bg=yellow;fg=black> WARNING </> ';
+                break;
+
+            case 'error':
+                $msgType = '<bg=red;fg=white> ERROR </> ';
+                break;
         }
-        $this->output->write(' > '.$prefix.$message);
+
+        $this->output->write(' > '.$prefix.$msgType.$message);
     }
 
     /**

@@ -1,0 +1,23 @@
+glossary:
+    options: 
+        # 'all': all ocurrences
+        # 'item': (default) only first ocurrence into an item (i.e. chapter)
+        # 'first': first ocurrence in the whole book
+        coverage: 'item'
+        # Elements to process (default: "chapter")
+        elements: ["chapter"]
+    
+    ####
+    # Global definitions of terms:
+    #
+    #   "term": Term description
+    #
+    # Variants are allowed (singular, plural)
+    #
+    #   "term[s]": Description which is applied to "term" and "terms"
+    #   "term [one|two]": Description which is applied to "term one" and "term two"
+    ####
+    terms: 
+        "auto-glossary": A glossary generated automatically.
+        "glossary term[s]": A word or expression to be defined as part of a glossary.
+        

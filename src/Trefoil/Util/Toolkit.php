@@ -26,12 +26,15 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
-    public static function getCurrentResourcesDir(Application $app, $format)
+    public static function getCurrentResourcesDir(Application $app, $format = null)
     {
         $theme = ucfirst($app->edition('theme'));
 
         $edition = $app['publishing.edition'];
-        $format = Toolkit::getCurrentFormat($app);
+
+        if (!$format) {
+            $format = Toolkit::getCurrentFormat($app);
+        }
 
         // the custom theme set for this book publishing
         $localResourcesDir = realpath($app['trefoil.publishing.dir.themes']) .'/'.$theme.'/'.$format;

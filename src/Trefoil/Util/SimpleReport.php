@@ -29,8 +29,7 @@ class SimpleReport
     {
         $this->headers = $headers;
 
-        foreach ($headers as $index => $header)
-        {
+        foreach ($headers as $index => $header) {
             $this->columnsWidth[$index] = 10;
             $this->columnsAlignment[$index] = '';
         }
@@ -133,7 +132,8 @@ class SimpleReport
     /**
      * @see http://www.php.net/manual/en/ref.mbstring.php#90611
      */
-    protected function mb_str_pad ($input, $pad_length, $pad_string = '', $pad_style, $encoding="UTF-8") {
+    protected function mb_str_pad($input, $pad_length, $pad_string = '', $pad_style, $encoding="UTF-8")
+    {
         return str_pad($input,
                 strlen($input)-mb_strlen($input,$encoding)+$pad_length, $pad_string, $pad_style);
     }

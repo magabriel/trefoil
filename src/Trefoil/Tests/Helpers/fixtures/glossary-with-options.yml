@@ -1,0 +1,9 @@
+glossary:
+    options: 
+        coverage: 'first'
+        elements: ["chapter", "prologue"]
+    
+    terms: 
+        "term 1": The term 1.
+        "term 2": The term 2.
+        

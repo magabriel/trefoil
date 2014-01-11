@@ -1,13 +1,12 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Util\Toolkit;
-use Trefoil\Util\SimpleReport;
-use Trefoil\Helpers\LinkChecker;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\LinkChecker;
+use Trefoil\Util\SimpleReport;
 
 /**
  * Plugin to check internal and external links in book.
@@ -28,7 +27,7 @@ use Easybook\Events\ParseEvent;
  *                     LinkCheck:
  *                         check_external_links: true
  *
- * The plugin will generate a report in the output directory for all the external links
+ * The plugin will generate a report in the output directory for all the links
  * in the book with its status from the check (OK or error).
  *
  */
@@ -56,7 +55,8 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $event->getItemProperty('content');
 
         // retrieve all the links for this item
-        $links = $this->findLinks($content,  $event->getItem()['config']['content']);
+        $item = $event->getItem();
+        $links = $this->findLinks($content, $item['config']['content']);
         $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
@@ -133,20 +133,21 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function checkInternalLinks()
     {
+        $errors = false;
+
         foreach ($this->links['internal'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 if (!in_array(substr($link['uri'], 1), $this->linkTargets)) {
-                    $this->writeLn(
-                            sprintf(
-                                    '<error>"%s": Internal link target "%s" => "%s" not found.</error>',
-                                    $xref,
-                                    $link['text'],
-                                    $link['uri']));
                     $this->links['internal'][$xref][$index]['status'] = 'Not found';
+                    $errors = true;
                 } else {
                     $this->links['internal'][$xref][$index]['status'] = 'OK';
                 }
             }
+        }
+
+        if ($errors) {
+            $this->writeLn('Some internal links are not correct.', 'error');
         }
     }
 
@@ -161,31 +162,26 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         $checker = new LinkChecker();
 
+        $this->writeLn('Checking external links....');
+
+        $errors = false;
+
         foreach ($this->links['external'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 try {
-                    $this->writeLn(sprintf(' > Checking link "%s" => ', $link['text']));
-                    $this->write(sprintf('     %s ...', $link['uri']));
-
                     $checker->check($link['uri']);
-
-                    $this->writeLn('<info>OK</info>', false);
-
                     $this->links['external'][$xref][$index]['status'] = 'OK';
-
                 } catch (\Exception $e) {
-                    $this->writeLn('', false);
-                    $this->writeLn(
-                            sprintf(
-                                    '<error>"%s": External link target "%s" => "%s" error "%s".</error>',
-                                    $xref,
-                                    $link['text'],
-                                    $link['uri'],
-                                    $e->getMessage()));
-
                     $this->links['external'][$xref][$index]['status'] = $e->getMessage();
+                    $errors = true;
                 }
             }
+        }
+
+        if ($errors) {
+            $this->writeLn('Some external links are not correct.', 'error');
+        } else {
+            $this->writeLn('All external links are correct.');
         }
     }
 

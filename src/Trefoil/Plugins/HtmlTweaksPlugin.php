@@ -120,9 +120,9 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         $file = $this->app->getFirstExistingFile('html-tweaks.yml', $dirs);
 
         if (!$file) {
-            $this->writeLn('<error>No html-tweaks.yml file found.</error> Looked up dirs:');
+            $this->writeLn('No html-tweaks.yml file found. Looked up directories:', 'error');
             foreach ($dirs as $dir) {
-                $this->writeLn('- '.$dir, false);
+                $this->writeLn('- '.$dir);
             }
             return false;
         }

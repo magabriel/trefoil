@@ -67,6 +67,11 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $event->getItemProperty('content');
 
+        // ensure the Twig function call is not enclosed into a '<p>..</p>' tag
+        // as it will result in epub checking erros
+        $content = preg_replace('/<p>\s*{{/', '{{', $content);
+        $content = preg_replace('/}}\s*<\/p>/', '}}', $content);
+
         // replace "{#" to avoid problems with markdown extra syntax for ids in headers
         $content = str_replace('{#', '@%@&', $content);
 
@@ -132,7 +137,10 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $file = $dir.'/'.$filename;
 
         if (!file_exists($file)) {
-            throw new \Exception(sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content'] ));
+            $this->writeLn(
+                    sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content'] ),
+                    'error');
+            return $filename;
         }
 
         $rendered = $this->renderString(file_get_contents($file), $variables);

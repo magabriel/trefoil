@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId">
+
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:title>Test book - EpubUncompressPlugin</dc:title>
+        <dc:language>en</dc:language>
+        <dc:identifier id="BookId" opf:scheme="isbn">1234567890X</dc:identifier>
+        <dc:creator opf:role="aut">trefoil</dc:creator>
+        <dc:publisher>trefoil DEV</dc:publisher>
+        <dc:date opf:event="publication">2013</dc:date>
+        <dc:date opf:event="creation">2013-02-01</dc:date>
+        <meta name="cover" content="cover" />
+    </metadata>
+ 
+    <manifest>
+        <item id="titlepage" href="titlepage.html" media-type="application/xhtml+xml"/>
+        <item id="chapter-1" href="chapter-1.html" media-type="application/xhtml+xml" />
+        <item id="stylesheet" href="css/easybook.css" media-type="text/css" />
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+    </manifest>
+
+    <spine toc="ncx">
+        <itemref idref="titlepage" />
+        <itemref idref="chapter-1" />
+    </spine>
+
+    <guide>
+        <reference href="titlepage.html" type="cover" title="Cover"/>
+    </guide>
+
+</package>

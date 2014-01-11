@@ -1,4 +1,5 @@
 <?php
+
 namespace Trefoil\Helpers;
 
 /**
@@ -19,6 +20,7 @@ namespace Trefoil\Helpers;
  */
 class Glossary implements \IteratorAggregate
 {
+
     /**
      * @var GlossaryItem[]
      */
@@ -34,7 +36,7 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * @param string $term
+     * @param  string       $term
      * @return GlossaryItem
      */
     public function get($term)
@@ -88,7 +90,7 @@ class Glossary implements \IteratorAggregate
     protected function explodeVariants(GlossaryItem $item)
     {
         $regExp = '/';
-        $regExp .= '(?<root>[\w\s]*)'; // root of the term (can contain in-between spaces)
+        $regExp .= '(?<root>[\w\s-]*)'; // root of the term (can contain in-between spaces or dashes)
         $regExp .= '(\['; // opening square bracket
         $regExp .= '(?<suffixes>.+)'; // suffixes
         $regExp .= '\])?'; // closing square bracket
@@ -117,4 +119,5 @@ class Glossary implements \IteratorAggregate
 
         $item->setVariants($variants);
     }
+
 }

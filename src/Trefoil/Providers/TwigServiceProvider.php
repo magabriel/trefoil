@@ -55,8 +55,6 @@ class TwigServiceProvider implements ServiceProviderInterface
 
                 // Register template paths
                 $ownTemplatePaths = array(
-                        // <themes-dir>/<template-name>.twig
-                        $themesDir,
                         // <themes-dir>/<edition-type>/Templates/<template-name>.twig
                         sprintf('%s/%s/Templates', $themesDir, $format));
 
@@ -86,7 +84,9 @@ class TwigServiceProvider implements ServiceProviderInterface
             // Register content paths
             if (file_exists($themesDir)) {
                 $ownContentPaths = array(
-                        // <themes-dir>/<edition-type>/Contents/<template-name>.twig
+                        // <themes-dir>/Common/Contents/<template-name>.md
+                        sprintf('%s/Contents', $themesDir),
+                        // <themes-dir>/<edition-type>/Contents/<template-name>.md
                         sprintf('%s/%s/Contents', $themesDir, $format));
 
                 foreach ($ownContentPaths as $path) {

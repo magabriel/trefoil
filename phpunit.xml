@@ -14,6 +14,9 @@
 
     <!-- files considered for the code coverage -->
     <filter>
+        <blacklist>
+            <directory>vendor</directory>
+        </blacklist>
         <whitelist>
             <directory>src</directory>
             <exclude>

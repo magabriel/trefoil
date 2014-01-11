@@ -1,16 +1,14 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\Glossary;
-use Trefoil\Helpers\GlossaryItem;
-use Trefoil\Helpers\GlossaryReplacer;
 use Trefoil\Helpers\GlossaryLoader;
+use Trefoil\Helpers\GlossaryReplacer;
+use Trefoil\Helpers\TextPreserver;
 use Trefoil\Util\SimpleReport;
 
 /**
@@ -18,13 +16,23 @@ use Trefoil\Util\SimpleReport;
  *
  * Configuration:
  *
- * - Global (per book):
+ * - Configuration:
+ *
+ *     editions:
+ *         <edition-name>
+ *             plugins:
+ *                 ...
+ *                 options:
+ *                     AutoGlossary:
+ *                         pagebreaks: true   # use pagebreaks between defined terms
+ *
+ * - Global glossary (per book):
  *
  *     <book_dir>/
  *         Contents/
  *             auto-glossary.yml
  *
- * - Per book item:
+ * - Per book item glossary:
  *
  *     <book_dir>/
  *         Contents/
@@ -98,31 +106,38 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-                TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
+                EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
                 EasybookEvents::POST_PARSE => array('onItemPostParse', -100),
                 EasybookEvents::POST_PUBLISH => 'onPostPublish');
-    }
-
-    public function onPrePublishAndReady(BaseEvent $event)
-    {
-        $this->init($event);
-
-        // get all the book-wide glossary definitions and options
-        $this->loadBookGlossary();
     }
 
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
+        // get all the book-wide glossary definitions and options
+        if (!$this->bookGlossary) {
+            $this->loadBookGlossary();
+        }
+
         // get all the item-wide glossary definitions
         $this->loadItemGlossary();
 
-        // process this item (either replacing terms into or generating the glossary)
+        // process this item replacing terms into
         $this->processItem();
 
         // reload changed item
         $event->setItem($this->item);
+    }
+
+    public function onItemPreParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        if ('auto-glossary' == $this->item['config']['element']) {
+            $this->saveAutoGlossary();
+        }
+
     }
 
     public function onPostPublish(BaseEvent $event)
@@ -156,9 +171,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $this->glossaryOptions = $loader->getOptions();
 
         if (!$loader->isLoaded()) {
-            $this->output->write(
-                    sprintf(" <comment>WARNING</comment>No book glossary definition file '%s' found in '%s' directory.\n",
-                            basename($glossaryFile), realpath($contentsDir)));
+            $this->writeLn(
+                    sprintf("No book glossary definition file '%s' found in the book's \"Contents\" directory.",
+                            basename($glossaryFile)), 'warning');
         }
     }
 
@@ -190,9 +205,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     }
 
     /**
-     * Performs either one of two processes:
-     * <li>For a content item to be processed, replace glossary terms into the text.
-     * <li>For 'auto-glossary' item, gernerate the glossary itself.
+     * For a content item to be processed for glossary terms, replace glossary terms into the text.
      */
     public function processItem()
     {
@@ -205,11 +218,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
             // append a copy of the processed definitions to the processed glossary
             // to avoid losing all xrefs and anchorlinks for this item
             $this->processedGlossary->merge(clone($this->glossary));
-
-        } elseif ('auto-glossary' == $this->item['config']['element']) {
-
-            // generate the book auto glossary
-            $this->generateAutoGlossary();
         }
     }
 
@@ -221,6 +229,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         // instantiate the GlossaryReplacer object
         $replacer = new GlossaryReplacer(
                 $this->glossary,
+                new TextPreserver(),
                 $this->item['content'],
                 $this->item['config']['content'],
                 $this->glossaryOptions);
@@ -230,25 +239,14 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     }
 
     /**
-     * Generate the auto glossary
+     * Save the auto glossary definitions to be generated on item rendering
      */
-    protected function generateAutoGlossary()
+    protected function saveAutoGlossary()
     {
-        $content = $this->item['content'];
-
-        $variables = array(
-                'definitions' => $this->processedGlossary,
-                'item' => $this->item
-                );
-
-        $rendered = $this->app->get('twig')->render('auto-glossary-items.twig', $variables);
+        $this->app['publishing.glossary.definitions'] = $this->processedGlossary;
+        $this->app['publishing.glossary.pagebreaks'] = $this->getEditionOption('plugins.options.AutoGlossary.pagebreaks', true);
 
         $this->generated = true;
-
-        // concat rendered string to content instead of replacing it to preserve user content
-        $content .= $rendered;
-
-        $this->item['content'] = $content;
     }
 
     /**
@@ -262,9 +260,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report .= $this->getNotUsedTermsReport();
 
         if (!$this->generated) {
-            $this->output
-            ->write(
-                    " <error>No glossary has been generated, check for missing 'auto-glosssary' contents element.</error>\n");
+            $this->writeLn(
+                    "No glossary has been generated, check for missing 'auto-glosssary' contents element.", "error");
         }
 
         $outputDir = $this->app['publishing.dir.output'];

@@ -1,4 +1,5 @@
 <?php
+
 namespace Trefoil\Helpers;
 
 /**
@@ -23,6 +24,7 @@ namespace Trefoil\Helpers;
  */
 class DropCaps
 {
+
     /**
      * The first "length" letters are transformed into drop caps
      * @var string
@@ -45,14 +47,14 @@ class DropCaps
     protected $length = 1;
 
     /**
-     * @param string $text  The input text
-     * @param string $mode  The working mode (default = MODE_LETTER)
-     * @param int $length   The length (default = 1)
+     * @param string $text   The input text
+     * @param string $mode   The working mode (default = MODE_LETTER)
+     * @param int    $length The length (default = 1)
      */
     public function __construct($text, $mode = self::MODE_LETTER, $length = 1)
     {
-        $this->text = $text;
-        $this->mode = $mode;
+        $this->text   = $text;
+        $this->mode   = $mode;
         $this->length = $length;
     }
 
@@ -74,19 +76,14 @@ class DropCaps
         $regex.= '\s*<p>\[\[(?<first>.*)\]\](?<rest>.*)<\/p>';
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
-        $text = preg_replace_callback($regex,
-                function ($matches)
-                {
-                    $ptext = $this->renderDropCaps('', $matches['first'], $matches['rest']);
-                    $html = sprintf('<p class="has-dropcaps">%s</p>',
-                            $ptext
-                    );
+        $callback = function ($matches) {
+            $ptext = $this->renderDropCaps('', $matches['first'], $matches['rest']);
+            $html  = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
-                    return $html;
-                },
-                $this->text);
+            return $html;
+        };
 
-        $this->text = $text;
+        $this->text = preg_replace_callback($regex, $callback, $this->text);
     }
 
     /**
@@ -99,19 +96,14 @@ class DropCaps
         $regex.= '^\s*<p>(?<ptext>.*)<\/p>';
         $regex.= '/Us'; // Ungreedy, dotall
 
-        $text = preg_replace_callback($regex,
-                function ($matches)
-                {
-                    $ptext = $this->createDropCaps($matches['ptext']);
+        $callback = function ($matches) {
+            $ptext = $this->createDropCaps($matches['ptext']);
+            $html  = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
-                    $html = sprintf('<p class="has-dropcaps">%s</p>',
-                            $ptext
-                    );
-                    return $html;
-                },
-                $this->text);
+            return $html;
+        };
 
-        $this->text = $text;
+        $this->text = preg_replace_callback($regex, $callback, $this->text);
     }
 
     /**
@@ -127,29 +119,23 @@ class DropCaps
         $regex.= '<p>(?<ptext>.*)<\/p>'; // 1st paragraph
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
-        $text = preg_replace_callback($regex,
-                function ($matches) use ($levels)
-                {
-                    if (!in_array($matches['level'], $levels)) {
-                        return $matches[0];
-                    }
+        $callback = function ($matches) use ($levels) {
+            if (!in_array($matches['level'], $levels)) {
+                return $matches[0];
+            }
 
-                    $ptext = $this->createDropCaps($matches['ptext']);
+            $ptext = $this->createDropCaps($matches['ptext']);
 
-                    $html = sprintf('<h%s%s>%s</h%s>%s<p class="has-dropcaps">%s</p>',
-                            $matches['level'],
-                            $matches['hrest'],
-                            $matches['hcontent'],
-                            $matches['level'],
-                            $matches['whitespace'],
-                            $ptext
-                    );
-                    return $html;
-                },
-                $this->text);
+            $html = sprintf('<h%s%s>%s</h%s>%s<p class="has-dropcaps">%s</p>', $matches['level'], $matches['hrest'],
+                $matches['hcontent'], $matches['level'], $matches['whitespace'], $ptext);
+
+            return $html;
+        };
+
+        $text = preg_replace_callback($regex, $callback, $this->text);
 
         // only set if no errors (i.e. no <p> tag after a heading)
-        if (null !== $text ) {
+        if (null !== $text) {
             $this->text = $text;
         }
     }
@@ -165,16 +151,15 @@ class DropCaps
         $regex.= '<p><span.*class="dropcaps">(?<dropcapstext>.*)<\/span>(?<ptext>.*)<\/p>';
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
-        $text = preg_replace_callback($regex,
-                function ($matches)
-                {
-                    $html = sprintf('<p class="has-dropcaps"><span class="dropcaps">%s</span>%s</p>',
-                            $matches['dropcapstext'],
-                            $matches['ptext']
-                    );
-                    return $html;
-                },
-                $this->text);
+        $callback = function ($matches) {
+            $html = sprintf('<p class="has-dropcaps"><span class="dropcaps">%s</span>%s</p>', $matches['dropcapstext'],
+                $matches['ptext']
+            );
+
+            return $html;
+        };
+
+        $text = preg_replace_callback($regex, $callback, $this->text);
 
         $this->text = $text;
     }
@@ -182,14 +167,14 @@ class DropCaps
     /**
      * Create drop caps markup for a text.
      *
-     * @param string $text
+     * @param  string $text
      * @return string
      */
     protected function createDropCaps($text)
     {
-        $skip = '';
+        $skip     = '';
         $dropCaps = '';
-        $rest = '';
+        $rest     = '';
 
         if ('word' == $this->mode) {
 
@@ -198,13 +183,12 @@ class DropCaps
 
             // isolate the first "$length" words
             $dropCaps = implode('', array_slice($matches[1], 0, $this->length));
-            $rest = implode('', array_slice($matches[1], $this->length));
+            $rest     = implode('', array_slice($matches[1], $this->length));
 
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
 
         // 'letter'mode
-
         // look if it starts with an HTML entity
         if (preg_match('/^(&[#[:alnum:]]*;)/U', $text, $matches)) {
 
@@ -214,7 +198,7 @@ class DropCaps
             }
             // isolate the first "$length" letters but skipping the entity
             $dropCaps = $matches[1] . substr($text, strlen($matches[1]), $this->length);
-            $rest = substr($text, strlen($matches[1])+$this->length);
+            $rest     = substr($text, strlen($matches[1]) + $this->length);
 
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
@@ -229,11 +213,11 @@ class DropCaps
             }
 
             // isolate the first "$length" letters but skipping the tag
-            $skip = '<'.$matches['tag'].$matches['attr'].'>';
+            $skip           = '<' . $matches['tag'] . $matches['attr'] . '>';
             $dropCapsLength = min($this->length, strlen($matches['content']));
 
             $dropCaps = substr($text, strlen($skip), $dropCapsLength);
-            $rest = substr($text, strlen($skip) + $dropCapsLength);
+            $rest     = substr($text, strlen($skip) + $dropCapsLength);
 
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
@@ -243,25 +227,23 @@ class DropCaps
 
             // isolate the first "$length" letters but skipping the non-word char(s)
             $dropCaps = $matches[1] . mb_substr($text, mb_strlen($matches[1]), $this->length);
-            $rest = mb_substr($text, mb_strlen($matches[1])+$this->length);
+            $rest     = mb_substr($text, mb_strlen($matches[1]) + $this->length);
 
             return $this->renderDropCaps($skip, $dropCaps, $rest);
         }
 
         // normal case, isolate the first "$length" letters
         $dropCaps = substr($text, 0, $this->length);
-        $rest = substr($text, $this->length);
+        $rest     = substr($text, $this->length);
 
         return $this->renderDropCaps($skip, $dropCaps, $rest);
     }
 
     protected function renderDropCaps($skip, $dropCaps, $rest)
     {
-        $html = sprintf('%s<span class="dropcaps">%s</span>%s',
-                $skip,
-                $dropCaps,
-                $rest);
+        $html = sprintf('%s<span class="dropcaps">%s</span>%s', $skip, $dropCaps, $rest);
 
         return $html;
     }
+
 }

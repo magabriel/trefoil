@@ -22,9 +22,12 @@
     /* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */
     @font-face {
         font-family: inconsolata;
-        font-style: normal;
-        font-weight: 400;
-        src: url("{{ resources_dir }}/fonts/Inconsolata.ttf")
+        src: url("{{ resources_dir }}/fonts/Inconsolata-Regular.ttf")
+    }
+    @font-face {
+        font-family: inconsolata;
+        font-weight: bold;
+        src: url("{{ resources_dir }}/fonts/Inconsolata-Bold.ttf")
     }
 {% endif %}
 
@@ -38,39 +41,8 @@
    -------------------------------------------------------------------------- #}
 {% block links %}
 {{ parent() }}
-
-    a {
-        background-image: url('../images/ico_external_link.png');
-        background-position: right;
-        background-repeat: no-repeat;
-        padding-right: 23px;
-        padding-top: 3px;
-        padding-bottom: 2px;
-    }
-
-    a[href*='pdf'] {
-        background-image: url('../images/ico_pdf.png');
-    }
-
-    a[href*='youtube'] {
-        background-image: url('../images/ico_youtube.png');
-    }
-
-    a.internal, .toc a {
-        background-image: none;
-        padding-right: 0;
-    }
-
-    a img {
-        text-decoration: none;
-    }
-
-    a.internal.invalid {
-        background: #faa;
-    }
-
 {% endblock %}
-
+    
 {# @headings
    -------------------------------------------------------------------------- #}
 {% block headings %}
@@ -80,7 +52,7 @@
         font-family: sans-serif;
         font-weight: bold;
         line-height: 1;
-        margin: 1em 0 .25em 0;
+        margin: 1.2em 0 0.6em 0;
     }
 
     h1, h2, h3 {
@@ -196,6 +168,67 @@
         display: none;
     }
 
+    /* Admonitions
+     */
+    .admonition {
+        margin: 10px 0 !important;
+        border: 1px solid #ccc;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        font-size: 90%;
+        padding: 10px 8px 20px 8px !important;
+        page-break-inside: avoid;
+    }
+
+        .admonition.aside {}
+        .admonition.note {}
+        .admonition.tip {}
+        .admonition.error {}
+        .admonition.information {}
+        .admonition.question {}
+        .admonition.discussion {}
+
+        .admonition.aside {
+            display: block;
+            float: right;
+            width: 50%;
+            min-width: 200px;
+            margin-left: 1em !important;
+            border: 1px solid #6cafd0;
+            background-color: transparent;
+        }
+
+        .admonition.tip, .admonition.note {
+            border: 1px solid #6cafd0;
+            background-color: transparent;
+        }
+
+        .admonition.error {
+            border: 1px solid #8e0012;
+            background-color: #fce5e8;
+        }
+
+        .admonition.information {
+            background-color: #FFF68F;
+            border: 1px solid #615E3F;
+        }
+
+        .admonition h5 {
+            font-family: sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin: 4px 0 6px !important;
+            color: #000;
+        }
+
+        .admonition h6 {
+            font-family: sans-serif;
+            text-align: left;
+            margin: 4px 0 6px !important;
+            color: #444;
+        }
+
 {% endblock %}
 
 {% endblock %} {# @typography #}
@@ -275,13 +308,14 @@
 {{ parent() }}
 
     code, pre, pre span, pre * {
-        font-family: inconsolata, monospace !important;
+        font-family: inconsolata, monospace;
     }
 
     div.code {
-        border: 1px solid #666;
         margin: 1em 0;
-        padding: .2em;
+        padding: .4em;
+        font-size: .9em;
+        border: 1px solid #CCC;
     }
 
     div.code pre {
@@ -290,11 +324,18 @@
     }
 
     code {
-        font-weight: bold;
-        border: 1px solid #ccc;
+        font-size: .93em;
+        border: 1px solid #CCC;
         padding: .1em;
-        background: #eee;
+        background: #F6F6F6;
+        font-weight: bold;
     }
+
+    h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+        font: inherit;
+    }
+
+    {% include 'style.code.css.twig' %}
 
 {% endblock %}
 
@@ -345,6 +386,14 @@
 
     div.item p {
         text-indent: 0;
+    }
+
+    .item h2 {
+        color: #8e0012;
+    }
+
+    .item h4 {
+        color: #a12;
     }
 
     {% include 'style.DropCaps.css.twig' %}
@@ -506,7 +555,8 @@
     }
 {% endblock %}
 
-
+{# @toc
+   -------------------------------------------------------------------------- #}
 {% block toc %}
 {{ parent() }}
 
@@ -540,6 +590,8 @@
     /* local toc */
     .local_toc {
         border: 1px solid #AAA;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
         padding: 0 1em;
         margin: 1em auto;
         min-width: 10em;
@@ -570,6 +622,11 @@
     }
 
 {% endblock %}
+
+{# NON-STANDARD ITEMS STYLES
+   -------------------------------------------------------------------------- #}
+    {% include 'style.AutoGlossary.css.twig' %}
+    {% include 'style.Footnotes.css.twig' %}
 
 {% endblock %} {# @items #}
 

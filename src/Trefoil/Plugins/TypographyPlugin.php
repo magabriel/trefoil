@@ -22,6 +22,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *                 ...
  *                 options:
  *                     Typography:
+ *                         checkboxes: true
  *                         fix_spanish_style_dialog: false
  *
  * - fix_spanish_style_dialog: Convert starting '-' (dash) in paragraphs to em-dash.
@@ -30,6 +31,11 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 {
+    const BALLOT_BOX_HTMLENTITY = '&#9744;';
+    const BALLOT_BOX_CHECKED_HTMLENTITY = '&#9745;';
+    const EMDASH_UNICODE = '\x{2014}';
+    const EMDASH_HTMLENTITY = '&#8212;';
+
     protected $links = array();
 
     public static function getSubscribedEvents()
@@ -129,6 +135,15 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected function replaceSymbolsPostParse($content)
     {
+        if ($this->getEditionOption('plugins.options.Typography.checkboxes', true)) {
+            $content = $this->replaceCheckboxes($content);
+        }
+
+        return $content;
+    }
+
+    protected function replaceCheckboxes($content)
+    {
         $regExp = '/';
         $regExp .= '(?<sign>';
         $regExp .= '\[ \]'; // open bracket + space + close bracket
@@ -139,7 +154,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $content = preg_replace_callback($regExp,
                 function ($matches) use ($me)
                 {
-                    return "&#9744;"; // ballot box (box without checkmark)
+                    return self::BALLOT_BOX_HTMLENTITY; // ballot box (box without checkmark)
                 }, $content);
 
         $regExp = '/';
@@ -152,7 +167,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $content = preg_replace_callback($regExp,
                 function ($matches) use ($me)
                 {
-                    return "&#9745;"; // ballot box with checkmark
+                    return self::BALLOT_BOX_CHECKED_HTMLENTITY; // ballot box with checkmark
                 }, $content);
 
         return $content;
@@ -166,10 +181,10 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function fixSpanishStyleDialog($content)
     {
-        // process all paragraphs begining with a dash
+        // process all paragraphs begining with a dash or em-dash
         $regExp = '/';
-        $regExp .= '<p>-(?<text>[^ ].*)<\/p>';
-        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
+        $regExp .= '<p>[-' . self::EMDASH_UNICODE . '](?<text>[^ ].*)<\/p>';
+        $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
         $content = preg_replace_callback($regExp,
                 function ($matches)
@@ -178,7 +193,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
                     $text = $this->replaceSpanishStyleDialog($matches['text']);
 
                     // return the paragraph replacing the starting dash by an em-dash
-                    return sprintf('<p>&#8212;%s</p>', $text);
+                    return sprintf('<p>' . self::EMDASH_HTMLENTITY . '%s</p>', $text);
                 }, $content);
 
         return $content;
@@ -192,7 +207,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function replaceSpanishStyleDialog($text)
     {
-        // replace "space and dash followed by something" by
+        // replace "space and dash or em-dash character followed by something" by
         //         "space and em-dash followed by something"
         $regExp = '/';
         $regExp .= ' -(?<char>[^ -])';
@@ -201,10 +216,10 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $text = preg_replace_callback($regExp,
                 function ($matches)
                 {
-                    return sprintf(' &#8212;%s', $matches['char']);
+                    return sprintf(' ' . self::EMDASH_HTMLENTITY . '%s', $matches['char']);
                 }, $text);
 
-        // replace "something followed by dash" by
+        // replace "something followed by dash or emdash character" by
         //         "something followed by em-dash"
         $regExp = '/';
         $regExp .= '(?<char>[^ -])-(?<next>[\W])';
@@ -213,7 +228,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $text = preg_replace_callback($regExp,
                 function ($matches)
                 {
-                    return sprintf('%s&#8212;%s', $matches['char'], $matches['next']);
+                    return sprintf('%s' . self::EMDASH_HTMLENTITY . '%s', $matches['char'], $matches['next']);
                 }, $text);
 
         return $text;

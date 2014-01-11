@@ -1,0 +1,34 @@
+================================================================================
+QualityControlPlugin
+Problems found
+================================================================================
+
+Element    Type       Object                         Message                                                                                              
+---------- ---------- ------------------------------ ---------------------------------------------------------------------------------------------------- 
+
+chapter1.md 
+
+           emphasis    _                             Emphasis mark not processed                                                                          
+           emphasis   adipiscing_                    Emphasis mark not processed                                                                          
+           emphasis   Curabitur**                    Emphasis mark not processed                                                                          
+           emphasis    **elit.                       Emphasis mark not processed                                                                          
+           emphasis   nunc*p                         Emphasis mark not processed                                                                          
+           emphasis   eros._                         Emphasis mark not processed                                                                          
+           emphasis   Nulla_                         Emphasis mark not processed                                                                          
+           emphasis   _ Duis hendrerit molestie mass Emphasis mark not processed                                                                          
+
+    ==================================================
+    8 problems found
+    ==================================================
+================================================================================
+QualityControlPlugin
+Images not used
+================================================================================
+
+Image                                                                                                
+---------------------------------------------------------------------------------------------------- 
+images/lorem.gif                                                                                     
+
+    ==================================================
+    1 unused images found
+    ==================================================

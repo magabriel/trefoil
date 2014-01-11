@@ -16,22 +16,8 @@
         {
             "type": "package",
             "package": {
-                "name": "smartypants/smartypants",
-                "version": "dev-master",
-                "dist": {
-                    "url": "http://littoral.michelf.ca/code/php-smartypants/php-smartypants-1.5.1f.zip",
-                    "type": "zip"
-                },
-                "autoload": {
-                     "files": ["smartypants.php"]
-                } 
-            }
-        },
-        {
-            "type": "package",
-            "package": {
                 "name": "smartypants/typographer",
-                "version": "dev-master",
+                "version": "1.0.1",
                 "dist": {
                     "url": "http://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
                     "type": "zip"
@@ -45,15 +31,14 @@
     
     "require": {
         "easybook/easybook":        "dev-master",
-        "smartypants/typographer":  "dev-master",
-        "symfony/dom-crawler":      "2.3.*",
-        "symfony/css-selector":     "2.3.*"
+        "smartypants/typographer":  "~1.0",
+        "symfony/dom-crawler":      "~2.3",
+        "symfony/css-selector":     "~2.3"
         
     },
     
     "autoload": {
         "psr-0": { "Trefoil": "src/" }
-    },
+    }
 
-    "minimum-stability": "dev"
 }

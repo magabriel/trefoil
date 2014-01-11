@@ -2,68 +2,68 @@
 
 ## 1. Normal table
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ----------|-----------|------------
-Uno       | Dos       | Tres
-Uno       | Dos       | Tres
+One       | Two       | Three
+One       | Two       | Three
 
 ## 2. With aligment
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ---------:|:----------|:----------:
-Uno       | Dos       | Tres
-Uno       | Dos       | Tres
+One       | Two       | Three
+One       | Two       | Three
 
 ## 3. Rowspan
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ----------|-----------|------------
-Uno       | Dos       | Tres
-"         | Dos       | Tres
-Uno       | Dos       | Tres
-"         | Dos       | Tres
+One       | Two       | Three
+"         | Two       | Three
+One       | Two       | Three
+"         | Two       | Three
 
 ## 3.1 Rowspan x3
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ----------|-----------|------------
-Uno       | Dos       | Tres
-"         | Dos       | Tres
-"         | Dos       | Tres
-Uno       | Dos       | Tres
-"         | Dos       | Tres
+One       | Two       | Three
+"         | Two       | Three
+"         | Two       | Three
+One       | Two       | Three
+"         | Two       | Three
 
 ## 4. Rowspan in the middle
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ---------:|:----------|:----------:
-Uno       | Dos       | Tres
-Uno       | "         | Tres
-Uno       | Dos       | Tres
-Uno       | Dos       | "
+One       | Two       | Three
+One       | "         | Three
+One       | Two       | Three
+One       | Two       | "
 
 ## 5. Colspan
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ---------:|:----------|:----------:
-Uno                  || Tres
-Uno       | Dos       | Tres
-Uno                  || Tres
+One                  || Three
+One       | Two       | Three
+One                  || Three
 
 ## 5.1 Colspan x3
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 :--------:|:----------|:----------:
-Uno                             ||| 
-Uno       | Dos       | Tres
-Uno                  || Tres
+One                             ||| 
+One       | Two       | Three
+One                  || Three
 
 ## 6. Rowspan + colspan
 
-Columna 1 | Columna 2 | Columna 3
+Column 1  | Column 2  | Column 3
 ---------:|:----------|:----------:
-Uno                  || Tres
-"                    || Tres
-Uno       | Dos       | Tres
-Uno       | Dos       | Tres
+One                  || Three
+"                    || Three
+One       | Two       | Three
+One       | Two       | Three
 

@@ -1,7 +1,10 @@
-<?php
+<?php 
 
 namespace Trefoil\Events;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class TrefoilEvents
 {
     /**

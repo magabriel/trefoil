@@ -10,6 +10,7 @@ Term                           Variant                        Item              
 ------------------------------ ------------------------------ ------------------------------ ----- ------------------------------ 
 dapibus                        dapibus                        chapter1.md                        1 auto-glossary.yml              
                                                               chapter2.md                        1 auto-glossary.yml              
+lorem-ipsum                    lorem-ipsum                    chapter2.md                        1 auto-glossary.yml              
 lectus                         lectus                         chapter1.md                        1 chapter1-auto-glossary.yml     
 sagittis                       sagittis                       chapter1.md                        1 chapter1-auto-glossary.yml     
 sapien [mattis|turpis]         sapien mattis                  chapter2.md                        1 chapter2-auto-glossary.yml     
