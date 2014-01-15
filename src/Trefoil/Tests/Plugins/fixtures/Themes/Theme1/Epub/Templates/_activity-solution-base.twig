@@ -1,0 +1,71 @@
+<!--
+========================================
+Solution for:
+Activity: {{ activity.id }}
+Type....: {{ activity.type }}
+========================================
+-->
+<div class="activity-solution activity-solution-{{ activity.type }}" data-type="{{ activity.type }}">
+
+{% for qindex, question in activity.questions  %}
+
+    {# take responses from the question (i.e. abc) or from the activity (i.e. ynb) #}
+    {% set responses = question.responses|default(activity.responses) %}
+
+    {% for rindex, response in responses %}
+
+        {# this question id #}
+        {% set qid = 'a-'~activity.id ~ '_' ~ qindex %}
+
+        {# next question id #}
+        {% set nextqid = null %}
+        {% if activity.questions[qindex+1]|default(null) %}
+            {% set nextqid = 'a-'~activity.id ~ '_' ~ (qindex+1) %}
+        {% endif %}
+
+        {# the heading #}
+        <h5 id="{{ qid }}_{{ rindex }}">{{ activity.heading }}</h5>
+
+        {# the question text and response #}
+        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span> {{ question.text|default(question) }}</h6>
+
+        <hr />
+            <p class="response">&raquo; {{ response }}</p>
+        <hr />
+            {# success or error #}
+            {% block result %}
+            {% endblock %}
+
+            {# retrieve success value set by result block #}
+            {% set success = block('success') %}
+        <hr />
+
+        {# next and return links after the response #}
+        <p>
+            <a href="#{{ qid }}">
+                <span>[ Back ]</span>
+            </a>
+            {% if success %}
+                {% if nextqid %}
+                    <a href="#{{ nextqid }}">
+                        <span>[ Next ]</span>
+                    </a>
+                {% else %}
+                    <a href="#skip-a-{{ activity.id }}"><span>[ Finish ]</span></a>
+                {% endif %}
+            {% endif %}
+        </p>
+        <div class="page-break" ></div>
+
+        {# second page break
+         # just in case viewer is in two-pages mode
+         #}
+        <hr/>
+        <p><span style="font-size: 3em; font-weight: bold;vertical-align: middle;">&larr;</span>
+            Please click to continue.</p>
+        <hr/>
+        <div class="page-break" ></div>
+    {% endfor %}
+{% endfor %}
+
+</div>

@@ -1,0 +1,55 @@
+<!--
+========================================
+Activity: {{ activity.id }}
+Type....: {{ activity.type }}
+========================================
+-->
+{% if activity.pagebreak == true %}
+<div class="page-break"></div>
+{% endif %}
+<div class="activity activity-{{ activity.type }}" data-type="{{ activity.type }}">
+
+    {% set activity_heading_text = activity.heading ? activity.heading : 'Activity ' ~ activity.id %}
+
+    <h5>{{ activity_heading_text }}</h5>
+
+    {% if activity.subHeading %}
+        <h6>{{ activity.subHeading }}</h6>
+    {% else %}
+        <h6>Please select the correct response for each question.</h6>
+    {% endif %}
+
+    {% if activity.introduction %}
+        <div class="introduction">{{ activity.introduction }}</div>
+    {% endif %}
+
+    {# start link #}
+    {% set start= 'a-'~activity.id  ~ '_0'  %}
+    <a href="#{{ start }}"><span>[ Start ]</span></a>
+    <a href="#skip-a-{{ activity.id }}"><span>[ Skip activity ]</span></a>
+
+    <div class="page-break"></div>
+
+{% for qindex, question in activity.questions  %}
+    {% set qid = 'a-'~activity.id ~ '_' ~ qindex %}
+
+    <h5 id="{{ qid }}">{{ activity_heading_text }}</h5>
+
+    <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span> {{ question.text|default(question) }}</h6>
+
+    <hr />
+    {% block responses %}
+        <p>No responses defined</p>
+    {% endblock %}
+    <hr />
+
+    <div class="page-break"></div>
+{% endfor %}
+</div>
+
+{# skip link target #}
+<div id="skip-a-{{ activity.id }}"></div>
+<hr />
+    <p>Fin de la actividad.</p>
+<hr />
+<div class="page-break"></div>

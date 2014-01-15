@@ -1,0 +1,16 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<div class="item ebook-activities-solutions">
+    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+
+    {{ item.content }}
+
+    {% for activity in app.get('publishing.activities') %}
+        {#% set template = 'activity-'~activity.type~'-solution.twig' %#}
+        {% set template = 'activity-solution.twig' %}
+        {% include template %}
+    {% endfor %}
+
+</div>
+{% endblock %}

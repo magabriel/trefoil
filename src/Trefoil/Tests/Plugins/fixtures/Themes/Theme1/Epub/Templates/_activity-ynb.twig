@@ -1,0 +1,12 @@
+{% extends 'activity-base.twig' %}
+
+{% block responses %}
+
+    <div class="responses">
+    {% for rindex, response in question.responses %}
+        <a href="#{{ qid }}_{{ rindex }}">
+            <span>[ {{ response }} ]</span></a>
+    {% endfor %}
+    </div>
+
+{% endblock %}
