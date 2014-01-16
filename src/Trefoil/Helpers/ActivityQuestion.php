@@ -42,6 +42,7 @@ class ActivityQuestion
     public function setText($text)
     {
         $this->text = $text;
+
         return $this;
     }
 
@@ -53,6 +54,7 @@ class ActivityQuestion
     public function setResponses(Array $responses)
     {
         $this->responses = $responses;
+
         return $this;
     }
 
@@ -64,6 +66,7 @@ class ActivityQuestion
     public function setExplanations(Array $explanations)
     {
         $this->explanations = $explanations;
+
         return $this;
     }
 
@@ -75,6 +78,7 @@ class ActivityQuestion
     public function setSolution($solution)
     {
         $this->solution = $solution;
+
         return $this;
     }
 }

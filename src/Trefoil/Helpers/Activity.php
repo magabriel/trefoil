@@ -20,18 +20,21 @@ class Activity
 
     /**
      * Id of the activity (manually assigned)
+     *
      * @var string
      */
     protected $id;
 
     /**
      * Internal Id of the activity
+     *
      * @var string
      */
     protected $internalId;
 
     /**
      * Type of the activity
+     *
      * @var string
      * @see Activity::ACTIVITY_TYPE_ABC
      * @see Activity::ACTIVITY_TYPE_YNB
@@ -40,24 +43,28 @@ class Activity
 
     /**
      * Options for this activity
+     *
      * @var Array of options
      */
     protected $options = array();
 
     /**
      * The heading for this activity
+     *
      * @var string
      */
     protected $heading;
 
     /**
      * The subheading for this activity
+     *
      * @var string
      */
     protected $subHeading;
 
     /**
      * The introduction text for this activity
+     *
      * @var string
      */
     protected $introduction;
@@ -78,6 +85,7 @@ class Activity
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -89,6 +97,7 @@ class Activity
     public function setInternalId($internalId)
     {
         $this->internalId = $internalId;
+
         return $this;
     }
 
@@ -100,6 +109,7 @@ class Activity
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -111,6 +121,7 @@ class Activity
     public function setOptions($options)
     {
         $this->options = $options;
+
         return $this;
     }
 
@@ -122,6 +133,7 @@ class Activity
     public function setHeading($heading)
     {
         $this->heading = $heading;
+
         return $this;
     }
 
@@ -133,6 +145,7 @@ class Activity
     public function setSubHeading($subHeading)
     {
         $this->subHeading = $subHeading;
+
         return $this;
     }
 
@@ -144,6 +157,7 @@ class Activity
     public function setIntroduction($introduction)
     {
         $this->introduction = $introduction;
+
         return $this;
     }
 
@@ -155,6 +169,7 @@ class Activity
     public function setQuestions(Array $questions)
     {
         $this->questions = $questions;
+
         return $this;
     }
 }

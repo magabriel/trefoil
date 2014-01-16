@@ -25,7 +25,9 @@ class TableExtra
 
     /**
      * Processes all tables in the html string
-     * @param string  $htmlString
+     *
+     * @param string $htmlString
+     *
      * @return string
      */
     public function processAllTables($htmlString)
@@ -41,7 +43,7 @@ class TableExtra
                 return $matches[0];
             }
             $table = $me->processExtraTable($table);
-            $html  = $me->renderTable($table);
+            $html = $me->renderTable($table);
 
             return $html;
         };
@@ -76,7 +78,7 @@ class TableExtra
         }
 
         // extract all rows from section
-        $thead  = $matches[0]['contents'];
+        $thead = $matches[0]['contents'];
         $regExp = '/<tr>(?<contents>.*)<\/tr>/Ums';
         preg_match_all($regExp, $thead, $matches, PREG_SET_ORDER);
 
@@ -88,7 +90,7 @@ class TableExtra
         $rows = array();
         foreach ($matches as $matchRow) {
 
-            $tr     = $matchRow['contents'];
+            $tr = $matchRow['contents'];
             $regExp = '/<(?<tag>t[hd])(?<attr>.*)>(?<contents>.*)<\/t[hd]>/Ums';
             preg_match_all($regExp, $tr, $matchesCol, PREG_SET_ORDER);
 
@@ -103,6 +105,7 @@ class TableExtra
 
             $rows[] = $cols;
         }
+
         return $rows;
     }
 
@@ -133,7 +136,8 @@ class TableExtra
                     $colspanCol = -1;
                     for ($j = $colIndex - 1; $j >= 0; $j--) {
                         if (!isset($newRows[$rowIndex][$j]['ignore']) ||
-                            (isset($newRows[$rowIndex][$j]['ignore']) && $j == 0)) {
+                            (isset($newRows[$rowIndex][$j]['ignore']) && $j == 0)
+                        ) {
                             $colspanCol = $j;
                             break;
                         }
@@ -144,7 +148,7 @@ class TableExtra
                         if (!isset($newRows[$rowIndex][$colspanCol]['colspan'])) {
                             $newRows[$rowIndex][$colspanCol]['colspan'] = 1;
                         }
-                        $newRows[$rowIndex][$colspanCol]['colspan'] ++;
+                        $newRows[$rowIndex][$colspanCol]['colspan']++;
 
                         // ignore this cell
                         $newRows[$rowIndex][$colIndex]['ignore'] = true;
@@ -188,7 +192,7 @@ class TableExtra
                             }
                             $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
                         }
-                        $newRows[$rowspanRow][$colIndex]['rowspan'] ++;
+                        $newRows[$rowspanRow][$colIndex]['rowspan']++;
 
                         $newRows[$rowIndex][$colIndex]['ignore'] = true;
                     }
@@ -256,12 +260,11 @@ class TableExtra
 
     /**
      * @param string $string
-     * @return array of attribures
+     *
+     * @return array of attributes
      */
     protected function extractAttributes($string)
     {
-        $attributes = array();
-
         $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
 

@@ -5,6 +5,7 @@ namespace Trefoil\Publishers;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents as Events;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
 use Trefoil\Util\Toolkit;
 
@@ -77,9 +78,9 @@ class Epub2Publisher extends HtmlPublisher
         // generate easybook CSS file
         if ($this->app->edition('include_styles')) {
             $this->app->render(
-                '@theme/style.css.twig',
-                array('resources_dir' => '..'),
-                $bookTmpDir.'/book/OEBPS/css/easybook.css'
+                      '@theme/style.css.twig',
+                      array('resources_dir' => '..'),
+                      $bookTmpDir . '/book/OEBPS/css/easybook.css'
             );
         }
 
@@ -88,9 +89,9 @@ class Epub2Publisher extends HtmlPublisher
         $hasCustomCss = file_exists($customCss);
         if ($hasCustomCss) {
             $this->app['filesystem']->copy(
-                $customCss,
-                $bookTmpDir.'/book/OEBPS/css/styles.css',
-                true
+                                    $customCss,
+                                    $bookTmpDir . '/book/OEBPS/css/styles.css',
+                                    true
             );
         } else {
             // new in Trefoil:
@@ -99,9 +100,9 @@ class Epub2Publisher extends HtmlPublisher
             $hasCustomCss = file_exists($customCss);
             if ($hasCustomCss) {
                 $this->app->render(
-                        'style.css.twig',
-                        array(),
-                        $bookTmpDir.'/book/OEBPS/css/styles.css'
+                          'style.css.twig',
+                          array(),
+                          $bookTmpDir . '/book/OEBPS/css/styles.css'
                 );
             }
         }
@@ -110,7 +111,7 @@ class Epub2Publisher extends HtmlPublisher
 
         // generate one HTML page for every book item
         foreach ($bookItems as $item) {
-            $renderedTemplatePath = $bookTmpDir.'/book/OEBPS/'.$item['page_name'].'.html';
+            $renderedTemplatePath = $bookTmpDir . '/book/OEBPS/' . $item['page_name'] . '.html';
             $templateVariables = array(
                 'item'           => $item,
                 'has_custom_css' => $hasCustomCss,
@@ -120,7 +121,7 @@ class Epub2Publisher extends HtmlPublisher
             // type, if it exists (e.g. toc.twig, chapter.twig, etc.) and
             // use chunk.twig as the fallback template
             try {
-                $templateName = $item['config']['element'].'.twig';
+                $templateName = $item['config']['element'] . '.twig';
 
                 $this->app->render($templateName, $templateVariables, $renderedTemplatePath);
             } catch (\Twig_Error_Loader $e) {
@@ -128,48 +129,57 @@ class Epub2Publisher extends HtmlPublisher
             }
         }
 
-        $bookImages = $this->prepareBookImages($bookTmpDir.'/book/OEBPS/images');
-        $bookCover  = $this->prepareBookCoverImage($bookTmpDir.'/book/OEBPS/images');
-        $bookFonts  = $this->prepareBookFonts($bookTmpDir.'/book/OEBPS/fonts');
+        $bookImages = $this->prepareBookImages($bookTmpDir . '/book/OEBPS/images');
+        $bookCover = $this->prepareBookCoverImage($bookTmpDir . '/book/OEBPS/images');
+        $bookFonts = $this->prepareBookFonts($bookTmpDir . '/book/OEBPS/fonts');
 
         // generate the book cover page
-        $this->app->render('cover.twig', array('customCoverImage' => $bookCover),
-            $bookTmpDir.'/book/OEBPS/titlepage.html'
+        $this->app->render(
+                  'cover.twig',
+                  array('customCoverImage' => $bookCover),
+                  $bookTmpDir . '/book/OEBPS/titlepage.html'
         );
 
         // generate the OPF file (the ebook manifest)
-        $this->app->render('content.opf.twig', array(
-                'cover'          => $bookCover,
-                'has_custom_css' => $hasCustomCss,
-                'fonts'          => $bookFonts,
-                'images'         => $bookImages,
-                'items'          => $bookItems
-            ),
-            $bookTmpDir.'/book/OEBPS/content.opf'
+        $this->app->render(
+                  'content.opf.twig',
+                  array(
+                      'cover'          => $bookCover,
+                      'has_custom_css' => $hasCustomCss,
+                      'fonts'          => $bookFonts,
+                      'images'         => $bookImages,
+                      'items'          => $bookItems
+                  ),
+                  $bookTmpDir . '/book/OEBPS/content.opf'
         );
 
         // generate the NCX file (the table of contents)
-        $this->app->render('toc.ncx.twig', array('items' => $bookItems),
-            $bookTmpDir.'/book/OEBPS/toc.ncx'
+        $this->app->render(
+                  'toc.ncx.twig',
+                  array('items' => $bookItems),
+                  $bookTmpDir . '/book/OEBPS/toc.ncx'
         );
 
         // generate container.xml and mimetype files
-        $this->app->render('container.xml.twig', array(),
-            $bookTmpDir.'/book/META-INF/container.xml'
+        $this->app->render(
+                  'container.xml.twig',
+                  array(),
+                  $bookTmpDir . '/book/META-INF/container.xml'
         );
-        $this->app->render('mimetype.twig', array(),
-            $bookTmpDir.'/book/mimetype'
+        $this->app->render(
+                  'mimetype.twig',
+                  array(),
+                  $bookTmpDir . '/book/mimetype'
         );
 
-        $this->fixInternalLinks($bookTmpDir.'/book/OEBPS');
+        $this->fixInternalLinks($bookTmpDir . '/book/OEBPS');
 
         // compress book contents as ZIP file and rename to .epub
-        // TODO: the name of the book file (book.epub) must be configurable
-        $this->zipBookContents($bookTmpDir.'/book', $bookTmpDir.'/book.zip');
+        $this->zipBookContents($bookTmpDir . '/book', $bookTmpDir . '/book.zip');
         $this->app['filesystem']->copy(
-            $bookTmpDir.'/book.zip',
-            $this->app['publishing.dir.output'].'/book.epub',
-            true
+                                $bookTmpDir . '/book.zip',
+                                $this->app['publishing.dir.output'] . '/book.epub',
+                                true
         );
 
         // remove temp directory used to build the book
@@ -185,22 +195,23 @@ class Epub2Publisher extends HtmlPublisher
      */
     private function prepareBookTemporaryDirectory()
     {
-        $bookDir = $this->app['app.dir.cache'].'/'
-                   .uniqid($this->app['publishing.book.slug']);
+        $bookDir = $this->app['app.dir.cache'] . '/'
+            . uniqid($this->app['publishing.book.slug']);
 
-        $this->app['filesystem']->mkdir(array(
-            $bookDir,
-            $bookDir.'/book',
-            $bookDir.'/book/META-INF',
-            $bookDir.'/book/OEBPS',
-            $bookDir.'/book/OEBPS/css',
-            $bookDir.'/book/OEBPS/images',
-            $bookDir.'/book/OEBPS/fonts',
-        ));
+        $this->app['filesystem']->mkdir(
+                                array(
+                                    $bookDir,
+                                    $bookDir . '/book',
+                                    $bookDir . '/book/META-INF',
+                                    $bookDir . '/book/OEBPS',
+                                    $bookDir . '/book/OEBPS/css',
+                                    $bookDir . '/book/OEBPS/images',
+                                    $bookDir . '/book/OEBPS/fonts',
+                                )
+        );
 
         return $bookDir;
     }
-
 
 
     /**
@@ -221,11 +232,11 @@ class Epub2Publisher extends HtmlPublisher
             $cover = array(
                 'height'    => $height,
                 'width'     => $width,
-                'filePath'  => 'images/'.basename($image),
+                'filePath'  => 'images/' . basename($image),
                 'mediaType' => image_type_to_mime_type($type)
             );
 
-            $this->app['filesystem']->copy($image, $targetDir.'/'.basename($image));
+            $this->app['filesystem']->copy($image, $targetDir . '/' . basename($image));
         }
 
         return $cover;
@@ -238,8 +249,6 @@ class Epub2Publisher extends HtmlPublisher
      *
      * For now, epub books only include the Inconsolata font to display
      * their code listings.
-     *
-     * // TODO: books should be able to include their own font files
      *
      * @param  string $targetDir The directory where the fonts are copied.
      *
@@ -255,17 +264,17 @@ class Epub2Publisher extends HtmlPublisher
 
         if (!file_exists($targetDir)) {
             throw new \RuntimeException(sprintf(
-                " ERROR: Books fonts couldn't be copied because \n"
-                    ." the given '%s' \n"
-                    ." directory doesn't exist.",
-                $targetDir
-            ));
+                                            " ERROR: Books fonts couldn't be copied because \n"
+                                            . " the given '%s' \n"
+                                            . " directory doesn't exist.",
+                                            $targetDir
+                                        ));
         }
 
         $sourceDirs = array();
         // the standard easybook fonts dir
         //     <easybook>/app/Resources/Fonts/
-        $sourceDirs[] = $this->app['app.dir.resources'].'/Fonts';
+        $sourceDirs[] = $this->app['app.dir.resources'] . '/Fonts';
 
         // new in trefoil
         // fonts inside the Resources directory of the <format> directory of the current theme
@@ -276,12 +285,12 @@ class Epub2Publisher extends HtmlPublisher
         //         or
         //        <the path set with the "--dir" publish command line argument>
         // 'Common' format takes precedence
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common').'/Fonts';
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app).'/Fonts';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common') . '/Fonts';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app) . '/Fonts';
 
         // the fonts inside the book
         //     <book-dir>/Fonts/
-        $sourceDirs[] = $this->app['publishing.dir.resources'].'/Fonts';
+        $sourceDirs[] = $this->app['publishing.dir.resources'] . '/Fonts';
 
         // new in trefoil
         $allowedFonts = $this->app->edition('fonts');
@@ -292,16 +301,17 @@ class Epub2Publisher extends HtmlPublisher
             if (file_exists($fontDir)) {
 
                 $fonts = Finder::create()
-                            ->files()
-                            ->name('*.ttf')
-                            ->name('*.otf')
-                            ->sortByName()
-                            ->in($fontDir);
+                               ->files()
+                               ->name('*.ttf')
+                               ->name('*.otf')
+                               ->sortByName()
+                               ->in($fontDir);
 
+                /** @var $font SplFileInfo */
                 foreach ($fonts as $font) {
                     /*@var $font SplFileInfo */
 
-                    $fontName = $font->getBasename('.'.$font->getExtension());
+                    $fontName = $font->getBasename('.' . $font->getExtension());
 
                     if (is_array($allowedFonts)) {
                         if (!in_array($fontName, $allowedFonts)) {
@@ -310,14 +320,14 @@ class Epub2Publisher extends HtmlPublisher
                     }
 
                     $this->app['filesystem']->copy(
-                            $font->getPathName(),
-                            $targetDir.'/'.$font->getFileName()
+                                            $font->getPathName(),
+                                            $targetDir . '/' . $font->getFileName()
                     );
 
                     $fontsData[] = array(
-                            'id'        => 'font-'.$i++,
-                            'filePath'  => 'fonts/'.$font->getFileName(),
-                            'mediaType' => finfo_file(finfo_open(FILEINFO_MIME_TYPE), $font->getPathName())
+                        'id'        => 'font-' . $i++,
+                        'filePath'  => 'fonts/' . $font->getFileName(),
+                        'mediaType' => finfo_file(finfo_open(FILEINFO_MIME_TYPE), $font->getPathName())
                     );
                 }
             }
@@ -345,7 +355,7 @@ class Epub2Publisher extends HtmlPublisher
         foreach ($items as $item) {
 
             $itemPageName = array_key_exists('number', $item['config'])
-                ? $item['config']['element'].' '.$item['config']['number']
+                ? $item['config']['element'] . ' ' . $item['config']['number']
                 : $item['config']['element'];
 
             $item['page_name'] = $this->app->slugifyUniquely($itemPageName);
@@ -381,7 +391,7 @@ class Epub2Publisher extends HtmlPublisher
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(
                 "[ERROR] You must enable the ZIP extension in PHP \n"
-                ." or your system should be able to execute 'zip' console command."
+                . " or your system should be able to execute 'zip' console command."
             );
         }
 
@@ -391,7 +401,9 @@ class Epub2Publisher extends HtmlPublisher
         //   $ zip -rX9 book.zip * -x mimetype
         $command = sprintf(
             'cd %s && zip -X0 %s mimetype && zip -rX9 %s * -x mimetype',
-            $directory, $zip_file, $zip_file
+            $directory,
+            $zip_file,
+            $zip_file
         );
 
         $process = new Process($command);
@@ -400,10 +412,10 @@ class Epub2Publisher extends HtmlPublisher
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(
                 "[ERROR] 'zip' command execution wasn't successful.\n\n"
-                ."Executed command:\n"
-                ." $command\n\n"
-                ."Result:\n"
-                .$process->getErrorOutput()
+                . "Executed command:\n"
+                . " $command\n\n"
+                . "Result:\n"
+                . $process->getErrorOutput()
             );
         }
     }
@@ -437,19 +449,22 @@ class Epub2Publisher extends HtmlPublisher
 
         //look for all the IDs of html tags in the rendered book
         foreach ($generatedChunks as $chunk) {
+            /** @var $chunk SplFileInfo */
             $htmlContent = file_get_contents($chunk->getPathname());
 
             $matches = array();
 
             $numAnchors = preg_match_all(
-                    '/<.*id="(?<id>.*)"/U',
-                    $htmlContent, $matches, PREG_SET_ORDER
+                '/<.*id="(?<id>.*)"/U',
+                $htmlContent,
+                $matches,
+                PREG_SET_ORDER
             );
 
             if ($numAnchors > 0) {
                 foreach ($matches as $match) {
-                    $relativeUri = '#'.$match['id'];
-                    $absoluteUri = $chunk->getRelativePathname().$relativeUri;
+                    $relativeUri = '#' . $match['id'];
+                    $absoluteUri = $chunk->getRelativePathname() . $relativeUri;
 
                     $internalLinkMapper[$relativeUri] = $absoluteUri;
                 }
@@ -458,6 +473,7 @@ class Epub2Publisher extends HtmlPublisher
 
         // replace the internal relative URIs for the mapped absolute URIs
         foreach ($generatedChunks as $chunk) {
+            /** @var $chunk SplFileInfo */
             $htmlContent = file_get_contents($chunk->getPathname());
 
             $htmlContent = preg_replace_callback(
@@ -471,8 +487,8 @@ class Epub2Publisher extends HtmlPublisher
 
                     // add "internal" to link class
                     $attributes = Toolkit::parseHTMLAttributes($matches['attr']);
-                    $attributes['class'] = isset($attributes['class']) ? $attributes['class'].' ' : '';
-                    $attributes['class'].= 'internal';
+                    $attributes['class'] = isset($attributes['class']) ? $attributes['class'] . ' ' : '';
+                    $attributes['class'] .= 'internal';
 
                     // render the new link tag
                     $attributes['href'] = $newUri;

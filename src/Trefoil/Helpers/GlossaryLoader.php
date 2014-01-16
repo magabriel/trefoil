@@ -7,9 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Loader class for Glossary object from definition file.
- *
  * Expected format (yml):
- *
  *     glossary:
  *         options: # optional section
  *             <option..>: <value>
@@ -31,19 +29,20 @@ class GlossaryLoader
     protected $slugger;
 
     /**
-     * @param string $fileName (full path) of the definition file
-     * @param Slugger $slugger An Slugger instance
+     * @param string  $fileName (full path) of the definition file
+     * @param Slugger $slugger  An Slugger instance
      */
     public function __construct($fileName, Slugger $slugger)
     {
         $this->fileName = $fileName;
-        $this->slugger  = $slugger;
+        $this->slugger = $slugger;
     }
 
     /**
      * Load the definition file.
      *
      * @param string $hasOptions Whether the file also has an 'options' section
+     *
      * @return Glossary
      */
     public function load($hasOptions = false)
@@ -77,7 +76,7 @@ class GlossaryLoader
     /**
      * Read the options file
      *
-     * @param string $hasOptions Whether the file also has an 'options' section
+     * @param bool $hasOptions Whether the file also has an 'options' section
      */
     protected function readFromFile($hasOptions = false)
     {
@@ -85,7 +84,7 @@ class GlossaryLoader
 
         if (file_exists($this->fileName)) {
             $glossaryDefinition = Yaml::parse($this->fileName);
-            $this->loaded       = true;
+            $this->loaded = true;
         } else {
             $glossaryDefinition = array();
         }
@@ -99,10 +98,10 @@ class GlossaryLoader
 
         if ($hasOptions) {
             $default['glossary']['options'] = array(
-                    'coverage' => 'item',
-                    'elements' => array(
-                        'chapter'
-                    )
+                'coverage' => 'item',
+                'elements' => array(
+                    'chapter'
+                )
             );
         }
 

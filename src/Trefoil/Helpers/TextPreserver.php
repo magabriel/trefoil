@@ -6,11 +6,11 @@ namespace Trefoil\Helpers;
  * can be safely manipulated without inadvertedly replacing one of these parts.
  *
  * Intended use case:
- * <li>1. Preserve the contents of certain HTML tags.
- * <li>2. Preserve the values of certain HTML tag attributes.
- * <li>3. Create individual placeholders for strings.
- * <li>4. Make the desired changes into the text.
- * <li>5. Restore the preserved parts.
+ * 1. Preserve the contents of certain HTML tags.
+ * 2. Preserve the values of certain HTML tag attributes.
+ * 3. Create individual placeholders for strings.
+ * 4. Make the desired changes into the text.
+ * 5. Restore the preserved parts.
  *
  */
 class TextPreserver
@@ -35,15 +35,19 @@ class TextPreserver
         $regex = sprintf('/<(?<tag>(%s)[> ].*)>(?<content>.*)</Ums', implode('|', $tags));
 
         $me = $this;
-        $this->text = preg_replace_callback($regex,
-                function ($matches) use ($me) {
-                    $tag = $matches['tag'];
-                    $content = $matches['content'];
+        $this->text = preg_replace_callback(
+            $regex,
+            function ($matches) use ($me) {
+                $tag = $matches['tag'];
+                $content = $matches['content'];
 
-                    $placeHolder = $me->createPlacehoder($content, 'tag');
-                    return sprintf('<%s>%s<', $tag, $placeHolder);
+                $placeHolder = $me->createPlacehoder($content, 'tag');
 
-                }, $this->text);
+                return sprintf('<%s>%s<', $tag, $placeHolder);
+
+            },
+            $this->text
+        );
 
     }
 
@@ -53,19 +57,23 @@ class TextPreserver
         $regex = sprintf('/(?<attr>%s)="(?<value>.*)"/Ums', implode('|', $attributes));
 
         $me = $this;
-        $this->text = preg_replace_callback($regex,
-                function ($matches) use ($me) {
-                    $attr = $matches['attr'];
-                    $value = $matches['value'];
+        $this->text = preg_replace_callback(
+            $regex,
+            function ($matches) use ($me) {
+                $attr = $matches['attr'];
+                $value = $matches['value'];
 
-                    $placeHolder = $me->createPlacehoder($value, 'attr');
-                    return sprintf('%s="%s"', $attr, $placeHolder);
-                }, $this->text);
+                $placeHolder = $me->createPlacehoder($value, 'attr');
+
+                return sprintf('%s="%s"', $attr, $placeHolder);
+            },
+            $this->text
+        );
     }
 
     public function createPlacehoder($string, $prefix = 'str')
     {
-        $placeHolder = '@'.$prefix.'-' . md5($string . count($this->stringMapper)) . '@';
+        $placeHolder = '@' . $prefix . '-' . md5($string . count($this->stringMapper)) . '@';
         $this->stringMapper[$placeHolder] = $string;
 
         return $placeHolder;

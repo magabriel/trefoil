@@ -16,7 +16,6 @@ namespace Trefoil\Helpers;
  *   'cat[s]' => 'cat' and 'cats'
  *   'star [wars|trek]' => 'star wars' and 'star trek'
  *
- *
  */
 class Glossary implements \IteratorAggregate
 {
@@ -36,7 +35,8 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * @param  string       $term
+     * @param  string $term
+     *
      * @return GlossaryItem
      */
     public function get($term)
@@ -52,6 +52,7 @@ class Glossary implements \IteratorAggregate
 
     /**
      * Merge another glossary into this one
+     *
      * @param Glossary $glossary
      */
     public function merge(Glossary $glossary)
@@ -63,6 +64,7 @@ class Glossary implements \IteratorAggregate
 
     /**
      * Number of items in glossary
+     *
      * @return number
      */
     public function count()

@@ -81,6 +81,7 @@ class ActivityParser
     public function setResponsesValidAsYes($responsesValidAsYes)
     {
         $this->responsesValidAsYes = $responsesValidAsYes;
+
         return $this;
     }
 
@@ -92,6 +93,7 @@ class ActivityParser
     public function setResponsesValidAsNo($responsesValidAsNo)
     {
         $this->responsesValidAsNo = $responsesValidAsNo;
+
         return $this;
     }
 
@@ -103,6 +105,7 @@ class ActivityParser
     public function setResponsesValidAsBoth($responsesValidAsBoth)
     {
         $this->responsesValidAsBoth = $responsesValidAsBoth;
+
         return $this;
     }
 
@@ -185,7 +188,7 @@ class ActivityParser
      * @param Crawler $crawler
      * @param string  $tag
      *
-     * @return array  $heading
+     * @return array $heading
      */
     protected function extractHeading(Crawler $crawler, $tag)
     {
@@ -245,7 +248,7 @@ class ActivityParser
      * @param Crawler $crawler
      *
      * @throws \RuntimeException
-     * @return array   with activity values
+     * @return array             with activity values
      */
     protected function extractQuestions(Crawler $crawler)
     {
@@ -312,7 +315,7 @@ class ActivityParser
                             // ul or ol, so take its li's
                             $liNodes       = $ps->eq($i)->children();
                             $explanation[] = '<' . $nodeName . '>';
-                            foreach ($liNodes as $liIndex => $liDomNode) {
+                            foreach ($liNodes as $liDomNode) {
                                 $liNode = new Crawler($liDomNode);
 
                                 // can contain HTML
@@ -358,6 +361,7 @@ class ActivityParser
         $responses = array();
 
         foreach ($this->activity->getQuestions() as $question) {
+            /** @var $question ActivityQuestion */
             $responsesClean = array();
             foreach ($question->getResponses() as $response) {
                 // Remove ending dot if any

@@ -51,7 +51,7 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase {
         $html.= '</div>';
 
         $this->object->setText($html);
-        $this->object->preserveHtmlTags(['a']);
+        $this->object->preserveHtmlTags(array('a'));
 
         $this->assertNotEquals($html, $this->object->getText());
 
@@ -70,7 +70,7 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase {
         $html.= '</div>';
 
         $this->object->setText($html);
-        $this->object->preserveHtmlTagAttributes(['href', 'class']);
+        $this->object->preserveHtmlTagAttributes(array('href', 'class'));
 
         $this->assertNotEquals($html, $this->object->getText());
 
@@ -80,7 +80,6 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase {
 
     /**
      * @covers Trefoil\Helpers\TextPreserver::createPlacehoder
-     * @todo   Implement testCreatePlacehoder().
      */
     public function testCreatePlacehoder()
     {
