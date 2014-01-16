@@ -1,12 +1,9 @@
 <?php
 namespace Trefoil\Plugins;
 
+use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Util\Toolkit;
-use Easybook\Events\BaseEvent;
-use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
 
 /**
  * Plugin to update the version in the book config.yml file.

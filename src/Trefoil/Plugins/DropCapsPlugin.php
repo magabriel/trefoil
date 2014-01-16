@@ -1,14 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Helpers\DropCaps;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
-use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
-use Trefoil\Util\Toolkit;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\DropCaps;
 
 /**
  * Add drop caps to the book.

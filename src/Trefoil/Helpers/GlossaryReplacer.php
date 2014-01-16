@@ -93,7 +93,7 @@ class GlossaryReplacer
         $text = $this->textPreserver->getText();
 
         // process each variant of each term
-        foreach ($this->glossary as $term => $glossaryItem /* @var $glossaryItem GlossaryItem */ ) {
+        foreach ($this->glossary as $glossaryItem /* @var $glossaryItem GlossaryItem */ ) {
 
             foreach ($glossaryItem->getVariants() as $variant) {
                 $newText = $this->replaceTermVariant($text, $glossaryItem, $variant);
@@ -171,12 +171,13 @@ class GlossaryReplacer
         $regExp .= '/ui'; // unicode, case-insensitive
 
         // replace all ocurrences of $variant into $tagContent with a glossary link
+        $me = $this;
         $text = preg_replace_callback($regExp,
-                function ($matches) use ($glossaryItem, $variant) {
+                function ($matches) use ($me, $glossaryItem, $variant) {
                     // look if already replaced once in this item, so just leave it unchanged
-                    if ('item' == $this->glossaryOptions['coverage']) {
+                    if ('item' == $me->glossaryOptions['coverage']) {
                         foreach ($glossaryItem->getXref() as $variant => $xRefs) {
-                           if (isset($xRefs[$this->textId])) {
+                           if (isset($xRefs[$me->textId])) {
                                 return $matches[0];
                            }
                         }
@@ -185,7 +186,7 @@ class GlossaryReplacer
                     /* if coverage type is "first" and term is already defined,
                      * don't replace the term again
                     */
-                    if ('first' == $this->glossaryOptions['coverage'] && $glossaryItem->getXref()) {
+                    if ('first' == $me->glossaryOptions['coverage'] && $glossaryItem->getXref()) {
                         // already replaced elsewhere, just leave it unchanged
                         return $matches[0];
                     }
@@ -193,16 +194,16 @@ class GlossaryReplacer
                     /* create the anchor link from the slug
                      * and get the number given to the anchor link just created
                      */
-                    list($anchorLink, $num) = $this->saveProcessedDefinition(
+                    list($anchorLink, $num) = $me->saveProcessedDefinition(
                             $glossaryItem,
                             sprintf('auto-glossary-term-%s', $glossaryItem->getSlug())
                     );
 
                     // save the placeholder for this slug to be replaced later
-                    $placeHolder = $this->textPreserver->createPlacehoder($glossaryItem->getSlug(). '-' . $num);
+                    $placeHolder = $me->textPreserver->createPlacehoder($glossaryItem->getSlug(). '-' . $num);
 
                     // save the placeholder for this term (to avoid further unwanted matches into)
-                    $placeHolder2 = $this->textPreserver->createPlacehoder($matches[2]);
+                    $placeHolder2 = $me->textPreserver->createPlacehoder($matches[2]);
 
                     // create replacement
                     $repl = sprintf(
@@ -211,7 +212,7 @@ class GlossaryReplacer
                             . '</span>', $placeHolder, $placeHolder, $placeHolder2);
 
                     // save xref
-                    $glossaryItem->addXref($variant, $this->textId);
+                    $glossaryItem->addXref($variant, $me->textId);
 
                     // return reconstructed match
                     return $matches[1] . $repl . $matches[3];

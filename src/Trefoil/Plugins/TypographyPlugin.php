@@ -1,11 +1,9 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This plugin replaces certain symbols with its typographic equivalents.
@@ -152,9 +150,9 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 
         $me = $this;
         $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
+                function () use ($me)
                 {
-                    return self::BALLOT_BOX_HTMLENTITY; // ballot box (box without checkmark)
+                    return $me::BALLOT_BOX_HTMLENTITY; // ballot box (box without checkmark)
                 }, $content);
 
         $regExp = '/';
@@ -165,9 +163,9 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 
         $me = $this;
         $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
+                function () use ($me)
                 {
-                    return self::BALLOT_BOX_CHECKED_HTMLENTITY; // ballot box with checkmark
+                    return $me::BALLOT_BOX_CHECKED_HTMLENTITY; // ballot box with checkmark
                 }, $content);
 
         return $content;
@@ -186,14 +184,15 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<p>[-' . self::EMDASH_UNICODE . '](?<text>[^ ].*)<\/p>';
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
+        $me = $this;
         $content = preg_replace_callback($regExp,
-                function ($matches)
+                function ($matches) use ($me)
                 {
                     // replace the dialog inside the paragraph
-                    $text = $this->replaceSpanishStyleDialog($matches['text']);
+                    $text = $me->replaceSpanishStyleDialog($matches['text']);
 
                     // return the paragraph replacing the starting dash by an em-dash
-                    return sprintf('<p>' . self::EMDASH_HTMLENTITY . '%s</p>', $text);
+                    return sprintf('<p>' . $me::EMDASH_HTMLENTITY . '%s</p>', $text);
                 }, $content);
 
         return $content;
@@ -225,10 +224,11 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<char>[^ -])-(?<next>[\W])';
         $regExp .= '/U'; // Ungreedy
 
+        $me = $this;
         $text = preg_replace_callback($regExp,
-                function ($matches)
+                function ($matches) use ($me)
                 {
-                    return sprintf('%s' . self::EMDASH_HTMLENTITY . '%s', $matches['char'], $matches['next']);
+                    return sprintf('%s' . $me::EMDASH_HTMLENTITY . '%s', $matches['char'], $matches['next']);
                 }, $text);
 
         return $text;

@@ -244,6 +244,7 @@ class ActivityParser
      *
      * @param Crawler $crawler
      *
+     * @throws \RuntimeException
      * @return array   with activity values
      */
     protected function extractQuestions(Crawler $crawler)

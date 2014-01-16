@@ -4,8 +4,8 @@ namespace Trefoil\Providers;
 
 use Easybook\DependencyInjection\Application;
 use Easybook\DependencyInjection\ServiceProviderInterface;
-use Trefoil\Util\Toolkit;
 use Easybook\Util\TwigCssExtension;
+use Trefoil\Util\Toolkit;
 
 class TwigServiceProvider implements ServiceProviderInterface
 {
@@ -20,6 +20,8 @@ class TwigServiceProvider implements ServiceProviderInterface
         );
 
         $app['twig.loader'] = $app->share(function() use ($app) {
+
+            /* @var Application $var */
 
             $theme  = ucfirst($app->edition('theme'));
             $format = Toolkit::camelize($app->edition('format'), true);
@@ -100,6 +102,8 @@ class TwigServiceProvider implements ServiceProviderInterface
         });
 
         $app['twig'] = $app->share(function() use ($app) {
+            /* @var Application $var */
+
             $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
             $twig->addExtension(new TwigCssExtension());
 

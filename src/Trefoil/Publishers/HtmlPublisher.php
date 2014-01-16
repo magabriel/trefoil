@@ -42,6 +42,6 @@ class HtmlPublisher extends BasePublisher
         );
 
         // copy book images        
-        $bookImages = $this->prepareBookImages($this->app['publishing.dir.output'].'/images');
+        $this->prepareBookImages($this->app['publishing.dir.output'].'/images');
     }
 }

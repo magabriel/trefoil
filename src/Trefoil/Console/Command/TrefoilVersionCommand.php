@@ -4,6 +4,7 @@ namespace Trefoil\Console\Command;
 use Easybook\Console\Command\EasybookVersionCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Trefoil\DependencyInjection\Application;
 
 class TrefoilVersionCommand extends EasybookVersionCommand
 {
@@ -17,13 +18,16 @@ class TrefoilVersionCommand extends EasybookVersionCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /* @var Application $app (fake cast) */
+        $app = $this->app;
+
         $output->writeln(array(
             '',
-            $this->app['app.signature'],
+            $app['app.signature'],
             ' <info>easybook</info> installed version: '
-            .'<comment>'.$this->app->getVersion().'</comment>',
+            .'<comment>'.$app->getVersion().'</comment>',
             ' <info>trefoil</info>  installed version: '
-            .'<comment>'.$this->app->getMyVersion().'</comment>',
+            .'<comment>'.$app->getMyVersion().'</comment>',
             '',
         ));
     }

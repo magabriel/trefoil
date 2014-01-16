@@ -1,18 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
-use Symfony\Component\Finder\Finder;
-
-use Easybook\Publishers\Epub2Publisher;
-
-use Easybook\Events\EasybookEvents;
-
-use Easybook\Util\Toolkit;
 
 use Easybook\Events\BaseEvent;
-
+use Easybook\Events\EasybookEvents;
+use Easybook\Util\Toolkit;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
 
 /**
  * Plugin to uncompress the generated epub ebook

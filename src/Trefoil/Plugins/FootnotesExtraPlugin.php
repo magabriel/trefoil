@@ -5,7 +5,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
+
 use Trefoil\Util\SimpleReport;
 
 /**
@@ -160,11 +160,12 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp.= '<a(?<prev>.*)href="#(?<href>fn:.*)"(?<post>.*)>(?<number>.*)<\/a>';
         $regExp.= '/Ums'; // Ungreedy, multiline, dotall
 
+        $me = $this;
         $content = preg_replace_callback(
                 $regExp,
-                function ($matches)
+                function ($matches) use ($me)
                 {
-                    $newNumber = $this->footnotes[$matches['href']]['new_number'];
+                    $newNumber = $me->footnotes[$matches['href']]['new_number'];
 
                     $html = sprintf('<sup id="%s"><a%shref="#%s"%s>%s</a>',
                             str_replace(':', '-', $matches['supid']),

@@ -1,20 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
-use Symfony\Component\Process\Process;
-
-use Symfony\Component\Finder\Finder;
-
-use Easybook\Publishers\Epub2Publisher;
-
-use Easybook\Events\EasybookEvents;
-
-use Easybook\Util\Toolkit;
 
 use Easybook\Events\BaseEvent;
-
+use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
+use Symfony\Component\Process\Process;
 
 /**
  * Plugin to check the generated epub ebook using the EpubCheck utility.

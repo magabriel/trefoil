@@ -3,10 +3,11 @@ namespace Trefoil\Util;
 
 use Easybook\Util\Toolkit as EasybookToolkit;
 use Trefoil\DependencyInjection\Application;
+use Easybook\DependencyInjection\Application as EasybookApplication;
 
 class Toolkit extends EasybookToolkit
 {
-    public static function getCurrentThemeDir(Application $app)
+    public static function getCurrentThemeDir(EasybookApplication $app)
     {
         $theme = ucfirst($app->edition('theme'));
 
@@ -26,11 +27,9 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
-    public static function getCurrentResourcesDir(Application $app, $format = null)
+    public static function getCurrentResourcesDir(EasybookApplication $app, $format = null)
     {
         $theme = ucfirst($app->edition('theme'));
-
-        $edition = $app['publishing.edition'];
 
         if (!$format) {
             $format = Toolkit::getCurrentFormat($app);
@@ -56,7 +55,7 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
-    public static function getCurrentFormat(Application $app)
+    public static function getCurrentFormat(EasybookApplication $app)
     {
         $format = Toolkit::camelize($app->edition('format'), true);
 

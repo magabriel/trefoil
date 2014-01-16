@@ -1,12 +1,11 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Util\Toolkit;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Util\Toolkit;
 
 /**
  * This plugin brings support to extended image syntax:
@@ -94,7 +93,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                             $args['style'] = str_replace(' ', self::SPACE_REPLACEMENT, $args['style']);
                         }
 
-                        $arguments = $this->renderArguments($args);
+                        $arguments = $me->renderArguments($args);
                     }
 
                     return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?'.$arguments : ''));
@@ -115,7 +114,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
             function ($matches) use ($me)
                       {
                       $image = Toolkit::parseHTMLAttributes($matches['image']);
-                      $image = $this->processExtraImage($image);
+                      $image = $me->processExtraImage($image);
                       $html = Toolkit::renderHTMLTag('img', null, $image);
 
                       return $html;

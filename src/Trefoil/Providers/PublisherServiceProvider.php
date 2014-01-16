@@ -14,7 +14,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
-        $app['publisher'] = $app->share(function ($app) {
+        $app['publisher'] = $app->share(function (Application $app) {
             $outputFormat = $app->edition('format');
 
             switch (strtolower($outputFormat)) {
@@ -39,7 +39,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
                     break;
 
                 default:
-                    throw new RuntimeException(sprintf(
+                    throw new \RuntimeException(sprintf(
                         'Unknown "%s" format for "%s" edition (allowed: "pdf", "html", "html_chunked", "epub", "mobi")',
                         $outputFormat,
                         $app['publishing.edition']
@@ -47,7 +47,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
             }
 
             if (true != $publisher->checkIfThisPublisherIsSupported()) {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     "Your system doesn't support publishing books with the '%s' format\n"
                     ."Check the easybook documentation to know the dependencies required by this format.",
                     $outputFormat

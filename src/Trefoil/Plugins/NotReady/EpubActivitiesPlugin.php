@@ -128,10 +128,10 @@ class EpubActivitiesPlugin extends EpubInteractivePluginBase implements EventSub
                     $activity = $me->extractActivity($crawler);
 
                     // save it for later
-                    $this->activities[] = $activity;
+                    $me->activities[] = $activity;
 
                     // and for reporting
-                    $this->saveXref($activity);
+                    $me->saveXref($activity);
 
                     // PRUEBAS
                     //print_r($activity);
@@ -183,6 +183,7 @@ class EpubActivitiesPlugin extends EpubInteractivePluginBase implements EventSub
      * [a-b-c-activity] ::= <ol>...</ol>
      *
      * @param  Crawler $crawler
+     * @throws \Exception
      * @return array   with activity values
      */
     protected function extractActivity(Crawler $crawler)
@@ -406,6 +407,7 @@ class EpubActivitiesPlugin extends EpubInteractivePluginBase implements EventSub
      *
      * @param Crawler $crawler
      * @param string $activityId
+     * @throws \RuntimeException
      * @return array   with activity values
      */
     protected function extractActivityABC(Crawler $crawler, $activityId)

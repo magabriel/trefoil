@@ -56,7 +56,7 @@ class Glossary implements \IteratorAggregate
      */
     public function merge(Glossary $glossary)
     {
-        foreach ($glossary as $term => $item) {
+        foreach ($glossary as $item) {
             $this->add($item);
         }
     }

@@ -76,8 +76,9 @@ class DropCaps
         $regex.= '\s*<p>\[\[(?<first>.*)\]\](?<rest>.*)<\/p>';
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
-        $callback = function ($matches) {
-            $ptext = $this->renderDropCaps('', $matches['first'], $matches['rest']);
+        $me = $this;
+        $callback = function ($matches) use ($me) {
+            $ptext = $me->renderDropCaps('', $matches['first'], $matches['rest']);
             $html  = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
             return $html;
@@ -96,8 +97,9 @@ class DropCaps
         $regex.= '^\s*<p>(?<ptext>.*)<\/p>';
         $regex.= '/Us'; // Ungreedy, dotall
 
-        $callback = function ($matches) {
-            $ptext = $this->createDropCaps($matches['ptext']);
+        $me = $this;
+        $callback = function ($matches) use ($me) {
+            $ptext = $me->createDropCaps($matches['ptext']);
             $html  = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
             return $html;
@@ -119,12 +121,13 @@ class DropCaps
         $regex.= '<p>(?<ptext>.*)<\/p>'; // 1st paragraph
         $regex.= '/Ums'; // Ungreedy, multiline, dotall
 
-        $callback = function ($matches) use ($levels) {
+        $me = $this;
+        $callback = function ($matches) use ($me, $levels) {
             if (!in_array($matches['level'], $levels)) {
                 return $matches[0];
             }
 
-            $ptext = $this->createDropCaps($matches['ptext']);
+            $ptext = $me->createDropCaps($matches['ptext']);
 
             $html = sprintf('<h%s%s>%s</h%s>%s<p class="has-dropcaps">%s</p>', $matches['level'], $matches['hrest'],
                 $matches['hcontent'], $matches['level'], $matches['whitespace'], $ptext);

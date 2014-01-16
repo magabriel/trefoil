@@ -19,7 +19,9 @@ class CrawlerTools
      */
     public static function getNodeName(Crawler $node)
     {
-        foreach ($node as $i => $n) {
+        $domNode = null;
+
+        foreach ($node as $n) {
             $domNode = $n;
             break;
         }
@@ -33,11 +35,11 @@ class CrawlerTools
      * @param Crawler $node
      * @return string
      */
-    public function getNodeHtml(Crawler $node)
+    public static function getNodeHtml(Crawler $node)
     {
         $domNode = null;
 
-        foreach ($node as $i => $n) {
+        foreach ($node as $n) {
             $domNode = $n;
             break;
         }

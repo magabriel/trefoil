@@ -41,8 +41,6 @@ class RegisterResources implements EventSubscriberInterface
 
     /**
      * Register services that need a dynamic configuration
-     *
-     * @return \Trefoil\Util\Logger
      */
     public function registerOwnServices()
     {
@@ -95,6 +93,7 @@ class RegisterResources implements EventSubscriberInterface
 
             // if book plugins aren't namespaced, we must include the classes.
             if ('' == $namespace) {
+                /** @noinspection PhpIncludeInspection */
                 include_once $file->getPathName();
             }
 

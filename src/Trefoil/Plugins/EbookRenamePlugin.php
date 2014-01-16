@@ -1,14 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\Finder\Finder;
-
-use Easybook\Events\EasybookEvents;
-use Easybook\Util\Toolkit;
 use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
+use Symfony\Component\Finder\Finder;
 
 /**
  * plugin to rename the generated file book.<ext> to <something-else>.<ext>

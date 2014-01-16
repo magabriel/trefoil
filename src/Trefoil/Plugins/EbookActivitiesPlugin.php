@@ -121,7 +121,7 @@ class EbookActivitiesPlugin extends BasePlugin implements EventSubscriberInterfa
                     $activity = $parser->parse();
 
                     // save it for later
-                    $this->activities[] = $activity;
+                    $me->activities[] = $activity;
 
                     // and for reporting
                     //$this->saveXref($activity);
@@ -151,8 +151,6 @@ class EbookActivitiesPlugin extends BasePlugin implements EventSubscriberInterfa
      */
     protected function renderActivity(Activity $activity)
     {
-        $html = '';
-        
         $variables = array('activity' => $activity);
 
         $html = $this->app['twig']->render('activity.twig', $variables);

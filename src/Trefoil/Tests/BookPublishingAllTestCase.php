@@ -1,20 +1,18 @@
 <?php
 namespace Trefoil\Tests;
 
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Tests\Output\ConsoleOutputTest;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Trefoil\Console\ConsoleApplication;
-use Trefoil\DependencyInjection\Application;
 use Easybook\Tests\TestCase;
-use Easybook\Tests\Publishers\PublisherTest;
 use Easybook\Util\Toolkit;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
+use Trefoil\Console\ConsoleApplication;
+use Trefoil\DependencyInjection\Application;
 
 abstract class BookPublishingAllTestCase extends TestCase
 {
@@ -91,8 +89,6 @@ abstract class BookPublishingAllTestCase extends TestCase
 
         $books = array();
 
-        $filesystem = $this->filesystem;
-
         // look if only one fixture should be tested
         global $argv;
         $fixtureName = end($argv);
@@ -149,8 +145,6 @@ abstract class BookPublishingAllTestCase extends TestCase
 
         // look for and publish the book edition
         $bookConfigFile = $this->tmpDir.'/config.yml';
-        $bookConfig = Yaml::parse($bookConfigFile);
-        $editions = $bookConfig['book']['editions'];
 
         // publish the book edition
         $input = new ArrayInput(array(
@@ -172,7 +166,6 @@ abstract class BookPublishingAllTestCase extends TestCase
         // look for config.yml modification
         $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';
         if (file_exists($expectedBookConfigFile)) {
-            $expectedBookConfig = Yaml::parse($expectedBookConfigFile);
             $this->assertFileEquals($expectedBookConfigFile,
                                     $bookConfigFile,
                                     'Book config.yml not modified correctly');
@@ -236,6 +229,7 @@ abstract class BookPublishingAllTestCase extends TestCase
      *
      * @param string $dirExpected
      * @param string $dirGenerated
+     * @param $zipName
      * @apram string $zipName
      */
     protected function checkGeneratedFiles($dirExpected, $dirGenerated, $zipName)

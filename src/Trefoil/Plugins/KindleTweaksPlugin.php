@@ -1,13 +1,9 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
-use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
-use Trefoil\Util\Toolkit;
+use Easybook\Events\EasybookEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Several tweaks to make the ebook more compatible with Kindle MOBI format

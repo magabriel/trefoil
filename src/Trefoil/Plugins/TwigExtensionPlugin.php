@@ -1,13 +1,9 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Easybook\DependencyInjection\Application;
-use Easybook\Events\BaseEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
-use Trefoil\Events\TrefoilEvents;
 use Easybook\Events\ParseEvent;
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 
 /**

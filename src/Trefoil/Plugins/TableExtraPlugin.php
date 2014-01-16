@@ -1,12 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Helpers\TableExtra;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
-use Easybook\Events\ParseEvent;
+use Easybook\Events\EasybookEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\TableExtra;
 
 /**
  * Implements the extra syntax for tables, allowing colspanned and rowspanned cells.

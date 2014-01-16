@@ -1,17 +1,22 @@
 {
-    "name":        "magabriel/trefoil",
+    "name": "magabriel/trefoil",
     "description": "Book publishing",
-    "keywords":    ["book", "publish", "ebook", "e-book", "documentation"],
-    "homepage":    "",
-    "license":     "MIT",
+    "keywords": [
+        "book",
+        "publish",
+        "ebook",
+        "e-book",
+        "documentation"
+    ],
+    "homepage": "",
+    "license": "MIT",
     "authors": [
         {
-            "name":     "Miguel Angel Gabriel",
-            "email":    "magabriel@gmail.com",
+            "name": "Miguel Angel Gabriel",
+            "email": "magabriel@gmail.com",
             "homepage": ""
         }
     ],
-
     "repositories": [
         {
             "type": "package",
@@ -23,22 +28,26 @@
                     "type": "zip"
                 },
                 "autoload": {
-                     "files": ["smartypants.php"]
-                } 
+                    "files": [
+                        "smartypants.php"
+                    ]
+                }
             }
-        }        
-    ],    
-    
+        }
+    ],
     "require": {
-        "easybook/easybook":        "dev-master",
-        "smartypants/typographer":  "~1.0",
-        "symfony/dom-crawler":      "~2.3",
-        "symfony/css-selector":     "~2.3"
-        
+        "easybook/easybook": "dev-master",
+        "smartypants/typographer": "~1.0",
+        "symfony/dom-crawler": "~2.3",
+        "symfony/css-selector": "~2.3"
     },
-    
+    "require-dev": {
+        "phpunit/phpunit": "~3.7",
+        "phpunit/phpunit-mock-objects": "~1.2"
+    },
     "autoload": {
-        "psr-0": { "Trefoil": "src/" }
+        "psr-0": {
+            "Trefoil": "src/"
+        }
     }
-
 }

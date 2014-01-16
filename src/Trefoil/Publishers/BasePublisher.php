@@ -9,13 +9,14 @@ use Trefoil\Util\Toolkit;
 class BasePublisher extends EasybookBasePublisher
 {
 
-     /**
+    /**
      * It prepares the book images by copying them into the appropriate
      * temporary directory. It also prepares an array with all the images
      * data needed later to generate the full ebook contents manifest.
      *
      * @param  string $targetDir The directory where the images are copied.
      *
+     * @throws \RuntimeException
      * @return array             Images data needed to create the book manifest.
      */
     protected function prepareBookImages($targetDir)
@@ -31,7 +32,6 @@ class BasePublisher extends EasybookBasePublisher
 
         $edition = $this->app['publishing.edition'];
         $format = Toolkit::getCurrentFormat($this->app);
-        $theme = ucfirst($this->app->edition('theme'));
 
         // construct the list of source directories for images.
         // they will be used sequentially, so images inside each one will override previous images.

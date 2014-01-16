@@ -78,6 +78,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
      * Extract all links in content
      *
      * @param string $content
+     * @param $xref
      * @return array
      */
     protected function findLinks($content, $xref)

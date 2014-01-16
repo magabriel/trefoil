@@ -102,8 +102,6 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Read the Yml file with the tweaks' options
-     *
-     * @return boolean
      */
     protected function readTweaksFile()
     {
@@ -124,7 +122,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
             foreach ($dirs as $dir) {
                 $this->writeLn('- '.$dir);
             }
-            return false;
+            return;
         }
 
         $this->tweaks = Yaml::parse($file);

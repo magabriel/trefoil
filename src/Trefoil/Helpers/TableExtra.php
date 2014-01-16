@@ -34,13 +34,14 @@ class TableExtra
         $regExp .= '(?<table><table.*<\/table>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $callback = function ($matches) {
-            $table = $this->parseTable($matches['table']);
+        $me = $this;
+        $callback = function ($matches) use ($me) {
+            $table = $me->parseTable($matches['table']);
             if (!$table) {
                 return $matches[0];
             }
-            $table = $this->processExtraTable($table);
-            $html  = $this->renderTable($table);
+            $table = $me->processExtraTable($table);
+            $html  = $me->renderTable($table);
 
             return $html;
         };

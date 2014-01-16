@@ -23,8 +23,6 @@ class ConsoleApplication extends EasybookConsoleApplication
 
     public function getHelp()
     {
-        $app = $this->getApp();
-
         $help = parent::getHelp();
 
         $help .= "\n"

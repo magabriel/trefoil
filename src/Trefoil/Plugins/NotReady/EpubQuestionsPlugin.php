@@ -113,7 +113,6 @@ class EpubQuestionsPlugin extends EpubInteractivePluginBase implements EventSubs
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-
         $content = preg_replace_callback($regExp,
                 function ($matches) use ($me)
                 {
@@ -128,7 +127,7 @@ class EpubQuestionsPlugin extends EpubInteractivePluginBase implements EventSubs
                     // extract questionSet
                     $questionSet = $me->extractQuestionSet($crawler);
 
-                    if ($this->questionSetIdExists($questionSet['id'])) {
+                    if ($me->questionSetIdExists($questionSet['id'])) {
                         throw new \Exception(
                                 sprintf('questionSet id "%s" already used', $questionSet['id']));
                     }
@@ -475,7 +474,7 @@ class EpubQuestionsPlugin extends EpubInteractivePluginBase implements EventSubs
      * Return the node name
      *
      * @param Crawler $node
-     * @return Ambigous <NULL>
+     * @return string
      */
     protected function getNodeName(Crawler $node)
     {
@@ -491,6 +490,7 @@ class EpubQuestionsPlugin extends EpubInteractivePluginBase implements EventSubs
      * Return the node HTML contents
      *
      * @param Crawler $node
+     * @param bool $withTags
      * @return string|mixed
      */
     protected function getNodeHtml(Crawler $node, $withTags = false)

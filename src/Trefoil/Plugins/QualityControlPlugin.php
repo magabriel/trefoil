@@ -1,13 +1,12 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Trefoil\Util\SimpleReport;
-
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
-use Easybook\Events\ParseEvent;
+use Easybook\Events\EasybookEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Finder\Finder;
+
+use Trefoil\Util\SimpleReport;
 
 /**
  * This plugin performs several checks on the finished book to help
