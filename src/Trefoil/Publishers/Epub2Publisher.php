@@ -122,7 +122,6 @@ class Epub2Publisher extends HtmlPublisher
             // use chunk.twig as the fallback template
             try {
                 $templateName = $item['config']['element'] . '.twig';
-
                 $this->app->render($templateName, $templateVariables, $renderedTemplatePath);
             } catch (\Twig_Error_Loader $e) {
                 $this->app->render('chunk.twig', $templateVariables, $renderedTemplatePath);

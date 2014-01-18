@@ -69,7 +69,8 @@ class EbookActivitiesPlugin extends BasePlugin implements EventSubscriberInterfa
         // create the processing report
         $this->createReport();
     }
-    /*     * *******************************************************************************
+
+    /**********************************************************************************
      * Implementation
      * ********************************************************************************
      */

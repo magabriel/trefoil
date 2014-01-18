@@ -2,8 +2,10 @@
 namespace Trefoil\Plugins;
 
 use Easybook\Events\BaseEvent;
-
+use Symfony\Component\Console\Output\Output;
+use Trefoil\DependencyInjection\Application;
 use Trefoil\Util\Toolkit;
+
 
 /**
  * Base class for all plugins
@@ -11,7 +13,14 @@ use Trefoil\Util\Toolkit;
  */
 abstract class BasePlugin
 {
+    /**
+     * @var Application
+     */
     protected $app;
+
+    /**
+     * @var Output
+     */
     protected $output;
     protected $edition;
     protected $format;

@@ -39,7 +39,7 @@ Type....: {{ activity.type }}
 
     <hr />
     <div class="responses">
-    {% if activity.type == 'abc' %}
+    {% if activity.type == 'activity.abc' %}
         {% set letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] %}
         {% for rindex, response in question.responses %}
             <p class="response">
@@ -47,7 +47,7 @@ Type....: {{ activity.type }}
                 &nbsp;{{ response }}
             </p>
         {% endfor %}
-    {% elseif activity.type == 'ynb' %}
+    {% elseif activity.type == 'activity.ynb' %}
         {% for rindex, response in question.responses %}
             <a href="#{{ qid }}_{{ rindex }}">
                 <span>[ {{ response }} ]</span></a>
