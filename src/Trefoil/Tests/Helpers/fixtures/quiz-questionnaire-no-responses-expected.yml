@@ -1,0 +1,26 @@
+questionnaire:
+    id: "quest-2"
+    type: "questionnaire"
+    options:
+        pagebreak: true
+    heading: "Questionnaire 2"
+    subheading: "Please answer the following questions."
+    introduction: >
+        <p>This is the introduction text of the questionnaire 1.</p>
+        <ul><li>One.</li><li>Two.</li><li>Tree.</li></ul>
+        <p>Lorem ipsum dolor sit amen.</p>
+    questions:
+        1:
+            text: "<p>First question (no solution provided):</p>"
+            heading: null
+            solution: null
+
+        2:
+            text: "<p>Second question (no solution provided):</p>"
+            heading: null
+            solution: null
+
+        3:
+            text: "<p>Third question (no solution provided):</p>"
+            heading: null
+            solution: null

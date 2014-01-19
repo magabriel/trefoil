@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\QuizActivity;
 use Trefoil\Helpers\QuizActivityParser;
 use Trefoil\Helpers\QuizItem;
+use Trefoil\Helpers\QuizQuestionnaire;
 use Trefoil\Helpers\QuizQuestionnaireParser;
 use Trefoil\Util\SimpleReport;
 
@@ -40,7 +41,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-            EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
+            EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
             EasybookEvents::POST_PARSE   => array('onItemPostParse', -100),
             EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
@@ -54,7 +55,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
             $this->prepareSolutions();
         }
     }
-    
+
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -96,10 +97,6 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
-                // PRUEBAS
-                //echo "#### QUIZ ELEMENT SOURCE HTML ##########################################\n";
-                //print_r($matches['div']);
-
                 $html = '';
                 switch ($matches['type']) {
                     case 'activity':
@@ -113,10 +110,6 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                         // TODO: create error report
                         return $matches[0];
                 }
-
-
-                //echo "#### QUIZ ELEMENT RENDERIZADO #####################################\n";
-                //print_r($html);
 
                 return $html;
             },
@@ -155,12 +148,8 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         // save it for rendering the solutions later
         $this->quizElements[] = $activity;
 
-        // and for reporting
-        //$this->saveXref($activity);
-
-        // PRUEBAS
-        //echo "#### ACTIVIDAD PARSEADA ########################################\n";
-        //print_r($activity);
+        // save xref for reporting
+        $this->saveXref($activity);
 
         // render it
         $variables = array('activity' => $activity);
@@ -178,7 +167,6 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function processQuestionnaireType($sourceHtml)
     {
-
         $parser = new QuizQuestionnaireParser($sourceHtml);
 
         $questionnaire = $parser->parse();
@@ -186,12 +174,8 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         // save it for rendering the solutions later
         $this->quizElements[] = $questionnaire;
 
-        // and for reporting
-        //$this->saveXref($questionnaire);
-
-        // PRUEBAS
-        //echo "#### QUESTIONNAIRE PARSEADO ########################################\n";
-        //print_r($questionnaire);
+        // save xref for reporting
+        $this->saveXref($questionnaire);
 
         // render it
         $variables = array('questionnaire' => $questionnaire);
@@ -201,15 +185,31 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     }
 
     /**
+     * Save a quiz item xref for reporting.
+     *
+     * @param QuizItem $quizItem
+     */
+    protected function saveXref(QuizItem $quizItem)
+    {
+        $name = $this->item['config']['content'];
+
+        if (!isset($this->xrefs[$name])) {
+            $this->xrefs[$name] = array();
+        }
+
+        $this->xrefs[$name][] = $quizItem;
+    }
+
+    /**
      * Save the information for the "solutions" book element to be rendered.
-     * 
+     *
      * The rendering will be done by the publisher at decoration time (or when
      * the book is assembled, depending on the implementation).
      */
     protected function prepareSolutions()
     {
         $this->app['publishing.quiz.items'] = $this->quizElements;
-       
+
         $this->generated = true;
     }
 
@@ -218,13 +218,6 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function createReport()
     {
-        return;
-
-        $report = '';
-        $report .= $this->getUsedTermsReport();
-        $report .= "\n\n";
-        $report .= $this->getNotUsedTermsReport();
-
         if (!$this->generated) {
             $this->writeLn(
                  "No glossary has been generated, check for missing 'auto-glosssary' contents element.",
@@ -232,60 +225,54 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
             );
         }
 
-        $outputDir = $this->app['publishing.dir.output'];
-        $reportFile = $outputDir . '/report-AutoGlossaryPlugin.txt';
-
-        file_put_contents($reportFile, $report);
-    }
-
-    protected function getUsedTermsReport()
-    {
         $report = new SimpleReport();
-        $report->setTitle('AutoGlossaryPlugin');
-        $report->setSubtitle('Used terms');
+        $report->setTitle('EbookQuizPlugin');
+        $report->setSubtitle('Quiz Items');
 
-        $report->addIntroLine('Coverage: ' . $this->glossaryOptions['coverage']);
-        $report->addIntroLine('Elements: ' . '"' . join('", "', $this->glossaryOptions['elements']) . '"');
+        $report->setHeaders(array('Item', 'Id', 'Type', 'Heading', 'Questions'));
 
-        $report->setHeaders(array('Term', 'Variant', 'Item', 'Count', 'Source'));
+        $report->setColumnsWidth(array(30, 15, 15, 40, 9));
+        $report->setColumnsAlignment(array('', '', '', '', 'right'));
 
-        $report->setColumnsWidth(array(30, 30, 30, 5, 30));
-        $report->setColumnsAlignment(array('', '', '', 'right', ''));
+        foreach ($this->xrefs as $item => $quizItems) {
+            $auxItem = $item;
 
-        $auxTerm = '';
-        $auxVariant = '';
-        foreach ($this->processedGlossary as $term => $data) {
-            $auxTerm = $term;
-            foreach ($data->getXref() as $variant => $items) {
-                $auxVariant = $variant;
-                foreach ($items as $item => $count) {
-                    $report->addline(array($auxTerm, $auxVariant, $item, $count, $data->getSource()));
-                    $auxTerm = '';
-                    $auxVariant = '';
+            /** @var QuizItem $quizItem */
+            foreach ($quizItems as $quizItem) {
+
+                switch ($quizItem->getType()) {
+                    case QuizActivity::QUIZ_ACTIVITY_TYPE_ABC:
+                    case QuizActivity::QUIZ_ACTIVITY_TYPE_YNB:
+                        /** @var QuizActivity $activity */
+                        $activity = $quizItem;
+                        $count = count($activity->getQuestions());
+                        break;
+                    case QuizQuestionnaire::QUIZ_QUESTIONNAIRE:
+                        /** @var QuizQuestionnaire $questionnaire */
+                        $questionnaire = $quizItem;
+                        $count = count($questionnaire->getQuestions());
+                        break;
+                    default:
+                        $count = null;
                 }
+
+                $report->addline(
+                       array($auxItem,
+                             $quizItem->getId(),
+                             $quizItem->getType(),
+                             substr($quizItem->getHeading(),0, 40),
+                             $count)
+                );
+                $auxItem = '';
             }
         }
 
-        return $report->getText();
+        $outputDir = $this->app['publishing.dir.output'];
+        $reportFile = $outputDir . '/report-EbookQuizPlugin.txt';
+
+        file_put_contents($reportFile, $report->getText());
+
     }
 
-    protected function getNotUsedTermsReport()
-    {
-        $report = new SimpleReport();
-        $report->setTitle('AutoGlossaryPlugin');
-        $report->setSubtitle('Not used terms');
-
-        $report->setHeaders(array('Term', 'Source'));
-
-        $report->setColumnsWidth(array(30, 30));
-
-        foreach ($this->processedGlossary as $term => $data) {
-            if (!count($data->getXref($term))) {
-                $report->addLine(array($term, $data->getSource()));
-            }
-        }
-
-        return $report->getText();
-    }
 
 }

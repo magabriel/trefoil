@@ -1,0 +1,30 @@
+activity:
+    id: "activity-yn"
+    type: "activity.ynb"
+    options: 
+        pagebreak: true
+    heading: "Exercise 2"
+    subheading: "Please select true or false."
+    introduction: null
+    questions:
+        1:
+            text: "<p>First question.</p>"
+            responses:
+                - "True"
+                - "False"
+            solution: 0
+            explanations:
+                - '<p>This is the correct answer (true).</p>'
+                - null
+
+        2:
+            text: "<p>Second question.</p>"
+            responses:
+                - "True"
+                - "False"
+            solution: 1
+             
+            explanations:
+                - null
+                - "<p>This is the correct answer (false).</p>"
+                 

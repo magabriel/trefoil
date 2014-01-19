@@ -1,4 +1,4 @@
-# EbookActivities test
+# EbookQuiz test
 
 <div markdown="1" class="activity" data-id="act-1">
 ##### Exercise 1
@@ -23,6 +23,29 @@
     3. Third response.
     4. Fourth response.
   
+</div>
+
+<div markdown="1" class="questions" data-id="quest-1" >
+##### Questionnaire 1
+###### Please answer the following questions.
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod
+tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua.
+
+1. First question (solution provided):
+
+  ###### Solution
+    
+    The solution to the first question.
+
+2. Second question (no solution provided):
+
+3. Third question (solution provided):
+
+  ###### Solution
+    
+    The solution to the third question.
+
 </div>
 
 <div markdown="1" class="activity" data-id="act-2">

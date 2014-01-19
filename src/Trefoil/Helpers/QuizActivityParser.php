@@ -6,7 +6,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Trefoil\Util\CrawlerTools;
 
 /**
- * Parse an HTML representation of an activity into an Activity object.
+ * Parse an HTML representation of an activity into a QuizQuizActivity object.
  *
  * Example activity:
  *
@@ -40,7 +40,7 @@ use Trefoil\Util\CrawlerTools;
  *    </li>
  *  </ol>
  */
-class ActivityParser
+class QuizActivityParser
 {
 
     /**
@@ -51,7 +51,7 @@ class ActivityParser
 
     /**
      * The parsed activity
-     * @var Activity
+     * @var QuizActivity
      */
     protected $activity;
 
@@ -81,8 +81,6 @@ class ActivityParser
     public function setResponsesValidAsYes($responsesValidAsYes)
     {
         $this->responsesValidAsYes = $responsesValidAsYes;
-
-        return $this;
     }
 
     public function getResponsesValidAsNo()
@@ -93,8 +91,6 @@ class ActivityParser
     public function setResponsesValidAsNo($responsesValidAsNo)
     {
         $this->responsesValidAsNo = $responsesValidAsNo;
-
-        return $this;
     }
 
     public function getResponsesValidAsBoth()
@@ -105,8 +101,6 @@ class ActivityParser
     public function setResponsesValidAsBoth($responsesValidAsBoth)
     {
         $this->responsesValidAsBoth = $responsesValidAsBoth;
-
-        return $this;
     }
 
     public function __construct($text)
@@ -116,11 +110,11 @@ class ActivityParser
 
     /**
      *
-     * @return Activity
+     * @return QuizActivity
      */
     public function parse()
     {
-        $this->extractActivity();
+        $this->extractQuizActivity();
 
         return $this->activity;
     }
@@ -140,21 +134,21 @@ class ActivityParser
      *
      * [activity questions] ::=  <ol>...</ol>
      */
-    protected function extractActivity()
+    protected function extractQuizActivity()
     {
         $crawler = new Crawler();
         $crawler->addHtmlContent($this->text, 'UTF-8');
         $crawler = $crawler->filter('div');
 
-        $this->activity = new Activity();
+        $this->activity = new QuizActivity();
 
         // Type ABC by default
-        $this->activity->setType(Activity::ACTIVITY_TYPE_ABC);
+        $this->activity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_ABC);
 
         // Common data
         $this->activity->setId($crawler->attr('data-id'));
         if (!$this->activity->getId()) {
-            throw new \Exception(sprintf('Activity must have data-id: "%s"', $crawler->text()));
+            throw new \Exception(sprintf('QuizActivity must have data-id: "%s"', $crawler->text()));
         }
 
         $this->activity->setOptions(array(
@@ -170,7 +164,7 @@ class ActivityParser
         }
 
         // introduction text (optional)
-        $this->activity->setIntroduction($this->extractActivityIntroduction($crawler));
+        $this->activity->setIntroduction($this->extractQuizActivityIntroduction($crawler));
 
         // the questions
         $this->activity->setQuestions($this->extractQuestions($crawler));
@@ -207,7 +201,7 @@ class ActivityParser
      * @param  Crawler $crawler
      * @return string
      */
-    protected function extractActivityIntroduction(Crawler $crawler)
+    protected function extractQuizActivityIntroduction(Crawler $crawler)
     {
         $questionTextNodes = $crawler->filter('div>p, div>ul');
 
@@ -271,7 +265,7 @@ class ActivityParser
         foreach ($qnodes as $qIndex => $qDomNode) {
             $qnode = new Crawler($qDomNode);
 
-            $question = new ActivityQuestion();
+            $question = new QuizActivityQuestion();
             $question->setText(CrawlerTools::getNodeHtml($qnode->filter('p')));
 
             // the 2nd level "li" nodes are responses to that question
@@ -353,7 +347,7 @@ class ActivityParser
      */
     protected function transformAbcToYnb()
     {
-        if ($this->activity->getType() != Activity::ACTIVITY_TYPE_ABC) {
+        if ($this->activity->getType() != QuizActivity::QUIZ_ACTIVITY_TYPE_ABC) {
             return;
         }
 
@@ -361,7 +355,7 @@ class ActivityParser
         $responses = array();
 
         foreach ($this->activity->getQuestions() as $question) {
-            /** @var $question ActivityQuestion */
+            /** @var $question QuizActivityQuestion */
             $responsesClean = array();
             foreach ($question->getResponses() as $response) {
                 // Remove ending dot if any
@@ -387,7 +381,7 @@ class ActivityParser
         }
 
         // OK for YNB type
-        $this->activity->setType(Activity::ACTIVITY_TYPE_YNB);
+        $this->activity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_YNB);
     }
 
     /**

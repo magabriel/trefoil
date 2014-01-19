@@ -43,27 +43,24 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1100), // the latest possible
+                EasybookEvents::POST_DECORATE => array('onItemPostDecorate', -1100), // the latest possible
                 EasybookEvents::POST_PUBLISH => array('onPostPublish', -1100)  // the latest possible
         );
     }
 
-    public function onItemPostParse(ParseEvent $event)
+    public function onItemPostDecorate(BaseEvent $event)
     {
         $this->init($event);
 
-        $content = $event->getItemProperty('content');
-
         // retrieve all the links for this item
-        $item = $event->getItem();
-        $links = $this->findLinks($content, $item['config']['content']);
+        $links = $this->findLinks($this->item['content'], $this->item['config']['content']);
         $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
-        $linkTargets = $this->findLinkTargets($content);
+        $linkTargets = $this->findLinkTargets($this->item['content']);
         $this->linkTargets = array_merge_recursive($this->linkTargets, $linkTargets);
     }
-
+    
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);

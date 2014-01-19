@@ -1,4 +1,4 @@
-# EbookActivities test chapter 2
+# EbookQuiz test in Spanish
 
 <div markdown="1" class="activity" data-id="act-3-spanish">
 ##### Ejercicio 3

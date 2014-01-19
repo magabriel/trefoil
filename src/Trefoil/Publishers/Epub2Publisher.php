@@ -46,7 +46,7 @@ class Epub2Publisher extends HtmlPublisher
     /**
      * Overrides the base publisher method to avoid the decoration of the book items.
      * Instead of using the regular Twig templates based on the item type (e.g. chapter),
-     * ePub books items are decorated afterwards with some special Twig templates.
+     * ePub books items are decorated with some special Twig templates.
      */
     public function decorateContents()
     {
@@ -59,8 +59,21 @@ class Epub2Publisher extends HtmlPublisher
             $event = new BaseEvent($this->app);
             $this->app->dispatch(Events::PRE_DECORATE, $event);
 
-            // Do nothing to decorate the item
-
+            // try first to render the specific template for each content
+            // type, if it exists (e.g. toc.twig, chapter.twig, etc.) and
+            // use chunk.twig as the fallback template
+            $templateVariables = array(
+                'item'           => $item,
+                'has_custom_css' => (null !== $this->getCustomCssFile()),
+            );
+            try {
+                $templateName = $item['config']['element'] . '.twig';
+                $item['content'] = $this->app->render($templateName, $templateVariables);
+            } catch (\Twig_Error_Loader $e) {
+                $item['content'] = $this->app->render('chunk.twig', $templateVariables);
+            }
+            $this->app['publishing.active_item'] = $item;
+            
             $event = new BaseEvent($this->app);
             $this->app->dispatch(Events::POST_DECORATE, $event);
 
@@ -69,6 +82,28 @@ class Epub2Publisher extends HtmlPublisher
         }
 
         $this->app['publishing.items'] = $decoratedItems;
+    }
+
+    /**
+     * Retrieve the custom css file to be used with this book
+     * 
+     * @return null|string
+     */
+    protected function getCustomCssFile()
+    {
+        // try the text file "style.css"
+        $customCss = $this->app->getCustomTemplate('style.css');
+        if ($customCss) {
+            return $customCss;
+        }
+        
+        // try the Twig template "style.css.twig"
+        $customCss = $this->app->getCustomTemplate('style.css.twig');
+        if ($customCss) {
+            return $customCss;
+        }
+        
+        return null;
     }
 
     public function assembleBook()
@@ -85,9 +120,9 @@ class Epub2Publisher extends HtmlPublisher
         }
 
         // generate custom CSS file
-        $customCss = $this->app->getCustomTemplate('style.css');
-        $hasCustomCss = file_exists($customCss);
-        if ($hasCustomCss) {
+        $customCss = $this->getCustomCssFile();
+        $customCssName = pathinfo($customCss, PATHINFO_BASENAME);
+        if ('style.css' == $customCssName) {
             $this->app['filesystem']->copy(
                                     $customCss,
                                     $bookTmpDir . '/book/OEBPS/css/styles.css',
@@ -96,9 +131,7 @@ class Epub2Publisher extends HtmlPublisher
         } else {
             // new in Trefoil:
             // generate custom CSS file from template
-            $customCss = $this->app->getCustomTemplate('style.css.twig');
-            $hasCustomCss = file_exists($customCss);
-            if ($hasCustomCss) {
+            if ('style.css.twig' == $customCssName) {
                 $this->app->render(
                           'style.css.twig',
                           array(),
@@ -106,26 +139,17 @@ class Epub2Publisher extends HtmlPublisher
                 );
             }
         }
-
+        $hasCustomCss = ($customCss != null);
+        
         $bookItems = $this->app['publishing.items'];
 
         // generate one HTML page for every book item
         foreach ($bookItems as $item) {
             $renderedTemplatePath = $bookTmpDir . '/book/OEBPS/' . $item['page_name'] . '.html';
-            $templateVariables = array(
-                'item'           => $item,
-                'has_custom_css' => $hasCustomCss,
-            );
-
-            // try first to render the specific template for each content
-            // type, if it exists (e.g. toc.twig, chapter.twig, etc.) and
-            // use chunk.twig as the fallback template
-            try {
-                $templateName = $item['config']['element'] . '.twig';
-                $this->app->render($templateName, $templateVariables, $renderedTemplatePath);
-            } catch (\Twig_Error_Loader $e) {
-                $this->app->render('chunk.twig', $templateVariables, $renderedTemplatePath);
-            }
+            
+            // book items have already been rendered, so we just need
+            // to copy them to the temp dir            
+            file_put_contents($renderedTemplatePath, $item['content']);
         }
 
         $bookImages = $this->prepareBookImages($bookTmpDir . '/book/OEBPS/images');

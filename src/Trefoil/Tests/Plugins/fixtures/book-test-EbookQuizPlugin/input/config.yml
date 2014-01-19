@@ -4,7 +4,7 @@ easybook:
             code_block_type: fenced 
 
 book:
-    title:            'Test book - EbookActivitiesPlugin'
+    title:            'Test book - EbookQuizPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -16,7 +16,7 @@ book:
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
         
-        - { element: ebook-activities-solutions }
+        - { element: ebook-quiz-solutions }
 
     editions:
         ebook:
@@ -27,15 +27,14 @@ book:
             theme:          Theme1
             toc:
                 deep:       3
-                elements:   ["appendix", "chapter", "part", "ebook-activities-solutions"]
+                elements:   ["appendix", "chapter", "part", "ebook-quiz-solutions"]
             isbn:           1234567890X
             plugins:
                 enabled:        
-                    - EbookActivities
-                    - LinkCheck
+                    - EbookQuiz
                 
                 options:
-                    EbookActivities:
+                    EbookQuiz:
                         ynb:
                             yes: [ Yes, 'True', Si, Cierto, Cierta, Verdadero, Verdadera ]
                             no: [ No, 'False', Falso, Falsa ]
