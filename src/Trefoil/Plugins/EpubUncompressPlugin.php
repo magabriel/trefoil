@@ -18,8 +18,8 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return array(
-                // runs later but before renaming
-                EasybookEvents::POST_PUBLISH => array('onPostPublish',-900)
+            // runs later but before renaming
+            EasybookEvents::POST_PUBLISH => array('onPostPublish', -900)
         );
     }
 
@@ -47,10 +47,10 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // remove the uncompressed ebook directory
         if (file_exists($epubFolder)) {
-            $this->app->get('filesystem')->remove($epubFolder);
+            $this->app['filesystem']->remove($epubFolder);
         }
 
-        $this->app->get('filesystem')->mkdir($epubFolder);
+        $this->app['filesystem']->mkdir($epubFolder);
 
         Toolkit::unzip($epubFile, $epubFolder);
     }

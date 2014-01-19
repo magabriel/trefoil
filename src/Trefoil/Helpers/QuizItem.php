@@ -168,5 +168,5 @@ abstract class QuizItem
     {
         return $this->type;
     }
-    
+
 } 

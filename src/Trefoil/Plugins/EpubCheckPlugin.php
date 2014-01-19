@@ -8,6 +8,7 @@ use Symfony\Component\Process\Process;
 
 /**
  * Plugin to check the generated epub ebook using the EpubCheck utility.
+ *
  * @see https://github.com/IDPF/epubcheck
  *
  * For formats: Epub
@@ -26,8 +27,8 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                // runs later but before renaming
-                EasybookEvents::POST_PUBLISH => array('onPostPublish',-900)
+            // runs later but before renaming
+            EasybookEvents::POST_PUBLISH => array('onPostPublish', -900)
         );
     }
 
@@ -49,17 +50,22 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $epubcheckOptions = $this->getConfigOption('easybook.parameters.epubcheck.command_options');
 
         if (!$epubcheck || !file_exists($epubcheck)) {
-            $this->writeLn('The EpubCheck library needed to check EPUB books cannot be found. '.
-                    'Check that you have set your custom Epubcheck path in the book\'s config.yml file.', 'error');
+            $this->writeLn(
+                 'The EpubCheck library needed to check EPUB books cannot be found. ' .
+                 'Check that you have set your custom Epubcheck path in the book\'s config.yml file.',
+                 'error'
+            );
+
             return;
         }
 
-        $epubFilePath = $this->app['publishing.dir.output'].'/book.epub';
+        $epubFilePath = $this->app['publishing.dir.output'] . '/book.epub';
 
-        $command = sprintf("java -jar '%s' '%s' %s",
-                $epubcheck,
-                $epubFilePath,
-                $epubcheckOptions
+        $command = sprintf(
+            "java -jar '%s' '%s' %s",
+            $epubcheck,
+            $epubFilePath,
+            $epubcheckOptions
         );
 
         $this->writeLn('Running EpubCheck...');

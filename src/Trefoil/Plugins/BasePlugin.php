@@ -89,6 +89,7 @@ abstract class BasePlugin
      *
      * @param string $optionName (as in 'one.two.three')
      * @param string $default
+     *
      * @return mixed
      */
     protected function getEditionOption($optionName, $default = null)
@@ -116,6 +117,7 @@ abstract class BasePlugin
      *
      * @param string $optionName (as in 'one.two.three')
      * @param string $default
+     *
      * @return mixed
      */
     protected function getConfigOption($optionName, $default = null)

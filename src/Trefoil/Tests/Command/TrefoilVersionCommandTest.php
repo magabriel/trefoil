@@ -33,7 +33,7 @@ class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        
+
     }
 
     public function testDisplayVersion()
@@ -41,9 +41,11 @@ class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
         $command = $this->console->find('version');
 
         $tester = new CommandTester($command);
-        $tester->execute(array(
-            'command' => $command->getName()
-        ));
+        $tester->execute(
+               array(
+                   'command' => $command->getName()
+               )
+        );
 
         $app = $command->getApp();
 

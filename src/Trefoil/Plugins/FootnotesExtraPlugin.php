@@ -1,11 +1,10 @@
 <?php
 namespace Trefoil\Plugins;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Util\SimpleReport;
 
 /**
@@ -24,24 +23,28 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
     /**
      * The footnotes
+     *
      * @var array
      */
     protected $footnotes = array();
 
     /**
      * Cross-references of replaced terms for reporting
+     *
      * @var array
      */
     protected $xrefs = array();
 
     /**
      * Whether or not the glossary item has been generated
+     *
      * @var bool
      */
     protected $generated = false;
 
     /**
      * Whether a term has been replaced at least once into the current item
+     *
      * @var bool
      */
     protected $termReplaced;
@@ -53,9 +56,9 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     static public function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
-                EasybookEvents::POST_PARSE => array('onItemPostParse'),
-                EasybookEvents::POST_PUBLISH => 'onPostPublish');
+            EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
+            EasybookEvents::POST_PARSE   => array('onItemPostParse'),
+            EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
     public function onItemPostParse(ParseEvent $event)
@@ -66,7 +69,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
             // not for this format
             return;
         }
-        
+
         $this->processItem();
 
         // reload changed item
@@ -81,7 +84,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
             // not for this format
             return;
         }
-        
+
         if ('footnotes' == $this->item['config']['element']) {
             $this->saveFootnotes();
         }
@@ -95,7 +98,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
             // not for this format
             return;
         }
-        
+
         // create the processing report
         $this->createReport();
     }
@@ -121,32 +124,33 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $content = $this->item['content'];
 
         $regExp = '/';
-        $regExp.= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
-        $regExp.= '/Ums'; // Ungreedy, multiline, dotall
+        $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        $me = $this;
         $content = preg_replace_callback(
-                $regExp,
-                function ($matches)
-                {
-                    $regExp2 = '/';
-                    $regExp2.= '<li.*id="(?<id>.*)">.*';
-                    $regExp2.= '<p>(?<text>.*)&#160;<a href="#(?<backref>.*)"';
-                    $regExp2.= '/Ums'; // Ungreedy, multiline, dotall
+            $regExp,
+            function ($matches) use ($me) {
+                $regExp2 = '/';
+                $regExp2 .= '<li.*id="(?<id>.*)">.*';
+                $regExp2 .= '<p>(?<text>.*)&#160;<a href="#(?<backref>.*)"';
+                $regExp2 .= '/Ums'; // Ungreedy, multiline, dotall
 
-                    preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
+                preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
 
-                    foreach ($matches2 as $match2) {
-                        $this->footnotes[$match2['id']] = array(
-                                'id' => str_replace(':', '-', $match2['id']),
-                                'text' => $match2['text'],
-                                'backref' => str_replace(':', '-', $match2['backref']),
-                                'new_number' => count($this->footnotes) + 1
-                                );
-                    }
+                foreach ($matches2 as $match2) {
+                    $me->footnotes[$match2['id']] = array(
+                        'id'         => str_replace(':', '-', $match2['id']),
+                        'text'       => $match2['text'],
+                        'backref'    => str_replace(':', '-', $match2['backref']),
+                        'new_number' => count($me->footnotes) + 1
+                    );
+                }
 
-                    return '';
-                },
-                $content);
+                return '';
+            },
+            $content
+        );
 
         $this->item['content'] = $content;
     }
@@ -156,27 +160,29 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $content = $this->item['content'];
 
         $regExp = '/';
-        $regExp.= '<sup id="(?<supid>fnref:.*)">';
-        $regExp.= '<a(?<prev>.*)href="#(?<href>fn:.*)"(?<post>.*)>(?<number>.*)<\/a>';
-        $regExp.= '/Ums'; // Ungreedy, multiline, dotall
+        $regExp .= '<sup id="(?<supid>fnref:.*)">';
+        $regExp .= '<a(?<prev>.*)href="#(?<href>fn:.*)"(?<post>.*)>(?<number>.*)<\/a>';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
         $content = preg_replace_callback(
-                $regExp,
-                function ($matches) use ($me)
-                {
-                    $newNumber = $me->footnotes[$matches['href']]['new_number'];
+            $regExp,
+            function ($matches) use ($me) {
+                $newNumber = $me->footnotes[$matches['href']]['new_number'];
 
-                    $html = sprintf('<sup id="%s"><a%shref="#%s"%s>%s</a>',
-                            str_replace(':', '-', $matches['supid']),
-                            $matches['prev'],
-                            str_replace(':', '-', $matches['href']),
-                            $matches['post'],
-                            $newNumber
-                            );
-                    return $html;
-                },
-                $content);
+                $html = sprintf(
+                    '<sup id="%s"><a%shref="#%s"%s>%s</a>',
+                    str_replace(':', '-', $matches['supid']),
+                    $matches['prev'],
+                    str_replace(':', '-', $matches['href']),
+                    $matches['post'],
+                    $newNumber
+                );
+
+                return $html;
+            },
+            $content
+        );
 
         $this->item['content'] = $content;
     }
@@ -202,16 +208,19 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $report->setColumnsAlignment(array('center', 'center', 'left'));
 
         foreach ($this->footnotes as $footnote) {
-            $oldRef = split('-', $footnote['id'])[1];
+            $parts = explode('-', $footnote['id']);
+            $oldRef = $parts[1];
             $newRef = $footnote['new_number'];
             $text = substr($footnote['text'], 0, 90);
-            $text.= ($text == $footnote['text'] ? '' : '...');
+            $text .= ($text == $footnote['text'] ? '' : '...');
             $report->addLine(array($oldRef, $newRef, $text));
         }
 
         if (!$this->generated) {
             $this->writeLn(
-                    "No footnotes element has been generated, check for missing 'footnotes' contents element.", 'error');
+                 "No footnotes element has been generated, check for missing 'footnotes' contents element.",
+                 'error'
+            );
         }
 
         $outputDir = $this->app['publishing.dir.output'];

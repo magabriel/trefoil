@@ -40,8 +40,8 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1100)
-                );
+            EasybookEvents::POST_PARSE => array('onItemPostParse', -1100)
+        );
     }
 
     public function onItemPostParse(ParseEvent $event)
@@ -59,6 +59,7 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
      * Add drop caps markup
      *
      * @param string $content
+     *
      * @return string
      */
     protected function addDropCaps($content)

@@ -6,7 +6,7 @@
     <li class="{{ item.config.element }} level-{{ level }}">
         <a href="{{ hash }}">
             {% if entry %}
-                 {{ entry.label ? ('<span>'~entry.label~'</span> - '~entry.title) : entry.title }}
+                {{ entry.label ? ('<span>'~entry.label~'</span> - '~entry.title) : entry.title }}
             {% else %}
                 {{ item.title }}
             {% endif %}
@@ -15,28 +15,28 @@
 {% endmacro %}
 
 {% block body %}
-<div class="local_toc">
-    {% set itemtoc_deep = itemtoc_deep | default(edition.toc.deep + 1) %}
-    {% set currentLevel = 0 %}
-    <ul class="unstyled">
-    {% for entry in item.toc %}
-        {% set level = entry.level %}
-        {% if level <= itemtoc_deep%}
-            {% if level > 1 %}
-                {% if level > currentLevel %}
-                    {% if level == currentLevel+1 %}
-                        {{ helper.tocItem(item, entry, level) }}
-                    {% else %}
-                        {% set level = currentLevel %}
+    <div class="local_toc">
+        {% set itemtoc_deep = itemtoc_deep | default(edition.toc.deep + 1) %}
+        {% set currentLevel = 0 %}
+        <ul class="unstyled">
+            {% for entry in item.toc %}
+                {% set level = entry.level %}
+                {% if level <= itemtoc_deep %}
+                    {% if level > 1 %}
+                        {% if level > currentLevel %}
+                            {% if level == currentLevel+1 %}
+                                {{ helper.tocItem(item, entry, level) }}
+                            {% else %}
+                                {% set level = currentLevel %}
+                            {% endif %}
+                        {% else %}
+                            {{ helper.tocItem(item, entry, level) }}
+                        {% endif %}
                     {% endif %}
-                {% else %}
-                     {{ helper.tocItem(item, entry, level) }}
+                    {% set currentLevel = level %}
                 {% endif %}
-            {% endif %}
-            {% set currentLevel = level %}
-        {% endif %}
-    {% endfor %}
-    </ul>
+            {% endfor %}
+        </ul>
 
-</div>
+    </div>
 {% endblock %}

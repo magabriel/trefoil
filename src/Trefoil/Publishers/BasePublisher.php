@@ -23,11 +23,11 @@ class BasePublisher extends EasybookBasePublisher
     {
         if (!file_exists($targetDir)) {
             throw new \RuntimeException(sprintf(
-                " ERROR: Books images couldn't be copied because \n"
-                ." the given '%s' \n"
-                ." directory doesn't exist.",
-                $targetDir
-            ));
+                                            " ERROR: Books images couldn't be copied because \n"
+                                            . " the given '%s' \n"
+                                            . " directory doesn't exist.",
+                                            $targetDir
+                                        ));
         }
 
         $edition = $this->app['publishing.edition'];
@@ -45,8 +45,8 @@ class BasePublisher extends EasybookBasePublisher
         //         or
         //        <the path set with the "--dir" publish command line argument>
         // 'Common' format takes precedence
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common').'/images';
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app).'/images';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common') . '/images';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app) . '/images';
 
         // theme images can be overriden by the book:
         //     <book-dir>/Resources/images/
@@ -58,7 +58,7 @@ class BasePublisher extends EasybookBasePublisher
 
         // the normal book images:
         //     <book-dir>/images/
-        $sourceDirs[] = $this->app['publishing.dir.contents'].'/images';
+        $sourceDirs[] = $this->app['publishing.dir.contents'] . '/images';
 
         // process each directory in sequence, so each one will override the previously copied images
         $imagesData = array();
@@ -68,16 +68,16 @@ class BasePublisher extends EasybookBasePublisher
             if (file_exists($imagesDir)) {
 
                 $images = Finder::create()
-                            ->files()
-                            ->sortByName()
-                            ->in($imagesDir);
+                                ->files()
+                                ->sortByName()
+                                ->in($imagesDir);
 
                 foreach ($images as $image) {
 
                     $this->app['filesystem']->copy(
-                        $image->getPathName(),
-                        $targetDir.'/'.$image->getFileName(),
-                        true // overwrite
+                                            $image->getPathName(),
+                                            $targetDir . '/' . $image->getFileName(),
+                                            true // overwrite
                     );
 
                     // The right mediatype for jpeg images is jpeg, not jpg
@@ -85,9 +85,9 @@ class BasePublisher extends EasybookBasePublisher
                     $mediaType = str_replace('jpg', 'jpeg', $mediaType);
 
                     $imagesData[$image->getFileName()] = array(
-                        'id'        => 'image-'.$i++,
-                        'filePath'  => 'images/'.$image->getFileName(),
-                        'mediaType' => 'image/'.$mediaType
+                        'id'        => 'image-' . $i++,
+                        'filePath'  => 'images/' . $image->getFileName(),
+                        'mediaType' => 'image/' . $mediaType
                     );
                 }
             }

@@ -73,7 +73,7 @@ class Epub2Publisher extends HtmlPublisher
                 $item['content'] = $this->app->render('chunk.twig', $templateVariables);
             }
             $this->app['publishing.active_item'] = $item;
-            
+
             $event = new BaseEvent($this->app);
             $this->app->dispatch(Events::POST_DECORATE, $event);
 
@@ -86,7 +86,7 @@ class Epub2Publisher extends HtmlPublisher
 
     /**
      * Retrieve the custom css file to be used with this book
-     * 
+     *
      * @return null|string
      */
     protected function getCustomCssFile()
@@ -96,13 +96,13 @@ class Epub2Publisher extends HtmlPublisher
         if ($customCss) {
             return $customCss;
         }
-        
+
         // try the Twig template "style.css.twig"
         $customCss = $this->app->getCustomTemplate('style.css.twig');
         if ($customCss) {
             return $customCss;
         }
-        
+
         return null;
     }
 
@@ -140,13 +140,13 @@ class Epub2Publisher extends HtmlPublisher
             }
         }
         $hasCustomCss = ($customCss != null);
-        
+
         $bookItems = $this->app['publishing.items'];
 
         // generate one HTML page for every book item
         foreach ($bookItems as $item) {
             $renderedTemplatePath = $bookTmpDir . '/book/OEBPS/' . $item['page_name'] . '.html';
-            
+
             // book items have already been rendered, so we just need
             // to copy them to the temp dir            
             file_put_contents($renderedTemplatePath, $item['content']);

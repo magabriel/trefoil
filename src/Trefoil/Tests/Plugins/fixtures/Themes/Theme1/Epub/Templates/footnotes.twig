@@ -1,18 +1,19 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-<div class="item footnotes">
-    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+    <div class="item footnotes">
+        <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
 
-    {{ item.content }}
+        {{ item.content }}
 
-    <hr />
-    <ol>
-    {% for footnote in app.get('publishing.footnotes.items') %}
-    <li id="{{ footnote.id }}">
-        <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote" class="footnote-backref">[&#8617;]</a></p>
-    </li>
-    {% endfor %}
-    </ol>
-</div>
-{% endblock%}
+        <hr/>
+        <ol>
+            {% for footnote in app.get('publishing.footnotes.items') %}
+                <li id="{{ footnote.id }}">
+                    <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote"
+                                                   class="footnote-backref">[&#8617;]</a></p>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

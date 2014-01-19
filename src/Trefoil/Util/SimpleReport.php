@@ -103,13 +103,13 @@ class SimpleReport
 
         $line = '';
         foreach ($this->headers as $index => $header) {
-            $line.= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
+            $line .= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]) . ' ';
         }
         $text[] = $line;
 
         $line = '';
         foreach ($this->columnsWidth as $headerWidth) {
-            $line.= str_repeat('-', $headerWidth ?: 10) .' ';
+            $line .= str_repeat('-', $headerWidth ? : 10) . ' ';
         }
         $text[] = $line;
 
@@ -132,10 +132,14 @@ class SimpleReport
     /**
      * @see http://www.php.net/manual/en/ref.mbstring.php#90611
      */
-    protected function mb_str_pad($input, $pad_length, $pad_string = '', $pad_style, $encoding="UTF-8")
+    protected function mb_str_pad($input, $pad_length, $pad_string = '', $pad_style, $encoding = "UTF-8")
     {
-        return str_pad($input,
-                strlen($input)-mb_strlen($input,$encoding)+$pad_length, $pad_string, $pad_style);
+        return str_pad(
+            $input,
+            strlen($input) - mb_strlen($input, $encoding) + $pad_length,
+            $pad_string,
+            $pad_style
+        );
     }
 
     protected function formatLines()
@@ -145,7 +149,7 @@ class SimpleReport
         foreach ($this->lines as $lineFields) {
             $lineText = '';
             foreach ($lineFields as $index => $field) {
-                $lineText.= $this->pad($field, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
+                $lineText .= $this->pad($field, $this->columnsWidth[$index], $this->columnsAlignment[$index]) . ' ';
             }
             $text[] = $lineText;
         }
@@ -162,7 +166,7 @@ class SimpleReport
         $text = array();
 
         foreach ($this->intro as $line) {
-            $text[] = ' '. $line;
+            $text[] = ' ' . $line;
         }
 
         $text[] = '';
@@ -178,13 +182,13 @@ class SimpleReport
 
         $text = array();
         $text[] = '';
-        $text[] = '    '.str_repeat('=', 50);
+        $text[] = '    ' . str_repeat('=', 50);
 
         foreach ($this->summary as $line) {
-            $text[] = '    '. $line;
+            $text[] = '    ' . $line;
         }
 
-        $text[] = '    '.str_repeat('=', 50);
+        $text[] = '    ' . str_repeat('=', 50);
 
         return $text;
     }

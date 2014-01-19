@@ -39,8 +39,8 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return array(
-                // runs in the first place after publishing
-                EasybookEvents::POST_PUBLISH => array('onPostPublish',1000)
+            // runs in the first place after publishing
+            EasybookEvents::POST_PUBLISH => array('onPostPublish', 1000)
         );
     }
 
@@ -55,6 +55,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         if (!$this->app->book('version')) {
             $this->writeLn('No "book.version" option found. Cannot update version.', 'error');
+
             return;
         }
 
@@ -84,12 +85,18 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
         // check for correctness
         if (count($parts) <> 2) {
             $this->writeLn(
-                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString), 'error');
+                 sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
+                 'error'
+            );
+
             return $versionString;
         }
         if (!ctype_digit($parts[0]) || !ctype_digit($parts[1])) {
-           $this->writeLn(
-                    sprintf('Malformed version string "%s". Expected "int.int"', $versionString), 'error');
+            $this->writeLn(
+                 sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
+                 'error'
+            );
+
             return $versionString;
         }
 
@@ -121,7 +128,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
      */
     protected function updateConfigFile($newVersionString)
     {
-        $configFile = $this->app->get('publishing.dir.book') . '/config.yml';
+        $configFile = $this->app['publishing.dir.book'] . '/config.yml';
 
         $config = file_get_contents($configFile);
 
@@ -134,16 +141,17 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $config = preg_replace_callback(
-                $regExp,
-                function ($matches) use ($newVersionString)
-                          {
-                          $new = $matches['indent'] .
-                                 $matches['label'] .
-                                 $matches['spaces'] .
-                                 $matches['delim'] . $newVersionString . $matches['delim'];
-                          return $new;
-                          },
-                          $config);
+            $regExp,
+            function ($matches) use ($newVersionString) {
+                $new = $matches['indent'] .
+                    $matches['label'] .
+                    $matches['spaces'] .
+                    $matches['delim'] . $newVersionString . $matches['delim'];
+
+                return $new;
+            },
+            $config
+        );
 
         file_put_contents($configFile, $config);
     }

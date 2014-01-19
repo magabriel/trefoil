@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 // TODO: this is a temporary fix.
 // When executing the test suite with a locale different from en_US, some tests

@@ -4,7 +4,7 @@ Questionnaire: {{ questionnaire.id }}
 ========================================
 -->
 {% if questionnaire.pagebreak == true %}
-<div class="page-break"></div>
+    <div class="page-break"></div>
 {% endif %}
 <div class="questions">
 
@@ -23,35 +23,35 @@ Questionnaire: {{ questionnaire.id }}
     {% endif %}
 
     {# start link #}
-    {% set start= 'q-'~questionnaire.id  ~ '_0'  %}
+    {% set start= 'q-'~questionnaire.id  ~ '_0' %}
     <a href="#{{ start }}"><span>[ Start ]</span></a>
     <a href="#skip-q-{{ questionnaire.id }}"><span>[ Skip questionnaire ]</span></a>
-    
+
     <div class="page-break"></div>
 
-{% for qindex, question in questionnaire.questions  %}
-    {% set qid = 'q-'~questionnaire.id ~ '_' ~ qindex %}
+    {% for qindex, question in questionnaire.questions %}
+        {% set qid = 'q-'~questionnaire.id ~ '_' ~ qindex %}
 
-    <h5 id="{{ qid }}">{{ questionnaire_heading_text }}</h5>
+        <h5 id="{{ qid }}">{{ questionnaire_heading_text }}</h5>
 
-    <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
-    <div class="question">{{ question.text }}</div>
+        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
+        <div class="question">{{ question.text }}</div>
 
-    <hr />
+        <hr/>
         {% if question.solution %}
             <a href="#{{ qid }}-solution"><span>[ View solution ]</span></a>
         {% else %}
             <p class="response">Ask your teacher to provide the solution.</p>
         {% endif %}
-    <hr />
+        <hr/>
 
-    <div class="page-break"></div>
-{% endfor %}
+        <div class="page-break"></div>
+    {% endfor %}
 </div>
 
 {# skip link target #}
 <div id="skip-q-{{ questionnaire.id }}"></div>
-<hr />
-    <p>End of questionnaire.</p>
-<hr />
+<hr/>
+<p>End of questionnaire.</p>
+<hr/>
 <div class="page-break"></div>

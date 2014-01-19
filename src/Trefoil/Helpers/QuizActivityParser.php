@@ -45,30 +45,35 @@ class QuizActivityParser
 
     /**
      * The original text (UTF-8)
+     *
      * @var string
      */
     protected $text;
 
     /**
      * The parsed activity
+     *
      * @var QuizActivity
      */
     protected $activity;
 
     /**
      * List of responses to be intepreted as "Yes"
+     *
      * @var Array|string
      */
     protected $responsesValidAsYes = array('Yes', 'True');
 
     /**
      * List of responses to be intepreted as "No"
+     *
      * @var Array|string
      */
     protected $responsesValidAsNo = array('No', 'False');
 
     /**
      * List of responses to be intepreted as "Both"
+     *
      * @var Array|string
      */
     protected $responsesValidAsBoth = array('Both');
@@ -151,8 +156,9 @@ class QuizActivityParser
             throw new \Exception(sprintf('QuizActivity must have data-id: "%s"', $crawler->text()));
         }
 
-        $this->activity->setOptions(array(
-            'pagebreak' => $crawler->attr('data-pagebreak') != '0')
+        $this->activity->setOptions(
+                       array(
+                           'pagebreak' => $crawler->attr('data-pagebreak') != '0')
         );
 
         // extract heading (optional)
@@ -199,6 +205,7 @@ class QuizActivityParser
      * Extract the activity introduction text
      *
      * @param  Crawler $crawler
+     *
      * @return string
      */
     protected function extractQuizActivityIntroduction(Crawler $crawler)
@@ -207,7 +214,7 @@ class QuizActivityParser
 
         $text = array();
         foreach ($questionTextNodes as $pNode) {
-            $p      = new Crawler($pNode);
+            $p = new Crawler($pNode);
             $text[] = CrawlerTools::getNodeHtml($p);
         }
 
@@ -251,9 +258,11 @@ class QuizActivityParser
 
         if (0 == $olNode->count()) {
             throw new \RuntimeException(
-            sprintf(
-                'No questions found for activity id "%s" of type "%s"' . "\n"
-                . $this->activity->getId(), $this->activity->getType()));
+                sprintf(
+                    'No questions found for activity id "%s" of type "%s"' . "\n"
+                    . $this->activity->getId(),
+                    $this->activity->getType()
+                ));
         }
 
         // collect questions
@@ -272,13 +281,16 @@ class QuizActivityParser
             $responses = $qnode->filter('ol');
             if (0 == $responses->count()) {
                 throw new \RuntimeException(
-                sprintf(
-                    'No responses found for activity id "%s", question #%s of type "abc"', $this->activity->getId(),
-                    $qIndex, $this->activity->getType()));
+                    sprintf(
+                        'No responses found for activity id "%s", question #%s of type "abc"',
+                        $this->activity->getId(),
+                        $qIndex,
+                        $this->activity->getType()
+                    ));
             }
 
             // collect responses and explanations
-            $responsesList    = array();
+            $responsesList = array();
             $explanationsList = array();
 
             $rnodes = $responses->children();
@@ -307,7 +319,7 @@ class QuizActivityParser
                             $explanation[] = CrawlerTools::getNodeHtml($ps->eq($i));
                         } else {
                             // ul or ol, so take its li's
-                            $liNodes       = $ps->eq($i)->children();
+                            $liNodes = $ps->eq($i)->children();
                             $explanation[] = '<' . $nodeName . '>';
                             foreach ($liNodes as $liDomNode) {
                                 $liNode = new Crawler($liDomNode);
@@ -359,7 +371,7 @@ class QuizActivityParser
             $responsesClean = array();
             foreach ($question->getResponses() as $response) {
                 // Remove ending dot if any
-                $response         = trim($response);
+                $response = trim($response);
                 $responsesClean[] = ('.' == substr($response, -1)) ? substr($response, 0, -1) : $response;
             }
 
@@ -403,7 +415,8 @@ class QuizActivityParser
             // note the case insensitive search in the arrays
             if (!in_array($resp, array_map('strtolower', $this->responsesValidAsYes)) &&
                 !in_array($resp, array_map('strtolower', $this->responsesValidAsNo)) &&
-                !in_array($resp, array_map('strtolower', $this->responsesValidAsBoth))) {
+                !in_array($resp, array_map('strtolower', $this->responsesValidAsBoth))
+            ) {
                 return false;
             }
         }

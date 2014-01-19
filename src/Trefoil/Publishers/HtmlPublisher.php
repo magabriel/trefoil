@@ -14,9 +14,9 @@ class HtmlPublisher extends BasePublisher
         // generate easybook CSS file
         if ($this->app->edition('include_styles')) {
             $this->app->render(
-                '@theme/style.css.twig',
-                array('resources_dir' => $this->app['app.dir.resources'].'/'),
-                $this->app['publishing.dir.output'].'/css/easybook.css'
+                      '@theme/style.css.twig',
+                      array('resources_dir' => $this->app['app.dir.resources'] . '/'),
+                      $this->app['publishing.dir.output'] . '/css/easybook.css'
             );
         }
 
@@ -25,23 +25,23 @@ class HtmlPublisher extends BasePublisher
         $hasCustomCss = file_exists($customCss);
         if ($hasCustomCss) {
             $this->app['filesystem']->copy(
-                $customCss,
-                $this->app['publishing.dir.output'].'/css/styles.css',
-                true
+                                    $customCss,
+                                    $this->app['publishing.dir.output'] . '/css/styles.css',
+                                    true
             );
         }
 
         // implode all the contents to create the whole book
         $this->app->render(
-            'book.twig',
-            array(
-                'items'          => $this->app['publishing.items'],
-                'has_custom_css' => $hasCustomCss
-            ),
-            $this->app['publishing.dir.output'].'/book.html'
+                  'book.twig',
+                  array(
+                      'items'          => $this->app['publishing.items'],
+                      'has_custom_css' => $hasCustomCss
+                  ),
+                  $this->app['publishing.dir.output'] . '/book.html'
         );
 
         // copy book images        
-        $this->prepareBookImages($this->app['publishing.dir.output'].'/images');
+        $this->prepareBookImages($this->app['publishing.dir.output'] . '/images');
     }
 }

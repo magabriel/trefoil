@@ -18,7 +18,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        
+
     }
 
     /**
@@ -27,7 +27,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        
+
     }
 
     /**
@@ -78,36 +78,36 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
     public function testParseActivityYNBSpanish()
     {
         $valid = array(
-            'yes' => array('Si', 'Cierto'),
-            'no' => array('No', 'Falso'),
+            'yes'  => array('Si', 'Cierto'),
+            'no'   => array('No', 'Falso'),
             'both' => array('Ambos', 'Ambas')
         );
-            
+
         $activity = $this->loadFixture(__DIR__ . '/fixtures/quiz-activity-ynb-spanish.md', $valid);
         $expected = $this->loadExpected(__DIR__ . '/fixtures/quiz-activity-ynb-spanish-expected.yml');
-        
+
         // internal id is calculated as a hash from source and cannot be predicted
         $expected->setInternalId($activity->getInternalId());
 
         $this->assertEquals($expected, $activity);
     }
-    
+
     protected function loadFixture($mdFile, $valid = null)
     {
-        $fixture  = file_get_contents($mdFile);
+        $fixture = file_get_contents($mdFile);
         $markdown = new MarkdownExtra();
-        $text     = $markdown->transform($fixture);
+        $text = $markdown->transform($fixture);
 
         $parser = new QuizActivityParser($text);
-        
+
         if ($valid) {
             $parser->setResponsesValidAsYes($valid['yes']);
             $parser->setResponsesValidAsNo($valid['no']);
             $parser->setResponsesValidAsBoth($valid['both']);
         }
-        
+
         $activity = $parser->parse();
-        
+
         return $activity;
     }
 
@@ -126,19 +126,19 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
         $expected->setIntroduction($this->clean($activity['introduction']));
 
         $questions = array();
-        foreach ($activity['questions'] as $qIndex => $question) {
+        foreach ($activity['questions'] as $question) {
             $questionObj = new QuizActivityQuestion();
             $questionObj->setText($question['text']);
             $questionObj->setSolution($question['solution']);
 
             $responses = array();
-            foreach ($question['responses'] as $eIndex => $response) {
+            foreach ($question['responses'] as $response) {
                 $responses[] = $this->clean($response);
             }
             $questionObj->setResponses($responses);
 
             $explanations = array();
-            foreach ($question['explanations'] as $eIndex => $explanation) {
+            foreach ($question['explanations'] as $explanation) {
                 $explanations[] = $this->clean($explanation);
             }
             $questionObj->setExplanations($explanations);
@@ -156,6 +156,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
         if (null === $string) {
             return null;
         }
+
         return str_replace(array('> <', "\n"), array('><', ''), $string);
     }
 }

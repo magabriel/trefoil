@@ -13,7 +13,9 @@ class TrefoilVersionCommand extends EasybookVersionCommand
         $this->setDefinition(array())
              ->setName('version')
              ->setDescription('Shows installed easybook + trefoil version')
-             ->setHelp('The <info>version</info> command shows you the installed version of <info>easybook</info> and <info>trefoil</info>');
+             ->setHelp(
+             'The <info>version</info> command shows you the installed version of <info>easybook</info> and <info>trefoil</info>'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -21,14 +23,16 @@ class TrefoilVersionCommand extends EasybookVersionCommand
         /* @var Application $app (fake cast) */
         $app = $this->app;
 
-        $output->writeln(array(
-            '',
-            $app['app.signature'],
-            ' <info>easybook</info> installed version: '
-            .'<comment>'.$app->getVersion().'</comment>',
-            ' <info>trefoil</info>  installed version: '
-            .'<comment>'.$app->getMyVersion().'</comment>',
-            '',
-        ));
+        $output->writeln(
+               array(
+                   '',
+                   $app['app.signature'],
+                   ' <info>easybook</info> installed version: '
+                   . '<comment>' . $app->getVersion() . '</comment>',
+                   ' <info>trefoil</info>  installed version: '
+                   . '<comment>' . $app->getMyVersion() . '</comment>',
+                   '',
+               )
+        );
     }
 }

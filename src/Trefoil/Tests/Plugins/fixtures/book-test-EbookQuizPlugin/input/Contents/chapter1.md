@@ -1,6 +1,6 @@
 # EbookQuiz test
 
-<div markdown="1" class="activity" data-id="act-1">
+<div markdown="1" class="quiz-activity" data-id="act-1">
 ##### Exercise 1
 ###### Please select the correct response.
 
@@ -25,7 +25,7 @@
   
 </div>
 
-<div markdown="1" class="questions" data-id="quest-1" >
+<div markdown="1" class="quiz-questionnaire" data-id="quest-1" >
 ##### Questionnaire 1
 ###### Please answer the following questions.
 
@@ -48,7 +48,7 @@ tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua.
 
 </div>
 
-<div markdown="1" class="activity" data-id="act-2">
+<div markdown="1" class="quiz-activity" data-id="act-2">
 ##### Exercise 2
 ###### Please select true or false.
 

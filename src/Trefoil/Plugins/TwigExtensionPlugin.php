@@ -33,8 +33,8 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => 'onItemPreParse',
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
+            EasybookEvents::PRE_PARSE  => 'onItemPreParse',
+            EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
         );
     }
 
@@ -83,7 +83,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     protected function renderString($string, $variables = array())
     {
         // we need a new Twig String Renderer environment
-        $twig = new \Twig_Environment(new \Twig_Loader_String(), $this->app->get('twig.options'));
+        $twig = new \Twig_Environment(new \Twig_Loader_String(), $this->app['twig.options']);
 
         $this->addTwigGlobals($twig);
         $this->registerExtensions($twig);
@@ -95,7 +95,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $twig->addGlobal('app', $this->app);
 
-        if (null != $this->app->get('publishing.book.config')['book']) {
+        if (null != $this->app['publishing.book.config']['book']) {
             $twig->addGlobal('book', $this->app['publishing.book.config']['book']);
 
             $publishingEdition = $this->edition;
@@ -117,25 +117,30 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         // itemtoc() and its internal counterpart
         $twig->addFunction(new \Twig_SimpleFunction('itemtoc', array($this, 'itemTocFunction')));
         $twig->addFunction(
-                new \Twig_SimpleFunction('_itemtoc_internal', array($this, '_itemTocInternalFunction')));
+             new \Twig_SimpleFunction('_itemtoc_internal', array($this, '_itemTocInternalFunction'))
+        );
     }
 
     /**
      * Twig function: <b>file(filename, variables, options)</b>
-     * @param string $filename to be included (relative to book Contents dir)
-     * @param array $variables to be passed to the template
-     * @param array $options (default: 'nopagebreak: true' => do not add a page break after the included text)
+     *
+     * @param string $filename  to be included (relative to book Contents dir)
+     * @param array  $variables to be passed to the template
+     * @param array  $options   (default: 'nopagebreak: true' => do not add a page break after the included text)
+     *
      * @return string included text with all the replacements done.
      */
     public function fileFunction($filename, $variables = array(), $options = array())
     {
         $dir = $this->app['publishing.dir.contents'];
-        $file = $dir.'/'.$filename;
+        $file = $dir . '/' . $filename;
 
         if (!file_exists($file)) {
             $this->writeLn(
-                    sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content'] ),
-                    'error');
+                 sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
+                 'error'
+            );
+
             return $filename;
         }
 
@@ -144,7 +149,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         // pagebreak is added by default
         $addPageBreak = !isset($options['nopagebreak']) || (isset($options['nopagebreak']) && !$options['nopagebreak']);
         if ($addPageBreak) {
-            $rendered.= '<div class="page-break"></div>';
+            $rendered .= '<div class="page-break"></div>';
         }
 
         return $rendered;
@@ -152,6 +157,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Twig function: <b>itemtoc()</b>
+     *
      * @return string The _itemtoc_internal() function call
      *
      * Generating the item toc requires two phases to ensure that included files got parsed after being
@@ -168,7 +174,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      * <b>This is an internal function so is not to be used directly in content files.</b>
      * It will be invoked on itemPostParse, after all the file() functions have been resolved and all
      * the included item contents have been parsed.
-
+     *
      * @uses Configuration option <i>edition.plugins.TwigExtension.itemtoc.deep</i>
      *       (default: <i>edition.toc.deep + 1 </i>
      *
@@ -180,11 +186,13 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $template = 'itemtoc.twig';
 
         // note that we need to use the normal Twig template renderer, not our Twig string renderer
-        $twig = $this->app->get('twig');
+        $twig = $this->app['twig'];
         $this->addTwigGlobals($twig);
 
-        $itemtoc_deep = $this->getEditionOption('plugins.options.TwigExtension.itemtoc.deep',
-                        $this->getEditionOption('toc.deep') + 1);
+        $itemtoc_deep = $this->getEditionOption(
+                             'plugins.options.TwigExtension.itemtoc.deep',
+                             $this->getEditionOption('toc.deep') + 1
+        );
 
         $rendered = $twig->render($template, array('itemtoc_deep' => $itemtoc_deep));
 

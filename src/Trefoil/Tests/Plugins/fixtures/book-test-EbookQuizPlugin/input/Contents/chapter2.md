@@ -1,6 +1,6 @@
 # EbookQuiz test in Spanish
 
-<div markdown="1" class="activity" data-id="act-3-spanish">
+<div markdown="1" class="quiz-activity" data-id="act-3-spanish">
 ##### Ejercicio 3
 ###### Seleccione Verdadero o Falso.
 

@@ -130,7 +130,7 @@ class GlossaryReplacer
      *
      * @param string       $text
      * @param GlossaryItem $glossaryItem
-     * @param string       $variant      The variant to replace
+     * @param string       $variant The variant to replace
      *
      * @return string
      */
@@ -170,7 +170,7 @@ class GlossaryReplacer
      *
      * @param string       $text
      * @param GlossaryItem $glossaryItem
-     * @param string       $variant      The variant to replace
+     * @param string       $variant The variant to replace
      *
      * @return string
      */

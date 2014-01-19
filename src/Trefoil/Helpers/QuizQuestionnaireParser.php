@@ -39,12 +39,14 @@ class QuizQuestionnaireParser
 
     /**
      * The original text (UTF-8)
+     *
      * @var string
      */
     protected $text;
 
     /**
      * The parsed questionnaire
+     *
      * @var QuizQuestionnaire
      */
     protected $questionnaire;
@@ -94,8 +96,9 @@ class QuizQuestionnaireParser
             throw new \Exception(sprintf('QuizQestionnaire must have data-id: "%s"', $crawler->text()));
         }
 
-        $this->questionnaire->setOptions(array(
-            'pagebreak' => $crawler->attr('data-pagebreak') != '0')
+        $this->questionnaire->setOptions(
+                            array(
+                                'pagebreak' => $crawler->attr('data-pagebreak') != '0')
         );
 
         // extract heading (optional)
@@ -139,6 +142,7 @@ class QuizQuestionnaireParser
      * Extract the questionnaire introduction text
      *
      * @param  Crawler $crawler
+     *
      * @return string
      */
     protected function extractQuestionnaireIntroduction(Crawler $crawler)
@@ -147,7 +151,7 @@ class QuizQuestionnaireParser
 
         $text = array();
         foreach ($questionTextNodes as $pNode) {
-            $p      = new Crawler($pNode);
+            $p = new Crawler($pNode);
             $text[] = CrawlerTools::getNodeHtml($p);
         }
 
@@ -185,9 +189,10 @@ class QuizQuestionnaireParser
 
         if (0 == $olNode->count()) {
             throw new \RuntimeException(
-            sprintf(
-                'No questions found for questionnaire id "%s"' . "\n"
-                . $this->questionnaire->getId()));
+                sprintf(
+                    'No questions found for questionnaire id "%s"' . "\n"
+                    . $this->questionnaire->getId()
+                ));
         }
 
         // collect questions
@@ -196,7 +201,7 @@ class QuizQuestionnaireParser
         $qnodes = $crawler->filter('ol')->children();
 
         // all the 1st level "li" nodes are questions
-        foreach ($qnodes as $qIndex => $qDomNode) {
+        foreach ($qnodes as $qDomNode) {
             $qnode = new Crawler($qDomNode);
 
             $question = new QuizQuestionnaireQuestion();
@@ -208,7 +213,7 @@ class QuizQuestionnaireParser
                 $question->setText('<p>' . $qnode->text() . '</p>');
             } else {
                 // a normal question
-                foreach ($qnodeNodes as $qnodeIndex => $qnodeDomNode) {
+                foreach ($qnodeNodes as $qnodeDomNode) {
                     $qnodeNode = new Crawler($qnodeDomNode);
 
                     $nodeName = CrawlerTools::getNodeName($qnodeNode);
@@ -221,10 +226,10 @@ class QuizQuestionnaireParser
                         $piece = CrawlerTools::getNodeHtml($qnodeNode);
                         if ($question->getHeading()) {
                             // solution
-                            $question->setSolution($question->getSolution().$piece);
+                            $question->setSolution($question->getSolution() . $piece);
                         } else {
                             // question text
-                            $question->setText($question->getText().$piece);
+                            $question->setText($question->getText() . $piece);
                         }
                     }
                 }

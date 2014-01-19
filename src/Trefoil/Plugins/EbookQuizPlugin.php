@@ -38,7 +38,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected $generated = false;
 
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
@@ -84,11 +84,18 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function processItem()
     {
+        $quizElements = array(
+            'activity', // backwards compatibility
+            'questions', // backwards compatibility
+            'quiz-activity',
+            'quiz-questionnaire'
+        );
+
         // capture quiz elements
         $regExp = '/';
         $regExp .= '(?<div>';
         $regExp .= '<div[^(class|>)]*';
-        $regExp .= 'class="(?<type>activity|questions)"';
+        $regExp .= sprintf('class="(?<type>%s)"', implode('|', $quizElements));
         $regExp .= '.*';
         $regExp .= '<\/div>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
@@ -100,15 +107,13 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                 $html = '';
                 switch ($matches['type']) {
                     case 'activity':
+                    case 'quiz-activity':
                         $html = $me->processActivityType($matches['div']);
                         break;
                     case 'questions':
+                    case 'quiz-questionnaire':
                         $html = $me->processQuestionnaireType($matches['div']);
                         break;
-                    default:
-                        // unrecognized type
-                        // TODO: create error report
-                        return $matches[0];
                 }
 
                 return $html;
@@ -155,7 +160,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $variables = array('activity' => $activity);
         $html = $this->app['twig']->render('ebook-quiz-activity.twig', $variables);
 
-        return $html;
+         return $html;
     }
 
     /**
@@ -260,7 +265,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                        array($auxItem,
                              $quizItem->getId(),
                              $quizItem->getType(),
-                             substr($quizItem->getHeading(),0, 40),
+                             substr($quizItem->getHeading(), 0, 40),
                              $count)
                 );
                 $auxItem = '';
@@ -273,6 +278,5 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         file_put_contents($reportFile, $report->getText());
 
     }
-
 
 }

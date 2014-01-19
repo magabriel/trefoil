@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Trefoil\Events;
 
@@ -13,5 +13,5 @@ final class TrefoilEvents
      * after performing all its initialization tasks (basically, plugin itself into the
      * Easybook system).
      */
-    const PRE_PUBLISH_AND_READY   = 'trefoil.publish.start';
+    const PRE_PUBLISH_AND_READY = 'trefoil.publish.start';
 }

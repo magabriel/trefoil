@@ -21,6 +21,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
     /**
      * String to replace spaces into images specifications
+     *
      * @var string
      */
     const SPACE_REPLACEMENT = '¬|{^';
@@ -28,8 +29,8 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => array('onItemPreParse', -100), // after TwigExtensionPlugin
-                EasybookEvents::POST_PARSE => 'onItemPostParse'
+            EasybookEvents::PRE_PARSE  => array('onItemPreParse', -100), // after TwigExtensionPlugin
+            EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
 
@@ -64,40 +65,42 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    $image = $matches['image'];
-                    $arguments = '';
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                $image = $matches['image'];
+                $arguments = '';
 
-                    // get the query
-                    $parts = explode('?', html_entity_decode($matches['image']));
-                    if (isset($parts[1])) {
-                        // no query, nothing to do
+                // get the query
+                $parts = explode('?', html_entity_decode($matches['image']));
+                if (isset($parts[1])) {
+                    // no query, nothing to do
 
-                        // the real image
-                        $image = $parts[0];
+                    // the real image
+                    $image = $parts[0];
 
-                        // get the arguments
-                        parse_str($parts[1], $args);
-                        $args = str_replace('"', '', $args);
+                    // get the arguments
+                    parse_str($parts[1], $args);
+                    $args = str_replace('"', '', $args);
 
-                        /* replace all spaces for this to work
-                         * (this is because of the way Markdown parses the image specification)
-                         */
-                        if (isset($args['class'])) {
-                            $args['class'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['class']);
-                        }
-
-                        if (isset($args['style'])) {
-                            $args['style'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['style']);
-                        }
-
-                        $arguments = $me->renderArguments($args);
+                    /* replace all spaces for this to work
+                     * (this is because of the way Markdown parses the image specification)
+                     */
+                    if (isset($args['class'])) {
+                        $args['class'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['class']);
                     }
 
-                    return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?'.$arguments : ''));
-                }, $content);
+                    if (isset($args['style'])) {
+                        $args['style'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['style']);
+                    }
+
+                    $arguments = $me->renderArguments($args);
+                }
+
+                return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?' . $arguments : ''));
+            },
+            $content
+        );
 
         return $content;
     }
@@ -111,15 +114,15 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $me = $this;
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me)
-                      {
-                      $image = Toolkit::parseHTMLAttributes($matches['image']);
-                      $image = $me->processExtraImage($image);
-                      $html = Toolkit::renderHTMLTag('img', null, $image);
+            function ($matches) use ($me) {
+                $image = Toolkit::parseHTMLAttributes($matches['image']);
+                $image = $me->processExtraImage($image);
+                $html = Toolkit::renderHTMLTag('img', null, $image);
 
-                      return $html;
-                      },
-                      $content);
+                return $html;
+            },
+            $content
+        );
 
         // ensure there is no space replacements left (it can happen if
         // some of the image tags were not rendered because they were
@@ -155,14 +158,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         // assign them
         if (isset($args['class'])) {
             $args['class'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['class']);
-            $image['class'] = isset($image['class']) ? $image['class'].' '.$args['class'] : $args['class'];
+            $image['class'] = isset($image['class']) ? $image['class'] . ' ' . $args['class'] : $args['class'];
             unset($args['class']);
         }
 
         if (isset($args['style'])) {
             // replace back all spaces
             $args['style'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['style']);
-            $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
+            $image['style'] = isset($image['style']) ? $image['style'] . ';' . $args['style'] : $args['style'];
             unset($args['style']);
         }
 

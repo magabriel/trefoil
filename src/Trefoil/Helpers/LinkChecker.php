@@ -23,6 +23,7 @@ class LinkChecker
         $rc = '';
         $msg = 'Invalid host';
 
+        /** @noinspection PhpUsageOfSilenceOperatorInspection */
         $f = @fopen(html_entity_decode($url), "r");
         if ($f) {
             fclose($f);

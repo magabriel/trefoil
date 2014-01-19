@@ -18,7 +18,7 @@ class TableExtraPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::POST_DECORATE => 'onItemPostDecorate'
+            EasybookEvents::POST_DECORATE => 'onItemPostDecorate'
         );
     }
 

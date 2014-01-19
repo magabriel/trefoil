@@ -78,5 +78,5 @@ class QuizQuestionnaireQuestion
     {
         return $this->text;
     }
-  
+
 }

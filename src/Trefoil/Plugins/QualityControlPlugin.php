@@ -5,7 +5,6 @@ use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
-
 use Trefoil\Util\SimpleReport;
 
 /**
@@ -23,8 +22,8 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -9999), // Latest
-                EasybookEvents::POST_PUBLISH => 'onPostPublish'
+            EasybookEvents::POST_PARSE   => array('onItemPostParse', -9999), // Latest
+            EasybookEvents::POST_PUBLISH => 'onPostPublish'
         );
     }
 
@@ -67,6 +66,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
      * Extracts all images in the string
      *
      * @param string $string
+     *
      * @return array of images
      */
     protected function extractImages($string)
@@ -97,8 +97,8 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // process all the paragraphs
         $regExp = '/';
-        $regExp.= '<p>(?<par>.*)<\/p>';
-        $regExp.= '/Ums'; // Ungreedy, multiline, dotall
+        $regExp .= '<p>(?<par>.*)<\/p>';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $content, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
@@ -115,16 +115,16 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // find all the Markdown emphasis marks that have made it out to HTML
         $regExp = '/(?<em>'; // start capturing group
-        $regExp.= '\s[_\*]+(?:[^\s_\*]+?)'; // underscore or asterisk after a space
-        $regExp.= '|';
-        $regExp.= '(?:[^\s_\*]+)[_\*]+\s'; // underscore or asterisk before a space
-        $regExp.= '|';
-        $regExp.= '(?:\s(?:_|\*{1,2})\s)'; // underscore or asterisk or double asterisk surrounded by spaces
-        $regExp.= '|';
-        $regExp.= '^(?:[_\*]+\s.*$)'; // underscore or asterisk before a space at start of line
-        $regExp.= '|';
-        $regExp.= '(?:'.$noBlanks.'+\*+'.$noBlanks.'+)'; // asterisk between no spaces
-        $regExp.= ')/Ums'; // Ungreedy, multiline, dotall
+        $regExp .= '\s[_\*]+(?:[^\s_\*]+?)'; // underscore or asterisk after a space
+        $regExp .= '|';
+        $regExp .= '(?:[^\s_\*]+)[_\*]+\s'; // underscore or asterisk before a space
+        $regExp .= '|';
+        $regExp .= '(?:\s(?:_|\*{1,2})\s)'; // underscore or asterisk or double asterisk surrounded by spaces
+        $regExp .= '|';
+        $regExp .= '^(?:[_\*]+\s.*$)'; // underscore or asterisk before a space at start of line
+        $regExp .= '|';
+        $regExp .= '(?:' . $noBlanks . '+\*+' . $noBlanks . '+)'; // asterisk between no spaces
+        $regExp .= ')/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 
         $emphasis = array();
@@ -168,9 +168,9 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $reportFile = $outputDir . '/report-QualityControlPlugin.txt';
 
         $report = '';
-        $report.= $this->getProblemsReport();
-        $report.= '';
-        $report.= $this->getImagesNotUsedReport();
+        $report .= $this->getProblemsReport();
+        $report .= '';
+        $report .= $this->getImagesNotUsedReport();
 
         file_put_contents($reportFile, $report);
     }
@@ -191,11 +191,13 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             $report->addLine();
             foreach ($problems as $problem) {
                 $count++;
-                $report->addLine(array(
-                        '',
-                        $problem['type'],
-                        substr($problem['object'], 0, 30),
-                        $problem['message']));
+                $report->addLine(
+                       array(
+                           '',
+                           $problem['type'],
+                           substr($problem['object'], 0, 30),
+                           $problem['message'])
+                );
             }
         }
 
@@ -218,15 +220,15 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $report->setColumnsWidth(array(100));
 
         // check existing images
-        $imagesDir =  $this->app['publishing.dir.contents'].'/images';
+        $imagesDir = $this->app['publishing.dir.contents'] . '/images';
 
         $existingImages = array();
 
         if (file_exists($imagesDir)) {
-            $existingFiles= Finder::create()->files()->in($imagesDir)->sortByName();
+            $existingFiles = Finder::create()->files()->in($imagesDir)->sortByName();
 
             foreach ($existingFiles as $image) {
-                $name = str_replace($this->app['publishing.dir.contents'].'/', '', $image->getPathname());
+                $name = str_replace($this->app['publishing.dir.contents'] . '/', '', $image->getPathname());
                 $existingImages[] = $name;
             }
         }
