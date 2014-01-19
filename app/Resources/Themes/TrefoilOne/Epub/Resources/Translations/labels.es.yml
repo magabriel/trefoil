@@ -49,7 +49,7 @@ label:
     by:              'por'
     page:            'página'
     blank:           'Esta página se ha dejado vacía a propósito'
-    
+
     # Trefoil
     authors:                'Autores'
     technical_reviewer:     'Revisor técnico'
@@ -62,4 +62,3 @@ label:
     series:                 'Colección'
     publisher:              'Editorial'
     publishing_label:       'Sello editorial'
-    

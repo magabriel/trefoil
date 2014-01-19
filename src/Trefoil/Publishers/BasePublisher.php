@@ -14,7 +14,7 @@ class BasePublisher extends EasybookBasePublisher
      * temporary directory. It also prepares an array with all the images
      * data needed later to generate the full ebook contents manifest.
      *
-     * @param  string $targetDir The directory where the images are copied.
+     * @param string $targetDir The directory where the images are copied.
      *
      * @throws \RuntimeException
      * @return array             Images data needed to create the book manifest.

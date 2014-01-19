@@ -37,5 +37,4 @@ class QuizActivity extends QuizItem
         return $this->questions;
     }
 
-
 }

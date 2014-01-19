@@ -98,4 +98,3 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         return $content;
     }
 }
-

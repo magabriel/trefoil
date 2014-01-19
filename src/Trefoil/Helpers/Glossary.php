@@ -35,7 +35,7 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * @param  string $term
+     * @param string $term
      *
      * @return GlossaryItem
      */

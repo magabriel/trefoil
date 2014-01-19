@@ -98,4 +98,3 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
         return $content;
     }
 }
-

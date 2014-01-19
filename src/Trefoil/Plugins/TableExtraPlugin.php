@@ -36,4 +36,3 @@ class TableExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($item);
     }
 }
-

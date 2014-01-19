@@ -185,4 +185,3 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         return implode('&', $argArray);
     }
 }
-

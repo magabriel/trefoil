@@ -96,7 +96,6 @@ class SimpleReport
         return $text;
     }
 
-
     protected function formatHeaders()
     {
         $text = array();

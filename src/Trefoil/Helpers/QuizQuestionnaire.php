@@ -15,7 +15,7 @@ class QuizQuestionnaire extends QuizItem
      */
     protected $questions = array();
 
-    function __construct()
+    public function __construct()
     {
         $this->setType(self::QUIZ_QUESTIONNAIRE);
     }

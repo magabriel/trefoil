@@ -53,7 +53,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      * Event handlers
      * ********************************************************************************
      */
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),

@@ -34,7 +34,7 @@ class Application extends EasybookApplication
         $this->register(new TwigServiceProvider());
     }
 
-    public final function getMyVersion()
+    final public function getMyVersion()
     {
         return static::MY_VERSION;
     }

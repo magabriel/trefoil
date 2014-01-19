@@ -250,4 +250,3 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         return $report->getText();
     }
 }
-

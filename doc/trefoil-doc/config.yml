@@ -1,60 +1,60 @@
 easybook:
     parameters:
-        parser.options: 
+        parser.options:
             code_block_type: fenced
         kindlegen.path: '/home/miguelangel/bin/kindlegen'
-        epubcheck.path: '/home/miguelangel/bin/epubcheck.jar'            
+        epubcheck.path: '/home/miguelangel/bin/epubcheck.jar'
 book:
     title:            'Trefoil documentation'
     author:           'trefoil'
     edition:          '0'
     language:         en
     publication_date: '01-12-2013'
-    
+
     version:          '0.376'
 
     generator:        { name: trefoil, version: DEV }
-   
+
     contents:
         - { element: edition }
         - { element: toc }
         - { element: introduction, content: introduction.md }
-        
+
         - { element: part,        number: 1,    content: part-1.md }
         - { element: chapter,     number:   1,  content: chapter1.md }
-            
+
         - { element: part,        number: 2,    content: part-2.md }
         - { element: chapter,     number:   2,  content: chapter2.md }
-        - { element: chapter,     number:   3,  content: chapter3.md } 
-        - { element: chapter,     number:   4,  content: chapter4.md } 
-                               
-        - { element: footnotes }    
+        - { element: chapter,     number:   3,  content: chapter3.md }
+        - { element: chapter,     number:   4,  content: chapter4.md }
+
+        - { element: footnotes }
         - { element: auto-glossary }
- 
+
     editions:
         kindle:
             extends: ebook
             format:  mobi
-             
+
         ebook:
             format:         epub
             highlight_code: true
             highlight_cache: true
             include_styles: true
- 
+
             include_fonts:  true
-            fonts: 
+            fonts:
                 - Inconsolata-Regular
                 - Inconsolata-Bold
- 
-            labels:         ['appendix', 'chapter', 'figure', 'part'] 
+
+            labels:         ['appendix', 'chapter', 'figure', 'part']
             theme:          TrefoilTwo
             toc:
                 deep:       3
                 elements:   ["appendix", "chapter", "part", "introduction"]
 
-            plugins:       
-                enabled: 
+            plugins:
+                enabled:
                     - AutoGlossary
                     - DropCaps
                     - EbookRename
@@ -70,20 +70,20 @@ book:
                     - TwigExtension
                     - Typography
                     - VersionUpdater
-                    
+
                 options:
-                    DropCaps: 
+                    DropCaps:
                         levels:     [1]                             # 1 to 6 (default: 1)
                         mode:       letter                          # letter, word (default: letter)
                         length:     1                               # number of letters or words to highlight (default: 1)
-                        elements:   ['chapter', 'introduction']     # which elements to process 
+                        elements:   ['chapter', 'introduction']     # which elements to process
 
-                    TwigExtension: 
+                    TwigExtension:
                         itemtoc:
                             deep:   2
-                    
+
                     LinkCheck:
-                        check_external_links: true                        
+                        check_external_links: true
 
                     EbookRename:
                         schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
@@ -91,28 +91,28 @@ book:
 
                     Typography:
                         checkboxes: true
-                        fix_spanish_style_dialog: false                        
-                
+                        fix_spanish_style_dialog: false
+
         ###########################################
-        
+
         base-edition:
             highlight_code: true
             highlight_cache: true
             include_styles: true
- 
+
             include_fonts:  true
-            fonts: 
+            fonts:
                 - Inconsolata-Regular
                 - Inconsolata-Bold
- 
-            labels:         ['appendix', 'chapter', 'figure', 'part'] 
+
+            labels:         ['appendix', 'chapter', 'figure', 'part']
             theme:          TrefoilTwo
             toc:
                 deep:       3
                 elements:   ["appendix", "chapter", "part", "introduction"]
 
-            plugins:       
-                enabled: 
+            plugins:
+                enabled:
                     - AutoGlossary
                     - DropCaps
                     - EbookRename
@@ -128,20 +128,20 @@ book:
                     - TwigExtension
                     - Typography
                     - VersionUpdater
-                    
+
                 options:
-                    DropCaps: 
+                    DropCaps:
                         levels:     [1]                             # 1 to 6 (default: 1)
                         mode:       letter                          # letter, word (default: letter)
                         length:     1                               # number of letters or words to highlight (default: 1)
-                        elements:   ['chapter', 'introduction']     # which elements to process 
+                        elements:   ['chapter', 'introduction']     # which elements to process
 
-                    TwigExtension: 
+                    TwigExtension:
                         itemtoc:
                             deep:   2
-                    
+
                     LinkCheck:
-                        check_external_links: true                        
+                        check_external_links: true
 
                     EbookRename:
                         schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
@@ -149,8 +149,8 @@ book:
 
                     Typography:
                         checkboxes: true
-                        fix_spanish_style_dialog: false         
-                        
+                        fix_spanish_style_dialog: false
+
         print:
             extends:         base-edition
             format:          pdf
@@ -174,7 +174,7 @@ book:
             format:          html_chunked
             chunk_level:     1
             #images_base_dir: /img/doc-en/
-            
+
         trefoil-project.org:
             extends:         base-edition
             format:          html_chunked

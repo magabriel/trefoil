@@ -113,7 +113,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      * Event handlers
      * ********************************************************************************
      */
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
@@ -303,7 +303,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         foreach ($this->processedGlossary as $term => $data) {
             /* @var GlossaryItem $data */
-            $auxTerm = $term; 
+            $auxTerm = $term;
             foreach ($data->getXref() as $variant => $items) {
                 $auxVariant = $variant;
                 foreach ($items as $item => $count) {
@@ -337,4 +337,3 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         return $report->getText();
     }
 }
-

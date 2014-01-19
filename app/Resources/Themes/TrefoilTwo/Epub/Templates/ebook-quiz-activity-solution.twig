@@ -30,7 +30,7 @@ Type....: {{ activity.type }}
             <p class="response">&raquo; {{ response }}</p>
         <hr />
             {# success or error #}
-            {% set success = (question.solution == rindex ? 1 : 0) %} 
+            {% set success = (question.solution == rindex ? 1 : 0) %}
 
             {% if success %}
                 <div>

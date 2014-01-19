@@ -5,7 +5,7 @@
     <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
 
     {{ item.content }}
-    
+
     {% for quizItem in app.get('publishing.quiz.items') %}
         {% if quizItem.type in ['activity.abc', 'activity.ynb'] %}
             {% set template = 'ebook-quiz-activity-solution.twig' %}

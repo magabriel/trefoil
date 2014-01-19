@@ -204,7 +204,7 @@ class QuizActivityParser
     /**
      * Extract the activity introduction text
      *
-     * @param  Crawler $crawler
+     * @param Crawler $crawler
      *
      * @return string
      */

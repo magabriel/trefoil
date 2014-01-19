@@ -148,7 +148,7 @@ class Epub2Publisher extends HtmlPublisher
             $renderedTemplatePath = $bookTmpDir . '/book/OEBPS/' . $item['page_name'] . '.html';
 
             // book items have already been rendered, so we just need
-            // to copy them to the temp dir            
+            // to copy them to the temp dir
             file_put_contents($renderedTemplatePath, $item['content']);
         }
 
@@ -236,14 +236,13 @@ class Epub2Publisher extends HtmlPublisher
         return $bookDir;
     }
 
-
     /**
      * It prepares the book cover image (if the book defines one).
      *
-     * @param  string $targetDir The directory where the cover image is copied.
+     * @param string $targetDir The directory where the cover image is copied.
      *
-     * @return array|null        Book cover image data or null if the book doesn't
-     *                           include a cover image.
+     * @return array|null Book cover image data or null if the book doesn't
+     *                    include a cover image.
      */
     private function prepareBookCoverImage($targetDir)
     {
@@ -273,7 +272,7 @@ class Epub2Publisher extends HtmlPublisher
      * For now, epub books only include the Inconsolata font to display
      * their code listings.
      *
-     * @param  string $targetDir The directory where the fonts are copied.
+     * @param string $targetDir The directory where the fonts are copied.
      *
      * @throws \RuntimeException
      * @return array             Font data needed to create the book manifest.
@@ -367,9 +366,9 @@ class Epub2Publisher extends HtmlPublisher
      * This method creates a new property for each item called 'page_name' which
      * stores the normalized page name that should have this chunk.
      *
-     * @param  array $items The original book items.
+     * @param array $items The original book items.
      *
-     * @return array        The book items with their new 'page_name' property.
+     * @return array The book items with their new 'page_name' property.
      */
     private function normalizePageNames($items)
     {
@@ -396,8 +395,8 @@ class Epub2Publisher extends HtmlPublisher
      *
      * This method will generate he ZIP file using the OS 'zip' command.
      *
-     * @param  string $directory  Book contents directory
-     * @param  string $zip_file   The path of the generated ZIP file
+     * @param string $directory Book contents directory
+     * @param string $zip_file  The path of the generated ZIP file
      */
     private function zipBookContents($directory, $zip_file)
     {
@@ -458,8 +457,8 @@ class Epub2Publisher extends HtmlPublisher
      * ./chapter.html#section-slug are wrong and chapter.html or
      * chapter.html#section-slug are right.
      *
-     * @param  string $chunksDir The directory where the book's HTML page/chunks
-     *                           are stored
+     * @param string $chunksDir The directory where the book's HTML page/chunks
+     *                          are stored
      */
     private function fixInternalLinks($chunksDir)
     {

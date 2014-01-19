@@ -26,7 +26,7 @@ Questionnaire: {{ questionnaire.id }}
     {% set start= 'q-'~questionnaire.id  ~ '_0'  %}
     <a href="#{{ start }}"><span>[ Start ]</span></a>
     <a href="#skip-q-{{ questionnaire.id }}"><span>[ Skip questionnaire ]</span></a>
-    
+
     <div class="page-break"></div>
 
 {% for qindex, question in questionnaire.questions  %}

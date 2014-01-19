@@ -183,7 +183,7 @@ class DropCaps
     /**
      * Create drop caps markup for a text.
      *
-     * @param  string $text
+     * @param string $text
      *
      * @return string
      */

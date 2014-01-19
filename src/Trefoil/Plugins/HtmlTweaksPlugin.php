@@ -250,4 +250,3 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         return $content;
     }
 }
-

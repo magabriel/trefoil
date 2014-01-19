@@ -141,7 +141,7 @@ class QuizQuestionnaireParser
     /**
      * Extract the questionnaire introduction text
      *
-     * @param  Crawler $crawler
+     * @param Crawler $crawler
      *
      * @return string
      */

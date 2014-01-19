@@ -5,7 +5,6 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 /**
  * This plugin extends Twig to provide some useful functionalities:
  *
@@ -179,7 +178,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      *       (default: <i>edition.toc.deep + 1 </i>
      *
      * @return string The item toc rendered
-     * @internal
+     *                @internal
      */
     public function _itemTocInternalFunction()
     {

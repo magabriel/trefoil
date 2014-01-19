@@ -257,4 +257,3 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         file_put_contents($reportFile, $text);
     }
 }
-

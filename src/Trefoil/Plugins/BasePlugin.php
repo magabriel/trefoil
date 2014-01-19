@@ -6,7 +6,6 @@ use Symfony\Component\Console\Output\Output;
 use Trefoil\DependencyInjection\Application;
 use Trefoil\Util\Toolkit;
 
-
 /**
  * Base class for all plugins
  *
@@ -50,7 +49,7 @@ abstract class BasePlugin
      * Write an output message line
      *
      * @param string $message
-     * @param string $type of message ('error', 'warning', 'info')
+     * @param string $type    of message ('error', 'warning', 'info')
      */
     public function writeLn($message, $type = 'info')
     {
@@ -62,7 +61,7 @@ abstract class BasePlugin
      * Write an output message (w/o a line break)
      *
      * @param string $message
-     * @param string $type of message ('error', 'warning', 'info')
+     * @param string $type    of message ('error', 'warning', 'info')
      */
     public function write($message, $type = 'info')
     {
