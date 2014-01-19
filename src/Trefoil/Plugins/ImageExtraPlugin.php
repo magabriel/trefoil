@@ -86,11 +86,11 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                          * (this is because of the way Markdown parses the image specification)
                          */
                         if (isset($args['class'])) {
-                            $args['class'] = str_replace(' ', self::SPACE_REPLACEMENT, $args['class']);
+                            $args['class'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['class']);
                         }
 
                         if (isset($args['style'])) {
-                            $args['style'] = str_replace(' ', self::SPACE_REPLACEMENT, $args['style']);
+                            $args['style'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['style']);
                         }
 
                         $arguments = $me->renderArguments($args);

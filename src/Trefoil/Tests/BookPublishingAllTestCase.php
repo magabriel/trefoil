@@ -66,6 +66,7 @@ abstract class BookPublishingAllTestCase extends TestCase
     }
 
     /**
+     * @throws \Exception
      * @return array
      */
     public function bookProvider()

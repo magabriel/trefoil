@@ -96,7 +96,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $twig->addGlobal('app', $this->app);
 
         if (null != $this->app->get('publishing.book.config')['book']) {
-            $twig->addGlobal('book', $this->app->get('publishing.book.config')['book']);
+            $twig->addGlobal('book', $this->app['publishing.book.config']['book']);
 
             $publishingEdition = $this->edition;
             $editions = $this->app->book('editions');

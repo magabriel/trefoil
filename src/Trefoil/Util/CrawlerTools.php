@@ -2,6 +2,7 @@
 namespace Trefoil\Util;
 
 use Symfony\Component\DomCrawler\Crawler;
+use DOMNode;
 
 /**
  * Serveral utility operations for Crawler objects.
@@ -19,6 +20,7 @@ class CrawlerTools
      */
     public static function getNodeName(Crawler $node)
     {
+        /* @var DOMNode $domNode */
         $domNode = null;
 
         foreach ($node as $n) {

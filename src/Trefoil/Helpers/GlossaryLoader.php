@@ -41,7 +41,7 @@ class GlossaryLoader
     /**
      * Load the definition file.
      *
-     * @param string $hasOptions Whether the file also has an 'options' section
+     * @param bool|string $hasOptions Whether the file also has an 'options' section
      *
      * @return Glossary
      */

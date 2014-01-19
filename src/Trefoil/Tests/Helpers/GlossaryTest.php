@@ -58,7 +58,7 @@ class GlossaryTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($item, $actual);
 
         $this->assertEquals(
-                ['item 1a', 'item 1b'], $actual->getVariants());
+                array('item 1a', 'item 1b'), $actual->getVariants());
     }
 
     /**
@@ -66,19 +66,19 @@ class GlossaryTest extends \PHPUnit_Framework_TestCase {
      */
     public function testMerge()
     {
-        $itemsA = [
+        $itemsA = array(
             $this->createGlossaryItem(1),
             $this->createGlossaryItem(2)
-        ];
+        );
 
         foreach ($itemsA as $item) {
             $this->object->add($item);
         }
 
-        $itemsB = [
+        $itemsB = array(
             $this->createGlossaryItem(3),
             $this->createGlossaryItem(4)
-        ];
+        );
 
         $glossary2 = new Glossary;
         foreach ($itemsB as $item) {
@@ -117,7 +117,7 @@ class GlossaryTest extends \PHPUnit_Framework_TestCase {
         $this->object->add($item2);
 
         $this->assertEquals(
-                ['item 1[a|b]' => $item1, 'item 2[a|b]' => $item2], iterator_to_array($this->object->getIterator()));
+                array('item 1[a|b]' => $item1, 'item 2[a|b]' => $item2), iterator_to_array($this->object->getIterator()));
     }
 
     protected function createGlossaryItem($number)

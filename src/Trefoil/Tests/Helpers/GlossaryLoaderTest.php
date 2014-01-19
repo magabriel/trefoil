@@ -18,6 +18,7 @@ class GlossaryLoaderTest extends \PHPUnit_Framework_TestCase {
      */
     protected function setUp()
     {
+        /* @var Slugger $slugger */
         $slugger = $this->getMockBuilder('Easybook\Util\Slugger')
                         ->disableOriginalConstructor()
                         ->enableArgumentCloning()->getMock();
@@ -45,10 +46,10 @@ class GlossaryLoaderTest extends \PHPUnit_Framework_TestCase {
         
         $this->assertTrue($this->object->isLoaded());
 
-        $options = [
+        $options = array(
             'coverage' => 'first',
-            'elements' => ["chapter", "prologue"]
-        ];
+            'elements' => array("chapter", "prologue")
+        );
 
         $this->assertEquals($options, $this->object->getOptions());
     }

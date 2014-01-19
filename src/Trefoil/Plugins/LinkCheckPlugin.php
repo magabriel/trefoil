@@ -3,7 +3,6 @@ namespace Trefoil\Plugins;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
-use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\LinkChecker;
 use Trefoil\Util\SimpleReport;

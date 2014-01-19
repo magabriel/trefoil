@@ -212,10 +212,11 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= ' -(?<char>[^ -])';
         $regExp .= '/U'; // Ungreedy
 
+        $me = $this;
         $text = preg_replace_callback($regExp,
-                function ($matches)
+                function ($matches) use ($me)
                 {
-                    return sprintf(' ' . self::EMDASH_HTMLENTITY . '%s', $matches['char']);
+                    return sprintf(' ' . $me::EMDASH_HTMLENTITY . '%s', $matches['char']);
                 }, $text);
 
         // replace "something followed by dash or emdash character" by

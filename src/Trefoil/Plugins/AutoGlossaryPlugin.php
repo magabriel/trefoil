@@ -284,8 +284,6 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report->setColumnsWidth(array(30, 30, 30, 5, 30));
         $report->setColumnsAlignment(array('', '', '', 'right', ''));
 
-        $auxTerm = '';
-        $auxVariant = '';
         foreach ($this->processedGlossary as $term => $data) {
             $auxTerm = $term;
             foreach ($data->getXref() as $variant => $items) {

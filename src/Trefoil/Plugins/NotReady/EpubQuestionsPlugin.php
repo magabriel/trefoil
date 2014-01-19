@@ -43,7 +43,7 @@ class EpubQuestionsPlugin extends EpubInteractivePluginBase implements EventSubs
                 $content = $this->processSolutions($content);
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // DEBUG
             //echo $e->getTraceAsString();
             throw $e;
