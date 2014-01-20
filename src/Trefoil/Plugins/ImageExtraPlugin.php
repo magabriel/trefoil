@@ -38,7 +38,8 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
             EasybookEvents::PRE_PARSE  => array('onItemPreParse', -100), // after TwigExtensionPlugin
-            EasybookEvents::POST_PARSE => 'onItemPostParse'
+            EasybookEvents::POST_PARSE => 'onItemPostParse',    // after content has been parsed
+            EasybookEvents::POST_DECORATE => 'onItemPostDecorate' // after templates have been rendered
         );
     }
 
@@ -57,14 +58,20 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content = $this->item['content'];
+        $this->item['content'] = $this->processImages($this->item['content']);
 
-        $content = $this->processImages($content);
-
-        $this->item['content'] = $content;
         $event->setItem($this->item);
     }
 
+    public function onItemPostDecorate(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $this->item['content'] = $this->processImages($this->item['content']);
+
+        $event->setItem($this->item);
+    }
+    
     public function preProcessImages($content)
     {
         $regExp = '/';
@@ -87,6 +94,10 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                     // the real image
                     $image = $parts[0];
 
+                    // allow images to include 'images/' as path, for compatibility
+                    // with Markdown editors like MdCharm
+                    $image = str_replace('images/', '', $image);
+                    
                     // get the arguments
                     parse_str($parts[1], $args);
                     $args = str_replace('"', '', $args);
@@ -142,10 +153,6 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected function processExtraImage(array $image)
     {
-        // allow images to include 'images/' as path, for compatibility
-        // with Markdown editors like MdCharm
-        $image['src'] = str_replace('images/', '', $image['src']);
-
         // replace typographic quotes (just in case, may be set by SmartyPants)
         $src = str_replace(array('&#8221;', '&#8217;'), '"', $image['src']);
 

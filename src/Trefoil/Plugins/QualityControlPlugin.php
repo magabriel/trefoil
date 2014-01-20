@@ -30,7 +30,8 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return array(
-            EasybookEvents::POST_PARSE   => array('onItemPostParse', -9999), // Latest
+            //EasybookEvents::POST_PARSE   => array('onItemPostParse', -9999), // Latest
+            EasybookEvents::POST_DECORATE => array('onItemPostDecorate', -9999), // Latest
             EasybookEvents::POST_PUBLISH => 'onPostPublish'
         );
     }
@@ -49,6 +50,16 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $this->checkEmphasis($content);
     }
 
+    public function onItemPostDecorate(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $content = $this->item['content'];
+
+        $this->checkImages($content);
+        $this->checkEmphasis($content);
+    }
+    
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
@@ -112,6 +123,15 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         foreach ($matches as $match) {
             $emphasis = $this->extractEmphasis($match['par']);
             foreach ($emphasis as $emph) {
+                if (in_array($emph, array('(*)', '"*"'))) {
+                    // common strings
+                    continue;
+                }
+                if (false !== strpos($emph, '__' )) {
+                    // a line draw with underscores
+                    continue;
+                }
+                
                 $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
             }
         }

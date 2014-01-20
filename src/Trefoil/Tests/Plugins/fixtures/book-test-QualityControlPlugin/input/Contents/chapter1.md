@@ -16,6 +16,10 @@ No error:
 
 2. Curabitur **vitae** hendrerit elit. Quisque nec velit ut nunc pellentesque tincidunt. 
 
+3. This is not an error (*) but a text mark.
+
+4. This is a line draw with underscores: hello ______ and ________ world .
+
 Errors:
 
 1. Lorem ipsum dolor sit amet, consectetur _ adipiscing_ elit. Maecenas non venenatis turpis, nec bibendum urna. 
