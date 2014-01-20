@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Helpers;
 
 /**
@@ -19,7 +27,7 @@ class GlossaryItem
      * Add a cross-reference to the list
      *
      * @param string $variant The term variant
-     * @param string $where The location where it was found
+     * @param string $where   The location where it was found
      */
     public function addXref($variant, $where)
     {

@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Helpers;
 
 /**
@@ -23,6 +31,7 @@ class LinkChecker
         $rc = '';
         $msg = 'Invalid host';
 
+        /** @noinspection PhpUsageOfSilenceOperatorInspection */
         $f = @fopen(html_entity_decode($url), "r");
         if ($f) {
             fclose($f);

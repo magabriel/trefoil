@@ -1,8 +1,18 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
 
-use Trefoil\Util\Toolkit;
 use Easybook\Events\BaseEvent;
+use Symfony\Component\Console\Output\Output;
+use Trefoil\DependencyInjection\Application;
+use Trefoil\Util\Toolkit;
 
 /**
  * Base class for all plugins
@@ -10,16 +20,24 @@ use Easybook\Events\BaseEvent;
  */
 abstract class BasePlugin
 {
+    /**
+     * @var Application
+     */
     protected $app;
+
+    /**
+     * @var Output
+     */
     protected $output;
     protected $edition;
     protected $format;
     protected $theme;
     protected $item;
+    protected $event;
 
     /**
      * Do some initialization tasks.
-     * Must be called explicitly for each plugin at the begining
+     * Must be called explicitly for each plugin at the beginning
      * of each event handler method.
      *
      * @param BaseEvent $event
@@ -28,7 +46,7 @@ abstract class BasePlugin
     {
         $this->event = $event;
         $this->app = $event->app;
-        $this->output = $this->app->get('console.output');
+        $this->output = $this->app['console.output'];
         $this->edition = $this->app['publishing.edition'];
         $this->format = Toolkit::getCurrentFormat($this->app);
         $this->theme = ucfirst($this->app->edition('theme'));
@@ -39,7 +57,7 @@ abstract class BasePlugin
      * Write an output message line
      *
      * @param string $message
-     * $param string $type of message ('error', 'warning', 'info')
+     * @param string $type    of message ('error', 'warning', 'info')
      */
     public function writeLn($message, $type = 'info')
     {
@@ -51,11 +69,11 @@ abstract class BasePlugin
      * Write an output message (w/o a line break)
      *
      * @param string $message
-     * $param string $type of message ('error', 'warning', 'info')
+     * @param string $type    of message ('error', 'warning', 'info')
      */
     public function write($message, $type = 'info')
     {
-        $class = join('',array_slice(explode('\\', get_called_class()), -1));
+        $class = join('', array_slice(explode('\\', get_called_class()), -1));
         $prefix = sprintf('%s: ', $class);
 
         $msgType = '';
@@ -70,21 +88,23 @@ abstract class BasePlugin
                 break;
         }
 
-        $this->output->write(' > '.$prefix.$msgType.$message);
+        $this->output->write(' > ' . $prefix . $msgType . $message);
     }
 
     /**
      * Retrieve the value of an edition option (from config.yml file)
      *
-     * @param string $optionNane (as in 'one.two.three')
+     * @param string $optionName (as in 'one.two.three')
      * @param string $default
+     *
      * @return mixed
      */
-    protected function getEditionOption($optionNane, $default = null)
+    protected function getEditionOption($optionName, $default = null)
     {
-        $editionOptions = $this->app->book('editions')[$this->edition];
+        $editions = $this->app->book('editions');
+        $editionOptions = $editions[$this->edition];
 
-        $keys = explode('.', $optionNane);
+        $keys = explode('.', $optionName);
 
         $option = $editionOptions;
 
@@ -102,19 +122,20 @@ abstract class BasePlugin
     /**
      * Retrieve the value of a book option (from config.yml file)
      *
-     * @param string $optionNane (as in 'one.two.three')
+     * @param string $optionName (as in 'one.two.three')
      * @param string $default
+     *
      * @return mixed
      */
-    protected function getConfigOption($optionNane, $default = null)
+    protected function getConfigOption($optionName, $default = null)
     {
         $configOptions = $this->app['publishing.book.config'];
 
-        $keys = explode('.', $optionNane);
+        $keys = explode('.', $optionName);
 
         $option = $configOptions;
 
-        foreach ($keys as $index=>$key) {
+        foreach ($keys as $index => $key) {
             if (array_key_exists($key, $option)) {
                 $option = $option[$key];
             } else {

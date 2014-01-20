@@ -1,4 +1,5 @@
 doc/*/Output/*
+app/Cache
 
 vendor
 
@@ -7,3 +8,5 @@ vendor
 .settings
 
 nbproject
+
+.idea

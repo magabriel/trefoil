@@ -1,11 +1,19 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
 
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents;
 use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Yaml\Yaml;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
 
@@ -60,10 +68,10 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
-                EasybookEvents::PRE_PARSE => array('onItemPreParse', -1000),
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1000)
-                );
+            TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
+            EasybookEvents::PRE_PARSE            => array('onItemPreParse', -1000),
+            EasybookEvents::POST_PARSE           => array('onItemPostParse', -1000)
+        );
     }
 
     public function onPrePublishAndReady(BaseEvent $event)
@@ -78,7 +86,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        $content =  $event->getItemProperty('original');
+        $content = $event->getItemProperty('original');
 
         if (isset($this->tweaks['tweaks']['onPreParse'])) {
             $content = $this->processTweaks($content, $this->tweaks['tweaks']['onPreParse']);
@@ -102,13 +110,11 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Read the Yml file with the tweaks' options
-     *
-     * @return boolean
      */
     protected function readTweaksFile()
     {
         // first path is the book Contents dir
-        $bookDir = $this->app->get('publishing.dir.book');
+        $bookDir = $this->app['publishing.dir.book'];
         $contentsDir = $bookDir . '/Contents';
 
         // second path is the theme /Config dir
@@ -122,9 +128,10 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         if (!$file) {
             $this->writeLn('No html-tweaks.yml file found. Looked up directories:', 'error');
             foreach ($dirs as $dir) {
-                $this->writeLn('- '.$dir);
+                $this->writeLn('- ' . $dir);
             }
-            return false;
+
+            return;
         }
 
         $this->tweaks = Yaml::parse($file);
@@ -134,7 +141,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      * Process all tweaks
      *
      * @param string $content
-     * @param array $tweaks
+     * @param array  $tweaks
      *
      * @return string
      */
@@ -151,7 +158,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      * Process one tweak
      *
      * @param string $content
-     * @param array $tweak
+     * @param array  $tweak
      *
      * @return string
      */
@@ -166,77 +173,88 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
             $noclose = true;
 
             $pattern = '/';
-            $pattern.= '<'.$tweak['tag'].' *(?<attrs>.*) *\/>';
-            $pattern.= '/Ums';
+            $pattern .= '<' . $tweak['tag'] . ' *(?<attrs>.*) *\/>';
+            $pattern .= '/Ums';
         } else {
             $pattern = '/';
-            $pattern.= '<'.$tweak['tag'].' *(?<attrs>.*)>';
-            $pattern.= '(?<inner>.*)';
-            $pattern.= '<\/'.$tweak['tag'].'>';
-            $pattern.= '/Ums';
+            $pattern .= '<' . $tweak['tag'] . ' *(?<attrs>.*)>';
+            $pattern .= '(?<inner>.*)';
+            $pattern .= '<\/' . $tweak['tag'] . '>';
+            $pattern .= '/Ums';
         }
 
-        $content = preg_replace_callback($pattern,
-                function ($matches) use ($tweak, $noclose)
-                {
-                    $found = true;
+        $content = preg_replace_callback(
+            $pattern,
+            function ($matches) use ($tweak, $noclose) {
+                $found = true;
 
-                    // lookup with or without class?
-                    if (isset($tweak['class'])) {
-                        if (preg_match('/class="(?<classes>.*)"/Ums', $matches['attrs'], $matches2)) {
-                            $classes = explode(' ', $matches2['classes']);
-                            if (!in_array($tweak['class'], $classes)) {
-                                $found = false;
-                            }
-                        } else {
+                // lookup with or without class?
+                if (isset($tweak['class'])) {
+                    if (preg_match('/class="(?<classes>.*)"/Ums', $matches['attrs'], $matches2)) {
+                        $classes = explode(' ', $matches2['classes']);
+                        if (!in_array($tweak['class'], $classes)) {
                             $found = false;
                         }
+                    } else {
+                        $found = false;
                     }
+                }
 
-                    $newTag = sprintf('<%s %s>%s</%s>',
-                                        $tweak['tag'],
-                                        $matches['attrs'],
-                                        $matches['inner'],
-                                        $tweak['tag']);
+                $newTag = sprintf(
+                    '<%s %s>%s</%s>',
+                    $tweak['tag'],
+                    $matches['attrs'],
+                    $matches['inner'],
+                    $tweak['tag']
+                );
 
-                    if ($found) {
-                        if (isset($tweak['insert'])) {
-                            $newTag = sprintf('<%s %s>%s%s%s</%s>',
-                                        $tweak['tag'],
-                                        $matches['attrs'],
-                                        str_replace('\n', "\n", $tweak['insert']['open']),
-                                        $matches['inner'],
-                                        str_replace('\n', "\n", $tweak['insert']['close']),
-                                        $tweak['tag']);
+                if ($found) {
+                    if (isset($tweak['insert'])) {
+                        $newTag = sprintf(
+                            '<%s %s>%s%s%s</%s>',
+                            $tweak['tag'],
+                            $matches['attrs'],
+                            str_replace('\n', "\n", $tweak['insert']['open']),
+                            $matches['inner'],
+                            str_replace('\n', "\n", $tweak['insert']['close']),
+                            $tweak['tag']
+                        );
 
-                        } elseif (isset($tweak['surround'])) {
-                            $newTag = sprintf('%s<%s %s>%s</%s>%s',
-                                    str_replace('\n', "\n", $tweak['surround']['open']),
-                                    $tweak['tag'],
-                                    $matches['attrs'],
-                                    $matches['inner'],
-                                    $tweak['tag'],
-                                    str_replace('\n', "\n", $tweak['surround']['close']));
+                    } elseif (isset($tweak['surround'])) {
+                        $newTag = sprintf(
+                            '%s<%s %s>%s</%s>%s',
+                            str_replace('\n', "\n", $tweak['surround']['open']),
+                            $tweak['tag'],
+                            $matches['attrs'],
+                            $matches['inner'],
+                            $tweak['tag'],
+                            str_replace('\n', "\n", $tweak['surround']['close'])
+                        );
 
-                        } elseif (isset($tweak['replace'])) {
-                            if ($noclose) {
-                                $newTag = sprintf('<%s %s />',
-                                        str_replace('\n', "\n", $tweak['replace']['tag']),
-                                        $matches['attrs']);
-                            } else {
-                                $newTag = sprintf('<%s %s>%s</%s>',
-                                        str_replace('\n', "\n", $tweak['replace']['tag']),
-                                        $matches['attrs'],
-                                        $matches['inner'],
-                                        str_replace('\n', "\n", $tweak['replace']['tag']));
-                            }
+                    } elseif (isset($tweak['replace'])) {
+                        if ($noclose) {
+                            $newTag = sprintf(
+                                '<%s %s />',
+                                str_replace('\n', "\n", $tweak['replace']['tag']),
+                                $matches['attrs']
+                            );
+                        } else {
+                            $newTag = sprintf(
+                                '<%s %s>%s</%s>',
+                                str_replace('\n', "\n", $tweak['replace']['tag']),
+                                $matches['attrs'],
+                                $matches['inner'],
+                                str_replace('\n', "\n", $tweak['replace']['tag'])
+                            );
                         }
                     }
+                }
 
-                    return $newTag;
-                }, $content);
+                return $newTag;
+            },
+            $content
+        );
 
         return $content;
     }
 }
-

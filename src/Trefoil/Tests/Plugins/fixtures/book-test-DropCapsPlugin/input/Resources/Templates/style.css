@@ -14,5 +14,5 @@ p.has-dropcaps {
 }
 
 p.has-dropcaps + p {
-    clear:both;
+    clear: both;
 }

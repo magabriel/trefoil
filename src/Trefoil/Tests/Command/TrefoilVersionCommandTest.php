@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Console\Command;
 
@@ -33,7 +41,7 @@ class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-        
+
     }
 
     public function testDisplayVersion()
@@ -41,9 +49,11 @@ class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
         $command = $this->console->find('version');
 
         $tester = new CommandTester($command);
-        $tester->execute(array(
-            'command' => $command->getName()
-        ));
+        $tester->execute(
+               array(
+                   'command' => $command->getName()
+               )
+        );
 
         $app = $command->getApp();
 

@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Publishers;
 
@@ -24,8 +32,11 @@ class MobiPublisher extends Epub2Publisher
 
         $epubFilePath = $this->app['publishing.dir.output'] . '/book.epub';
 
-        // TODO: the name of the generated book should be configurable
-        $command = sprintf("%s %s -o book.mobi %s", $this->app['kindlegen.path'], $this->app['kindlegen.command_options'], $epubFilePath
+        $command = sprintf(
+            "%s %s -o book.mobi %s",
+            $this->app['kindlegen.path'],
+            $this->app['kindlegen.command_options'],
+            $epubFilePath
         );
 
         $process = new Process($command);

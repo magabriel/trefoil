@@ -1,0 +1,46 @@
+activity:
+    id: "activity-ynb"
+    type: "activity.ynb"
+    options: 
+        pagebreak: true
+    heading: "Exercise 2"
+    subheading: "Please select true or false."
+    introduction: null
+    questions:
+        1:
+            text: "<p>First question.</p>"
+            responses:
+                - "True"
+                - "False"
+                - "Both"
+            solution: 0
+            explanations:
+                - '<p>This is the correct answer (true).</p>'
+                - null
+                - null
+
+        2:
+            text: "<p>Second question.</p>"
+            responses:
+                - "True"
+                - "False"
+                - "Both"
+            solution: 1
+             
+            explanations:
+                - null
+                - "<p>This is the correct answer (false).</p>"
+                - null
+
+        3:
+            text: "<p>Third question.</p>"
+            responses:
+                - "True"
+                - "False"
+                - "Both"
+            solution: 2
+             
+            explanations:
+                - null
+                - null
+                - "<p>This is the correct answer (both).</p>"                 

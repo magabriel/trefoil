@@ -1,12 +1,20 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Util;
 
+use Easybook\DependencyInjection\Application as EasybookApplication;
 use Easybook\Util\Toolkit as EasybookToolkit;
-use Trefoil\DependencyInjection\Application;
 
 class Toolkit extends EasybookToolkit
 {
-    public static function getCurrentThemeDir(Application $app)
+    public static function getCurrentThemeDir(EasybookApplication $app)
     {
         $theme = ucfirst($app->edition('theme'));
 
@@ -14,11 +22,11 @@ class Toolkit extends EasybookToolkit
         $localThemesDir = realpath($app['trefoil.publishing.dir.themes']);
 
         // the default trefoil themes
-        $defaultThemesDir = $app['trefoil.app.dir.resources'].'/Themes';
+        $defaultThemesDir = $app['trefoil.app.dir.resources'] . '/Themes';
 
         $paths = array(
-                $localThemesDir,
-                $defaultThemesDir
+            $localThemesDir,
+            $defaultThemesDir
         );
 
         $existing = $app->getFirstExistingFile($theme, $paths);
@@ -26,29 +34,27 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
-    public static function getCurrentResourcesDir(Application $app, $format = null)
+    public static function getCurrentResourcesDir(EasybookApplication $app, $format = null)
     {
         $theme = ucfirst($app->edition('theme'));
-
-        $edition = $app['publishing.edition'];
 
         if (!$format) {
             $format = Toolkit::getCurrentFormat($app);
         }
 
         // the custom theme set for this book publishing
-        $localResourcesDir = realpath($app['trefoil.publishing.dir.themes']) .'/'.$theme.'/'.$format;
+        $localResourcesDir = realpath($app['trefoil.publishing.dir.themes']) . '/' . $theme . '/' . $format;
 
         // the default trefoil themes for the format
-        $defaultResourcesDir = $app['trefoil.app.dir.resources'].'/Themes'.'/'.$theme.'/'.$format;
+        $defaultResourcesDir = $app['trefoil.app.dir.resources'] . '/Themes' . '/' . $theme . '/' . $format;
 
         // the Common format into the default trefoil themes
-        $defaultCommonResourcesDir = $app['trefoil.app.dir.resources'].'/Themes'.'/'.$theme.'/Common';
+        $defaultCommonResourcesDir = $app['trefoil.app.dir.resources'] . '/Themes' . '/' . $theme . '/Common';
 
         $paths = array(
-                $localResourcesDir,
-                $defaultResourcesDir,
-                $defaultCommonResourcesDir
+            $localResourcesDir,
+            $defaultResourcesDir,
+            $defaultCommonResourcesDir
         );
 
         $existing = $app->getFirstExistingFile('Resources', $paths);
@@ -56,7 +62,7 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
-    public static function getCurrentFormat(Application $app)
+    public static function getCurrentFormat(EasybookApplication $app)
     {
         $format = Toolkit::camelize($app->edition('format'), true);
 
@@ -78,12 +84,11 @@ class Toolkit extends EasybookToolkit
      * Extract the attributes of an HTML tag
      *
      * @param string $string
+     *
      * @return array of attributes
      */
     public static function parseHTMLAttributes($string)
     {
-        $attributes = array();
-
         $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
 
@@ -99,6 +104,7 @@ class Toolkit extends EasybookToolkit
      * Render the attributes of an HTML tag
      *
      * @param array $attributes
+     *
      * @return string
      */
     public static function renderHTMLAttributes(array $attributes)
@@ -117,13 +123,14 @@ class Toolkit extends EasybookToolkit
      *
      * @param string $tag
      * @param string $contents
-     * @param array $attributes
+     * @param array  $attributes
+     *
      * @return string
      */
     public static function renderHTMLTag($tag, $contents = '', array $attributes = array())
     {
         $strAttributes = static::renderHTMLAttributes($attributes);
-        $strAttributes = $strAttributes ? ' '.$strAttributes : '';
+        $strAttributes = $strAttributes ? ' ' . $strAttributes : '';
 
         if ($contents) {
             return sprintf('<%s%s>%s</%s>', $tag, $strAttributes, $contents, $tag);

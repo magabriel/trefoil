@@ -1,14 +1,18 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
 
-use Trefoil\Helpers\DropCaps;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
-use Easybook\Events\BaseEvent;
 use Easybook\Events\ParseEvent;
-use Trefoil\Events\TrefoilEvents;
-use Trefoil\Util\Toolkit;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\DropCaps;
 
 /**
  * Add drop caps to the book.
@@ -44,8 +48,8 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -1100)
-                );
+            EasybookEvents::POST_PARSE => array('onItemPostParse', -1100)
+        );
     }
 
     public function onItemPostParse(ParseEvent $event)
@@ -63,6 +67,7 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
      * Add drop caps markup
      *
      * @param string $content
+     *
      * @return string
      */
     protected function addDropCaps($content)
@@ -101,4 +106,3 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
         return $content;
     }
 }
-

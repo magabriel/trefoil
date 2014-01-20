@@ -1,5 +1,13 @@
 <?php
-require_once __DIR__.'/../../../vendor/autoload.php';
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
 // TODO: this is a temporary fix.
 // When executing the test suite with a locale different from en_US, some tests

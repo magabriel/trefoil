@@ -1,18 +1,18 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
-use Symfony\Component\Finder\Finder;
-
-use Easybook\Publishers\Epub2Publisher;
-
-use Easybook\Events\EasybookEvents;
-
-use Easybook\Util\Toolkit;
 
 use Easybook\Events\BaseEvent;
-
+use Easybook\Events\EasybookEvents;
+use Easybook\Util\Toolkit;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Easybook\Events\EasybookEvents as Events;
-use Easybook\Events\ParseEvent;
 
 /**
  * Plugin to uncompress the generated epub ebook
@@ -26,8 +26,8 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
     public static function getSubscribedEvents()
     {
         return array(
-                // runs later but before renaming
-                EasybookEvents::POST_PUBLISH => array('onPostPublish',-900)
+            // runs later but before renaming
+            EasybookEvents::POST_PUBLISH => array('onPostPublish', -900)
         );
     }
 
@@ -55,10 +55,10 @@ class EpubUncompressPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // remove the uncompressed ebook directory
         if (file_exists($epubFolder)) {
-            $this->app->get('filesystem')->remove($epubFolder);
+            $this->app['filesystem']->remove($epubFolder);
         }
 
-        $this->app->get('filesystem')->mkdir($epubFolder);
+        $this->app['filesystem']->mkdir($epubFolder);
 
         Toolkit::unzip($epubFile, $epubFolder);
     }

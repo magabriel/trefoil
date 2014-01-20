@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
 
 use Easybook\Events\BaseEvent;
@@ -6,6 +14,7 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\Glossary;
+use Trefoil\Helpers\GlossaryItem;
 use Trefoil\Helpers\GlossaryLoader;
 use Trefoil\Helpers\GlossaryReplacer;
 use Trefoil\Helpers\TextPreserver;
@@ -47,54 +56,63 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * The book-wide glossary
+     *
      * @var Glossary
      */
     protected $bookGlossary;
 
     /**
      * The item-wide glossary
+     *
      * @var Glossary
      */
     protected $itemGlossary;
 
     /**
      * The glossary to apply for the current item (book + item)
+     *
      * @var Glossary
      */
     protected $glossary;
 
     /**
      * The processed glossary items
+     *
      * @var Glossary
      */
     protected $processedGlossary;
 
     /**
      * Options that govern the glossary processing
+     *
      * @var array
      */
     protected $glossaryOptions = array();
 
     /**
      * Terms already defined, to avoid defining them more than once if coverage mandates it
+     *
      * @var array
      */
     protected $alreadyDefinedTerms = array();
 
     /**
      * Cross-references of replaced terms for reporting
+     *
      * @var array
      */
     protected $xrefs = array();
 
     /**
      * Whether or not the glossary item has been generated
+     *
      * @var bool
      */
     protected $generated = false;
 
     /**
      * Whether a term has been replaced at least once into the current item
+     *
      * @var bool
      */
     protected $termReplaced;
@@ -103,12 +121,12 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
      * Event handlers
      * ********************************************************************************
      */
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
-                EasybookEvents::POST_PARSE => array('onItemPostParse', -100),
-                EasybookEvents::POST_PUBLISH => 'onPostPublish');
+            EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
+            EasybookEvents::POST_PARSE   => array('onItemPostParse', -100),
+            EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
     public function onItemPostParse(ParseEvent $event)
@@ -163,17 +181,21 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $this->processedGlossary = new Glossary();
 
         // get all the book-wide glossary terms from file and create the definitions data structure
-        $contentsDir = $this->app->get('publishing.dir.book') . '/Contents';
+        $contentsDir = $this->app['publishing.dir.book'] . '/Contents';
         $glossaryFile = $contentsDir . '/auto-glossary.yml';
 
-        $loader = new GlossaryLoader($glossaryFile, $this->app->get('slugger'));
+        $loader = new GlossaryLoader($glossaryFile, $this->app['slugger']);
         $this->bookGlossary = $loader->load(true); // with options
         $this->glossaryOptions = $loader->getOptions();
 
         if (!$loader->isLoaded()) {
             $this->writeLn(
-                    sprintf("No book glossary definition file '%s' found in the book's \"Contents\" directory.",
-                            basename($glossaryFile)), 'warning');
+                 sprintf(
+                     "No book glossary definition file '%s' found in the book's \"Contents\" directory.",
+                     basename($glossaryFile)
+                 ),
+                 'warning'
+            );
         }
     }
 
@@ -189,12 +211,12 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         }
 
         // read item glossary and merge it with book glossary
-        $contentsDir =  $this->app->get('publishing.dir.book') . '/Contents';
+        $contentsDir = $this->app['publishing.dir.book'] . '/Contents';
 
         $fileName = pathinfo($this->item['config']['content'], PATHINFO_FILENAME);
         $glossaryFile = $contentsDir . '/' . $fileName . '-auto-glossary.yml';
 
-        $loader = new GlossaryLoader($glossaryFile, $this->app->get('slugger'));
+        $loader = new GlossaryLoader($glossaryFile, $this->app['slugger']);
         $this->itemGlossary = $loader->load();
 
         // start with a fresh copy of the book-wide definitions
@@ -228,11 +250,11 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     {
         // instantiate the GlossaryReplacer object
         $replacer = new GlossaryReplacer(
-                $this->glossary,
-                new TextPreserver(),
-                $this->item['content'],
-                $this->item['config']['content'],
-                $this->glossaryOptions);
+            $this->glossary,
+            new TextPreserver(),
+            $this->item['content'],
+            $this->item['config']['content'],
+            $this->glossaryOptions);
 
         // do the replacements (also modifies the glossary object)
         $this->item['content'] = $replacer->replace();
@@ -244,7 +266,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     protected function saveAutoGlossary()
     {
         $this->app['publishing.glossary.definitions'] = $this->processedGlossary;
-        $this->app['publishing.glossary.pagebreaks'] = $this->getEditionOption('plugins.options.AutoGlossary.pagebreaks', true);
+        $this->app['publishing.glossary.pagebreaks'] =
+            $this->getEditionOption('plugins.options.AutoGlossary.pagebreaks', true);
 
         $this->generated = true;
     }
@@ -261,7 +284,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         if (!$this->generated) {
             $this->writeLn(
-                    "No glossary has been generated, check for missing 'auto-glosssary' contents element.", "error");
+                 "No glossary has been generated, check for missing 'auto-glosssary' contents element.",
+                 "error"
+            );
         }
 
         $outputDir = $this->app['publishing.dir.output'];
@@ -284,9 +309,8 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report->setColumnsWidth(array(30, 30, 30, 5, 30));
         $report->setColumnsAlignment(array('', '', '', 'right', ''));
 
-        $auxTerm = '';
-        $auxVariant = '';
         foreach ($this->processedGlossary as $term => $data) {
+            /* @var GlossaryItem $data */
             $auxTerm = $term;
             foreach ($data->getXref() as $variant => $items) {
                 $auxVariant = $variant;
@@ -312,6 +336,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report->setColumnsWidth(array(30, 30));
 
         foreach ($this->processedGlossary as $term => $data) {
+            /* @var GlossaryItem $data */
             if (!count($data->getXref($term))) {
                 $report->addLine(array($term, $data->getSource()));
             }
@@ -320,4 +345,3 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         return $report->getText();
     }
 }
-

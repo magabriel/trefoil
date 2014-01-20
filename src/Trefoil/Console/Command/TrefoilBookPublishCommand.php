@@ -1,13 +1,20 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Console\Command;
 
-use Trefoil\Bridge\Easybook\RegisterResources;
 use Easybook\Console\Command\BookPublishCommand as EasybookBookPublishCommand;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Trefoil\Bridge\Easybook\RegisterResources;
 
 class TrefoilBookPublishCommand extends EasybookBookPublishCommand
 {
@@ -16,14 +23,17 @@ class TrefoilBookPublishCommand extends EasybookBookPublishCommand
         parent::configure();
 
         $this->addOption(
-                'themes_dir', '', InputOption::VALUE_OPTIONAL, "<info>(*)</info> Path of the custom themes directory"
-                );
+             'themes_dir',
+             '',
+             InputOption::VALUE_OPTIONAL,
+             "<info>(*)</info> Path of the custom themes directory"
+        );
 
         $oldHelp = $this->getHelp();
 
-        $newHelp = "NOTE: Items marked with <info>(*)</info> are <comment>trefoil</comment> extensions."."\n\n" .
-                   $oldHelp . "\n\n" .
-                   file_get_contents(__DIR__.'/Resources/TrefoilBookPublishCommandHelp.txt');
+        $newHelp = "NOTE: Items marked with <info>(*)</info> are <comment>trefoil</comment> extensions." . "\n\n" .
+            $oldHelp . "\n\n" .
+            file_get_contents(__DIR__ . '/Resources/TrefoilBookPublishCommandHelp.txt');
 
         $this->setHelp($newHelp);
     }

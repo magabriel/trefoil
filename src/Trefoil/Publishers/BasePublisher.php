@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Publishers;
 
@@ -9,29 +17,29 @@ use Trefoil\Util\Toolkit;
 class BasePublisher extends EasybookBasePublisher
 {
 
-     /**
+    /**
      * It prepares the book images by copying them into the appropriate
      * temporary directory. It also prepares an array with all the images
      * data needed later to generate the full ebook contents manifest.
      *
-     * @param  string $targetDir The directory where the images are copied.
+     * @param string $targetDir The directory where the images are copied.
      *
+     * @throws \RuntimeException
      * @return array             Images data needed to create the book manifest.
      */
     protected function prepareBookImages($targetDir)
     {
         if (!file_exists($targetDir)) {
             throw new \RuntimeException(sprintf(
-                " ERROR: Books images couldn't be copied because \n"
-                ." the given '%s' \n"
-                ." directory doesn't exist.",
-                $targetDir
-            ));
+                                            " ERROR: Books images couldn't be copied because \n"
+                                            . " the given '%s' \n"
+                                            . " directory doesn't exist.",
+                                            $targetDir
+                                        ));
         }
 
         $edition = $this->app['publishing.edition'];
         $format = Toolkit::getCurrentFormat($this->app);
-        $theme = ucfirst($this->app->edition('theme'));
 
         // construct the list of source directories for images.
         // they will be used sequentially, so images inside each one will override previous images.
@@ -45,8 +53,8 @@ class BasePublisher extends EasybookBasePublisher
         //         or
         //        <the path set with the "--dir" publish command line argument>
         // 'Common' format takes precedence
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common').'/images';
-        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app).'/images';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app, 'Common') . '/images';
+        $sourceDirs[] = Toolkit::getCurrentResourcesDir($this->app) . '/images';
 
         // theme images can be overriden by the book:
         //     <book-dir>/Resources/images/
@@ -58,7 +66,7 @@ class BasePublisher extends EasybookBasePublisher
 
         // the normal book images:
         //     <book-dir>/images/
-        $sourceDirs[] = $this->app['publishing.dir.contents'].'/images';
+        $sourceDirs[] = $this->app['publishing.dir.contents'] . '/images';
 
         // process each directory in sequence, so each one will override the previously copied images
         $imagesData = array();
@@ -68,16 +76,16 @@ class BasePublisher extends EasybookBasePublisher
             if (file_exists($imagesDir)) {
 
                 $images = Finder::create()
-                            ->files()
-                            ->sortByName()
-                            ->in($imagesDir);
+                                ->files()
+                                ->sortByName()
+                                ->in($imagesDir);
 
                 foreach ($images as $image) {
 
                     $this->app['filesystem']->copy(
-                        $image->getPathName(),
-                        $targetDir.'/'.$image->getFileName(),
-                        true // overwrite
+                                            $image->getPathName(),
+                                            $targetDir . '/' . $image->getFileName(),
+                                            true // overwrite
                     );
 
                     // The right mediatype for jpeg images is jpeg, not jpg
@@ -85,9 +93,9 @@ class BasePublisher extends EasybookBasePublisher
                     $mediaType = str_replace('jpg', 'jpeg', $mediaType);
 
                     $imagesData[$image->getFileName()] = array(
-                        'id'        => 'image-'.$i++,
-                        'filePath'  => 'images/'.$image->getFileName(),
-                        'mediaType' => 'image/'.$mediaType
+                        'id'        => 'image-' . $i++,
+                        'filePath'  => 'images/' . $image->getFileName(),
+                        'mediaType' => 'image/' . $mediaType
                     );
                 }
             }

@@ -1,0 +1,42 @@
+activity:
+    id: "activity-abc"
+    type: "abc"
+    options: 
+        pagebreak: true
+    heading: "Exercise 1"
+    subheading: "Please select the correct response."
+    introduction: >
+        <p>This is the introduction text of the exercise 1.</p>
+        <ul><li>One.</li><li>Two.</li><li>Tree.</li></ul>
+        <p>Lorem ipsum dolor sit amen.</p>
+    questions:
+        1:
+            text: "<p>First question:</p>"
+            responses:
+                - "First response (correct)."
+                - "Second response."
+                - "Third response."
+            solution: 0
+            explanations:
+                - null
+                - null
+                - null
+
+        2:
+            text: "<p>Second question:</p>"
+            responses:
+                - "First response."
+                - "Second response (correct)."
+                - "Third response."
+                - "Fourth response."
+            solution: 1
+             
+            explanations:
+                - null
+                - > 
+                   <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod
+                   tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua.</p>
+                   <p>At vero eos et accusam et justo duo dolores et ea rebum.</p>
+                - null
+                - "<p>This is an explanation for an incorrect response.</p>"
+                 

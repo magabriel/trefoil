@@ -8,113 +8,113 @@
    @items
    ========================================================================== #}
 {% block body %}
-{{ parent() }}
-body {
+    {{ parent() }}
+    body {
     margin: 0;
-}
+    }
 {% endblock %}
 
 {% block paragraphs %}
-{{ parent() }}
-p {
+    {{ parent() }}
+    p {
     margin: .6em 0;
-}
+    }
 {% endblock %}
 
 {% block cover %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.cover h1 {
+    .item.cover h1 {
     color: {{ color_black }};
     font-size: 2em;
     line-height: 1.1;
     padding: 1.5em .25em .25em 0;
     text-align: left;
-}
-.item.cover h2 {
+    }
+    .item.cover h2 {
     color: {{ color_gray }};
     font-size: 1em;
     font-weight: normal;
     margin-top: .5em;
     text-align: left;
-}
+    }
 {% endblock %}
 
 {% block title %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.title h1,
-.item.title h2,
-.item.title h3 {
+    .item.title h1,
+    .item.title h2,
+    .item.title h3 {
     font-weight: normal;
     text-align: center;
-}
-.item.title h1 {
+    }
+    .item.title h1 {
     font-size: 2em;
     line-height: 1.1;
     margin-top: 1em;
     margin-bottom: 0;
-}
-.item.title h2 {
+    }
+    .item.title h2 {
     font-size: 1.5em;
     margin-top: .5em;
-}
-.item.title h3 {
+    }
+    .item.title h3 {
     font-size: 1em;
     font-style: italic;
     margin-top: 1em;
-}
+    }
 {% endblock %}
 
 {% block dedication %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.dedication {
+    .item.dedication {
     padding-top: 5em;
-}
-.item.dedication h1.title {
+    }
+    .item.dedication h1.title {
     display: none;
-}
-.item.dedication p {
+    }
+    .item.dedication p {
     font-style: italic;
     text-align: center;
-}
+    }
 {% endblock %}
 
 {% block appendix %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.appendix h1 {
+    .item.appendix h1 {
     margin: 5em 1em .25em 0;
-}
+    }
 
-.item.appendix h1 span {
+    .item.appendix h1 span {
     color: {{ color_gray }};
     display: block;
     font-size: 90%;
     font-weight: normal;
     padding-bottom: .25em;
-}
+    }
 
-.item.appendix h1 + h2,
-.item.appendix h2 + h3,
-.item.appendix h3 + h4,
-.item.appendix h4 + h5,
-.item.appendix h5 + h6 {
+    .item.appendix h1 + h2,
+    .item.appendix h2 + h3,
+    .item.appendix h3 + h4,
+    .item.appendix h4 + h5,
+    .item.appendix h5 + h6 {
     margin-top: 1em;
-}
+    }
 {% endblock %}
 
 {% block part %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.part h1 {
+    .item.part h1 {
     font-size: 2em;
     margin: 0 0 1em;
     padding: 2em 0;
     text-align: center;
-}
-.item.part h1 span {
+    }
+    .item.part h1 span {
     border-bottom: 15px solid #88AABB;
     color: #116688;
     display: block;
@@ -122,407 +122,407 @@ p {
     font-weight: bold;
     margin-bottom: 0.5em;
     padding-bottom: 0.5em;
-}
+    }
 {% endblock %}
 
 {% block links %}
-{{ parent() }}
+    {{ parent() }}
 
-a {
+    a {
     background-image: url('../images/ico_external_link.png');
     background-position: right;
     background-repeat: no-repeat;
     padding-right: 23px;
     padding-top: 3px;
     padding-bottom: 2px;
-}
+    }
 
-a[href*='pdf'] {
+    a[href*='pdf'] {
     background-image: url('../images/ico_pdf.png');
-}
+    }
 
-a[href*='youtube'] {
+    a[href*='youtube'] {
     background-image: url('../images/ico_youtube.png');
-}
+    }
 
-a.internal, .toc a {
+    a.internal, .toc a {
     background-image: none;
     padding-right: 0;
-}
+    }
 
-a img {
+    a img {
     text-decoration: none;
-}
+    }
 
-/* Icons and buttons */
-img.icon {
+    /* Icons and buttons */
+    img.icon {
     height: 2em;
     width: auto;
-}
+    }
 
-img.button {
+    img.button {
     height: 2em;
     width: auto;
-}
+    }
 
-h6 a {
+    h6 a {
     font-size: 1em;
     font-style: normal;
     font-weight: normal;
-}
+    }
 {% endblock %}
 
 {% block headings %}
-{{ parent() }}
+    {{ parent() }}
 
-h1, h2, h3, h4, h5, h6 {
-	font-weight: bold;
-	line-height: 1em;
-}
+    h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    line-height: 1em;
+    }
 
-h1, h2, h3, h4 {
+    h1, h2, h3, h4 {
     clear: both;
-}
+    }
 
-h1 {
-	font-size: 1.8em;
-	margin-top: 0;
-}
-h2 {
-	font-size: 1.4em;
-}
-h3 {
-	font-size: 1.4em;
-}
-h4 {
-	font-size: 1.3em;
-}
-h5 {
-	font-size: 1.25em;
-}
-h6 {
-	font-size: 1.1em;
-}
+    h1 {
+    font-size: 1.8em;
+    margin-top: 0;
+    }
+    h2 {
+    font-size: 1.4em;
+    }
+    h3 {
+    font-size: 1.4em;
+    }
+    h4 {
+    font-size: 1.3em;
+    }
+    h5 {
+    font-size: 1.25em;
+    }
+    h6 {
+    font-size: 1.1em;
+    }
 
-/* A h2 surrounded by hr's */
-hr + h2 { margin-top: 1em; }
-h2 + hr { margin-top: 1.5em; }
+    /* A h2 surrounded by hr's */
+    hr + h2 { margin-top: 1em; }
+    h2 + hr { margin-top: 1.5em; }
 
 {% endblock %}
 
 {% block lists %}
-{{ parent() }}
+    {{ parent() }}
 
-ul, ol {
+    ul, ol {
     margin-left: 0;
     margin-top: .5em;
-}
+    }
 
-ul li li {
+    ul li li {
     list-style-type: circle;
-}
+    }
 
-ul li li li {
+    ul li li li {
     list-style-type: square;
-}
+    }
 
-dd+dt {
+    dd+dt {
     margin-top: 1em;
-}
+    }
 
 {% endblock %}
 
 {% block misc %}
-{{ parent() }}
+    {{ parent() }}
 
-blockquote {
+    blockquote {
     margin: 1em 0 1em 2.5em;
-}
+    }
 
-/* This is the only way to force a page-break for Kindle
- * page-break-after, etc. do not work when assigned to another selector
- */
-.page-break {
-  page-break-after: always;
-}
+    /* This is the only way to force a page-break for Kindle
+    * page-break-after, etc. do not work when assigned to another selector
+    */
+    .page-break {
+    page-break-after: always;
+    }
 
-.clearfix {
+    .clearfix {
     clear: both;
-}
+    }
 
-/*
- * Kindle specific
- */
-@media amzn-mobi {
-	.mobi {display: block;}
-	.kf8  {display: none;}
-	.not-mobi {display: none;}
-}
+    /*
+    * Kindle specific
+    */
+    @media amzn-mobi {
+    .mobi {display: block;}
+    .kf8  {display: none;}
+    .not-mobi {display: none;}
+    }
 
-@media not amzn-mobi {
-	.mobi {display: none;}
+    @media not amzn-mobi {
+    .mobi {display: none;}
     .kf8  {display: none;}
     .not-mobi {display: block;}
-}
+    }
 
-@media amzn-kf8 {
-	.mobi {display: none;}
+    @media amzn-kf8 {
+    .mobi {display: none;}
     .kf8  {display: block;}
     .not-mobi {display: block;}
-}
+    }
 
 {% endblock %}
 
 {% block images %}
-{{ parent() }}
+    {{ parent() }}
 
     /* .image => images that are not figures
-     * div.image => style like a figure
-     * span.image => style like an inline image
-     */
+    * div.image => style like a figure
+    * span.image => style like an inline image
+    */
     div.image.center,
     div.image.left,
     div.image.right {
-        display: inline-block;
-     }
-
-    .center img {
-        display: inline-block;
+    display: inline-block;
     }
 
-     div.image.center {
-        width: 100%;
-     }
+    .center img {
+    display: inline-block;
+    }
 
-        /* only min-max size if has alignment */
-        div.image.center img,
-        div.image.left img,
-        div.image.right img   {
-             min-width: 50%;
-             max-width: 100%;
-             display: inline-block;
-        }
+    div.image.center {
+    width: 100%;
+    }
+
+    /* only min-max size if has alignment */
+    div.image.center img,
+    div.image.left img,
+    div.image.right img   {
+    min-width: 50%;
+    max-width: 100%;
+    display: inline-block;
+    }
 
     span.image {
     }
 
     /* .figure => figures, with caption */
     .figure {
-        text-align: center;
-        page-break-inside: avoid;
+    text-align: center;
+    page-break-inside: avoid;
     }
 
-        .figure img {
-            min-width: 50%;
-            max-width: 100%;
-        }
+    .figure img {
+    min-width: 50%;
+    max-width: 100%;
+    }
 
     /* caption for figures */
     p.caption {
-    	font-style: italic;
-    	font-size: .9em;
-    	text-align: center;
+    font-style: italic;
+    font-size: .9em;
+    text-align: center;
     }
 
-/*
- * Image Extra
- * ===========
- */
+    /*
+    * Image Extra
+    * ===========
+    */
 
-/* override this for styling the figure box */
-div.figure .box {
+    /* override this for styling the figure box */
+    div.figure .box {
     border: 1px solid #aaa;
     padding: 10px 10px 0;
-}
+    }
 
-/* margins for left and right aligned figures */
-div.figure.left {
+    /* margins for left and right aligned figures */
+    div.figure.left {
     margin-right: 1em;
-}
-div.figure.right {
+    }
+    div.figure.right {
     margin-left: 1em;
-}
+    }
 
-/* width of a default figure (i.e. without alignment or class */
-div.figure.default .box {
+    /* width of a default figure (i.e. without alignment or class */
+    div.figure.default .box {
     width: 80%;
-}
+    }
 
-/* **************************
- * nothing to customize below
- * **************************
- */
+    /* **************************
+    * nothing to customize below
+    * **************************
+    */
 
-div.figure.narrower,
-div.figure.narrow,
-div.figure.half,
-div.figure.wide {
+    div.figure.narrower,
+    div.figure.narrow,
+    div.figure.half,
+    div.figure.wide {
     float: left;
-}
+    }
 
-div.figure.default .box img {
+    div.figure.default .box img {
     width: 100%;
-}
+    }
 
-div.figure.left img {
+    div.figure.left img {
     margin-right: 0;
-}
+    }
 
-div.figure.right {
+    div.figure.right {
     float: right !important;
-}
+    }
 
-div.figure.right img {
+    div.figure.right img {
     margin-left: 0;
-}
+    }
 
-div.figure .box {
+    div.figure .box {
     page-break-inside: avoid;
-}
+    }
 
-div.figure.center .box {
+    div.figure.center .box {
     display: inline-block;
     width: 80%;
-}
+    }
 
-div.figure.center .box > img {
+    div.figure.center .box > img {
     width: 100%;
-}
+    }
 
-div.figure.center .box,
-div.figure.default .box {
+    div.figure.center .box,
+    div.figure.default .box {
     max-width: 800px;
-}
+    }
 
-div.figure.narrower img,
-div.figure.narrow img,
-div.figure.half img,
-div.figure.wide img,
-div.image.narrower img,
-div.image.narrow img,
-div.image.half img,
-div.image.wide img  {
+    div.figure.narrower img,
+    div.figure.narrow img,
+    div.figure.half img,
+    div.figure.wide img,
+    div.image.narrower img,
+    div.image.narrow img,
+    div.image.half img,
+    div.image.wide img  {
     display: inline-block;
     width: 100%;
     float: none;
-}
+    }
 
-div.figure.narrower,
-div.image.narrower {
+    div.figure.narrower,
+    div.image.narrower {
     width: 23%;
     margin-right: 1%;
     display: inline-block;
-}
+    }
 
-div.figure.narrow,
-div.image.narrow {
+    div.figure.narrow,
+    div.image.narrow {
     width: 31%;
     margin-right: 1%;
     display: inline-block;
-}
+    }
 
-div.figure.half,
-div.image.half {
+    div.figure.half,
+    div.image.half {
     width: 48%;
     margin-right: 1%;
     display: inline-block;
-}
+    }
 
-div.figure.wide,
-div.image.wide {
+    div.figure.wide,
+    div.image.wide {
     width: 100%;
     display: inline-block;
-}
+    }
 
-/* figures centered with size */
+    /* figures centered with size */
 
-div.figure.center.half,
-div.figure.center.narrow,
-div.figure.center.narrower {
-     width: 100%;
-}
+    div.figure.center.half,
+    div.figure.center.narrow,
+    div.figure.center.narrower {
+    width: 100%;
+    }
 
-div.figure.center.half .box {
+    div.figure.center.half .box {
     width: 50%;
     min-width: 50%;
-}
+    }
 
-div.figure.center.narrow .box {
+    div.figure.center.narrow .box {
     width: 33%%;
     min-width: 33%;
-}
+    }
 
-div.figure.center.narrower .box {
+    div.figure.center.narrower .box {
     width: 25%;
     min-width: 25%;
-}
+    }
 
-div.image.narrower,
-div.image.narrow,
-div.image.half,
-div.image.wide {
-}
+    div.image.narrower,
+    div.image.narrow,
+    div.image.half,
+    div.image.wide {
+    }
 
-/* images centered with size */
+    /* images centered with size */
 
-div.image.center.half,
-div.image.center.narrow,
-div.image.center.narrower {
+    div.image.center.half,
+    div.image.center.narrow,
+    div.image.center.narrower {
     width: 100%;
-}
+    }
 
-div.image.center.half img {
+    div.image.center.half img {
     width: 50%;
     min-width: 50%;
-}
+    }
 
-div.image.center.narrow img {
+    div.image.center.narrow img {
     width: 33%;
     min-width: 33%;
-}
+    }
 
-div.image.center.narrower img {
+    div.image.center.narrower img {
     width: 25%;
     min-width: 25%;
-}
+    }
 
 {% endblock %}
 
 {% block tables %}
-{{ parent() }}
+    {{ parent() }}
 
-td[align="right"], th[align="right"] {
+    td[align="right"], th[align="right"] {
     text-align: right;
-}
+    }
 
-td[align="center"], th[align="center"] {
+    td[align="center"], th[align="center"] {
     text-align: center;
-}
+    }
 
-table, td, th {
+    table, td, th {
     border: 1px solid #ccc;
     border-collapse:collapse;;
-}
+    }
 
-thead tr {
+    thead tr {
     background-color: #E5EECC;
     font-weight: bold;
-}
+    }
 
 {% endblock %}
 
 {% block chapter %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.chapter h1 + h2,
-.item.chapter h2 + h3,
-.item.chapter h3 + h4,
-.item.chapter h4 + h5,
-.item.chapter h5 + h6 {
+    .item.chapter h1 + h2,
+    .item.chapter h2 + h3,
+    .item.chapter h3 + h4,
+    .item.chapter h4 + h5,
+    .item.chapter h5 + h6 {
     margin-top: 1em;
-}
+    }
 
-.item.chapter h1 {
+    .item.chapter h1 {
     background: none repeat scroll 0 0 #E9E9E9;
     border: 10px solid #335577;
     display: block;
@@ -531,9 +531,9 @@ thead tr {
     margin: 0 0 1em;
     padding: 0 0.2em 1em;
     text-align: center;
-}
+    }
 
-.item.chapter h1 span {
+    .item.chapter h1 span {
     color: inherit;
     display: block;
     font-size: 2em;
@@ -541,125 +541,125 @@ thead tr {
     line-height: 1.3em;
     margin-right: 0.1em;
     padding-bottom: 0;
-}
+    }
 
-.item.chapter h2 {
+    .item.chapter h2 {
     color: #00f;
     border-bottom: 10px solid #00a;
     font-size: 1.8em;
     margin: 0 0 1em;
     padding-bottom: 0.2em;
     text-align: left;
-}
+    }
 
-.item.chapter h3 {
+    .item.chapter h3 {
     border-bottom: 5px solid #666;
     padding: 0.2em;
-}
+    }
 
-.item.chapter h4 {
+    .item.chapter h4 {
     border-bottom: 2px solid #888888;
-}
+    }
 
-.item.chapter h5 {
+    .item.chapter h5 {
     margin-bottom: .5em;
     font-style: italic;
     border-bottom: 2px solid #888888;
-}
+    }
 
-.item.chapter h6 {
+    .item.chapter h6 {
     margin-bottom: .5em;
     color: #222;
     font-style: italic;
-}
+    }
 
-.item.chapter p {
-}
+    .item.chapter p {
+    }
 {% endblock %}
 
 {% block introduction %}
-{{ parent() }}
+    {{ parent() }}
 
-.item.introduction h1 {
-	margin-top: 0;
+    .item.introduction h1 {
+    margin-top: 0;
     border-bottom: 5px solid {{ color_h1_underline }};
     margin: 0 0 1em;
 
-}
+    }
 
-.item.introduction h2 {
-	border-bottom: 5px solid {{ color_h2_underline }};
-	padding: .2em;
-}
+    .item.introduction h2 {
+    border-bottom: 5px solid {{ color_h2_underline }};
+    padding: .2em;
+    }
 
-.item.introduction h3 {
-	border-bottom: 5px solid {{ color_h3_underline }};
+    .item.introduction h3 {
+    border-bottom: 5px solid {{ color_h3_underline }};
     color: #A0A;
-}
+    }
 
-.item.introduction h4 {
-}
+    .item.introduction h4 {
+    }
 
-.item.introduction h5 {
+    .item.introduction h5 {
     color: #444;
-}
+    }
 {% endblock %}
 
 {% block toc %}
-{{ parent() }}
+    {{ parent() }}
 
-/* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
-.item.toc div.level-1 {
-	margin-left: 1em;
-}
-.item.toc div.level-2 {
-	margin-left: 2em;
-}
-.item.toc div.level-3 {
-	margin-left: 3em;
-}
-.item.toc div.level-4 {
-	margin-left: 4em;
-}
-.item.toc div.level-5 {
-	margin-left: 5em;
-}
-.item.toc div.level-6 {
-	margin-left: 6em;
-}
+    /* ebook toc is defined using divs as recommended by Kindle Publishing Guidelines */
+    .item.toc div.level-1 {
+    margin-left: 1em;
+    }
+    .item.toc div.level-2 {
+    margin-left: 2em;
+    }
+    .item.toc div.level-3 {
+    margin-left: 3em;
+    }
+    .item.toc div.level-4 {
+    margin-left: 4em;
+    }
+    .item.toc div.level-5 {
+    margin-left: 5em;
+    }
+    .item.toc div.level-6 {
+    margin-left: 6em;
+    }
 
-/* local toc */
-.local_toc li {
+    /* local toc */
+    .local_toc li {
     margin-bottom: 0.15em;
     margin-top: 0.15em;
-}
+    }
 
-.local_toc li.level-1 {
-	margin-left: -2em;
-}
-.local_toc li.level-2 {
-	margin-left: -1em;
-}
-.local_toc li.level-3 {
-	margin-left: 0em;
-}
-.local_toc li.level-4 {
-	margin-left: 1em;
-}
-.local_toc li.level-5 {
-	margin-left: 2em;
-}
-.local_toc li.level-6 {
-	margin-left: 3em;
-}
+    .local_toc li.level-1 {
+    margin-left: -2em;
+    }
+    .local_toc li.level-2 {
+    margin-left: -1em;
+    }
+    .local_toc li.level-3 {
+    margin-left: 0em;
+    }
+    .local_toc li.level-4 {
+    margin-left: 1em;
+    }
+    .local_toc li.level-5 {
+    margin-left: 2em;
+    }
+    .local_toc li.level-6 {
+    margin-left: 3em;
+    }
 
 {% endblock %}
 
 {% block edition %}
-{{  parent() }}
+    {{ parent() }}
 
-.item.edition p {
+    .item.edition p {
     margin: .3em 0;
-}
+    }
 
 {% endblock %}

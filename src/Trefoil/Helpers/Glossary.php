@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Helpers;
 
@@ -15,7 +23,6 @@ namespace Trefoil\Helpers;
  * Examples:
  *   'cat[s]' => 'cat' and 'cats'
  *   'star [wars|trek]' => 'star wars' and 'star trek'
- *
  *
  */
 class Glossary implements \IteratorAggregate
@@ -36,7 +43,8 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * @param  string       $term
+     * @param string $term
+     *
      * @return GlossaryItem
      */
     public function get($term)
@@ -52,17 +60,19 @@ class Glossary implements \IteratorAggregate
 
     /**
      * Merge another glossary into this one
+     *
      * @param Glossary $glossary
      */
     public function merge(Glossary $glossary)
     {
-        foreach ($glossary as $term => $item) {
+        foreach ($glossary as $item) {
             $this->add($item);
         }
     }
 
     /**
      * Number of items in glossary
+     *
      * @return number
      */
     public function count()

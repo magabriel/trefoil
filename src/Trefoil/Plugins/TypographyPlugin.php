@@ -1,11 +1,17 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Plugins;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * This plugin replaces certain symbols with its typographic equivalents.
@@ -41,8 +47,8 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-                EasybookEvents::PRE_PARSE => 'onItemPreParse',
-                EasybookEvents::POST_PARSE => 'onItemPostParse'
+            EasybookEvents::PRE_PARSE  => 'onItemPreParse',
+            EasybookEvents::POST_PARSE => 'onItemPostParse'
         );
     }
 
@@ -79,11 +85,11 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $options = '';
 
         // normal SmartyPants processing
-        $options.= 'qbed'; // quotes, backticks ellipses and dashes
+        $options .= 'qbed'; // quotes, backticks ellipses and dashes
 
         // refinements for SmartyPants Typographer
-        $options.= 'g'; // angle quotes (needs preparation)
-        $options.= 'f-'; // do not add space inside angle quotes
+        $options .= 'g'; // angle quotes (needs preparation)
+        $options .= 'f-'; // do not add space inside angle quotes
 
         // and go!!
         $content = \SmartyPants($content, $options);
@@ -96,6 +102,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      * ensure there is a space before '>>' and  after '<<'
      *
      * @param string $content
+     *
      * @return string
      */
     protected function preProcessAngleQuotesForSmartypants($content)
@@ -108,12 +115,14 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    // put a space after the <<
-                    return $matches['prev']."<< ".$matches['next'];
-                }, $content);
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                // put a space after the <<
+                return $matches['prev'] . "<< " . $matches['next'];
+            },
+            $content
+        );
 
         // closing >>
         $regExp = '/';
@@ -123,12 +132,14 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    // put a space before the <<
-                    return $matches['prev']." >>".$matches['next'];
-                }, $content);
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                // put a space before the <<
+                return $matches['prev'] . " >>" . $matches['next'];
+            },
+            $content
+        );
 
         return $content;
     }
@@ -151,11 +162,13 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    return self::BALLOT_BOX_HTMLENTITY; // ballot box (box without checkmark)
-                }, $content);
+        $content = preg_replace_callback(
+            $regExp,
+            function () use ($me) {
+                return $me::BALLOT_BOX_HTMLENTITY; // ballot box (box without checkmark)
+            },
+            $content
+        );
 
         $regExp = '/';
         $regExp .= '(?<sign>';
@@ -164,11 +177,13 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $me = $this;
-        $content = preg_replace_callback($regExp,
-                function ($matches) use ($me)
-                {
-                    return self::BALLOT_BOX_CHECKED_HTMLENTITY; // ballot box with checkmark
-                }, $content);
+        $content = preg_replace_callback(
+            $regExp,
+            function () use ($me) {
+                return $me::BALLOT_BOX_CHECKED_HTMLENTITY; // ballot box with checkmark
+            },
+            $content
+        );
 
         return $content;
     }
@@ -177,6 +192,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      * Fix Spanish-style dialog for content
      *
      * @param string $content
+     *
      * @return string
      */
     protected function fixSpanishStyleDialog($content)
@@ -186,15 +202,18 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<p>[-' . self::EMDASH_UNICODE . '](?<text>[^ ].*)<\/p>';
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
-        $content = preg_replace_callback($regExp,
-                function ($matches)
-                {
-                    // replace the dialog inside the paragraph
-                    $text = $this->replaceSpanishStyleDialog($matches['text']);
+        $me = $this;
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                // replace the dialog inside the paragraph
+                $text = $me->replaceSpanishStyleDialog($matches['text']);
 
-                    // return the paragraph replacing the starting dash by an em-dash
-                    return sprintf('<p>' . self::EMDASH_HTMLENTITY . '%s</p>', $text);
-                }, $content);
+                // return the paragraph replacing the starting dash by an em-dash
+                return sprintf('<p>' . $me::EMDASH_HTMLENTITY . '%s</p>', $text);
+            },
+            $content
+        );
 
         return $content;
     }
@@ -203,6 +222,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      * Replace Spanish-style dialog inside a paragraph's text
      *
      * @param string $text
+     *
      * @return string
      */
     protected function replaceSpanishStyleDialog($text)
@@ -213,11 +233,14 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= ' -(?<char>[^ -])';
         $regExp .= '/U'; // Ungreedy
 
-        $text = preg_replace_callback($regExp,
-                function ($matches)
-                {
-                    return sprintf(' ' . self::EMDASH_HTMLENTITY . '%s', $matches['char']);
-                }, $text);
+        $me = $this;
+        $text = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                return sprintf(' ' . $me::EMDASH_HTMLENTITY . '%s', $matches['char']);
+            },
+            $text
+        );
 
         // replace "something followed by dash or emdash character" by
         //         "something followed by em-dash"
@@ -225,11 +248,14 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<char>[^ -])-(?<next>[\W])';
         $regExp .= '/U'; // Ungreedy
 
-        $text = preg_replace_callback($regExp,
-                function ($matches)
-                {
-                    return sprintf('%s' . self::EMDASH_HTMLENTITY . '%s', $matches['char'], $matches['next']);
-                }, $text);
+        $me = $this;
+        $text = preg_replace_callback(
+            $regExp,
+            function ($matches) use ($me) {
+                return sprintf('%s' . $me::EMDASH_HTMLENTITY . '%s', $matches['char'], $matches['next']);
+            },
+            $text
+        );
 
         return $text;
     }

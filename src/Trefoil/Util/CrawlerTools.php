@@ -1,6 +1,15 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 namespace Trefoil\Util;
 
+use DOMNode;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -14,11 +23,15 @@ class CrawlerTools
      * Return the node name
      *
      * @param Crawler $node
+     *
      * @return string
      */
-    protected static function getNodeName(Crawler $node)
+    public static function getNodeName(Crawler $node)
     {
-        foreach ($node as $i => $n) {
+        /* @var DOMNode $domNode */
+        $domNode = null;
+
+        foreach ($node as $n) {
             $domNode = $n;
             break;
         }
@@ -30,30 +43,37 @@ class CrawlerTools
      * Return the node HTML contents
      *
      * @param Crawler $node
+     *
      * @return string
      */
-    protected static function getNodeHtml(Crawler $node)
+    public static function getNodeHtml(Crawler $node)
     {
+        /* @var DOMNode $domNode */
         $domNode = null;
 
-        foreach ($node as $i => $n) {
+        foreach ($node as $n) {
             $domNode = $n;
             break;
         }
 
         $html = $domNode->ownerDocument->saveHtml($domNode);
 
+        // remove line breaks
+        $html = str_replace(array("\n", "\r"), '', $html);
+
         // remove surrounding tag
         $regExp = '/';
         $regExp .= '<(?<tag>.*)>';
-        $regExp .= '(?<html>.+)$';
+        $regExp .= '(?<html>.*)$';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $html = preg_replace_callback($regExp,
-                function ($matches) {
-                    $clean = mb_substr($matches['html'], 0, -mb_strlen('</' . $matches['tag'] . '>', 'utf8'), 'utf8');
-                    return $clean;
-                }, $html);
+        $html = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                return '<' . $matches['tag'] . '>' . $matches['html'];
+            },
+            $html
+        );
 
         return $html;
     }

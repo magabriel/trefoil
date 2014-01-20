@@ -1,4 +1,12 @@
 <?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\DependencyInjection;
 
@@ -16,25 +24,25 @@ class Application extends EasybookApplication
         parent::__construct();
 
         // -- global generic parameters ---------------------------------------
-        $this['app.signature'] = substr($this['app.signature'], 0, -1)."\n".
-        "     _     _            __     _ _ \n".
-        "   _| |_  | |_ _ _ ___ / _|___(_) |\n".
-        "  |_   _| |  _| '_/ -_)  _/ _ \ | |\n".
-        "    |_|    \__|_| \___|_| \___/_|_|\n";
+        $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" .
+            "     _     _            __     _ _ \n" .
+            "   _| |_  | |_ _ _ ___ / _|___(_) |\n" .
+            "  |_   _| |  _| '_/ -_)  _/ _ \ | |\n" .
+            "    |_|    \__|_| \___|_| \___/_|_|\n";
 
         // -- global directories location -------------------------------------
-        $this['trefoil.app.dir.base']          = realpath(__DIR__.'/../../../');
-        $this['app.dir.cache']                 = $this['trefoil.app.dir.base'].'/app/Cache';
-        $this['app.dir.doc']                   = $this['trefoil.app.dir.base'].'/doc';
-        $this['trefoil.app.dir.resources']     = $this['trefoil.app.dir.base'].'/app/Resources';
-        $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'].'/Themes';
-       
+        $this['trefoil.app.dir.base'] = realpath(__DIR__ . '/../../../');
+        $this['app.dir.cache'] = $this['trefoil.app.dir.base'] . '/app/Cache';
+        $this['app.dir.doc'] = $this['trefoil.app.dir.base'] . '/doc';
+        $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'] . '/app/Resources';
+        $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'] . '/Themes';
+
         // -- own services -----------------------------------------------------
         $this->register(new PublisherServiceProvider());
         $this->register(new TwigServiceProvider());
     }
 
-    public final function getMyVersion()
+    final public function getMyVersion()
     {
         return static::MY_VERSION;
     }
@@ -44,7 +52,7 @@ class Application extends EasybookApplication
      */
     public function getCustomLabelsFile()
     {
-        $labelsFileName = 'labels.'.$this->book('language').'.yml';
+        $labelsFileName = 'labels.' . $this->book('language') . '.yml';
         $labelsFile = parent::getCustomLabelsFile();
 
         // the file found has precedence
@@ -53,7 +61,7 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeLabelsDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')).'/Translations';
+        $themeLabelsDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')) . '/Translations';
         $themeLabelsFile = $themeLabelsDir . '/' . $labelsFileName;
 
         if (file_exists($themeLabelsFile)) {
@@ -68,7 +76,7 @@ class Application extends EasybookApplication
      */
     public function getCustomTitlesFile()
     {
-        $titlesFileName = 'titles.'.$this->book('language').'.yml';
+        $titlesFileName = 'titles.' . $this->book('language') . '.yml';
         $titlesFile = parent::getCustomTitlesFile();
 
         // the file found has precedence
@@ -77,7 +85,7 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeTitlesDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')).'/Translations';
+        $themeTitlesDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')) . '/Translations';
         $themeTitlesFile = $themeTitlesDir . '/' . $titlesFileName;
 
         if (file_exists($themeTitlesFile)) {

@@ -1,0 +1,25 @@
+questionnaire:
+    id: "quest-1"
+    options:
+        pagebreak: true
+    heading: "Questionnaire 1"
+    subheading: "Please answer the following questions."
+    introduction: >
+        <p>This is the introduction text of the questionnaire 1.</p>
+        <ul><li>One.</li><li>Two.</li><li>Tree.</li></ul>
+        <p>Lorem ipsum dolor sit amen.</p>
+    questions:
+        1:
+            text: "<p>First question (solution provided):</p>"
+            heading: "Solution"
+            solution: "<p>The solution to the first question.</p>"
+
+        2:
+            text: "<p>Second question (solution provided):</p>"
+            heading: "Solution"
+            solution: "<p>The solution to the second question.</p>"
+
+        3:
+            text: "<p>Third question (solution provided):</p>"
+            heading: "Solution"
+            solution: "<p>The solution to the third question.</p>"
