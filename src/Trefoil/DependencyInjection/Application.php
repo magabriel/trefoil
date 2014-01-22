@@ -95,4 +95,24 @@ class Application extends EasybookApplication
         return '';
     }
 
+    /**
+     * Transforms the original string into a web-safe slug. It also ensures that
+     * the generated slug is unique for the entire book (to do so, it stores
+     * every slug generated since the beginning of the script execution).
+     *
+     * @param  string $string    The string to slug
+     * @param  string $separator Used between words and to replace illegal characters
+     * @param  string $prefix    Prefix to be appended at the beginning of the slug
+     *
+     * @return string             The generated slug
+     */
+    public function slugifyUniquely($string, $separator = null, $prefix = null)
+    {
+        if (is_numeric(substr($string, 0, 1))) {
+            // epubcheck does not like ids starting with digit
+            $string = 'tr_'.$string;
+        }
+        
+        return parent::slugifyUniquely($string, $separator, $prefix);
+    }
 }

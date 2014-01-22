@@ -35,7 +35,9 @@ Type....: {{ activity.type }}
 
         <h5 id="{{ qid }}">{{ activity_heading_text }}</h5>
 
-        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span> {{ question.text|default(question) }}</h6>
+        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
+        
+        <div class="question">{{ question.text }}</h6>
 
         <hr/>
         <div class="responses">

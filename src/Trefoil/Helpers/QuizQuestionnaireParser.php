@@ -137,7 +137,7 @@ class QuizQuestionnaireParser
      */
     protected function extractHeading(Crawler $crawler, $tag)
     {
-        $headingNode = $crawler->filter($tag);
+        $headingNode = $crawler->filter('div>'.$tag);
 
         if (count($headingNode)) {
             return $headingNode->text();
@@ -193,7 +193,7 @@ class QuizQuestionnaireParser
     protected function extractQuestions(Crawler $crawler)
     {
         // 'ol' node contains all the questions
-        $olNode = $crawler->filter('ol');
+        $olNode = $crawler->filter('div>ol');
 
         if (0 == $olNode->count()) {
             throw new \RuntimeException(
@@ -206,7 +206,7 @@ class QuizQuestionnaireParser
         // collect questions
         $questionsList = array();
 
-        $qnodes = $crawler->filter('ol')->children();
+        $qnodes = $olNode->children();
 
         // all the 1st level "li" nodes are questions
         foreach ($qnodes as $qDomNode) {

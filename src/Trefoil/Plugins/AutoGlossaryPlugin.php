@@ -90,7 +90,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     protected $glossaryOptions = array();
 
     /**
-     * Terms already defined, to avoid defining them more than once if coverage mandates it
+     * Terms already defined, to detect duplicated definitions in different files
      *
      * @var array
      */
@@ -125,7 +125,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE   => array('onItemPostParse', -100),
+            EasybookEvents::POST_PARSE   => array('onItemPostParse', -110), // after EbookQuizPlugin to avoid interferences
             EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
@@ -217,7 +217,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $glossaryFile = $contentsDir . '/' . $fileName . '-auto-glossary.yml';
 
         $loader = new GlossaryLoader($glossaryFile, $this->app['slugger']);
-        $this->itemGlossary = $loader->load();
+        $this->itemGlossary = $loader->load(false);
 
         // start with a fresh copy of the book-wide definitions
         $this->glossary = clone($this->bookGlossary);
@@ -309,13 +309,13 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
         $report->setColumnsWidth(array(30, 30, 30, 5, 30));
         $report->setColumnsAlignment(array('', '', '', 'right', ''));
 
-        foreach ($this->processedGlossary as $term => $data) {
-            /* @var GlossaryItem $data */
-            $auxTerm = $term;
-            foreach ($data->getXref() as $variant => $items) {
+        foreach ($this->processedGlossary as $processedItem) {
+            /* @var GlossaryItem $processedItem */
+            $auxTerm = $processedItem->getTerm();
+            foreach ($processedItem->getXref() as $variant => $items) {
                 $auxVariant = $variant;
                 foreach ($items as $item => $count) {
-                    $report->addline(array($auxTerm, $auxVariant, $item, $count, $data->getSource()));
+                    $report->addline(array($auxTerm, $auxVariant, $item, $count, $processedItem->getSource()));
                     $auxTerm = '';
                     $auxVariant = '';
                 }
@@ -335,10 +335,10 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
 
         $report->setColumnsWidth(array(30, 30));
 
-        foreach ($this->processedGlossary as $term => $data) {
-            /* @var GlossaryItem $data */
-            if (!count($data->getXref($term))) {
-                $report->addLine(array($term, $data->getSource()));
+        foreach ($this->processedGlossary as $item) {
+            /* @var GlossaryItem $item */
+            if (!count($item->getXref())) {
+                $report->addLine(array($item->getTerm(), $item->getSource()));
             }
         }
 
