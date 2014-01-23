@@ -5,8 +5,8 @@ Quiz Items
 
 Item                           Id              Type            Heading                                  Questions 
 ------------------------------ --------------- --------------- ---------------------------------------- --------- 
-chapter1.md                    act-1           activity.abc    Exercise 1                                       2 
-                               quest-1         questionnaire   Questionnaire 1                                  3 
-                               quest-2         questionnaire   Questionnaire 2                                  2 
-                               act-2           activity.ynb    Exercise 2                                       2 
-chapter2.md                    act-3-spanish   activity.ynb    Ejercicio 3                                      2 
+chapter1.md                    act-1           activity.abc    1.0.0.0.1 Exercise 1                             2 
+                               quest-1         questionnaire   1.0.0.0.2 Questionnaire 1                        3 
+                               quest-2         questionnaire   1.0.0.0.3 Questionnaire 2                        2 
+                               act-2           activity.ynb    1.0.0.0.4 Exercise 2                             2 
+chapter2.md                    act-3-spanish   activity.ynb    2.0.0.0.1 Ejercicio 3                            2 

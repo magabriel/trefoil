@@ -14,7 +14,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Trefoil\Util\CrawlerTools;
 
 /**
- * Parse an HTML representation of an activity into a QuizQuizActivity object.
+ * Parse an HTML representation of an activity into a QuizActivity object.
  *
  * Example activity:
  *
@@ -48,39 +48,37 @@ use Trefoil\Util\CrawlerTools;
  *    </li>
  *  </ol>
  */
-class QuizActivityParser
+class QuizActivityParser extends QuizItemParser
 {
 
     /**
-     * The original text (UTF-8)
-     *
-     * @var string
-     */
-    protected $text;
-
-    /**
-     * The parsed activity
-     *
      * @var QuizActivity
      */
-    protected $activity;
+    protected $quizActivity;
+
+    public function __construct($text)
+    {
+        $this->quizActivity = new QuizActivity();
+
+        parent::__construct($text, $this->quizActivity);
+    }
 
     /**
-     * List of responses to be intepreted as "Yes"
+     * List of responses to be interpreted as "Yes"
      *
      * @var Array|string
      */
     protected $responsesValidAsYes = array('Yes', 'True');
 
     /**
-     * List of responses to be intepreted as "No"
+     * List of responses to be interpreted as "No"
      *
      * @var Array|string
      */
     protected $responsesValidAsNo = array('No', 'False');
 
     /**
-     * List of responses to be intepreted as "Both"
+     * List of responses to be interpreted as "Both"
      *
      * @var Array|string
      */
@@ -116,125 +114,8 @@ class QuizActivityParser
         $this->responsesValidAsBoth = $responsesValidAsBoth;
     }
 
-    public function __construct($text)
-    {
-        $this->text = $text;
-    }
-
     /**
-     *
-     * @return QuizActivity
-     */
-    public function parse()
-    {
-        $this->extractQuizActivity();
-
-        return $this->activity;
-    }
-
-    /**
-     * Example activity:
-     *
-     * <div class="activity" data-id="1-1">
-     *     <h5>Optional heading</h5>
-     *     <h6>Optional subheading</h6>
-     *     <p>free text</p>
-     *     <ul><li>can have unordered lists</li></ul>
-     *     <p>more free text</p>
-     *
-     *     [activity questions]
-     * </div>
-     *
-     * [activity questions] ::=  <ol>...</ol>
-     */
-    protected function extractQuizActivity()
-    {
-        $crawler = new Crawler();
-        $crawler->addHtmlContent($this->text, 'UTF-8');
-        $crawler = $crawler->filter('div');
-
-        $this->activity = new QuizActivity();
-
-        // Type ABC by default
-        $this->activity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_ABC);
-
-        // Common data
-        $this->activity->setId($crawler->attr('data-id'));
-        if (!$this->activity->getId()) {
-            throw new \Exception(sprintf('QuizActivity must have data-id: "%s"', $crawler->text()));
-        }
-
-        $this->activity->setOptions(
-                       array(
-                           'pagebreak' => $crawler->attr('data-pagebreak') != '0')
-        );
-
-        // extract heading (optional)
-        $this->activity->setHeading($this->extractHeading($crawler, 'h5'));
-
-        // extract subheading (optional)
-        if ($this->activity->getHeading()) {
-            $this->activity->setSubHeading($this->extractHeading($crawler, 'h6'));
-        }
-
-        // introduction text (optional)
-        $this->activity->setIntroduction($this->extractQuizActivityIntroduction($crawler));
-
-        // the questions
-        $this->activity->setQuestions($this->extractQuestions($crawler));
-
-        // Unique id for this activity
-        $this->activity->setInternalId(hash('crc32', json_encode($this->text)));
-
-        // Look if an ABC activity can be transformed bo YNB
-        $this->transformAbcToYnb();
-    }
-
-    /**
-     * Extract activity heading
-     *
-     * @param Crawler $crawler
-     * @param string  $tag
-     *
-     * @return array $heading
-     */
-    protected function extractHeading(Crawler $crawler, $tag)
-    {
-        $headingNode = $crawler->filter($tag);
-
-        if (count($headingNode)) {
-            return $headingNode->text();
-        }
-
-        return null;
-    }
-
-    /**
-     * Extract the activity introduction text
-     *
-     * @param Crawler $crawler
-     *
-     * @return string
-     */
-    protected function extractQuizActivityIntroduction(Crawler $crawler)
-    {
-        $questionTextNodes = $crawler->filter('div>p, div>ul');
-
-        $text = array();
-        foreach ($questionTextNodes as $pNode) {
-            $p = new Crawler($pNode);
-            $text[] = CrawlerTools::getNodeHtml($p);
-        }
-
-        if (!$text) {
-            return null;
-        }
-
-        return implode('', $text);
-    }
-
-    /**
-     * Example activity:
+     * Example body:
      *
      *  <ol>
      *    <li><p>Text of question 1</p>
@@ -259,24 +140,24 @@ class QuizActivityParser
      * @throws \RuntimeException
      * @return array             with activity values
      */
-    protected function extractQuestions(Crawler $crawler)
+    protected function parseBody(Crawler $crawler)
     {
         // 'ol' node contains all the questions
-        $olNode = $crawler->filter('ol');
+        $olNode = $crawler->filter('div>ol');
 
         if (0 == $olNode->count()) {
             throw new \RuntimeException(
                 sprintf(
                     'No questions found for activity id "%s" of type "%s"' . "\n"
-                    . $this->activity->getId(),
-                    $this->activity->getType()
+                    . $this->quizActivity->getId(),
+                    $this->quizActivity->getType()
                 ));
         }
 
         // collect questions
         $questionsList = array();
 
-        $qnodes = $crawler->filter('ol')->children();
+        $qnodes = $olNode->children();
 
         // all the 1st level "li" nodes are questions
         foreach ($qnodes as $qIndex => $qDomNode) {
@@ -291,9 +172,9 @@ class QuizActivityParser
                 throw new \RuntimeException(
                     sprintf(
                         'No responses found for activity id "%s", question #%s of type "abc"',
-                        $this->activity->getId(),
+                        $this->quizActivity->getId(),
                         $qIndex,
-                        $this->activity->getType()
+                        $this->quizActivity->getType()
                     ));
             }
 
@@ -356,7 +237,13 @@ class QuizActivityParser
             $questionsList[] = $question;
         }
 
-        return $questionsList;
+        $this->quizActivity->setQuestions($questionsList);
+
+        // Type ABC by default
+        $this->quizActivity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_ABC);
+
+        // Look if an ABC activity can be transformed bo YNB
+        $this->transformAbcToYnb();
     }
 
     /**
@@ -367,14 +254,14 @@ class QuizActivityParser
      */
     protected function transformAbcToYnb()
     {
-        if ($this->activity->getType() != QuizActivity::QUIZ_ACTIVITY_TYPE_ABC) {
+        if ($this->quizActivity->getType() != QuizActivity::QUIZ_ACTIVITY_TYPE_ABC) {
             return;
         }
 
         // Look for each group of responses
         $responses = array();
 
-        foreach ($this->activity->getQuestions() as $question) {
+        foreach ($this->quizActivity->getQuestions() as $question) {
             /** @var $question QuizActivityQuestion */
             $responsesClean = array();
             foreach ($question->getResponses() as $response) {
@@ -401,7 +288,7 @@ class QuizActivityParser
         }
 
         // OK for YNB type
-        $this->activity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_YNB);
+        $this->quizActivity->setType(QuizActivity::QUIZ_ACTIVITY_TYPE_YNB);
     }
 
     /**

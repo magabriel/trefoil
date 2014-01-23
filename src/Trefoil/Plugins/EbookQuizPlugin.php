@@ -50,7 +50,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE   => array('onItemPostParse', -100),
+            EasybookEvents::POST_PARSE   => array('onItemPostParse', -1100), // after ParserPlugin
             EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 

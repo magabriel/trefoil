@@ -39,7 +39,7 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\QuestionnaireParser::parse
+     * @covers Trefoil\Helpers\QuizQuestionnaireParser::parse
      */
     public function testParseQuestionnaireWithResponses()
     {
@@ -53,7 +53,7 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\QuestionnaireParser::parse
+     * @covers Trefoil\Helpers\QuizQuestionnaireParser::parse
      */
     public function testParseQuestionnaireWithoutResponses()
     {

@@ -125,7 +125,7 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
     {
         return array(
             EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE   => array('onItemPostParse', -110), // after EbookQuizPlugin to avoid interferences
+            EasybookEvents::POST_PARSE   => array('onItemPostParse', -1110), // after EbookQuizPlugin to avoid interferences
             EasybookEvents::POST_PUBLISH => 'onPostPublish');
     }
 
