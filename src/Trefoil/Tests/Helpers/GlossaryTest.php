@@ -129,7 +129,7 @@ class GlossaryTest extends \PHPUnit_Framework_TestCase
         $this->object->add($item2);
 
         $this->assertEquals(
-             array('item 1[a|b]' => $item1, 'item 2[a|b]' => $item2),
+             array('item1' => $item1, 'item2' => $item2),
              iterator_to_array($this->object->getIterator())
         );
     }

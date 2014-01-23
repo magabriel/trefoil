@@ -48,6 +48,26 @@ tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua.
 
 </div>
 
+<div markdown="1" class="quiz-questionnaire" data-id="quest-2" >
+##### Questionnaire 2
+
+Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumyeirmod
+tempor invidunt ut labore et dolore magna aliquyam erat, sed diamvoluptua.
+
+1. First question (solution provided):
+
+  ###### Solution
+    
+    The solution to the first question.
+    
+2. Second question (solution provided):
+
+  ###### Solution
+    
+    The solution to the second question.
+    
+</div>
+
 <div markdown="1" class="quiz-activity" data-id="act-2">
 ##### Exercise 2
 ###### Please select true or false.

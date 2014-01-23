@@ -39,9 +39,22 @@ class Glossary implements \IteratorAggregate
     public function add(GlossaryItem $item)
     {
         $this->explodeVariants($item);
-        $this->items[$item->getTerm()] = $item;
+        $this->items[$item->getSlug()] = $item;
     }
 
+    /**
+     * @param GlossaryItem $item
+     */
+    public function remove(GlossaryItem $item)
+    {
+        foreach ($this->items as $key => $existingItem) {
+            if ($existingItem->getTerm() == $item->getTerm()) {
+                unset($this->items[$key]);
+                break;
+            }
+        }
+    }
+    
     /**
      * @param string $term
      *

@@ -61,6 +61,7 @@ class GlossaryLoader
         return $glossary;
     }
 
+
     /**
      * True if the definition file could not been loaded (i.e. not found)
      *
@@ -72,8 +73,6 @@ class GlossaryLoader
     }
 
     /**
-     * Get the option
-     *
      * @return array
      */
     public function getOptions()
@@ -134,7 +133,13 @@ class GlossaryLoader
 
             $gi = new GlossaryItem();
             $gi->setTerm($term);
-            $gi->setSlug($this->slugger->slugify($term));
+
+            // ensure uniqueness of slug to avoid collisions 
+            // with other files that define the same term  
+            // with different variant
+            $prefix = crc32($term . $description) . '-';
+
+            $gi->setSlug($this->slugger->slugify($term, null, $prefix));
             $gi->setSource(basename($this->fileName));
             $gi->setDescription($description);
 
