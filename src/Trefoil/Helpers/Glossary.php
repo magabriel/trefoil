@@ -54,7 +54,7 @@ class Glossary implements \IteratorAggregate
             }
         }
     }
-    
+
     /**
      * @param string $term
      *

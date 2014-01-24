@@ -17,7 +17,7 @@ use Trefoil\Util\CrawlerTools;
  * Parse an HTML representation of a quiz into a QuizItem object.
  *
  * This is a base class to be extended by each quiz item type.
- * 
+ *
  * Example quiz item:
  *
  * <div class="quiz-item-type" data-id="1-1">
@@ -72,13 +72,13 @@ abstract class QuizItemParser
         $this->parseHeader($crawler);
 
         $this->parseBody($crawler);
-        
+
         return $this->quizItem;
     }
 
     /**
      * Parse the header part of the quiz item.
-     * 
+     *
      * Example:
      *
      * <div class="quiz-item-type" data-id="1-1">
@@ -121,10 +121,10 @@ abstract class QuizItemParser
 
     /**
      * Parse the body part of the quiz item.
-     * 
+     *
      * Must be overriden by inheritor classes to provide a valid implementation for the quiz item type.
-     * 
-     * @param Crawler $crawler
+     *
+     * @param  Crawler         $crawler
      * @throws \LogicException
      */
     protected function parseBody(Crawler $crawler)

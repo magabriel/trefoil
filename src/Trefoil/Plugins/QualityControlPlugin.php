@@ -59,7 +59,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $this->checkImages($content);
         $this->checkEmphasis($content);
     }
-    
+
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
@@ -131,7 +131,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
                     // a line draw with underscores
                     continue;
                 }
-                
+
                 $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
             }
         }

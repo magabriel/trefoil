@@ -99,13 +99,13 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<div>';
         $regExp .= '<div[^(class|>)]*';
         $regExp .= sprintf('class="(?<type>%s)"', implode('|', $quizElements));
-        
+
         // can have other divs embedded (i.e. figures or tables already decorated)
         $regExp .= '(';
         $regExp .= '(<div.*>.*<\/div>)|'; // a single div
         $regExp .= '.'; // anything
         $regExp .= ')*';
-        
+
         $regExp .= '<\/div>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
@@ -182,7 +182,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 
         $questionnaire = $parser->parse();
 
-        // save it for rendering the solutions later 
+        // save it for rendering the solutions later
         $this->saveQuizItem($questionnaire);
 
         // render it
@@ -201,20 +201,20 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     {
         // save the xref to this item
         $quizItem->setXref($this->item['config']['content']);
-        
-        // assign a name for grouping items 
+
+        // assign a name for grouping items
         $name = $this->item['title'];
         if ($this->item['label']) {
             $name = $this->item['label'] . ' - ' . $name;
         }
-        
+
         if (!isset($this->quizItems[$name])) {
             $this->quizItems[$name] = array();
         }
 
         $this->quizItems[$name][] = $quizItem;
     }
-    
+
     /**
      * Save the information for the "solutions" book element to be rendered.
      *
@@ -255,7 +255,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 
             /** @var QuizItem $quizItem */
             foreach ($quizItems as $quizItem) {
-                
+
                 switch ($quizItem->getType()) {
                     case QuizActivity::QUIZ_ACTIVITY_TYPE_ABC:
                     case QuizActivity::QUIZ_ACTIVITY_TYPE_YNB:

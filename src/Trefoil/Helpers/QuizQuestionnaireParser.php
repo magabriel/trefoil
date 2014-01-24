@@ -48,9 +48,9 @@ class QuizQuestionnaireParser extends QuizItemParser
      * @var QuizQuestionnaire
      */
     protected $quizQuestionnaire;
-    
+
     public function __construct($text)
-    {        
+    {
         $this->quizQuestionnaire = new QuizQuestionnaire();
         parent::__construct($text, $this->quizQuestionnaire);
     }

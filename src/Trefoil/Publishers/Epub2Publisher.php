@@ -168,8 +168,7 @@ class Epub2Publisher extends HtmlPublisher
         if (!$this->app['filesystem']->exists($bookTmpDir . '/book/OEBPS/fonts/*')) {
             $this->app['filesystem']->remove($bookTmpDir . '/book/OEBPS/fonts');
         }
-        
-        
+
         // generate the book cover page
         $this->app->render(
                   'cover.twig',

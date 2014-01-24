@@ -71,7 +71,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
         $event->setItem($this->item);
     }
-    
+
     public function preProcessImages($content)
     {
         $regExp = '/';
@@ -97,7 +97,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                     // allow images to include 'images/' as path, for compatibility
                     // with Markdown editors like MdCharm
                     $image = str_replace('images/', '', $image);
-                    
+
                     // get the arguments
                     parse_str($parts[1], $args);
                     $args = str_replace('"', '', $args);
