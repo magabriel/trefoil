@@ -2,6 +2,7 @@
 ========================================
 Solution for:
 Questionnnaire: {{ questionnaire.id }}
+Xref..........: {{ xref }}
 ========================================
 -->
 <div class="questions questions-solutions">
@@ -14,7 +15,7 @@ Questionnnaire: {{ questionnaire.id }}
         {% if questionnaire.questions[qindex+1]|default(null) %}
             {% set nextqid = 'q-'~questionnaire.id ~ '_' ~ (qindex+1) %}
         {% endif %}
-    
+
         <h5 id="{{ qid }}-solution">{{ questionnaire.heading }}</h5>
     
         <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>

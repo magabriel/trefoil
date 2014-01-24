@@ -32,12 +32,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @var Array|QuizItem
      */
-    protected $quizElements = array();
-
-    /**
-     * @var array
-     */
-    protected $xrefs = array();
+    protected $quizItems = array();
 
     /**
      * Whether or not the solutions item has been generated
@@ -159,10 +154,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $activity = $parser->parse();
 
         // save it for rendering the solutions later
-        $this->quizElements[] = $activity;
-
-        // save xref for reporting
-        $this->saveXref($activity);
+        $this->saveQuizItem($activity);
 
         // render it
         $variables = array('activity' => $activity);
@@ -184,11 +176,8 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 
         $questionnaire = $parser->parse();
 
-        // save it for rendering the solutions later
-        $this->quizElements[] = $questionnaire;
-
-        // save xref for reporting
-        $this->saveXref($questionnaire);
+        // save it for rendering the solutions later 
+        $this->saveQuizItem($questionnaire);
 
         // render it
         $variables = array('questionnaire' => $questionnaire);
@@ -202,17 +191,24 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @param QuizItem $quizItem
      */
-    protected function saveXref(QuizItem $quizItem)
+    protected function saveQuizItem(QuizItem $quizItem)
     {
-        $name = $this->item['config']['content'];
-
-        if (!isset($this->xrefs[$name])) {
-            $this->xrefs[$name] = array();
+        // save the xref to this item
+        $quizItem->setXref($this->item['config']['content']);
+        
+        // assign a name for grouping items 
+        $name = $this->item['title'];
+        if ($this->item['label']) {
+            $name = $this->item['label'] . ' - ' . $name;
+        }
+        
+        if (!isset($this->quizItems[$name])) {
+            $this->quizItems[$name] = array();
         }
 
-        $this->xrefs[$name][] = $quizItem;
+        $this->quizItems[$name][] = $quizItem;
     }
-
+    
     /**
      * Save the information for the "solutions" book element to be rendered.
      *
@@ -221,7 +217,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function prepareSolutions()
     {
-        $this->app['publishing.quiz.items'] = $this->quizElements;
+        $this->app['publishing.quiz.items'] = $this->quizItems;
 
         $this->generated = true;
     }
@@ -242,17 +238,18 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $report->setTitle('EbookQuizPlugin');
         $report->setSubtitle('Quiz Items');
 
-        $report->setHeaders(array('Item', 'Id', 'Type', 'Heading', 'Questions'));
+        $report->setHeaders(array('Item title', 'X-Ref', 'Id', 'Type', 'Heading', 'Questions'));
 
-        $report->setColumnsWidth(array(30, 15, 15, 40, 9));
-        $report->setColumnsAlignment(array('', '', '', '', 'right'));
+        $report->setColumnsWidth(array(40, 20, 15, 15, 40, 9));
+        $report->setColumnsAlignment(array('', '', '', '', '', 'right'));
 
-        foreach ($this->xrefs as $item => $quizItems) {
+        foreach ($this->quizItems as $item => $quizItems) {
             $auxItem = $item;
+            $auxXref = isset($quizItems[0]) ? $quizItems[0]->getXref() : '';
 
             /** @var QuizItem $quizItem */
             foreach ($quizItems as $quizItem) {
-
+                
                 switch ($quizItem->getType()) {
                     case QuizActivity::QUIZ_ACTIVITY_TYPE_ABC:
                     case QuizActivity::QUIZ_ACTIVITY_TYPE_YNB:
@@ -270,13 +267,15 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                 }
 
                 $report->addline(
-                       array($auxItem,
+                       array(substr($auxItem, 0, 40),
+                             $auxXref,
                              $quizItem->getId(),
                              $quizItem->getType(),
                              substr($quizItem->getHeading(), 0, 40),
                              $count)
                 );
                 $auxItem = '';
+                $auxXref = '';
             }
         }
 

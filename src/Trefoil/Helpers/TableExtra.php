@@ -94,7 +94,7 @@ class TableExtra
             return array();
         }
 
-        // extract columns from each rown
+        // extract columns from each row
         $rows = array();
         foreach ($matches as $matchRow) {
 
