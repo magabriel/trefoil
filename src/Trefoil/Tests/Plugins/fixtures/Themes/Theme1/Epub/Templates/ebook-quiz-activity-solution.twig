@@ -3,9 +3,10 @@
 Solution for:
 Activity: {{ activity.id }}
 Type....: {{ activity.type }}
+Xref....: {{ xref }}
 ========================================
 -->
-<div class="activity-solution activity-solution-{{ activity.type }}" data-type="{{ activity.type }}">
+<div class="activity-solution activity-solution-{{ activity.type }}">
 
     {% for qindex, question in activity.questions %}
 

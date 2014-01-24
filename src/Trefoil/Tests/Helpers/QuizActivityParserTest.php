@@ -39,7 +39,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\ActivitiesParser::parse
+     * @covers Trefoil\Helpers\QuizActivityParser::parse
      */
     public function testParseActivityABC()
     {
@@ -53,7 +53,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\ActivitiesParser::parse
+     * @covers Trefoil\Helpers\QuizActivityParser::parse
      */
     public function testParseActivityYN()
     {
@@ -67,7 +67,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\ActivitiesParser::parse
+     * @covers Trefoil\Helpers\QuizActivityParser::parse
      */
     public function testParseActivityYNB()
     {
@@ -81,7 +81,7 @@ class QuizActivityParserTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\ActivitiesParser::parse
+     * @covers Trefoil\Helpers\QuizActivityParser::parse
      */
     public function testParseActivityYNBSpanish()
     {

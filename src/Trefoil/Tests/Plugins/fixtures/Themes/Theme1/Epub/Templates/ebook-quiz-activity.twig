@@ -7,7 +7,7 @@ Type....: {{ activity.type }}
 {% if activity.pagebreak == true %}
     <div class="page-break"></div>
 {% endif %}
-<div class="activity activity-{{ activity.type }}" data-type="{{ activity.type }}">
+<div class="activity activity-{{ activity.type }}">
 
     {% set activity_heading_text = activity.heading ? activity.heading : 'Activity ' ~ activity.id %}
 

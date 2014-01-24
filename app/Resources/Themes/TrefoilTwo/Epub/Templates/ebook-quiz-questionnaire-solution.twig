@@ -2,53 +2,55 @@
 ========================================
 Solution for:
 Questionnnaire: {{ questionnaire.id }}
+Xref..........: {{ xref }}
 ========================================
 -->
 <div class="questions questions-solutions">
-{% for qindex, question in questionnaire.questions if question.solution %}
+    {% for qindex, question in questionnaire.questions if question.solution %}
 
-    {% set qid = 'q-'~questionnaire.id ~ '_' ~ qindex %}
+        {% set qid = 'q-'~questionnaire.id ~ '_' ~ qindex %}
+    
+        {# mext question id #}
+        {% set nextqid = null %}
+        {% if questionnaire.questions[qindex+1]|default(null) %}
+            {% set nextqid = 'q-'~questionnaire.id ~ '_' ~ (qindex+1) %}
+        {% endif %}
 
-    {# mext question id #}
-    {% set nextqid = null %}
-    {% if questionnaire.questions[qindex+1]|default(null) %}
-        {% set nextqid = 'q-'~questionnaire.id ~ '_' ~ (qindex+1) %}
-    {% endif %}
-
-    <h5 id="{{ qid }}-solution">{{ questionnaire.heading }}</h5>
-
-    <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
-    <div class="question" {{ question.text }}</div>
-
-    <hr />
+        <h5 id="{{ qid }}-solution">{{ questionnaire.heading }}</h5>
+    
+        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
+    
+        <div class="question" {{ question.text }}</div>
+    
+        <hr/>
         <div class="response">
-            <h6>{{ question.solution.heading }}</h6>
+            <h6>{{ question.heading }}</h6>
             {{ question.solution }}
         </div>
-    <hr />
-
-    {# next and return buttons #}
-    <p>
-        <a href="#{{ qid }}">
-            <span>[ Back ]</span>
-        </a>
-        {% if nextqid %}
-            <a href="#{{ nextqid }}">
-                <span>[ Next ]</span>
+        <hr/>
+        
+        {# next and return buttons #}
+        <p>
+            <a href="#{{ qid }}">
+                <span>[ Back ]</span>
             </a>
-        {% else %}
-            <a href="#skip-q-{{ questionnaire.id }}"><span>[ Finish ]</span></a>
-        {% endif %}
-    </p>
-    <div class="page-break"></div>
-
-    {# second page break
-     # just in case viewer is in two-pages mode
-     #}
-    <hr/>
-    <p><span style="font-size: 3em; font-weight: bold;vertical-align: middle;">&larr;</span>
-        Please click to continue.</p>
-    <hr/>
-    <div class="page-break"></div>
-{% endfor %}
+            {% if nextqid %}
+                <a href="#{{ nextqid }}">
+                    <span>[ Next ]</span>
+                </a>
+            {% else %}
+                <a href="#skip-q-{{ questionnaire.id }}"><span>[ Finish ]</span></a>
+            {% endif %}
+        </p>
+        <div class="page-break"></div>
+        
+        {# second page break
+         # just in case viewer is in two-pages mode
+         #}
+        <hr/>
+        <p><span style="font-size: 3em; font-weight: bold;vertical-align: middle;">&larr;</span>
+            Please click to continue.</p>
+        <hr/>
+        <div class="page-break"></div>
+    {% endfor %}
 </div>

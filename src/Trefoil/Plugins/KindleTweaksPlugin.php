@@ -29,7 +29,7 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1000) // the latest possible
+            EasybookEvents::POST_PARSE => array('onItemPostParse', -1010) // after ParserPlugin
         );
     }
 

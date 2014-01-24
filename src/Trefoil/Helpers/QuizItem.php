@@ -66,6 +66,13 @@ abstract class QuizItem
     protected $introduction;
 
     /**
+     * An xref to the book item where the quiz item is defined.
+     * 
+     * @var string
+     */
+    protected $xref;
+    
+    /**
      * @param string $heading
      */
     public function setHeading($heading)
@@ -177,4 +184,19 @@ abstract class QuizItem
         return $this->type;
     }
 
+    /**
+     * @param string $xref
+     */
+    public function setXref($xref)
+    {
+        $this->xref = $xref;
+    }
+
+    /**
+     * @return string
+     */
+    public function getXref()
+    {
+        return $this->xref;
+    }
 }
