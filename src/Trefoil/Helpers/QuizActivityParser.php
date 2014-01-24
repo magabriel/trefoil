@@ -164,7 +164,9 @@ class QuizActivityParser extends QuizItemParser
             $qnode = new Crawler($qDomNode);
 
             $question = new QuizActivityQuestion();
-            $question->setText(CrawlerTools::getNodeHtml($qnode->filter('p')));
+            
+            // select all tags other than "ol"
+            $question->setText(CrawlerTools::getNodeHtml($qnode->filterXPath('li/*[not(self::ol)]')));
 
             // the 2nd level "li" nodes are responses to that question
             $responses = $qnode->filter('ol');

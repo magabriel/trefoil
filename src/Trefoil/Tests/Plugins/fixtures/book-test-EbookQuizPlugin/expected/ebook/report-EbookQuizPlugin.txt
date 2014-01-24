@@ -10,3 +10,6 @@ Chapter 1 - EbookQuiz test               chapter1.md          act-1           ac
                                                               quest-2         questionnaire   1.0.0.0.3 Questionnaire 2                        2 
                                                               act-2           activity.ynb    1.0.0.0.4 Exercise 2                             2 
 Chapter 2 - EbookQuiz test in Spanish    chapter2.md          act-3-spanish   activity.ynb    2.0.0.0.1 Ejercicio 3                            2 
+Chapter 3 - EbookQuiz edge cases         chapter3.md          quest-3-1       questionnaire   3.0.0.0.1 Questionnaire 3-1                      4 
+                                                              act-3-2         activity.abc    3.0.0.0.2 Exercise 1                             2 
+                                                              act-3-3         questionnaire   3.0.0.0.3 Questionnaire 1                        3 

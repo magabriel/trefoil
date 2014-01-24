@@ -99,7 +99,13 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<div>';
         $regExp .= '<div[^(class|>)]*';
         $regExp .= sprintf('class="(?<type>%s)"', implode('|', $quizElements));
-        $regExp .= '.*';
+        
+        // can have other divs embedded (i.e. figures or tables already decorated)
+        $regExp .= '(';
+        $regExp .= '(<div.*>.*<\/div>)|'; // a single div
+        $regExp .= '.'; // anything
+        $regExp .= ')*';
+        
         $regExp .= '<\/div>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
