@@ -36,8 +36,6 @@ class RegisterResources implements EventSubscriberInterface
         $this->app = $event->app;
         $this->output = $event->app['console.output'];
 
-        $this->registerOwnServices();
-
         $this->registerOwnPlugins();
 
         $this->registerOwnThemes();
@@ -50,20 +48,15 @@ class RegisterResources implements EventSubscriberInterface
     }
 
     /**
-     * Register services that need a dynamic configuration
-     */
-    public function registerOwnServices()
-    {
-        // nothing here
-    }
-
-    /**
      * Register our own plugins
      */
     public function registerOwnPlugins()
     {
-        $edition = $this->app['publishing.edition'];
+        // register mandatory plugins
+        $this->registerEventSubscribers(__DIR__ . '/../../Plugins', 'Trefoil\\Plugins\\');
 
+        // register optional plugins
+        $edition = $this->app['publishing.edition'];
         $bookEditions = $this->app->book('editions');
         if (!isset($bookEditions[$edition]['plugins'])) {
             // no 'plugins' section
@@ -77,53 +70,70 @@ class RegisterResources implements EventSubscriberInterface
 
         $enabledPlugins = $bookEditions[$edition]['plugins']['enabled'];
 
-        $this->registerEventSubscribers(__DIR__ . '/../../Plugins', 'Trefoil\Plugins', $enabledPlugins);
+        $registered = $this->registerEventSubscribers(
+                           __DIR__ . '/../../Plugins/Optional',
+                           'Trefoil\\Plugins\\Optional\\',
+                           $enabledPlugins
+        );
+
+        // tell the user
+        foreach ($enabledPlugins as $plugin) {
+            if (!in_array($plugin, $registered)) {
+                throw new \Exception(
+                    'Enabled plugin was not registered: ' . $plugin);
+            }
+            $this->output->writeLn(sprintf(" > Using plugin %s", $plugin));
+        }
     }
 
+    /**
+     * @param       $dir
+     * @param       $namespace
+     * @param array $selectedPlugins List of plugins to register,
+     *                               or null to register all
+     *
+     * @return array
+     */
     private function registerEventSubscribers($dir,
-                                              $namespace = '',
-                                              $enabledPlugins = array())
+                                              $namespace,
+                                              array $selectedPlugins = null)
     {
         if (!file_exists($dir)) {
             return;
         }
 
-        $files = Finder::create()->files()->name('*Plugin.php')
-                       ->in($dir);
+        // find and register all plugins in dir
+        $files = Finder::create()->files()->name('*Plugin.php')->depth(0)->in($dir);
 
         $registered = array();
         foreach ($files as $file) {
             $className = $file->getBasename('.php'); // strip .php extension
 
             $pluginName = $file->getBasename('Plugin.php');
-            if (!in_array($pluginName, $enabledPlugins)) {
+
+            if ($selectedPlugins !== null && !in_array($pluginName, $selectedPlugins)) {
                 continue;
             }
 
+            $this->RegisterPlugin($namespace, $className);
             $registered[] = $pluginName;
-            $this->output->writeLn(sprintf(" > Using plugin %s", $pluginName));
-
-            // if book plugins aren't namespaced, we must include the classes.
-            if ('' == $namespace) {
-                /** @noinspection PhpIncludeInspection */
-                include_once $file->getPathName();
-            }
-
-            $r = new \ReflectionClass($namespace . '\\' . $className);
-            if ($r
-                ->implementsInterface(
-                'Symfony\\Component\\EventDispatcher\\EventSubscriberInterface'
-                )
-            ) {
-                $this->app->get('dispatcher')->addSubscriber($r->newInstance());
-            }
         }
 
-        foreach ($enabledPlugins as $plugin) {
-            if (!in_array($plugin, $registered)) {
-                throw new \Exception(
-                    'Enabled plugin was not registered: ' . $plugin);
-            }
+        return $registered;
+    }
+
+    /**
+     * Register one plugin.
+     *
+     * @param $namespace
+     * @param $className
+     */
+    protected function RegisterPlugin($namespace, $className)
+    {
+        $r = new \ReflectionClass($namespace . $className);
+
+        if ($r->implementsInterface('Symfony\\Component\\EventDispatcher\\EventSubscriberInterface')) {
+            $this->app->get('dispatcher')->addSubscriber($r->newInstance());
         }
     }
 

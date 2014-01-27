@@ -7,14 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Trefoil\Plugins;
+namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Util\SimpleReport;
-
+use Trefoil\Plugins\BasePlugin;
 /**
  * This plugin processes footnotes.
  *

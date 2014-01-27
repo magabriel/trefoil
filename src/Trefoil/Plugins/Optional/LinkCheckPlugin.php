@@ -7,14 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Trefoil\Plugins;
+namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\LinkChecker;
 use Trefoil\Util\SimpleReport;
-
+use Trefoil\Plugins\BasePlugin;
 /**
  * Plugin to check internal and external links in book.
  *
@@ -173,6 +173,14 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         $errors = false;
 
+        $numLinks = 0;
+        foreach ($this->links['external'] as $links) {
+            foreach ($links as $link) {
+                $numLinks++;
+            }
+        }
+
+        $this->progressStart($numLinks);
         foreach ($this->links['external'] as $xref => $links) {
             foreach ($links as $index => $link) {
                 try {
@@ -182,8 +190,10 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                     $this->links['external'][$xref][$index]['status'] = $e->getMessage();
                     $errors = true;
                 }
+                $this->progressAdvance();
             }
         }
+        $this->progressFinish();
 
         if ($errors) {
             $this->writeLn('Some external links are not correct.', 'error');

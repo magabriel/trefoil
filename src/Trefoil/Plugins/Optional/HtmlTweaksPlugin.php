@@ -7,7 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Trefoil\Plugins;
+namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Yaml;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
-
+use Trefoil\Plugins\BasePlugin;
 /**
  * Several tweaks to the final HTML of the ebook.
  * It allows modifying the HTML produced by the Markdown processor or by the

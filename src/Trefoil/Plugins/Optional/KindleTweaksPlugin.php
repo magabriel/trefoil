@@ -7,12 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Trefoil\Plugins;
+namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
+use Trefoil\Plugins\BasePlugin;
 /**
  * Several tweaks to make the ebook more compatible with Kindle MOBI format
  *

@@ -40,6 +40,9 @@ class Application extends EasybookApplication
         // -- own services -----------------------------------------------------
         $this->register(new PublisherServiceProvider());
         $this->register(new TwigServiceProvider());
+
+        // -- console ---------------------------------------------------------
+        $this['console.progress'] = null;
     }
 
     final public function getMyVersion()

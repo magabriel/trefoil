@@ -48,7 +48,8 @@ class TrefoilBookPublishCommand extends EasybookBookPublishCommand
 
         // register our resources
         $this->app['dispatcher']->addSubscriber(new RegisterResources());
-
+        $this->app['console.progress'] = $this->getHelperSet()->get('progress');
+        
         // and go!
         parent::execute($input, $output);
     }

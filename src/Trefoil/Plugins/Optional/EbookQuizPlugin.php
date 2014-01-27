@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Trefoil\Plugins;
+namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
@@ -20,6 +20,7 @@ use Trefoil\Helpers\QuizItem;
 use Trefoil\Helpers\QuizQuestionnaire;
 use Trefoil\Helpers\QuizQuestionnaireParser;
 use Trefoil\Util\SimpleReport;
+use Trefoil\Plugins\BasePlugin;
 
 class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 {
