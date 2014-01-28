@@ -175,9 +175,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         $numLinks = 0;
         foreach ($this->links['external'] as $links) {
-            foreach ($links as $link) {
-                $numLinks++;
-            }
+            $numLinks += count($links);
         }
 
         $this->progressStart($numLinks);
@@ -250,7 +248,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                         $countError++;
                     }
 
-                    $report->addLine(array('', '', $status, $link['text']));
+                    $report->addLine(array('', '', $status, trim($link['text'])));
                     if ($link['text'] != $link['uri']) {
                         $report->addLine(array('', '', '', '<' . $link['uri'] . '>'));
                     }
