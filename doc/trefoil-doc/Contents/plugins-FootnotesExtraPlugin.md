@@ -24,7 +24,7 @@ book:
 The Markdown parser converts footnotes into hyperlinks, where the link target 
 is the note text at the bottom of the document.
 
-While this behavior[^note1] can be correct in printed books, ebooks are a different 
+While this behavior[^note1] is adequate for printed books, ebooks are a different 
 mattter. The "footnotes at the end of the chapter" approach does not work
 well for electronic reading devices or applications because the notes stand 
 in the way of the normal reading flow.

@@ -7,7 +7,7 @@
     <meta name="generator" content="{{ book.generator.name }} {{ book.generator.version }}"/>
 
     <title>{% block title %}{% endblock %} {{ '' != block('title') ? '|' : '' }} {{ book.title }}</title>
-
+    
 {% if edition.include_styles %}
     <link rel="stylesheet" href="{{ 2 == item.level ? '..' : '.' }}/css/easybook.css" />
 {% endif %}

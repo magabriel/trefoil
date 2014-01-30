@@ -6,7 +6,6 @@ It does that by extending the already superb **easybook**
 (<http://easybook-project.org>) to provide additional features
 specifically targeted towards generation of ebooks.
 
-
 {{ itemtoc() }}
 
 Installing
@@ -17,12 +16,14 @@ TODO
 Extending Easybook
 ------------------
 
-If you are reading this it is assumed that you are familiar with **easybook**
+If you are reading this, it is assumed that you are familiar with **easybook**
 documentation. If you are not, please go to <http://easybook-project.org> and 
 read it. You can even install a test version of **easybook** and play with it
 a little to gain first-hand knowledge of its capabilities. When you are done
 with it you should return to this document and continue reading.
 
+N> ##### NOTICE
+N> **trefoil** is not a fork of **easybook** but an extension. 
 
 ### Compatibility
 

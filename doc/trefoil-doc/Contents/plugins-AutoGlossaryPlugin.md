@@ -1,6 +1,6 @@
 ## AutoGlossaryPlugin
 
-This auto-glossary plugin handles the generation of a glossary of terms 
+The auto-glossary plugin handles the generation of a glossary of terms 
 that are automatically hyperlinked to its definitions.
 
 ### Availability
@@ -119,7 +119,7 @@ that affect how the glossary terms are processed:
 
 **Example:**
 
-- This paragraph contains a the expressions "example term 1" and "example term 2" that should
+- This paragraph contains the expressions "example term 1" and "example term 2" that should
   be converted into glossary terms.
 
 N> ##### Note

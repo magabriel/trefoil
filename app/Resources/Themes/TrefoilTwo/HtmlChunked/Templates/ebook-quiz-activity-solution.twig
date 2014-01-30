@@ -1,0 +1,72 @@
+<!--
+========================================
+Solution for:
+Activity: {{ activity.id }}
+Type....: {{ activity.type }}
+Xref....: {{ xref }}
+========================================
+-->
+<div class="activity-solution activity-solution-{{ activity.type }}">
+
+    {% for qindex, question in activity.questions %}
+
+        {% for rindex, response in question.responses %}
+
+            {# this question id #}
+            {% set qid = 'a-'~activity.id ~ '_' ~ qindex %}
+
+            {# next question id #}
+            {% set nextqid = null %}
+            {% if activity.questions[qindex+1]|default(null) %}
+                {% set nextqid = 'a-'~activity.id ~ '_' ~ (qindex+1) %}
+            {% endif %}
+
+            {# the heading #}
+            <h5 id="{{ qid }}_{{ rindex }}">{{ activity.heading }}</h5>
+
+            {# the question text and response #}
+            <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
+            
+            <div class="question">{{ question.text }}</div>
+
+            <hr/>
+            <p class="response">&raquo; {{ response }}</p>
+            <hr/>
+            {# success or error #}
+            {% set success = (question.solution == rindex ? 1 : 0) %}
+
+            {% if success %}
+                <div>
+                    <span class="answer answer-ok">Correct!!</span>
+                </div>
+                {% if question.explanation|default('') %}
+                    {{ question.explanation }}
+                {% endif %}
+            {% else %}
+                <div>
+                    <span class="answer answer-error">Wrong</span>
+                </div>
+            {% endif %}
+            <hr/>
+
+            {# next and return links after the response #}
+            <p>
+                <a href="#{{ qid }}">
+                    <span>[ Back ]</span>
+                </a>
+                {% if success %}
+                    {% if nextqid %}
+                        <a href="#{{ nextqid }}">
+                            <span>[ Next ]</span>
+                        </a>
+                    {% else %}
+                        <a href="#skip-a-{{ activity.id }}"><span>[ Finish ]</span></a>
+                    {% endif %}
+                {% endif %}
+            </p>
+            <div class="page-break"></div>
+
+        {% endfor %}
+    {% endfor %}
+
+</div>

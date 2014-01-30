@@ -17,7 +17,6 @@ class FunctionalTest extends BookPublishingAllTestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        // __DIR__ is the directory containing THIS file
         $this->fixturesDir = __DIR__ . '/fixtures/';
     }
 }

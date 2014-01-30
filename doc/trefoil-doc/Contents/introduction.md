@@ -1,8 +1,63 @@
 Introduction
 ============
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. 
+This is the documentation of **trefoil**, a project conceived as an extension
+to **easybook** (<http://easybook-project.org>). 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. 
+---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. 
+**trefoil** extends **easybook** to provide additional features for publication
+of *ebooks*, both fiction and non-fiction.
+
+---
+
+This documentation is itself a **trefoil** project, intended to be published into
+one of the supported formats (*epub* or *mobi* recommended). To create the 
+documentation, go to the directory where trefoil is installed and run:
+
+~~~.bash
+book publish trefoil-doc ebook 
+~~~
+
+to get the *epub* version, or
+
+~~~.bash
+book publish trefoil-doc kindle
+~~~
+
+to get the *kindle* version. Other formats are supported, so look at 
+`<trefoil-dir>/doc/trefoil-doc/config.yml` to see all the options available.
+
+## License
+
+> ##### Application Code
+> 
+> Copyright (c) 2014 Miguel Angel Gabriel <magabriel@gmail.com>
+> 
+> - - -
+> 
+> Permission is hereby granted, free of charge, to any person obtaining a copy of
+> this software and associated documentation files (the "Software"), to deal in
+> the Software without restriction, including without limitation the rights to
+> use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+> of the Software, and to permit persons to whom the Software is furnished to do
+> so, subject to the following conditions:
+> 
+> The above copyright notice and this permission notice shall be included in all
+> copies or substantial portions of the Software.
+> 
+> THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+> IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+> AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+> LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+> OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+> SOFTWARE.
+
+> ##### Libraries and packages used ##
+> 
+> See their own license files in `vendor/` directory
+>
+> ##### Resources used ##
+>
+> See their own license files in `app/Resources/` directory

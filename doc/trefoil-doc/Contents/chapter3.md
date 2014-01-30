@@ -1,19 +1,12 @@
-# The Trefoil plugins
+# The Trefoil book formatting plugins
 
-The biggest part of **trefoil** functionality of is implemented into 
-the included plugins. 
+This chapter describes the *book formatting plugins*. These
+plugins provide functionalities to enhance the book's appearance
+or to ease applying advanced formatting.
  
 {{ itemtoc() }}
 
-{{ file('plugins-AutoGlossaryPlugin.md') }}
-
 {{ file('plugins-DropCapsPlugin.md') }}
-
-{{ file('plugins-EbookRenamePlugin.md') }}
-
-{{ file('plugins-EpubCheckPlugin.md') }}
-
-{{ file('plugins-EpubUncompressPlugin.md') }}
 
 {{ file('plugins-FootnotesExtraPlugin.md') }}
 
@@ -23,14 +16,8 @@ the included plugins.
 
 {{ file('plugins-KindleTweaksPlugin.md') }}
 
-{{ file('plugins-LinkCheckPlugin.md') }}
-
-{{ file('plugins-QualityControlPlugin.md') }}
-
 {{ file('plugins-TableExtraPlugin.md') }}
 
 {{ file('plugins-TypographyPlugin.md') }}
 
 {{ file('plugins-TwigExtensionPlugin.md') }}
- 
-{{ file('plugins-VersionUpdaterPlugin.md') }}

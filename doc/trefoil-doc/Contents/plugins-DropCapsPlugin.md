@@ -34,7 +34,7 @@ where the options are:
     
 ### Description
 
-There are several ways to add crop caps to the book:
+There are several ways to add drop caps to the book:
 
 1. Automatic dropcaps.
 2. Manual dropcaps HTML markup.

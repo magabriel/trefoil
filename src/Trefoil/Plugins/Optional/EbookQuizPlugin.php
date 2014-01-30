@@ -77,10 +77,21 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
+        $this->checkCompatibility();
+        
         // create the processing report
         $this->createReport();
     }
 
+    protected function checkCompatibility()
+    {
+        $plugins = $this->getEditionOption('plugins.enabled');
+        
+        if (in_array('KindleTweaks', $plugins)) {
+            $this->writeLn('"KindleTweaks" plugin is enabled. Please disable it to avoid incompatibilities.', "error");
+        }
+    }
+    
     /**
      * Parse the quiz elements in the current item and render them.
      *
@@ -236,7 +247,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     {
         if (!$this->generated) {
             $this->writeLn(
-                 "No glossary has been generated, check for missing 'auto-glosssary' contents element.",
+                 sprintf("No Quiz has been generated, check for missing '%s' contents element.", self::QUIZ_SOLUTIONS_ELEMENT),
                  "error"
             );
         }

@@ -2,8 +2,8 @@ easybook:
     parameters:
         parser.options:
             code_block_type: fenced
-        kindlegen.path: '/home/miguelangel/bin/kindlegen'
-        epubcheck.path: '/home/miguelangel/bin/epubcheck.jar'
+        kindlegen.path: '/usr/local/bin/kindlegen'
+        epubcheck.path: '/usr/local/bin/epubcheck.jar'
 book:
     title:            'Trefoil documentation'
     author:           'trefoil'
@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
 
-    version:          '0.376'
+    version:          '0.632'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -27,74 +27,16 @@ book:
         - { element: chapter,     number:   2,  content: chapter2.md }
         - { element: chapter,     number:   3,  content: chapter3.md }
         - { element: chapter,     number:   4,  content: chapter4.md }
+        - { element: chapter,     number:   5,  content: chapter5.md }
+
+        - { element: part,        number: 3,    content: part-3.md }
+        - { element: chapter,     number:   6,  content: chapter6.md }
 
         - { element: footnotes }
         - { element: auto-glossary }
+        - { element: ebook-quiz-solutions }
 
     editions:
-        kindle:
-            extends: ebook
-            format:  mobi
-
-        ebook:
-            format:         epub
-            highlight_code: true
-            highlight_cache: true
-            include_styles: true
-
-            include_fonts:  true
-            fonts:
-                - Inconsolata-Regular
-                - Inconsolata-Bold
-
-            labels:         ['appendix', 'chapter', 'figure', 'part']
-            theme:          TrefoilTwo
-            toc:
-                deep:       3
-                elements:   ["appendix", "chapter", "part", "introduction"]
-
-            plugins:
-                enabled:
-                    - AutoGlossary
-                    - DropCaps
-                    - EbookRename
-                    #- EpubCheck                # Uncomment to run the check
-                    - QualityControl
-                    - EpubUncompress
-                    - FootnotesExtra
-                    - HtmlTweaks
-                    - ImageExtra
-                    - KindleTweaks
-                    - LinkCheck
-                    - TableExtra
-                    - TwigExtension
-                    - Typography
-                    - VersionUpdater
-
-                options:
-                    DropCaps:
-                        levels:     [1]                             # 1 to 6 (default: 1)
-                        mode:       letter                          # letter, word (default: letter)
-                        length:     1                               # number of letters or words to highlight (default: 1)
-                        elements:   ['chapter', 'introduction']     # which elements to process
-
-                    TwigExtension:
-                        itemtoc:
-                            deep:   2
-
-                    LinkCheck:
-                        check_external_links: true
-
-                    EbookRename:
-                        schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
-                        keep_original:  true
-
-                    Typography:
-                        checkboxes: true
-                        fix_spanish_style_dialog: false
-
-        ###########################################
-
         base-edition:
             highlight_code: true
             highlight_cache: true
@@ -122,12 +64,13 @@ book:
                     - FootnotesExtra
                     - HtmlTweaks
                     - ImageExtra
-                    - KindleTweaks
+                    #- KindleTweaks             # disabled because interferes with EbookQuiz
                     - LinkCheck
                     - TableExtra
                     - TwigExtension
                     - Typography
                     - VersionUpdater
+                    - EbookQuiz
 
                 options:
                     DropCaps:
@@ -141,7 +84,7 @@ book:
                             deep:   2
 
                     LinkCheck:
-                        check_external_links: true
+                        check_external_links: false
 
                     EbookRename:
                         schema:         '{publishing.book.slug}-{book.version}' # syntax like twig but with single curlies
@@ -151,6 +94,14 @@ book:
                         checkboxes: true
                         fix_spanish_style_dialog: false
 
+        ebook:
+            extends:         base-edition
+            format:          epub
+
+        kindle:
+            extends:         base-edition
+            format:          mobi
+             
         print:
             extends:         base-edition
             format:          pdf
@@ -173,13 +124,14 @@ book:
             extends:         base-edition
             format:          html_chunked
             chunk_level:     1
+            include_styles:  true
             #images_base_dir: /img/doc-en/
 
-        trefoil-project.org:
+        doc-website:
             extends:         base-edition
-            format:          html_chunked
-            chunk_level:     2
+            format:          html
+            include_styles:  true
             #images_base_dir: /images/doc-en/
-            include_styles:  false
-            highlight_cache: false
             highlight_code:  true
+            toc:
+                deep:        3
