@@ -5,10 +5,16 @@
 {#% use 'css/images.css.twig'     %#}
 {#% use 'css/tables.css.twig'     %#}
 {#% use 'css/code.css.twig'       %#}
-{% use 'css/layout.css.twig'     %}
+{#% use 'css/layout.css.twig'     %#}
 {% use 'css/navigation.css.twig' %}
 {#% use 'css/items.css.twig'      %#}
 {#% use 'css/responsive.css.twig' %#}
+
+{# ==========================================================================
+   @layout
+   ========================================================================== #}
+{% block layout %}
+{% endblock %}
 
 {# ==========================================================================
    @items
@@ -196,6 +202,9 @@
 {# ==========================================================================
    @responsive
    ========================================================================== #}
+{% block responsive %}
+{% endblock %}
+
 {% block tablets %}
 {{ parent() }}
 

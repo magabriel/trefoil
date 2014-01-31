@@ -1,6 +1,11 @@
 body {
     color: #222;
     font: 14px/1.4 "Helvetica Neue", Arial, sans-serif;
+    padding: 0;
+}
+
+.container {
+    max-width: 1170px;
 }
 
 a, a:visited {
@@ -10,6 +15,11 @@ a, a:visited {
 .jumbotron {
     background: #4e0ffc;
     color: #fff;
+}
+
+.navbar-brand {
+    color: #4e0ffc !important;
+    font-weight: bold;
 }
 
 div.code {
@@ -36,11 +46,11 @@ blockquote p {
     border: 1px solid #999 !important;
 }
 
-.sidebar ul, 
-.sidebar ul li, 
-.sidebar a {
+ul.nav, 
+ul.nav li, 
+ul.nav a {
     margin: 0;
-    padding: 0;
+l    padding: 0;
     text-decoration: none;
     color: inherit;
     font: inherit;
@@ -136,7 +146,7 @@ blockquote p {
 
     .sidebar.affix {
         position: fixed; /* Undo the static from mobile first approach */
-        top: 20px;
+        top: 40px;
     }
 
     .sidebar.affix-bottom {
@@ -149,7 +159,7 @@ blockquote p {
         margin-bottom: 0;
     }
 }
-
+    
 @media (min-width: 1200px) {
     /* Widen the fixed sidebar again */
     .sidebar.affix-bottom,
