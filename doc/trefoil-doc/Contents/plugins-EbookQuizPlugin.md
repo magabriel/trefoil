@@ -212,6 +212,29 @@ consetetur sadipscing elitr, sed diam non umyeirmod.
 
 The quizes shown above as examples will render as follows:
 
+{% if app.edition('format') in ['epub', 'mobi'] %}
+
+N> ##### NOTE
+N> The following rendered version of the examples uses plain HTML
+N> to implement the user interactions. No Javascript or other
+N> scripting language are allowed by the edition format.
+
+{% else %}
+
+N> ##### NOTE
+N> The following rendered version of the examples is not the same
+N> than the one you will get for an `epub` or `mobi` ebook 
+N> because of the limited capabilities of the format. 
+N> Main differences are:
+N> 
+N> - The `epub` or `mobi` versions are rendered using only HTML.
+N> - This version uses Javascript to implement the user interactions.
+N> 
+N> Please generate the `epub` or `mobi` versions of this documentation
+N> to fully appreciate the differences.
+
+{% endif %}
+
 #### ABC-type quiz syntax
 
 <div markdown="1" class="quiz-activity" data-id="quiz-id-1">

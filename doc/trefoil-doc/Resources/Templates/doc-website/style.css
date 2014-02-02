@@ -38,6 +38,10 @@ blockquote p {
     font-size: 1em;
 }
 
+.item h1.title, .item h2.title, .item h3.title {
+    text-align: left;
+}
+
 .item.part h1 {
     text-align: left;
 }

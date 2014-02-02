@@ -34,18 +34,16 @@ Xref....: {{ xref }}
             {# success or error #}
             {% set success = (question.solution == rindex ? 1 : 0) %}
 
-            {% if success %}
-                <div>
+            <div>
+                {% if success %}
                     <span class="answer answer-ok">Correct!!</span>
-                </div>
-                {% if question.explanation|default('') %}
-                    {{ question.explanation }}
-                {% endif %}
-            {% else %}
-                <div>
+                {% else %}
                     <span class="answer answer-error">Wrong</span>
-                </div>
-            {% endif %}
+                {% endif %}
+                {% if question.explanations[rindex]|default('') %}
+                    {{ question.explanations[rindex] }}
+                {% endif %}
+            </div>
             <hr/>
 
             {# next and return links after the response #}
