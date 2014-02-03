@@ -115,7 +115,7 @@ class RegisterResources implements EventSubscriberInterface
                 continue;
             }
 
-            $this->RegisterPlugin($namespace, $className);
+            $this->registerPlugin($namespace, $className);
             $registered[] = $pluginName;
         }
 
@@ -128,7 +128,7 @@ class RegisterResources implements EventSubscriberInterface
      * @param $namespace
      * @param $className
      */
-    protected function RegisterPlugin($namespace, $className)
+    protected function registerPlugin($namespace, $className)
     {
         $r = new \ReflectionClass($namespace . $className);
 

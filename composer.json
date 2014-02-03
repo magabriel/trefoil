@@ -36,7 +36,7 @@
         }
     ],
     "require": {
-        "easybook/easybook": "dev-master",
+        "easybook/easybook": "dev-master#3fb20da25b263f670f644f4e21eb1753e8133e28",
         "smartypants/typographer": "~1.0",
         "symfony/dom-crawler": "~2.3",
         "symfony/css-selector": "~2.3"

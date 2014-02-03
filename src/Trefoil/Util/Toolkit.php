@@ -73,7 +73,8 @@ class Toolkit extends EasybookToolkit
     {
         $args = func_get_args();
 
-        for ($i = 1; $i < count($args); $i++) {
+        $count = count($args);
+        for ($i = 1; $i < $count; $i++) {
             $args[$i] = iconv('UTF-8', 'ISO-8859-15', $args[$i]);
         }
 
