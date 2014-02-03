@@ -262,7 +262,16 @@ class DropCaps
         return $this->renderDropCaps('', $dropCaps, $rest);
     }
 
-    protected function renderDropCaps($skip, $dropCaps, $rest)
+    /**
+     * *NOTE* should be protected but made public for PHP 5.3 compat
+     * 
+     * @param $skip
+     * @param $dropCaps
+     * @param $rest
+     *
+     * @return string
+     */
+    public function renderDropCaps($skip, $dropCaps, $rest)
     {
         $html = sprintf('%s<span class="dropcaps">%s</span>%s', $skip, $dropCaps, $rest);
 
