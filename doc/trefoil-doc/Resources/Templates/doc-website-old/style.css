@@ -139,20 +139,8 @@ ul.nav a {
 
     /* fixed top navbar */
     body {
-        padding-top: 70px;
+        padding-top: 80px;
     }   
-    
-    /* avoid top nav overlapping anchors on jump to anchor */
-    div.item h1[id], 
-    div.item h2[id],
-    div.item h3[id],
-    div.item h4[id],
-    div.item h5[id],
-    div.item h6[id],
-    a[name] {
-        padding-top: 70px !important;
-        margin-top: -60px !important;
-    }
     
     .container > nav {
         position: fixed;

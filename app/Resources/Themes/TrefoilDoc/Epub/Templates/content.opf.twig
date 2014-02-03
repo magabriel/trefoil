@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId">
+
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+{% if book.version and edition.debug %}
+        <dc:title>{{ book.title }} ({{ book.version }})</dc:title>
+{% else %}
+        <dc:title>{{ book.title }}</dc:title>
+{% endif %}
+        <dc:language>{{ book.language }}</dc:language>
+        <dc:identifier id="BookId" opf:scheme="{{ app['publishing.edition.id'].scheme }}">{{ app['publishing.edition.id'].value }}</dc:identifier>
+        <dc:creator opf:role="aut">{{ book.author | default(book.authors|join(',')) }}</dc:creator>
+        <dc:publisher>{{ book.publisher | default(book.generator.name~' '~book.generator.version) }}</dc:publisher>
+        <dc:date opf:event="publication">{{ book.publication_date|date('Y') }}</dc:date>
+        <dc:date opf:event="creation">{{ book.publication_date|date('Y-m-d') }}</dc:date>
+        <meta name="cover" content="cover" />
+{#
+        <dc:subject>...</dc:subject>
+        <dc:subject>...</dc:subject>
+        <dc:description>...</dc:description>
+#}
+{% if book.description %}
+        <dc:description>{{ book.description }}</dc:description>
+{% endif %}
+{% for subject in book.subject %}
+        <dc:subject>{{ subject }}</dc:subject>
+{% endfor %}
+
+    </metadata>
+
+    <manifest>
+        <item id="titlepage" href="titlepage.html" media-type="application/xhtml+xml"/>
+{% for item in app['publishing.items'] %}
+        <item id="{{ item.page_name }}" href="{{ item.page_name }}.html" media-type="application/xhtml+xml" />
+{% endfor %}
+{% if edition.include_styles %}
+        <item id="stylesheet" href="css/easybook.css" media-type="text/css" />
+{% endif %}
+{% if has_custom_css %}
+        <item id="stylesheet-custom" href="css/styles.css" media-type="text/css" />
+{% endif %}
+{% for image in images %}
+        <item id="{{ image.id }}" href="{{ image.filePath }}" media-type="{{ image.mediaType }}" />
+{% endfor %}
+{% if cover %}
+        <item id="cover" href="{{ cover.filePath }}" media-type="{{ cover.mediaType }}"/>
+{% endif %}
+{% for font in fonts %}
+        <item id="{{ font.id }}" href="{{ font.filePath }}" media-type="{{ font.mediaType }}" />
+{% endfor %}
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+    </manifest>
+
+    <spine toc="ncx">
+        <itemref idref="titlepage" />
+{% for item in app['publishing.items'] %}
+        <itemref idref="{{ item.page_name }}" />
+{% endfor %}
+    </spine>
+
+{% set startItem = app['publishing.items'][0] %}
+{% set startReading = startItem.page_name ~ '.html' %}
+
+    <guide>
+        <reference href="titlepage.html" type="cover" title="Cover"/>
+        <reference href="{{ startReading }}" type="text" title="StartReading"></reference>
+    </guide>
+
+</package>

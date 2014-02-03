@@ -1,0 +1,14 @@
+<div class="item footnotes">
+    <h1 id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+
+    {{ item.content }}
+
+    <hr />
+    <ol>
+    {% for footnote in app['publishing.footnotes.items'] %}
+    <li id="{{ footnote.id }}">
+        <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote" class="footnote-backref">[&#8617;]</a></p>
+    </li>
+    {% endfor %}
+    </ol>
+</div>

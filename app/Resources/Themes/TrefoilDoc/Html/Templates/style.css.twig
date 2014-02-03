@@ -1,28 +1,9 @@
 {% extends '@theme_common/style.css.twig' %}
 
-{% use 'css/normalize.css.twig'  %}
-
-{#% use 'css/typography.css.twig' %#}
-{#% use 'css/images.css.twig'     %#}
-{#% use 'css/tables.css.twig'     %#}
-{#% use 'css/code.css.twig'       %#}
-{% use 'css/layout.css.twig'     %}
-{% use 'css/navigation.css.twig' %}
-
-{#% use 'css/items.css.twig'      %#}
-{#% use 'css/responsive.css.twig' %#}
-
 {# ==========================================================================
-   @typography
+   @layout
    ========================================================================== #}
-{% block body %}
-    /* @body
-    -------------------------------------------------------------------------- */
-    body {
-    background: #FFF;
-    color: {{ color_black }};
-    font: 14px/1.3 "Helvetica Neue", Arial, sans-serif;
-    }
+{% block layout %}
 {% endblock %}
 
 {# ==========================================================================
@@ -192,62 +173,5 @@
 }
 {% endblock %}
 
-{% block appendix %}
-{{ parent() }}
 
-.item.appendix h1 {
-    font-size: 28px;
-    margin-top: 0;
-}
 
-.item.appendix h1 span {
-    display: block;
-    font-size: 24px;
-    font-weight: normal;
-    line-height: 1.5;
-}
-{% endblock %}
-
-{# ==========================================================================
-   @responsive
-   ========================================================================== #}
-{% block responsive %}
-{% endblock %}
-
-{% block tablets %}
-{{ parent() }}
-
-body { font-size: 15px; }
-
-.item.cover h1 { font-size: 48px; }
-.item.cover h2 { font-size: 21px; }
-
-.item.toc h1 { font-size: 16px; }
-.item.toc li { font-size: 13px; }
-{% endblock %}
-
-{% block tablets_and_phones %}
-{{ parent() }}
-
-.item.cover    { padding-right: 1em; }
-.item.cover h1 { font-size: 36px; letter-spacing: 0; }
-.item.cover h2 { font-size: 21px; }
-{% endblock %}
-
-{% block phones %}
-{{ parent() }}
-
-body { font-size: 14px; }
-
-h1 { font-size: 21px !important; } h1 span { font-size: inherit !important; }
-h2 { font-size: 18px !important; }
-h3 { font-size: 16px !important; }
-h4 { font-size: 16px !important; }
-h5 { font-size: 16px !important; }
-h6 { font-size: 16px !important; }
-
-.item.cover h1 { font-size: 28px !important; }
-.item.cover h2 { font-size: 18px !important; }
-
-.item.toc { display: none; }
-{% endblock %}

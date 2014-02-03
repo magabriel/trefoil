@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: '01-12-2013'
 
-    version:          '0.757'
+    version:          '0.806'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -48,7 +48,7 @@ book:
                 - Inconsolata-Bold
 
             labels:         ['appendix', 'chapter', 'figure', 'part']
-            theme:          TrefoilTwo
+            theme:          TrefoilDoc
             toc:
                 deep:       3
                 elements:   ["appendix", "chapter", "part", "introduction"]
