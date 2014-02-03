@@ -165,11 +165,11 @@ class Epub2Publisher extends HtmlPublisher
         $bookFonts = $this->prepareBookFonts($bookTmpDir . '/book/OEBPS/fonts');
 
         // ensure an empty fonts dir is not left begind (epubcheck error)
-        if (!$this->app['filesystem']->exists($bookTmpDir . '/book/OEBPS/fonts/*')) {
+        $fontFiles = Finder::create()->files()->in($bookTmpDir . '/book/OEBPS/fonts');
+        if (0 == $fontFiles->count()) {
             $this->app['filesystem']->remove($bookTmpDir . '/book/OEBPS/fonts');
         }
-        
-        
+
         // generate the book cover page
         $this->app->render(
                   'cover.twig',

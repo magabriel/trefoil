@@ -1,0 +1,432 @@
+{% extends '@theme_common/style.css.twig' %}
+
+{# ==========================================================================
+   @layout
+   ========================================================================== #}
+{% block layout %}
+{# do not extend parent #}
+
+.jumbotron {
+    background: #4e0ffc;
+    color: #fff;
+}
+
+.jumbotron h1,
+.jumbotron h2,
+.jumbotron h3 {
+    padding: 0;
+    margin: 20px 0;
+}
+
+{% endblock %}
+
+{# ==========================================================================
+   @misc
+   ========================================================================== #}
+{% block misc %}
+{{ parent() }}
+    
+hr {
+    border: 1px solid #aaa;
+}
+
+blockquote p {
+    font-size: 1em;
+}
+
+{% endblock %}
+
+{# ==========================================================================
+   @body
+   ========================================================================== #}
+{% block body %}
+{{ parent() }}
+    
+body {
+    color: #222;
+    font: 14px/1.4 "Helvetica Neue", Arial, sans-serif;
+    padding: 0;
+}
+
+.container {
+    max-width: 1170px;
+}
+
+{% endblock %}
+
+{# ==========================================================================
+   @links
+   ========================================================================== #}
+{% block links %}
+{{ parent() }}
+    
+a, a:visited {
+    text-decoration: none;
+}
+{% endblock %}
+
+{# ==========================================================================
+   @items
+   ========================================================================== #}
+{% block common %}
+{{ parent() }}
+
+.item {
+    border-bottom: medium solid {{ color_silver }};
+}
+
+.item h1.title, .item h2.title, .item h3.title {
+    text-align: left;
+}
+{% endblock %}
+
+{% block cover %}
+{{ parent() }}
+
+.item.cover {
+    border-bottom: thick solid {{ color_silver }};
+    color: {{ color_black }};
+    margin-bottom: .5em;
+    padding: 1.5em 200px 1.75em 0;
+}
+.item.cover h1 {
+    font-size: 64px;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin: 0;
+}
+.item.cover h2 {
+    color: {{ color_gray }};
+    font-size: 28px;
+    font-weight: normal;
+    margin-top: .5em;
+}
+{% endblock %}
+
+{% block toc %}
+{{ parent() }}
+
+.item.toc {
+    border: none;
+}
+
+.item.toc h1 {
+    color: {{ color_gray }};
+    font-size: 21px;
+    font-weight: normal;
+}
+
+.item.toc ul {
+    padding: 0;
+}
+
+.item.toc ul li {
+    font-size: 14px;
+}
+
+.item.toc ul li span {
+    font-weight: bold;
+}
+
+.item.toc ul li a {
+    text-decoration: none;
+}
+
+.item.toc ul li a:hover {
+    text-decoration: underline;
+}
+
+.item.toc ul li.level-1 {
+    border-top: 1px solid {{ color_silver }};
+    margin-top: .5em;
+    padding-top: .5em;
+}
+.item.toc h1 + ul li.level-1:first-child {
+    border-top: 0;
+    padding: 0;
+}
+
+.item.toc ul li.part {
+    background: #DDD;
+    padding: 5px 8px;   
+}
+
+.item.toc ul li.level-1 {
+    padding-left: .5em;
+}
+
+.item.toc ul li.chapter.level-2 {
+    padding-left: 1em;
+}
+
+.item.toc ul li.chapter.level-3 {
+    padding-left: 1.5em;
+}
+
+.item.toc ul li.chapter.level-4 {
+    padding-left: 2em;
+}
+
+.item.toc ul li.chapter.level-5 {
+    padding-left: 2.5em;
+}
+
+.item.toc ul li.chapter.level-6 {
+    padding-left: 2.5em;
+}
+
+{% endblock %}
+
+{% block title %}
+.item.title {
+    display: none;
+}
+{% endblock %}
+
+{% block dedication %}
+{{ parent() }}
+
+.item.dedication {
+    font-style: italic;
+    text-align: center;
+}
+{% endblock %}
+
+{% block part %}
+{{ parent() }}
+
+.item.part {
+    border: solid {{ color_gray }};
+    border-width: medium 0;
+    padding: 0;
+}
+
+.item + .item.part {
+    margin-top: -2em;
+}
+
+.item.part h1 {
+    font-size: 36px;
+    margin: 0;
+    padding: 1em 0;
+    text-align: left;
+    border: 0;
+}
+.item.part h1 span {
+    color: {{ color_gray }};
+    font-size: 80%;
+    font-weight: normal;
+    padding-bottom: .25em;
+}
+{% endblock %}
+
+{% block chapter %}
+{{ parent() }}
+
+.item.chapter h1 {
+    font-size: 28px;
+    margin-top: 0;
+}
+
+.item.chapter h1 span {
+    display: block;
+    font-size: 24px;
+    font-weight: normal;
+    line-height: 1.5;
+}
+{% endblock %}
+
+
+{# ==========================================================================
+   @tables
+   ========================================================================== #}
+{% block tables %}
+    {{ parent() }}
+
+.table th, .table td {
+    border: 1px solid #999 !important;
+}
+
+{% endblock %}
+
+{# ==========================================================================
+   @code
+   ========================================================================== #}
+{% block code %}
+{{ parent() }}
+
+div.code {
+    border: 0;
+}
+
+div.code pre {
+    padding: inherit;
+}
+{% endblock %}
+
+{# ==========================================================================
+   @menu
+   ========================================================================== #}
+{% block menu %}
+{# do not extend parent!!! #}
+
+.container > nav {
+    position: relative;
+}
+
+.navbar-brand {
+    color: #4e0ffc !important;
+    font-weight: bold;
+}
+
+ul.nav,
+ul.nav li,
+ul.nav a {
+    margin: 0;
+    text-decoration: none;
+    color: inherit;
+    font: inherit;
+}
+
+/* By default it's not affixed in mobile views, so undo that */
+.sidebar.affix {
+    position: static;
+}
+
+/* First level of nav */
+.sidenav {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-shadow: 0 1px 0 #fff;
+    background-color: #f7f5fa;
+    border-radius: 5px;
+}
+
+/* All levels of nav */
+.sidebar .nav > li > a {
+    display: block;
+    color: #716b7a;
+    padding: 5px 20px;
+}
+
+.sidebar .nav > li > a:hover,
+.sidebar .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #e5e3e9;
+    border-right: 1px solid #dbd8e0;
+}
+
+.sidebar .nav > .active > a,
+.sidebar .nav > .active:hover > a,
+.sidebar .nav > .active:focus > a {
+    font-weight: bold;
+    color: #563d7c;
+    background-color: transparent;
+    border-right: 1px solid #563d7c;
+}
+
+/* Nav: second level (shown on .active) */
+.sidebar .nav .nav {
+    display: none; /* Hide by default, but at >768px, show it */
+    margin-bottom: 0px;
+}
+
+.sidebar .nav .nav > li > a {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 30px;
+    font-size: 90%;
+}
+
+/* Nav: third level (shown on .active) */
+.sidebar .nav .nav .nav {
+    margin-bottom: 4px;
+}
+
+.sidebar .nav .nav .nav > li > a {
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 40px;
+    font-size: 90%;
+}
+
+.sidebar .nav .nav {
+    display: block;
+}
+
+.sidebar .nav .nav .nav {
+    display: none;
+}
+{% endblock %}
+
+{# ==========================================================================
+   @responsive
+   ========================================================================== #}
+{% block responsive %}
+{# do not extend parent!!! #}
+
+@media (min-width: 992px) {
+
+    /* fixed top navbar */
+    body {
+    padding-top: 70px;
+    }
+
+    /* avoid top nav overlapping anchors on jump to anchor */
+    div.item h1[id],
+    div.item h2[id],
+    div.item h3[id],
+    div.item h4[id],
+    div.item h5[id],
+    div.item h6[id],
+    a[name] {
+    padding-top: 70px !important;
+    margin-top: -60px !important;
+    }
+
+    .container > nav {
+    position: fixed;
+    }
+
+    /* Show and affix the side nav when space allows it */
+    .sidebar .nav > .active > ul {
+    display: block;
+    }
+
+    .sidebar .nav .nav > .active > ul {
+    display: block;
+    }
+
+    /* Widen the fixed sidebar */
+    .sidebar.affix,
+    .sidebar.affix-bottom {
+    width: 213px;
+    }
+
+    .sidebar.affix {
+    position: fixed; /* Undo the static from mobile first approach */
+    top: 70px;
+    }
+
+    .sidebar.affix-bottom {
+    position: absolute; /* Undo the static from mobile first approach */
+    }
+
+    .sidebar.affix-bottom .bs-sidenav,
+    .sidebar.affix .bs-sidenav {
+    margin-top: 0;
+    margin-bottom: 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Widen the fixed sidebar again */
+    .sidebar.affix-bottom,
+    .sidebar.affix {
+    width: 263px;
+    }
+}
+
+{% endblock %}

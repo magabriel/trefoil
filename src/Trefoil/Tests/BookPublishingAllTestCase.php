@@ -22,6 +22,27 @@ use Symfony\Component\Yaml\Yaml;
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
 
+/**
+ * PHPUnit test case for trefoil books.
+ *
+ * To use it, extend from this class and set the fixtures directory in the 
+ * constructor.
+ *
+ * Usage:
+ *  "phpunit my/path/to/MyTest.php [arguments]"
+ * 
+ * where:
+ * - "MyTest" is a class that extends this.
+ * - [arguments] are optional:
+ *      - "--debug" will show verbose messages and leave the test output
+ *        files for inspection after execution (such as current results).
+ *      - ":fixture-name" will execute only one fixture instead of all.
+ * 
+ * Example:
+ * 
+ *  "phpunit --debug src/Trefoil/Tests/Plugins/PluginsTest.php :book-test-LinkCheckPlugin"
+ *
+ */
 abstract class BookPublishingAllTestCase extends TestCase
 {
     protected $tmpDirBase;
@@ -74,6 +95,8 @@ abstract class BookPublishingAllTestCase extends TestCase
     }
 
     /**
+     * Fixtures provider.
+     * 
      * @throws \Exception
      * @return array
      */
@@ -131,6 +154,8 @@ abstract class BookPublishingAllTestCase extends TestCase
     }
 
     /**
+     * Publish and test one book.
+     * 
      * @dataProvider bookProvider
      */
     public function testBookPublish($bookName, $editionName)
@@ -238,11 +263,11 @@ abstract class BookPublishingAllTestCase extends TestCase
     }
 
     /**
-     * Assert that all generated files have the expected contents
+     * Assert that all generated files have the expected contents.
      *
      * @param string $dirExpected
      * @param string $dirGenerated
-     * @param        $zipName
+     * @param string $zipName
      *
      * @apram string $zipName
      */
@@ -267,7 +292,7 @@ abstract class BookPublishingAllTestCase extends TestCase
     }
 
     /**
-     * Assert that all expected files were generated
+     * Assert that all expected files were generated.
      *
      * @param string $dirExpected
      * @param string $dirGenerated

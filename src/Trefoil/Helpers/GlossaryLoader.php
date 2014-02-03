@@ -61,7 +61,6 @@ class GlossaryLoader
         return $glossary;
     }
 
-
     /**
      * True if the definition file could not been loaded (i.e. not found)
      *
@@ -134,8 +133,8 @@ class GlossaryLoader
             $gi = new GlossaryItem();
             $gi->setTerm($term);
 
-            // ensure uniqueness of slug to avoid collisions 
-            // with other files that define the same term  
+            // ensure uniqueness of slug to avoid collisions
+            // with other files that define the same term
             // with different variant
             $prefix = crc32($term . $description) . '-';
 

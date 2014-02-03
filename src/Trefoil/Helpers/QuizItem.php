@@ -67,11 +67,11 @@ abstract class QuizItem
 
     /**
      * An xref to the book item where the quiz item is defined.
-     * 
+     *
      * @var string
      */
     protected $xref;
-    
+
     /**
      * @param string $heading
      */

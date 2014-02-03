@@ -1,3 +1,3 @@
 # About Trefoil
 
-Lorem ipsum.
+The *whats*, *whys* and *hows* of **trefoil**.

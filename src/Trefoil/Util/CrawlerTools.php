@@ -32,24 +32,23 @@ class CrawlerTools
     }
 
     /**
-     * Return the node text contents (w/o the children). 
-     * 
+     * Return the node text contents (w/o the children).
+     *
      * @param Crawler $node
      *
      * @return string
      */
     public static function getNodeText(Crawler $node)
     {
-        foreach ($node->getNode(0)->childNodes as $cNode)
-        {
+        foreach ($node->getNode(0)->childNodes as $cNode) {
             if ("#text" == $cNode->nodeName) {
                 return $cNode->nodeValue;
             }
         }
-        
+
         return '';
     }
-    
+
     /**
      * Return the node HTML contents
      *
@@ -60,7 +59,7 @@ class CrawlerTools
     public static function getNodeHtml(Crawler $node)
     {
         $domNode = $node->getNode(0);
-        
+
         if (null == $domNode) {
             return '';
         }

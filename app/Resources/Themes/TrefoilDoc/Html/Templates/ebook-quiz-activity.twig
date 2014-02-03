@@ -1,0 +1,117 @@
+<!--
+========================================
+Activity: {{ activity.id }}
+Type....: {{ activity.type }}
+========================================
+-->
+<div class="panel panel-primary activity activity-{{ activity.type }}">
+
+    {% set activity_heading_text = activity.heading ? activity.heading : 'Activity ' ~ activity.id %}
+
+    <div class="panel-heading">
+        <h5 class="panel-title">{{ activity_heading_text }}</h5>
+    
+        {% if activity.subHeading %}
+            <h6>{{ activity.subHeading }}</h6>
+        {% else %}
+            <h6>Please select the correct response for each question.</h6>
+        {% endif %}
+    
+        {% if activity.introduction %}
+            <div class="introduction">{{ activity.introduction }}</div>
+        {% endif %}
+    </div>
+
+    <div class="panel-body">
+    {% for qindex, question in activity.questions %}
+        {% set qid = 'a-'~activity.id ~ '_' ~ qindex %}
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h6 class="panel-title question"><span class="label label-default number">{{ qindex+1 }}</span></h6>
+                <div class="question">{{ question.text }}</div>
+            </div> 
+            <div class="panel-body">
+                {% if activity.type == 'activity.abc' %}
+                    {% set letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] %}
+                    {% for rindex, response in question.responses %}
+                        <p class="response">
+                            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#{{ qid }}_{{ rindex }}_resp">
+                                {{ letters[rindex]|upper }}
+                            </button>
+    
+                            &nbsp;{{ response }}
+                            
+                            {# success or error #}
+                            {% set success = (question.solution == rindex ? true : false) %}
+    
+                            <div class="modal fade bs-modal-s" id="{{ qid }}_{{ rindex }}_resp" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">{{ response }}</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            {% if success %}
+                                                <h2><span class="label label-success">Correct!!</span></h2>
+                                            {% else %}
+                                                <h2><span class="label label-danger">Wrong</span></h2>
+                                            {% endif %}
+                                            {{ question.explanations[rindex] }}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </p>
+                    {% endfor %}
+                {% elseif activity.type == 'activity.ynb' %}
+                    {% for rindex, response in question.responses %}
+                        <button type="button" class="btn {{ ['btn-success', 'btn-danger', 'bth_danger'][rindex] }}" data-toggle="modal"
+                                data-target="#{{ qid }}_{{ rindex }}_resp">
+                            <span>{{ response }}</span>
+                        </button>
+    
+                        {# success or error #}
+                        {% set success = (question.solution == rindex ? true : false) %}
+                        
+                        <div class="modal fade bs-modal-s" id="{{ qid }}_{{ rindex }}_resp" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">{{ response }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% if success %}
+                                            <h2><span class="label label-success">Correct!!</span></h2>
+                                        {% else %}
+                                            <h2><span class="label label-danger">Wrong</span></h2>
+                                        {% endif %}
+                                        {{ question.explanations[rindex] }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    {% endfor %}
+                {% else %}
+                    <p>Invalid activity type: "{{ activity.type }}"</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+

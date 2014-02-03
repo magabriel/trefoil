@@ -1,3 +1,4 @@
-# Trefoil features
+# Trefoil plugins
 
-Lorem ipsum dolor.
+The biggest part of **trefoil** functionality is implemented into 
+the included plugins. 

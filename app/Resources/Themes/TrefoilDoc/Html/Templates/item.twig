@@ -1,0 +1,9 @@
+<div class="item {% block class %}{{ item.config.element }}{% endblock %}">
+{% block title %}
+    <h1 id="{{ item.slug }}"> {{ item.title }}</h1>
+{% endblock %} 
+
+{% block content %}
+    {{ item.content }}
+{% endblock %}
+</div> 

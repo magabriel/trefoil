@@ -1,14 +1,29 @@
 {% extends '@theme_common/style.css.twig' %}
 
 {% use 'css/normalize.css.twig'  %}
+
 {#% use 'css/typography.css.twig' %#}
 {#% use 'css/images.css.twig'     %#}
 {#% use 'css/tables.css.twig'     %#}
 {#% use 'css/code.css.twig'       %#}
 {% use 'css/layout.css.twig'     %}
 {% use 'css/navigation.css.twig' %}
+
 {#% use 'css/items.css.twig'      %#}
 {#% use 'css/responsive.css.twig' %#}
+
+{# ==========================================================================
+   @typography
+   ========================================================================== #}
+{% block body %}
+    /* @body
+    -------------------------------------------------------------------------- */
+    body {
+    background: #FFF;
+    color: {{ color_black }};
+    font: 14px/1.3 "Helvetica Neue", Arial, sans-serif;
+    }
+{% endblock %}
 
 {# ==========================================================================
    @items
@@ -86,6 +101,36 @@
     border-top: 0;
     padding: 0;
 }
+
+.item.toc ul li.part {
+    background: #DDD;
+    padding: 5px 8px;   
+}
+
+.item.toc ul li.level-1 {
+    padding-left: .5em;
+}
+
+.item.toc ul li.chapter.level-2 {
+    padding-left: 1em;
+}
+
+.item.toc ul li.chapter.level-3 {
+    padding-left: 1.5em;
+}
+
+.item.toc ul li.chapter.level-4 {
+    padding-left: 2em;
+}
+
+.item.toc ul li.chapter.level-5 {
+    padding-left: 2.5em;
+}
+
+.item.toc ul li.chapter.level-6 {
+    padding-left: 2.5em;
+}
+
 {% endblock %}
 
 {% block title %}
@@ -166,6 +211,9 @@
 {# ==========================================================================
    @responsive
    ========================================================================== #}
+{% block responsive %}
+{% endblock %}
+
 {% block tablets %}
 {{ parent() }}
 

@@ -41,7 +41,7 @@ book is generated.
 
 N> ##### Note
 N> The version is updated **after** the book is generated. This way is easy 
-to know the value of the next version of the book just looking into `config.yml`.  
+N> to know the value of the next version of the book just looking into `config.yml`.  
 
 The arguments allow selectively incrementing any of the components. 
 

@@ -2,11 +2,11 @@
 
 Plugins are the core of **easybook** 
 [extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
-But its implementation is a bit lacking on the side of flexibility, 
-so the first task was to get a more flexible plugin's system. And then, 
-implement as many new features as possible in the form of new plugins. 
+But considerably more flexibility was needed in order to allow implementation 
+of all the needed functionality, so the first task was to extend the plugins 
+system.  
  
-The first things to be fixed (or, rather, "enhanced") were: 
+The first things to be enhanced were: 
 
 - There are no way of reusing user-created plugins other than copying
   the code from one book to another.
@@ -17,15 +17,15 @@ The first things to be fixed (or, rather, "enhanced") were:
 
 ## Namespaces for plugins
 
-All of `trefoil` plugins are namespaced, in the namespace (you guess)
-`Trefoil\Plugins`. 
+All of `trefoil` plugins are namespaced. The *optional* plugins (more on
+that later) are under the namespace (you guess) `Trefoil\Plugins\Optional`. 
 
 So a typical plugin now looks like:
 
 ~~~ .php
 <?php
-// trefoil\src\Trefoil\Plugins\AwesomePlugin.php
-namespace Trefoil\Plugins;
+// trefoil\src\Trefoil\Plugins\Optional\AwesomePlugin.php
+namespace Trefoil\Plugins\Optional;
 
 use ...;
 
@@ -91,9 +91,11 @@ The `init()` method defines a bunch of useful properties to make them
 available for the plugins.
 
 
-## Selectively enabling plugins
+## Selectively enabling optional plugins
 
-Plugins can be enabled for each book edition:
+**trefoil** introduces the concept of *optional* plugins: each book's 
+edition can enable only certain plugins (**easybook** standard plugins,
+on the other hand, are always enabled).
 
 ~~~.yaml
 book:
@@ -107,7 +109,7 @@ book:
 ~~~ 
 
 `enabled` is a list of all the enabled plugins without the `Plugin` suffix,
-so if you wanted to enable plugins `DropCapsPlugin` and `TableExtraPluigin` 
+so if you wanted to enable plugins `DropCapsPlugin` and `TableExtraPlugin` 
 for edition `ebook` you would write:
 
 ~~~.yaml

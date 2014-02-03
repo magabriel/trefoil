@@ -1,0 +1,24 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+    <div class="item ebook-quiz-solutions">
+        <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+
+        {{ item.content }}
+
+        {% for xref, quizItems in app.get('publishing.quiz.items') %}
+            {% for quizItem in quizItems %}
+                {% if quizItem.type in ['activity.abc', 'activity.ynb'] %}
+                    {% set template = 'ebook-quiz-activity-solution.twig' %}
+                    {% include template with {'activity': quizItem, 'xref': xref} %}
+                {% elseif quizItem.type == 'questionnaire' %}
+                    {% set template = 'ebook-quiz-questionnaire-solution.twig' %}
+                    {% include template with {'questionnaire': quizItem, 'xref': xref} %}
+                {% else %}
+                    <p>Invalid quizItem type: "{{ activity.type }}"</p>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    </div>
+{% endblock %}

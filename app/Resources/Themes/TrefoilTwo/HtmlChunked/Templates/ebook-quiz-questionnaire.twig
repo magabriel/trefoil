@@ -1,0 +1,57 @@
+<!--
+========================================
+Questionnaire: {{ questionnaire.id }}
+========================================
+-->
+{% if questionnaire.pagebreak == true %}
+    <div class="page-break"></div>
+{% endif %}
+<div class="questions">
+
+    {% set questionnaire_heading_text = questionnaire.heading ? questionnaire.heading : 'Questionnaire ' ~ questionnaire.id %}
+
+    <h5>{{ questionnaire_heading_text }}</h5>
+
+    {% if questionnaire.subheading %}
+        <h6>{{ questionnaire.subheading }}</h6>
+    {% else %}
+        <h6>Find the answer to the following questions, then look at the solution.</h6>
+    {% endif %}
+
+    {% if questionnaire.introduction %}
+        <div class="introduction">{{ questionnaire.introduction }}</div>
+    {% endif %}
+
+    {# start link #}
+    {% set start= 'q-'~questionnaire.id  ~ '_0' %}
+    <a href="#{{ start }}"><span>[ Start ]</span></a>
+    <a href="#skip-q-{{ questionnaire.id }}"><span>[ Skip questionnaire ]</span></a>
+
+    <div class="page-break"></div>
+
+    {% for qindex, question in questionnaire.questions %}
+        {% set qid = 'q-'~questionnaire.id ~ '_' ~ qindex %}
+
+        <h5 id="{{ qid }}">{{ questionnaire_heading_text }}</h5>
+
+        <h6 class="question"><span class="number">[ {{ qindex+1 }} ]</span></h6>
+        <div class="question">{{ question.text }}</div>
+
+        <hr/>
+        {% if question.solution %}
+            <a href="#{{ qid }}-solution"><span>[ View solution ]</span></a>
+        {% else %}
+            <p class="response">Ask your teacher to provide the solution.</p>
+        {% endif %}
+        <hr/>
+
+        <div class="page-break"></div>
+    {% endfor %}
+</div>
+
+{# skip link target #}
+<div id="skip-q-{{ questionnaire.id }}"></div>
+<hr/>
+<p>End of questionnaire.</p>
+<hr/>
+<div class="page-break"></div>

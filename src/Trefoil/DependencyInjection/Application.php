@@ -40,6 +40,9 @@ class Application extends EasybookApplication
         // -- own services -----------------------------------------------------
         $this->register(new PublisherServiceProvider());
         $this->register(new TwigServiceProvider());
+
+        // -- console ---------------------------------------------------------
+        $this['console.progress'] = null;
     }
 
     final public function getMyVersion()
@@ -100,11 +103,11 @@ class Application extends EasybookApplication
      * the generated slug is unique for the entire book (to do so, it stores
      * every slug generated since the beginning of the script execution).
      *
-     * @param  string $string    The string to slug
-     * @param  string $separator Used between words and to replace illegal characters
-     * @param  string $prefix    Prefix to be appended at the beginning of the slug
+     * @param string $string    The string to slug
+     * @param string $separator Used between words and to replace illegal characters
+     * @param string $prefix    Prefix to be appended at the beginning of the slug
      *
-     * @return string             The generated slug
+     * @return string The generated slug
      */
     public function slugifyUniquely($string, $separator = null, $prefix = null)
     {
@@ -112,7 +115,7 @@ class Application extends EasybookApplication
             // epubcheck does not like ids starting with digit
             $string = 'tr_'.$string;
         }
-        
+
         return parent::slugifyUniquely($string, $separator, $prefix);
     }
 }

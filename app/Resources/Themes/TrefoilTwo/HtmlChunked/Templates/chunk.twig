@@ -2,6 +2,8 @@
 
 {% block title %}{{ item.title }}{% endblock %}
 
+{% block class %}item {{ item.config.element|default('chapter') }}{% endblock %}
+
 {% block body %}
 {% set urlBasePath = 2 == item.level ? '..' : '.' %}
 <div class="menu">
@@ -24,7 +26,7 @@
 </div>
 
 <div class="row">
-    <div class="span9">
+    <div class="span9 content">
 {% block content %}
         <h1 id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
         {{ item.content }}
@@ -37,8 +39,14 @@
             <h3>{{ app.getTitle('toc') }}</h3>
 
             <ul class="unstyled">
+            {% set hasParts = false %}
+            {% for item in app['publishing.items'] %}
+                {% if item.config.element == 'part' %}
+                    {% set hasParts = true %}
+                {% endif %}         
+            {% endfor %}
             {% if 1 == edition.chunk_level %}
-                {% for tocItem in item.toc if tocItem.level <= edition.toc.deep %}
+                {% for tocItem in item.toc if tocItem.level <= edition.toc.deep - (hasParts == true ? 1 : 0) %}
                     <li class="level-{{ tocItem.level }}">
                         <span>{{ tocItem.level != 1 ? tocItem.label : '' }}</span>
                         <a href="#{{ tocItem.slug }}">{{ tocItem.title }}</a>

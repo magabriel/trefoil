@@ -48,15 +48,15 @@ No, definitely 1 does not equal 2.
 
 The above piece of text will render as:
 
-> 
-> {# this is a Twig comment inside a content item #}
+
+{# this is a Twig comment inside a content item #}
 > **Lorem ipsum** dolor sit amen. 
-> 
-> {% if 1 == 2 %} 
+ 
+{% if 1 == 2 %} 
 > **Awesome,** it seems that 1 equals 2!!!
-> {% else %}
+{% else %}
 > No, definitely 1 does not equal 2.
-> {% endif %}
+{% endif %}
 
 
 But why in the world would you want to mix Twig code or functions with 
@@ -102,7 +102,9 @@ Usage:
 &#123;&#123; itemtoc() &#125;&#125;
 </pre></div>
 
-You can see an example at the begining of each chapter of this book.
+N> ##### Note
+N> You can see an example at the begining of each chapter of the `epub` or `kindle` editions 
+N> of this book.
 
 #### Include files into content
 
@@ -125,7 +127,9 @@ The available options are:
 
 - `{'nopagebreak': false}`: do not insert a page break after the included file (`true` by default)
  
-You can see an example in the source text of this chapter.
+N> ##### Note
+N> You can see an example in the source text of this chapter. Pagebreaks will only work on `Kindle`
+N> readers and certain `epub` readers.
  
  
  
