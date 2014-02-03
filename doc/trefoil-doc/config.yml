@@ -6,12 +6,12 @@ easybook:
         epubcheck.path: '/usr/local/bin/epubcheck.jar'
 book:
     title:            'Trefoil documentation'
-    author:           'trefoil'
-    edition:          '0'
+    author:           ''
+    edition:          '2014'
     language:         en
-    publication_date: '01-12-2013'
+    publication_date: ~
 
-    version:          '0.806'
+    version:          '0.854'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -102,30 +102,10 @@ book:
             extends:         base-edition
             format:          mobi
              
-        print:
-            extends:         base-edition
-            format:          pdf
-
-            margin:
-                top:         25mm
-                bottom:      25mm
-                inner:       30mm
-                outer:       20mm
-            page_size:       A4
-            #theme:           clean
-            two_sided:       true
-
         web:
             extends:         base-edition
             format:          html
             #theme:           clean
-
-        website:
-            extends:         base-edition
-            format:          html_chunked
-            chunk_level:     1
-            include_styles:  true
-            #images_base_dir: /img/doc-en/
 
         doc-website:
             extends:         base-edition

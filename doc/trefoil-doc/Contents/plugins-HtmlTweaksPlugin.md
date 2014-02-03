@@ -133,7 +133,7 @@ tweaks:
                 open:  '<div class="box1">'
                 close: '</div>'
                 
-        # convert all unordered lists in ordered lists
+        # convert all unordered lists into ordered lists
         tweak-ul:
             tag: 'ul'
             replace: 

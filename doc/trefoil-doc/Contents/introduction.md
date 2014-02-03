@@ -4,28 +4,36 @@ Introduction
 This is the documentation of **trefoil**, a project conceived as an extension
 to **easybook** (<http://easybook-project.org>). 
 
----
-
 **trefoil** extends **easybook** to provide additional features for publication
 of *ebooks*, both fiction and non-fiction.
 
----
+N> ##### Note
+N> This documentation is a **trefoil** book itself, intended to be published into
+N> one of the supported formats. 
 
-This documentation is itself a **trefoil** project, intended to be published into
-one of the supported formats (*epub* or *mobi* recommended). To create the 
-documentation, go to the directory where trefoil is installed and run:
+To create the documentation, go to the directory where trefoil is installed and run 
+one of the following commands:
 
+**To get the *epub* version:**
+ 
 ~~~.bash
 book publish trefoil-doc ebook 
 ~~~
 
-to get the *epub* version, or
-
+**To get the *kindle* version (please ensure you have the `kindlegen` application 
+installed):**
+ 
 ~~~.bash
 book publish trefoil-doc kindle
 ~~~
 
-to get the *kindle* version. Other formats are supported, so look at 
+**To get the *doc-website* version (this one):**
+ 
+~~~.bash
+book publish trefoil-doc doc-website
+~~~
+
+Other formats may be supported, so look at 
 `<trefoil-dir>/doc/trefoil-doc/config.yml` to see all the options available.
 
 ## License

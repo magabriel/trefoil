@@ -91,9 +91,11 @@ A theme, whether standard or custom, must follow this structure:
 ~~~
  
 N> ##### Note
-N> At the moment, standard **trefoil** themes only support edition types 
-N> `epub` and `mobi`. But you are free to implement support for other edition
-N> types in your custom themes.
+N> Standard **trefoil** themes do not support all the edition types, 
+N> but `epub` and `mobi` are available in each theme (please
+N> look at each theme directory to find out which ones are available).
+N> But you are free to implement support for other edition types in your 
+N> custom themes.
 
 ## Components of a theme
 

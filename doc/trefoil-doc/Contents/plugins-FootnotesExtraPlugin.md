@@ -36,6 +36,10 @@ footnotes list element with all the book's footnotes.
 N> ##### Tip
 N> You can see an example of footnotes in this section (look at the source text).
 
+{% if app.edition('format') not in ['epub', 'mobi'] %}
+N> ##### TODO
+N> Create an adequate implementation for editions different from `epub` and `mobi` (like this one).
+{% endif %}
 ### Output
 
 The plugin will generate a report[^note2] in the output directory called `report-FootnotesPlugin.txt`

@@ -28,7 +28,7 @@ Features:
 
 #### Explicit image path
 
-Some Markdown editors provice a live preview of the rendered HTML result. Some of them even
+Some Markdown editors provide a live preview of the rendered HTML result. Some of them even
 provide live preview for images (like the fabulous [MdCharm](http://www.mdcharm.com/)), but 
 for this to work the image path must point to the relative location of the image:
 

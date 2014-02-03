@@ -134,6 +134,10 @@ N>
 N> But, as this implementation is mostly focused on **ebooks**, even if it produces a clickable 
 N> autoglossary it may not give the best results on a printed edition.    
 
+{% if app.edition('format') not in ['epub', 'mobi'] %}
+N> ##### TODO
+N> Create an adequate implementation for editions different from `epub` and `mobi` (like this one).
+{% endif %}
 
 ### Output
 

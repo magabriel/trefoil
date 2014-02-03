@@ -11,7 +11,19 @@ specifically targeted towards generation of ebooks.
 Installing
 ----------
 
-TODO
+1.- Clone the trefoil repository:
+
+~~~.bash
+mkdir trefoil
+git clone http://github.com/magabriel/trefoil trefoil/
+~~~
+
+2.- Download the vendors and dependencies:
+
+~~~.bash
+cd trefoil/
+php composer.phar install
+~~~
 
 Extending Easybook
 ------------------
