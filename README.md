@@ -4,6 +4,8 @@
 additional features for publication of *ebooks*, both fiction and non-fiction.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6/mini.png)](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6)
+&nbsp;
+[![Build Status](https://travis-ci.org/magabriel/trefoil.png?branch=master)](https://travis-ci.org/magabriel/trefoil)
 
 ## Installation ##
 

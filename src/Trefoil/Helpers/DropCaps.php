@@ -191,11 +191,13 @@ class DropCaps
     /**
      * Create drop caps markup for a text.
      *
+     * *NOTE* Should be protected but need to be public for PHP 5.3 compat.
+     *            
      * @param string $text
      *
      * @return string
      */
-    protected function createDropCaps($text)
+    public function createDropCaps($text)
     {
         if ('word' == $this->mode) {
 
