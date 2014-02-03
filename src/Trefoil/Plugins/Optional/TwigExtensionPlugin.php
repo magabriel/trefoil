@@ -124,7 +124,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         // itemtoc() and its internal counterpart
         $twig->addFunction(new \Twig_SimpleFunction('itemtoc', array($this, 'itemTocFunction')));
         $twig->addFunction(
-             new \Twig_SimpleFunction('_itemtoc_internal', array($this, '_itemTocInternalFunction'))
+             new \Twig_SimpleFunction('_itemtoc_internal', array($this, 'itemTocInternalFunction'))
         );
     }
 
@@ -188,7 +188,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      * @return string The item toc rendered
      *                @internal
      */
-    public function _itemTocInternalFunction()
+    public function itemTocInternalFunction()
     {
         $template = 'itemtoc.twig';
 

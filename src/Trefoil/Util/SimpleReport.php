@@ -133,13 +133,13 @@ class SimpleReport
             $padType = STR_PAD_BOTH;
         }
 
-        return $this->mb_str_pad($str, $width, ' ', $padType);
+        return $this->mbStrPad($str, $width, ' ', $padType);
     }
 
     /**
      * @see http://www.php.net/manual/en/ref.mbstring.php#90611
      */
-    protected function mb_str_pad($input, $pad_length, $pad_string = '', $pad_style, $encoding = "UTF-8")
+    protected function mbStrPad($input, $pad_length, $pad_string = '', $pad_style, $encoding = "UTF-8")
     {
         return str_pad(
             $input,

@@ -203,7 +203,8 @@ class QuizActivityParser extends QuizItemParser
                     $responsesList[$rIndex] = $ps->eq(0)->text();
 
                     // get all the p's or li's
-                    for ($i = 1; $i < $ps->count(); $i++) {
+                    $count = $ps->count();
+                    for ($i = 1; $i < $count; $i++) {
                         $nodeName = CrawlerTools::getNodeName($ps->eq($i));
                         if ('p' == $nodeName) {
                             // can contain HTML

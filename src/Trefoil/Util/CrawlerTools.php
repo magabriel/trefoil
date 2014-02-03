@@ -9,7 +9,6 @@
  */
 namespace Trefoil\Util;
 
-use DOMNode;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
