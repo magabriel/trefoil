@@ -99,19 +99,21 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         preg_match_all('/<a .*href="(?<uri>.*)".*>(?<text>.*)<\/a>/Ums', $content, $matches, PREG_SET_ORDER);
 
-        foreach ($matches as $match) {
-            $link = array(
-                'text' => $match['text'],
-                'uri'  => $match['uri']
-            );
-
-            if ('#' == substr($match['uri'], 0, 1)) {
-                $links['internal'][$xref][] = $link;
-            } else {
-                $links['external'][$xref][] = $link;
+        if ($matches) {
+            foreach ($matches as $match) {
+                $link = array(
+                    'text' => $match['text'],
+                    'uri'  => $match['uri']
+                );
+    
+                if ('#' == substr($match['uri'], 0, 1)) {
+                    $links['internal'][$xref][] = $link;
+                } else {
+                    $links['external'][$xref][] = $link;
+                }
             }
         }
-
+        
         return $links;
     }
 

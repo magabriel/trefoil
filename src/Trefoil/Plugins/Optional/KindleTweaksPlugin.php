@@ -9,10 +9,11 @@
  */
 namespace Trefoil\Plugins\Optional;
 
-use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
+use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
+
 /**
  * Several tweaks to make the ebook more compatible with Kindle MOBI format
  *
@@ -33,7 +34,7 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         );
     }
 
-    public function onItemPostParse(BaseEvent $event)
+    public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 

@@ -111,12 +111,14 @@ class TableExtra
             preg_match_all($regExp, $tr, $matchesCol, PREG_SET_ORDER);
 
             $cols = array();
-            foreach ($matchesCol as $matchCol) {
-                $cols[] = array(
-                    'tag'        => $matchCol['tag'],
-                    'attributes' => $this->extractAttributes($matchCol['attr']),
-                    'contents'   => $matchCol['contents']
-                );
+            if ($matchesCol) {
+                foreach ($matchesCol as $matchCol) {
+                    $cols[] = array(
+                        'tag'        => $matchCol['tag'],
+                        'attributes' => $this->extractAttributes($matchCol['attr']),
+                        'contents'   => $matchCol['contents']
+                    );
+                }
             }
 
             $rows[] = $cols;
@@ -297,8 +299,10 @@ class TableExtra
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
 
         $attributes = array();
-        foreach ($attrMatches as $attrMatch) {
-            $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+        if ($attrMatches) {
+            foreach ($attrMatches as $attrMatch) {
+                $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+            }
         }
 
         return $attributes;

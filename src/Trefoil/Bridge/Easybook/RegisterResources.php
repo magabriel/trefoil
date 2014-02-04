@@ -99,7 +99,7 @@ class RegisterResources implements EventSubscriberInterface
                                               array $selectedPlugins = null)
     {
         if (!file_exists($dir)) {
-            return;
+            return array();
         }
 
         // find and register all plugins in dir

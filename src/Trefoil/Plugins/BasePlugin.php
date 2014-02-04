@@ -21,7 +21,7 @@ use Trefoil\Util\Toolkit;
 abstract class BasePlugin
 {
     /**
-     * @var Application
+     * @var array|Application
      */
     protected $app;
 
