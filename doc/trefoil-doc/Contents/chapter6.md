@@ -15,7 +15,11 @@ also images and fonts.
 - `TrefoilOne` is a classic-looking theme, suitable for novels, 
   essays and other literary works.
 
-- `TrefoilTwo` is a modern theme. This book uses it. 
+- `TrefoilTwo` is a modern theme. 
+
+- `TrefoilDoc` is used for generating this documentation. It is 
+  based on `TrefoilTwo` but adds an HTML edition `doc-website` that
+  uses `Twitter Bootstrap 3`.
 
 To use them, as always, just put the name of the theme in the 
 book's `config.yml`:
