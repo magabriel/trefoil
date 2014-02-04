@@ -202,12 +202,14 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<p>[-' . self::EMDASH_UNICODE . '](?<text>[^ ].*)<\/p>';
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
                 // replace the dialog inside the paragraph
-                $text = $me->replaceSpanishStyleDialog($matches['text']);
+                $text = $me->internalReplaceSpanishStyleDialog($matches['text']);
 
                 // return the paragraph replacing the starting dash by an em-dash
                 return sprintf('<p>' . $me::EMDASH_HTMLENTITY . '%s</p>', $text);
@@ -224,8 +226,9 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      * @param string $text
      *
      * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function replaceSpanishStyleDialog($text)
+    public function internalReplaceSpanishStyleDialog($text)
     {
         // replace "space and dash or em-dash character followed by something" by
         //         "space and em-dash followed by something"

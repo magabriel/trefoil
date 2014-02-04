@@ -42,14 +42,16 @@ class TextPreserver
         // replace all the contents of the tags with a placeholder
         $regex = sprintf('/<(?<tag>(%s)[> ].*)>(?<content>.*)</Ums', implode('|', $tags));
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $this->text = preg_replace_callback(
             $regex,
             function ($matches) use ($me) {
                 $tag = $matches['tag'];
                 $content = $matches['content'];
 
-                $placeHolder = $me->createPlacehoder($content, 'tag');
+                $placeHolder = $me->internalCreatePlacehoder($content, 'tag');
 
                 return sprintf('<%s>%s<', $tag, $placeHolder);
 
@@ -64,14 +66,16 @@ class TextPreserver
         // replace all the contents of the attribute with a placeholder
         $regex = sprintf('/(?<attr>%s)="(?<value>.*)"/Ums', implode('|', $attributes));
 
+        // // PHP 5.3 compat
         $me = $this;
+        
         $this->text = preg_replace_callback(
             $regex,
             function ($matches) use ($me) {
                 $attr = $matches['attr'];
                 $value = $matches['value'];
 
-                $placeHolder = $me->createPlacehoder($value, 'attr');
+                $placeHolder = $me->internalCreatePlacehoder($value, 'attr');
 
                 return sprintf('%s="%s"', $attr, $placeHolder);
             },
@@ -79,7 +83,14 @@ class TextPreserver
         );
     }
 
-    public function createPlacehoder($string, $prefix = 'str')
+    /**
+     * @param        $string
+     * @param string $prefix
+     *
+     * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalCreatePlacehoder($string, $prefix = 'str')
     {
         $placeHolder = '@' . $prefix . '-' . md5($string . count($this->stringMapper)) . '@';
         $this->stringMapper[$placeHolder] = $string;

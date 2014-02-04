@@ -44,14 +44,16 @@ class TableExtra
         $regExp .= '(?<table><table.*<\/table>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $callback = function ($matches) use ($me) {
-            $table = $me->parseTable($matches['table']);
+            $table = $me->internalParseTable($matches['table']);
             if (!$table) {
                 return $matches[0];
             }
-            $table = $me->processExtraTable($table);
-            $html = $me->renderTable($table);
+            $table = $me->internalProcessExtraTable($table);
+            $html = $me->internalRenderTable($table);
 
             return $html;
         };
@@ -61,7 +63,13 @@ class TableExtra
         return $output;
     }
 
-    protected function parseTable($tableHtml)
+    /**
+     * @param $tableHtml
+     *
+     * @return array
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalParseTable($tableHtml)
     {
         $table = array();
 
@@ -117,7 +125,13 @@ class TableExtra
         return $rows;
     }
 
-    protected function processExtraTable(array $table)
+    /**
+     * @param array $table
+     *
+     * @return array
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalProcessExtraTable(array $table)
     {
         // process and adjusts table definition
         $table['thead'] = $this->processRows($table['thead']);
@@ -211,7 +225,13 @@ class TableExtra
         return $newRows;
     }
 
-    protected function renderTable(array $table)
+    /**
+     * @param array $table
+     *
+     * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalRenderTable(array $table)
     {
         $html = '<table>';
 

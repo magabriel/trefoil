@@ -121,7 +121,9 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<\/div>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -129,11 +131,11 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                 switch ($matches['type']) {
                     case 'activity':
                     case 'quiz-activity':
-                        $html = $me->processActivityType($matches['div']);
+                        $html = $me->internalProcessActivityType($matches['div']);
                         break;
                     case 'questions':
                     case 'quiz-questionnaire':
-                        $html = $me->processQuestionnaireType($matches['div']);
+                        $html = $me->internalProcessQuestionnaireType($matches['div']);
                         break;
                 }
 
@@ -151,8 +153,9 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $sourceHtml
      *
      * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function processActivityType($sourceHtml)
+    public function internalProcessActivityType($sourceHtml)
     {
         $validYes = $this->getEditionOption('plugins.options.EbookQuiz.ynb.yes');
         $validNo = $this->getEditionOption('plugins.options.EbookQuiz.ynb.no');
@@ -187,8 +190,9 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $sourceHtml
      *
      * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function processQuestionnaireType($sourceHtml)
+    public function internalProcessQuestionnaireType($sourceHtml)
     {
         $parser = new QuizQuestionnaireParser($sourceHtml);
 

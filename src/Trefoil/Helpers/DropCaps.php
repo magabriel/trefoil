@@ -87,9 +87,11 @@ class DropCaps
         $regex .= '\s*<p>\[\[(?<first>.*)\]\](?<rest>.*)<\/p>';
         $regex .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $callback = function ($matches) use ($me) {
-            $ptext = $me->renderDropCaps('', $matches['first'], $matches['rest']);
+            $ptext = $me->internalRenderDropCaps('', $matches['first'], $matches['rest']);
             $html = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
             return $html;
@@ -108,9 +110,11 @@ class DropCaps
         $regex .= '^\s*<p>(?<ptext>.*)<\/p>';
         $regex .= '/Us'; // Ungreedy, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $callback = function ($matches) use ($me) {
-            $ptext = $me->createDropCaps($matches['ptext']);
+            $ptext = $me->internalCreateDropCaps($matches['ptext']);
             $html = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
 
             return $html;
@@ -133,13 +137,15 @@ class DropCaps
         $regex .= '<p>(?<ptext>.*)<\/p>'; // 1st paragraph
         $regex .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $callback = function ($matches) use ($me, $levels) {
             if (!in_array($matches['level'], $levels)) {
                 return $matches[0];
             }
 
-            $ptext = $me->createDropCaps($matches['ptext']);
+            $ptext = $me->internalCreateDropCaps($matches['ptext']);
 
             $html = sprintf(
                 '<h%s%s>%s</h%s>%s<p class="has-dropcaps">%s</p>',
@@ -191,13 +197,13 @@ class DropCaps
     /**
      * Create drop caps markup for a text.
      *
-     * *NOTE* Should be protected but need to be public for PHP 5.3 compat.
-     *            
      * @param string $text
      *
      * @return string
+     * 
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function createDropCaps($text)
+    public function internalCreateDropCaps($text)
     {
         if ('word' == $this->mode) {
 
@@ -208,7 +214,7 @@ class DropCaps
             $dropCaps = implode('', array_slice($matches[1], 0, $this->length));
             $rest = implode('', array_slice($matches[1], $this->length));
 
-            return $this->renderDropCaps('', $dropCaps, $rest);
+            return $this->internalRenderDropCaps('', $dropCaps, $rest);
         }
 
         // 'letter' mode
@@ -223,7 +229,7 @@ class DropCaps
             $dropCaps = $matches[1] . substr($text, strlen($matches[1]), $this->length);
             $rest = substr($text, strlen($matches[1]) + $this->length);
 
-            return $this->renderDropCaps('', $dropCaps, $rest);
+            return $this->internalRenderDropCaps('', $dropCaps, $rest);
         }
 
         // look if it starts with an HTML tag
@@ -242,7 +248,7 @@ class DropCaps
             $dropCaps = substr($text, strlen($skip), $dropCapsLength);
             $rest = substr($text, strlen($skip) + $dropCapsLength);
 
-            return $this->renderDropCaps($skip, $dropCaps, $rest);
+            return $this->internalRenderDropCaps($skip, $dropCaps, $rest);
         }
 
         // look if it starts with a non-word character(s)
@@ -252,26 +258,27 @@ class DropCaps
             $dropCaps = $matches[1] . mb_substr($text, mb_strlen($matches[1]), $this->length);
             $rest = mb_substr($text, mb_strlen($matches[1]) + $this->length);
 
-            return $this->renderDropCaps('', $dropCaps, $rest);
+            return $this->internalRenderDropCaps('', $dropCaps, $rest);
         }
 
         // normal case, isolate the first "$length" letters
         $dropCaps = substr($text, 0, $this->length);
         $rest = substr($text, $this->length);
 
-        return $this->renderDropCaps('', $dropCaps, $rest);
+        return $this->internalRenderDropCaps('', $dropCaps, $rest);
     }
 
     /**
-     * *NOTE* should be protected but made public for PHP 5.3 compat
-     * 
+     *         
      * @param $skip
      * @param $dropCaps
      * @param $rest
      *
      * @return string
+     * 
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function renderDropCaps($skip, $dropCaps, $rest)
+    public function internalRenderDropCaps($skip, $dropCaps, $rest)
     {
         $html = sprintf('%s<span class="dropcaps">%s</span>%s', $skip, $dropCaps, $rest);
 

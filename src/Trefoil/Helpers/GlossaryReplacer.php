@@ -62,6 +62,24 @@ class GlossaryReplacer
     protected $textPreserver;
 
     /**
+     * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function getTextId()
+    {
+        return $this->textId;
+    }
+
+    /**
+     * @return array
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function getGlossaryOptions()
+    {
+        return $this->glossaryOptions;
+    }
+
+    /**
      * @param Glossary      $glossary        The glossary object
      * @param TextPreserver $textPreserver   A TextPreserver instance
      * @param string        $text            The text to replace into
@@ -153,7 +171,9 @@ class GlossaryReplacer
         }
 
         // replace all occurrences of $variant into text $item with a glossary link
+        // PHP 5.3 compat
         $me = $this;
+        
         $text = preg_replace_callback(
             $patterns,
             function ($matches) use ($me, $glossaryItem, $variant) {
@@ -162,7 +182,7 @@ class GlossaryReplacer
                 $tagContent = $matches['content'];
 
                 // do the replacement
-                $newContent = $me->replaceTermVariantIntoString($tagContent, $glossaryItem, $variant);
+                $newContent = $me->internalReplaceTermVariantIntoString($tagContent, $glossaryItem, $variant);
 
                 // reconstruct the original tag with the modified text
                 return sprintf('<%s>%s</%s>', $tag, $newContent, $tag);
@@ -181,8 +201,10 @@ class GlossaryReplacer
      * @param string       $variant      The variant to replace
      *
      * @return string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function replaceTermVariantIntoString($text, GlossaryItem $glossaryItem, $variant)
+    public function internalReplaceTermVariantIntoString($text, GlossaryItem $glossaryItem, $variant)
     {
         // construct the regexp to replace inside the tag content
         $regExp = '/';
@@ -192,14 +214,19 @@ class GlossaryReplacer
         $regExp .= '/ui'; // unicode, case-insensitive
 
         // replace all ocurrences of $variant into $tagContent with a glossary link
-        $me = $this;
+
+        // PHP 5.3 compat
+        $me = $this; 
+        $textPreserver = $this->textPreserver; 
+        
         $text = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me, $glossaryItem, $variant) {
+            function ($matches) use ($me, $glossaryItem, $variant, $textPreserver) {
                 // look if already replaced once in this item, so just leave it unchanged
-                if ('item' == $me->glossaryOptions['coverage']) {
+                $options = $me->getGlossaryOptions();
+                if ('item' == $options['coverage']) {
                     foreach ($glossaryItem->getXref() as $variant => $xRefs) {
-                        if (isset($xRefs[$me->textId])) {
+                        if (isset($xRefs[$me->getTextId()])) {
                             return $matches[0];
                         }
                     }
@@ -208,7 +235,7 @@ class GlossaryReplacer
                 /* if coverage type is "first" and term is already defined,
                  * don't replace the term again
                 */
-                if ('first' == $me->glossaryOptions['coverage'] && $glossaryItem->getXref()) {
+                if ('first' == $options['coverage'] && $glossaryItem->getXref()) {
                     // already replaced elsewhere, just leave it unchanged
                     return $matches[0];
                 }
@@ -216,16 +243,16 @@ class GlossaryReplacer
                 /* create the anchor link from the slug
                  * and get the number given to the anchor link just created
                  */
-                list($anchorLink, $num) = $me->saveProcessedDefinition(
+                list($anchorLink, $num) = $me->internalSaveProcessedDefinition(
                                              $glossaryItem,
                                              sprintf('auto-glossary-term-%s', $glossaryItem->getSlug())
                 );
 
                 // save the placeholder for this slug to be replaced later
-                $placeHolder = $me->textPreserver->createPlacehoder($glossaryItem->getSlug() . '-' . $num);
+                $placeHolder = $textPreserver->internalCreatePlacehoder($glossaryItem->getSlug() . '-' . $num);
 
                 // save the placeholder for this term (to avoid further unwanted matches into)
-                $placeHolder2 = $me->textPreserver->createPlacehoder($matches[2]);
+                $placeHolder2 = $textPreserver->internalCreatePlacehoder($matches[2]);
 
                 // create replacement
                 $repl = sprintf(
@@ -238,7 +265,7 @@ class GlossaryReplacer
                 );
 
                 // save xref
-                $glossaryItem->addXref($variant, $me->textId);
+                $glossaryItem->addXref($variant, $me->getTextId());
 
                 // return reconstructed match
                 return $matches[1] . $repl . $matches[3];
@@ -256,8 +283,10 @@ class GlossaryReplacer
      * @param string       $anchorLink
      *
      * @return string The text of the anchor link saved
+     *                
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function saveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
+    protected function internalSaveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
     {
         $count = count($glossaryItem->getAnchorLinks());
 
