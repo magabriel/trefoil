@@ -166,15 +166,17 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
                 preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
 
-                foreach ($matches2 as $match2) {
-                    $footnotes = $me->getFootnotes();
-                    $footnotes[$match2['id']] = array(
-                        'id'         => str_replace(':', '-', $match2['id']),
-                        'text'       => $match2['text'],
-                        'backref'    => str_replace(':', '-', $match2['backref']),
-                        'new_number' => count($footnotes) + 1
-                    );
-                    $me->setFootnotes($footnotes);
+                if ($matches2) {
+                    foreach ($matches2 as $match2) {
+                        $footnotes = $me->getFootnotes();
+                        $footnotes[$match2['id']] = array(
+                            'id'         => str_replace(':', '-', $match2['id']),
+                            'text'       => $match2['text'],
+                            'backref'    => str_replace(':', '-', $match2['backref']),
+                            'new_number' => count($footnotes) + 1
+                        );
+                        $me->setFootnotes($footnotes);
+                    }
                 }
 
                 return '';

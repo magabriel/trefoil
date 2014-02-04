@@ -122,7 +122,7 @@ class Glossary implements \IteratorAggregate
         $variants = array();
 
         if (preg_match($regExp, $item->getTerm(), $parts)) {
-            if (array_key_exists('suffixes', $parts)) {
+            if ($parts && array_key_exists('suffixes', $parts)) {
                 $suffixes = explode('|', $parts['suffixes']);
                 if (1 == count($suffixes)) {
                     // exactly one suffix means root without and with suffix (i.e. 'word[s]')

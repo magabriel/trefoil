@@ -11,10 +11,12 @@ namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
+use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
-use Trefoil\Util\SimpleReport;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\SimpleReport;
+
 /**
  * This plugin performs several checks on the finished book to help
  * fixing common problems.
@@ -40,7 +42,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
      * Event handlers
     * ********************************************************************************
     */
-    public function onItemPostParse(BaseEvent $event)
+    public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
@@ -95,19 +97,25 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         preg_match_all($regExp, $string, $imagesMatch, PREG_SET_ORDER);
 
         $images = array();
-        foreach ($imagesMatch as $imageMatch) {
-            // get all attributes
-            $regExp2 = '/(?<attr>.*)="(?<value>.*)"/Us';
-            preg_match_all($regExp2, $imageMatch[1], $attrMatches, PREG_SET_ORDER);
-
-            $attributes = array();
-            foreach ($attrMatches as $attrMatch) {
-                $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+        
+        if ($imagesMatch) {
+            foreach ($imagesMatch as $imageMatch) {
+                // get all attributes
+                $regExp2 = '/(?<attr>.*)="(?<value>.*)"/Us';
+                preg_match_all($regExp2, $imageMatch[1], $attrMatches, PREG_SET_ORDER);
+    
+                $attributes = array();
+                
+                if ($attrMatches) {
+                    foreach ($attrMatches as $attrMatch) {
+                        $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+                    }
+                }
+                
+                $images[] = $attributes;
             }
-
-            $images[] = $attributes;
         }
-
+        
         return $images;
     }
 
@@ -120,19 +128,21 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
         preg_match_all($regExp, $content, $matches, PREG_SET_ORDER);
 
-        foreach ($matches as $match) {
-            $emphasis = $this->extractEmphasis($match['par']);
-            foreach ($emphasis as $emph) {
-                if (in_array($emph, array('(*)', '"*"'))) {
-                    // common strings
-                    continue;
+        if ($matches) {
+            foreach ($matches as $match) {
+                $emphasis = $this->extractEmphasis($match['par']);
+                foreach ($emphasis as $emph) {
+                    if (in_array($emph, array('(*)', '"*"'))) {
+                        // common strings
+                        continue;
+                    }
+                    if (false !== strpos($emph, '__' )) {
+                        // a line draw with underscores
+                        continue;
+                    }
+    
+                    $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
                 }
-                if (false !== strpos($emph, '__' )) {
-                    // a line draw with underscores
-                    continue;
-                }
-
-                $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
             }
         }
     }
@@ -156,8 +166,11 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         preg_match_all($regExp, $string, $matches, PREG_SET_ORDER);
 
         $emphasis = array();
-        foreach ($matches as $match) {
-            $emphasis[] = $match['em'];
+
+        if ($matches) {
+            foreach ($matches as $match) {
+                $emphasis[] = $match['em'];
+            }
         }
 
         return $emphasis;

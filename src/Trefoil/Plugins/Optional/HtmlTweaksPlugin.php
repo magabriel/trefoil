@@ -15,8 +15,9 @@ use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Yaml\Yaml;
 use Trefoil\Events\TrefoilEvents;
-use Trefoil\Util\Toolkit;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
+
 /**
  * Several tweaks to the final HTML of the ebook.
  * It allows modifying the HTML produced by the Markdown processor or by the
@@ -82,7 +83,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
         $this->readTweaksFile();
     }
 
-    public function onItemPreParse(BaseEvent $event)
+    public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
 

@@ -6,6 +6,10 @@ additional features for publication of *ebooks*, both fiction and non-fiction.
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6/mini.png)](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6)
 &nbsp;
 [![Build Status](https://travis-ci.org/magabriel/trefoil.png?branch=master)](https://travis-ci.org/magabriel/trefoil)
+&nbsp;
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/magabriel/trefoil/badges/quality-score.png?s=3a59ce8ad502597f2f34284968095bb56eb83cb8)](https://scrutinizer-ci.com/g/magabriel/trefoil/)
+&nbsp;
+[![Code Coverage](https://scrutinizer-ci.com/g/magabriel/trefoil/badges/coverage.png?s=fd7c126b3098f15e704fa1cb11b76a119d5c2ec2)](https://scrutinizer-ci.com/g/magabriel/trefoil/)
 
 ## Installation ##
 
