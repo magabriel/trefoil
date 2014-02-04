@@ -286,7 +286,7 @@ class GlossaryReplacer
      *                
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function internalSaveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
+    public function internalSaveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
     {
         $count = count($glossaryItem->getAnchorLinks());
 

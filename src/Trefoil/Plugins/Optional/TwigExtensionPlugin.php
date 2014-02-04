@@ -186,7 +186,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      *       (default: <i>edition.toc.deep + 1 </i>
      *
      * @return string The item toc rendered
-     *                @internal
+     *                
      */
     public function itemTocInternalFunction()
     {
