@@ -11,7 +11,8 @@
 namespace Trefoil\Bridge\Easybook;
 
 use Easybook\Events\BaseEvent;
-use Easybook\Events\EasybookEvents as Events;
+use Easybook\Events\EasybookEvents;
+use Symfony\Component\Console\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
 use Trefoil\Events\TrefoilEvents;
@@ -28,7 +29,7 @@ class RegisterResources implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(Events::PRE_PUBLISH => 'onPrePublish');
+        return array(EasybookEvents::PRE_PUBLISH => 'onPrePublish');
     }
 
     public function onPrePublish(BaseEvent $event)
@@ -40,11 +41,12 @@ class RegisterResources implements EventSubscriberInterface
 
         $this->registerOwnThemes();
 
-        $this->app
-            ->dispatch(
+        /** @var \Easybook\DependencyInjection\Application $app */
+        $app = $this->app;
+        $app->dispatch(
             TrefoilEvents::PRE_PUBLISH_AND_READY,
-            new BaseEvent($this->app)
-            );
+            new BaseEvent($app)
+        );
     }
 
     /**

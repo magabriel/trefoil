@@ -243,7 +243,7 @@ class GlossaryReplacer
                 /* create the anchor link from the slug
                  * and get the number given to the anchor link just created
                  */
-                list($anchorLink, $num) = $me->internalSaveProcessedDefinition(
+                list(, $num) = $me->internalSaveProcessedDefinition(
                                              $glossaryItem,
                                              sprintf('auto-glossary-term-%s', $glossaryItem->getSlug())
                 );

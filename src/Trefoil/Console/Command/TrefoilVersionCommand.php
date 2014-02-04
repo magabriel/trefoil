@@ -28,7 +28,7 @@ class TrefoilVersionCommand extends EasybookVersionCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /* @var Application $app (fake cast) */
+        /** @var Application $app */
         $app = $this->app;
 
         $output->writeln(

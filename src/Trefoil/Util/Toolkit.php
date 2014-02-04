@@ -14,6 +14,11 @@ use Easybook\Util\Toolkit as EasybookToolkit;
 
 class Toolkit extends EasybookToolkit
 {
+    /**
+     * @param array|EasybookApplication $app
+     *
+     * @return null|string
+     */
     public static function getCurrentThemeDir(EasybookApplication $app)
     {
         $theme = ucfirst($app->edition('theme'));
