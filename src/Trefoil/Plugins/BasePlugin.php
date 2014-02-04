@@ -110,7 +110,7 @@ abstract class BasePlugin
      * Retrieve the value of an edition option (from config.yml file)
      *
      * @param string $optionName (as in 'one.two.three')
-     * @param string $default
+     * @param mixed $default
      *
      * @return mixed
      */
@@ -138,7 +138,7 @@ abstract class BasePlugin
      * Retrieve the value of a book option (from config.yml file)
      *
      * @param string $optionName (as in 'one.two.three')
-     * @param string $default
+     * @param mixed  $default
      *
      * @return mixed
      */

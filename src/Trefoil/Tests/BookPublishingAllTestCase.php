@@ -71,11 +71,6 @@ abstract class BookPublishingAllTestCase extends TestCase
         }
     }
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     public function tearDown()
     {
         $delete = true;
