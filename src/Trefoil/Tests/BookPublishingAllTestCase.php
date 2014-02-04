@@ -250,9 +250,9 @@ abstract class BookPublishingAllTestCase extends TestCase
 
             // assert that book publication took less than 5 seconds
             $this->assertLessThan(
-                 5,
+                 10,
                  $this->app['app.timer.finish'] - $this->app['app.timer.start'],
-                 sprintf("Publication of '%s' edition for '%s' book took more than 5 seconds", $editionName, $slug)
+                 sprintf("Publication of '%s' edition for '%s' book took more than 10 seconds", $editionName, $slug)
             );
         }
     }
