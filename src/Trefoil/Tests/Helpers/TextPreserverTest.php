@@ -88,12 +88,12 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Trefoil\Helpers\TextPreserver::createPlacehoder
+     * @covers Trefoil\Helpers\TextPreserver::internalCreatePlacehoder
      */
     public function testCreatePlacehoder()
     {
         $value = 'myvalue';
-        $placeholder = $this->object->createPlacehoder($value, 'prefix');
+        $placeholder = $this->object->internalCreatePlacehoder($value, 'prefix');
 
         $html = '<div class="myclass">' . $value . '</div>';
         $html2 = str_replace('myvalue', $placeholder, $html);

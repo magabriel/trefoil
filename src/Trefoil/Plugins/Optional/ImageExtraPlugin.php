@@ -79,7 +79,9 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '\((?<image>.*)\)'; // the image specification
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -113,7 +115,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                         $args['style'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['style']);
                     }
 
-                    $arguments = $me->renderArguments($args);
+                    $arguments = $me->internalRenderArguments($args);
                 }
 
                 return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?' . $arguments : ''));
@@ -130,12 +132,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<img +(?<image>.*)>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
                 $image = Toolkit::parseHTMLAttributes($matches['image']);
-                $image = $me->processExtraImage($image);
+                $image = $me->internalProcessExtraImage($image);
                 $html = Toolkit::renderHTMLTag('img', null, $image);
 
                 return $html;
@@ -151,7 +155,13 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         return $content;
     }
 
-    protected function processExtraImage(array $image)
+    /**
+     * @param array $image
+     *
+     * @return array
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalProcessExtraImage(array $image)
     {
         // replace typographic quotes (just in case, may be set by SmartyPants)
         $src = str_replace(array('&#8221;', '&#8217;'), '"', $image['src']);
@@ -189,7 +199,13 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         return $image;
     }
 
-    protected function renderArguments(array $arguments)
+    /**
+     * @param array $arguments
+     *
+     * @return string
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function internalRenderArguments(array $arguments)
     {
         $argArray = array();
 

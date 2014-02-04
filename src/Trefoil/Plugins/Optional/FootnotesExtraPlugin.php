@@ -42,7 +42,6 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      * @var array
      */
     protected $xrefs = array();
-
     /**
      * Whether or not the glossary item has been generated
      *
@@ -56,6 +55,25 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      * @var bool
      */
     protected $termReplaced;
+
+    /**
+     * @param array $footnotes
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function setFootnotes($footnotes)
+    {
+        $this->footnotes = $footnotes;
+    }
+
+    /**
+     * @return array
+     * @internal Should be protected but made public for PHP 5.3 compat
+     */
+    public function getFootnotes()
+    {
+        return $this->footnotes;
+    }
+
 
     /* ********************************************************************************
      * Event handlers
@@ -135,7 +153,9 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -147,12 +167,14 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
                 preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
 
                 foreach ($matches2 as $match2) {
-                    $me->footnotes[$match2['id']] = array(
+                    $footnotes = $me->getFootnotes();
+                    $footnotes[$match2['id']] = array(
                         'id'         => str_replace(':', '-', $match2['id']),
                         'text'       => $match2['text'],
                         'backref'    => str_replace(':', '-', $match2['backref']),
-                        'new_number' => count($me->footnotes) + 1
+                        'new_number' => count($footnotes) + 1
                     );
+                    $me->setFootnotes($footnotes);
                 }
 
                 return '';
@@ -172,11 +194,14 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $regExp .= '<a(?<prev>.*)href="#(?<href>fn:.*)"(?<post>.*)>(?<number>.*)<\/a>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
+        // PHP 5.3 compat
         $me = $this;
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
-                $newNumber = $me->footnotes[$matches['href']]['new_number'];
+                $footnotes = $me->getFootnotes();
+                $newNumber = $footnotes[$matches['href']]['new_number'];
 
                 $html = sprintf(
                     '<sup id="%s"><a%shref="#%s"%s>%s</a>',
