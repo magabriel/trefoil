@@ -149,8 +149,6 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
         $output = tidy_repair_string($output, array('indent' => true), 'utf8');
         $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
 
-        //print_r($output);
-
         $this->assertEquals($expected, $output);
     }
 
