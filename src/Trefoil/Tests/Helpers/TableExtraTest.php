@@ -13,13 +13,6 @@ use Trefoil\Helpers\TableExtra;
 
 class TableExtraTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-    }
-
-    public function tearDown()
-    {
-    }
 
     public function testConvertWellFormedTable()
     {
@@ -87,8 +80,8 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
         $tableExtra = new TableExtra();
         $output = $tableExtra->processAllTables(implode("", $input));
 
-        $output = tidy_repair_string($output, array('indent' => true));
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true));
+        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
+        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
 
         //print_r($output);
 
@@ -153,10 +146,8 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
         $tableExtra = new TableExtra();
         $output = $tableExtra->processAllTables(implode("", $input));
 
-        $output = tidy_repair_string($output, array('indent' => true));
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true));
-
-        //print_r($output);
+        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
+        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
 
         $this->assertEquals($expected, $output);
     }

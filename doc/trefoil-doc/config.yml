@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '0.859'
+    version:          '0.860'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -101,12 +101,7 @@ book:
         kindle:
             extends:         base-edition
             format:          mobi
-             
-        web:
-            extends:         base-edition
-            format:          html
-            #theme:           clean
-
+              
         doc-website:
             extends:         base-edition
             format:          html
