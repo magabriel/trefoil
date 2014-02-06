@@ -134,9 +134,26 @@ N>
 N> But, as this implementation is mostly focused on **ebooks**, even if it produces a clickable 
 N> autoglossary it may not give the best results on a printed edition.    
 
-{% if app.edition('format') not in ['epub', 'mobi'] %}
-N> ##### TODO
-N> Create an adequate implementation for editions different from `epub` and `mobi` (like this one).
+{% if app.edition('format') in ['epub', 'mobi'] %}
+
+N> ##### NOTE
+N> The autoglossary version for `epub` and `mobi` edition uses plain HTML to implement 
+N> the user interactions. 
+N> No Javascript or other scripting language are allowed by the edition format.
+
+{% else %}
+
+N> ##### NOTE
+N> The version of the autoglossary in this documentation is not the same than the one you will get 
+N> for an  `epub` or `mobi` ebook because of the limited capabilities of the format. Moreover,
+N> as this documentation uses `Twitter Bootstrap 3`, it has some additional differences:
+N> 
+N> - The `epub` or `mobi` versions are rendered using only HTML.
+N> - This version uses Javascript to implement the user interactions.
+N> 
+N> Please generate the `epub` or `mobi` versions of this documentation
+N> to fully appreciate the differences.
+
 {% endif %}
 
 ### Output

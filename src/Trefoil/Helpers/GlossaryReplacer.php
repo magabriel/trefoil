@@ -62,6 +62,13 @@ class GlossaryReplacer
     protected $textPreserver;
 
     /**
+     * A Twig instance to render the template
+     *
+     * @var \Twig_Environment
+     */
+    private $twig;
+
+    /**
      * @return string
      *
      * @internal Should be protected but made public for PHP 5.3 compat
@@ -82,23 +89,26 @@ class GlossaryReplacer
     }
 
     /**
-     * @param Glossary      $glossary        The glossary object
-     * @param TextPreserver $textPreserver   A TextPreserver instance
-     * @param string        $text            The text to replace into
-     * @param string        $textId          The id of the text, for cross-reference
-     * @param array         $glossaryOptions The options to apply
+     * @param Glossary          $glossary        The glossary object
+     * @param TextPreserver     $textPreserver   A TextPreserver instance
+     * @param string            $text            The text to replace into
+     * @param string            $textId          The id of the text, for cross-reference
+     * @param array             $glossaryOptions The options to apply
+     * @param \Twig_Environment $twig            Twig loader to load the template from
      */
     public function __construct(Glossary $glossary,
                                 TextPreserver $textPreserver,
                                 $text,
                                 $textId,
-                                $glossaryOptions = array())
+                                $glossaryOptions = array(),
+                                \Twig_Environment $twig)
     {
         $this->glossary = $glossary;
         $this->textPreserver = $textPreserver;
         $this->text = $text;
         $this->textId = $textId;
         $this->glossaryOptions = $glossaryOptions;
+        $this->twig = $twig;
     }
 
     /**
@@ -197,7 +207,16 @@ class GlossaryReplacer
 
     /**
      * Replace a term variant into a given string
-     *
+     * 
+     * The rendering expects a Twig template called "auto-glossary-term.twig" to be loadable.
+     * Sample template:
+     * 
+     *      {% spaceless %}
+     *      <span class="auto-glossary-term">
+     *          <a href="#auto-glossary-{{ reference }}" id="auto-glossary-term-{{ reference }}">{{ term }}</a>
+     *      </span>
+     *      {% endspaceless %}
+     * 
      * @param string       $text
      * @param GlossaryItem $glossaryItem
      * @param string       $variant      The variant to replace
@@ -220,10 +239,11 @@ class GlossaryReplacer
         // PHP 5.3 compat
         $me = $this;
         $textPreserver = $this->textPreserver;
+        $twig = $this->twig;
 
         $text = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me, $glossaryItem, $variant, $textPreserver) {
+            function ($matches) use ($me, $glossaryItem, $variant, $textPreserver, $twig) {
                 // look if already replaced once in this item, so just leave it unchanged
                 $options = $me->getGlossaryOptions();
                 if ('item' == $options['coverage']) {
@@ -245,26 +265,21 @@ class GlossaryReplacer
                 /* create the anchor link from the slug
                  * and get the number given to the anchor link just created
                  */
-                list(, $num) = $me->internalSaveProcessedDefinition(
-                                             $glossaryItem,
-                                             sprintf('auto-glossary-term-%s', $glossaryItem->getSlug())
-                );
+                $anchorLink = $me->internalSaveAnchorLink($glossaryItem);
 
                 // save the placeholder for this slug to be replaced later
-                $placeHolder = $textPreserver->internalCreatePlacehoder($glossaryItem->getSlug() . '-' . $num);
+                $placeHolder = $textPreserver->internalCreatePlacehoder($anchorLink);
 
                 // save the placeholder for this term (to avoid further unwanted matches into)
                 $placeHolder2 = $textPreserver->internalCreatePlacehoder($matches[2]);
 
-                // create replacement
-                $repl = sprintf(
-                    '<span class="auto-glossary-term">'
-                    . '<a href="#auto-glossary-%s" id="auto-glossary-term-%s">%s</a>'
-                    . '</span>',
-                    $placeHolder,
-                    $placeHolder,
-                    $placeHolder2
-                );
+                // create replacement for link
+                $repl = $twig->render('auto-glossary-term.twig',
+                                      array(
+                                          'reference' => $placeHolder,
+                                          'term'      => $placeHolder2, 
+                                          'item'      => $glossaryItem
+                                      ));
 
                 // save xref
                 $glossaryItem->addXref($variant, $me->getTextId());
@@ -282,19 +297,18 @@ class GlossaryReplacer
      * Save an anchor link to be registered later
      *
      * @param GlossaryItem $glossaryItem
-     * @param string       $anchorLink
      *
-     * @return string The text of the anchor link saved
+     * @return int The anchor link saved
      *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalSaveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
+    public function internalSaveAnchorLink(GlossaryItem $glossaryItem)
     {
         $count = count($glossaryItem->getAnchorLinks());
 
-        $newAnchorLink = $anchorLink . '-' . $count;
-        $glossaryItem->addAnchorLink($newAnchorLink);
+        $savedAnchorLink = $glossaryItem->getSlug() . '-' . $count;
+        $glossaryItem->addAnchorLink($savedAnchorLink);
 
-        return array($newAnchorLink, $count);
+        return $savedAnchorLink;
     }
 }

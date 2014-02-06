@@ -255,7 +255,9 @@ class AutoGlossaryPlugin extends BasePlugin implements EventSubscriberInterface
             new TextPreserver(),
             $this->item['content'],
             $this->item['config']['content'],
-            $this->glossaryOptions);
+            $this->glossaryOptions,
+            $this->app['twig']
+        );
 
         // do the replacements (also modifies the glossary object)
         $this->item['content'] = $replacer->replace();

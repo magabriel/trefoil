@@ -11,10 +11,10 @@
         {% endif %}
 
         {% for term, data in app.get('publishing.glossary.definitions') %}
-            {% for aIndex, anchorLink in data.anchorLinks %}
+            {% for reference in data.anchorLinks %}
 
                 <div class="definition">
-                    <h5 id="auto-glossary-{{ data.slug }}-{{ aIndex }}">{{ item.title|default(item.toc[0].title|default('>>>')) }}</h5>
+                    <h5 id="auto-glossary-{{ reference }}">{{ item.title|default(item.toc[0].title|default('>>>')) }}</h5>
 
                     <hr/>
                     <h6>{{ data.variants.0 }}</h6>
@@ -23,7 +23,7 @@
                     <div class="description">{{ data.description }}</div>
                 </div>
                 <div class="backlink">
-                    <p><a href="#{{ anchorLink }}">[&#8617;]</a></p>
+                    <p><a href="#auto-glossary-term-{{ reference }}">[&#8617;]</a></p>
                 </div>
                 {% if app.get('publishing.glossary.pagebreaks') %}
                     <div class="page-break"></div>
