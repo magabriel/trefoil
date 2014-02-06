@@ -58,6 +58,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
     /**
      * @param array $footnotes
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function setFootnotes($footnotes)
@@ -67,6 +68,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
     /**
      * @return array
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function getFootnotes()
@@ -155,7 +157,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -198,7 +200,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {

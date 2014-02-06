@@ -105,7 +105,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                     'text' => $match['text'],
                     'uri'  => $match['uri']
                 );
-    
+
                 if ('#' == substr($match['uri'], 0, 1)) {
                     $links['internal'][$xref][] = $link;
                 } else {
@@ -113,7 +113,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                 }
             }
         }
-        
+
         return $links;
     }
 

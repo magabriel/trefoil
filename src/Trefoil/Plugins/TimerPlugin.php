@@ -17,8 +17,8 @@ use Easybook\Events\BaseEvent;
 /**
  * It registers the start and the end of the book publication
  * to measure the elapsed time.
- * 
- * == This sets the right times, taking into account trefoil actions == 
+ *
+ * == This sets the right times, taking into account trefoil actions ==
  */
 class TimerPlugin extends BasePlugin implements EventSubscriberInterface
 {

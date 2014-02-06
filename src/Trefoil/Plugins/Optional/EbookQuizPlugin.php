@@ -78,7 +78,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $this->init($event);
 
         $this->checkCompatibility();
-        
+
         // create the processing report
         $this->createReport();
     }
@@ -86,12 +86,12 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     protected function checkCompatibility()
     {
         $plugins = $this->getEditionOption('plugins.enabled');
-        
+
         if (in_array('KindleTweaks', $plugins)) {
             $this->writeLn('"KindleTweaks" plugin is enabled. Please disable it to avoid incompatibilities.', "error");
         }
     }
-    
+
     /**
      * Parse the quiz elements in the current item and render them.
      *
@@ -123,7 +123,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -153,6 +153,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $sourceHtml
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalProcessActivityType($sourceHtml)
@@ -190,6 +191,7 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $sourceHtml
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalProcessQuestionnaireType($sourceHtml)

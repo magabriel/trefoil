@@ -204,7 +204,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -226,6 +226,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
      * @param string $text
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalReplaceSpanishStyleDialog($text)
