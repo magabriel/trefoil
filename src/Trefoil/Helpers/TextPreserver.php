@@ -44,7 +44,7 @@ class TextPreserver
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $this->text = preg_replace_callback(
             $regex,
             function ($matches) use ($me) {
@@ -68,7 +68,7 @@ class TextPreserver
 
         // // PHP 5.3 compat
         $me = $this;
-        
+
         $this->text = preg_replace_callback(
             $regex,
             function ($matches) use ($me) {
@@ -88,6 +88,7 @@ class TextPreserver
      * @param string $prefix
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalCreatePlacehoder($string, $prefix = 'str')

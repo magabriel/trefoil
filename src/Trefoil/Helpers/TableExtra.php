@@ -46,7 +46,7 @@ class TableExtra
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $callback = function ($matches) use ($me) {
             $table = $me->internalParseTable($matches['table']);
             if (!$table) {
@@ -67,6 +67,7 @@ class TableExtra
      * @param $tableHtml
      *
      * @return array
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalParseTable($tableHtml)
@@ -131,6 +132,7 @@ class TableExtra
      * @param array $table
      *
      * @return array
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalProcessExtraTable(array $table)
@@ -231,6 +233,7 @@ class TableExtra
      * @param array $table
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalRenderTable(array $table)

@@ -81,7 +81,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -134,7 +134,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
@@ -159,6 +159,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
      * @param array $image
      *
      * @return array
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalProcessExtraImage(array $image)
@@ -203,6 +204,7 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
      * @param array $arguments
      *
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalRenderArguments(array $arguments)

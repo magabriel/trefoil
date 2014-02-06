@@ -90,7 +90,7 @@ abstract class BasePlugin
 
         $this->output->write(' > ' . $prefix . $msgType . $message);
     }
-    
+
     protected function progressStart($limit)
     {
         $this->app['console.progress']->start($this->output, $limit);
@@ -105,12 +105,12 @@ abstract class BasePlugin
     {
         $this->app['console.progress']->finish();
     }
-    
+
     /**
      * Retrieve the value of an edition option (from config.yml file)
      *
      * @param string $optionName (as in 'one.two.three')
-     * @param mixed $default
+     * @param mixed  $default
      *
      * @return mixed
      */

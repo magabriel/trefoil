@@ -89,7 +89,7 @@ class DropCaps
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $callback = function ($matches) use ($me) {
             $ptext = $me->internalRenderDropCaps('', $matches['first'], $matches['rest']);
             $html = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
@@ -112,7 +112,7 @@ class DropCaps
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $callback = function ($matches) use ($me) {
             $ptext = $me->internalCreateDropCaps($matches['ptext']);
             $html = sprintf('<p class="has-dropcaps">%s</p>', $ptext);
@@ -139,7 +139,7 @@ class DropCaps
 
         // PHP 5.3 compat
         $me = $this;
-        
+
         $callback = function ($matches) use ($me, $levels) {
             if (!in_array($matches['level'], $levels)) {
                 return $matches[0];
@@ -200,7 +200,7 @@ class DropCaps
      * @param string $text
      *
      * @return string
-     * 
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalCreateDropCaps($text)
@@ -269,13 +269,13 @@ class DropCaps
     }
 
     /**
-     *         
+     *
      * @param $skip
      * @param $dropCaps
      * @param $rest
      *
      * @return string
-     * 
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalRenderDropCaps($skip, $dropCaps, $rest)

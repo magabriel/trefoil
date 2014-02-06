@@ -97,25 +97,25 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         preg_match_all($regExp, $string, $imagesMatch, PREG_SET_ORDER);
 
         $images = array();
-        
+
         if ($imagesMatch) {
             foreach ($imagesMatch as $imageMatch) {
                 // get all attributes
                 $regExp2 = '/(?<attr>.*)="(?<value>.*)"/Us';
                 preg_match_all($regExp2, $imageMatch[1], $attrMatches, PREG_SET_ORDER);
-    
+
                 $attributes = array();
-                
+
                 if ($attrMatches) {
                     foreach ($attrMatches as $attrMatch) {
                         $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
                     }
                 }
-                
+
                 $images[] = $attributes;
             }
         }
-        
+
         return $images;
     }
 
@@ -140,7 +140,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
                         // a line draw with underscores
                         continue;
                     }
-    
+
                     $this->saveProblem($emph, 'emphasis', 'Emphasis mark not processed');
                 }
             }

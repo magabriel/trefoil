@@ -23,8 +23,8 @@ class ConsoleApplication extends EasybookConsoleApplication
 
         /** @var $myApp \Trefoil\DependencyInjection\Application */
         $myApp = $app;
-        
-        $this->setName('trefoil'); 
+
+        $this->setName('trefoil');
         $this->setVersion($myApp->getMyVersion());
 
         $this->add(new TrefoilVersionCommand());

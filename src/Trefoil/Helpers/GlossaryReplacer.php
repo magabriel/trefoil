@@ -63,6 +63,7 @@ class GlossaryReplacer
 
     /**
      * @return string
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function getTextId()
@@ -72,6 +73,7 @@ class GlossaryReplacer
 
     /**
      * @return array
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function getGlossaryOptions()
@@ -173,7 +175,7 @@ class GlossaryReplacer
         // replace all occurrences of $variant into text $item with a glossary link
         // PHP 5.3 compat
         $me = $this;
-        
+
         $text = preg_replace_callback(
             $patterns,
             function ($matches) use ($me, $glossaryItem, $variant) {
@@ -216,9 +218,9 @@ class GlossaryReplacer
         // replace all ocurrences of $variant into $tagContent with a glossary link
 
         // PHP 5.3 compat
-        $me = $this; 
-        $textPreserver = $this->textPreserver; 
-        
+        $me = $this;
+        $textPreserver = $this->textPreserver;
+
         $text = preg_replace_callback(
             $regExp,
             function ($matches) use ($me, $glossaryItem, $variant, $textPreserver) {
@@ -283,7 +285,7 @@ class GlossaryReplacer
      * @param string       $anchorLink
      *
      * @return string The text of the anchor link saved
-     *                
+     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalSaveProcessedDefinition(GlossaryItem $glossaryItem, $anchorLink)
