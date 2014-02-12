@@ -25,14 +25,14 @@ class LinkChecker
             $url = 'http://' . $url;
         }
 
-        /* @see http://www.php.net/manual/es/function.fopen.php#95455 */
-        ini_set('user_agent', 'Mozilla/5.0 (X11; Linux i686; rv:12.0) Gecko/20100101 Firefox/12.0');
-
+        $options = array('http' => array('user_agent' => 'Mozilla / 5.0 (X11; Linux i686; rv:12.0) Gecko / 20100101 Firefox / 12.0'));
+        $context = stream_context_create($options);
+        
         $rc = '';
         $msg = 'Invalid host';
 
         /** @noinspection PhpUsageOfSilenceOperatorInspection */
-        $f = @fopen(html_entity_decode($url), "r");
+        $f = @fopen(html_entity_decode($url), "r", null, $context);
         if ($f) {
             fclose($f);
         }
