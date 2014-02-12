@@ -12,7 +12,6 @@ namespace Trefoil\Bridge\Easybook;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
-use Symfony\Component\Console\Application;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
 use Trefoil\Events\TrefoilEvents;
