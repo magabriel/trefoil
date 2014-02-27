@@ -144,6 +144,13 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         if ('footnotes' != $this->item['config']['element']) {
             $this->extractFootnotes();
             $this->renumberReferences();
+        } else {
+            if (!$this->footnotes) {
+                // avoid empty footnotes item appearing in the book toc
+                $this->item['content'] = '';
+                $this->item['toc'] = array();
+                $this->writeLn("No footnotes found in text.",'info');
+            }
         }
     }
 
