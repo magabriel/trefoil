@@ -218,22 +218,20 @@ class DropCaps
         }
 
         // 'letter' mode
-        // look if it starts with an HTML entity
-        if (preg_match('/^(&[#[:alnum:]]*;)/U', $text, $matches)) {
+        
+        // look if it starts with an empty abbreviated HTML tag (like '<br />')
+        if (preg_match('/^(?<tag><.*\/>)(?<rest>.*)$/Uus', $text, $matches)) {
 
-            // ignore if it is an space
-            if ('&nbsp;' == $matches[1]) {
-                return $text;
-            }
-            // isolate the first "$length" letters but skipping the entity
-            $dropCaps = $matches[1] . substr($text, strlen($matches[1]), $this->length);
-            $rest = substr($text, strlen($matches[1]) + $this->length);
+            // isolate the first "$length" letters but skipping the tag
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
-            return $this->internalRenderDropCaps('', $dropCaps, $rest);
+            // prepend again the tag *before* the markup
+            return $this->internalRenderDropCaps($matches['tag'], $dropCaps, $rest);
         }
 
-        // look if it starts with an HTML tag
-        if (preg_match('/^<(?<tag>.*)(?<attr>.*)>(?<content>.*)<\/\1>/', $text, $matches)) {
+        // look if it starts with a normal HTML tag (like '<span>...</span>')
+        if (preg_match('/^(?<skip><(?<tag>.*) ?(?<attr>.*)>)(?<content>.*)<\/\k<tag>>(?<rest>.*)$/Uus', $text, $matches)) {
 
             // an HTML tag
             if (strpos($matches['attr'], 'dropcaps') > 0) {
@@ -242,32 +240,52 @@ class DropCaps
             }
 
             // isolate the first "$length" letters but skipping the tag
-            $skip = '<' . $matches['tag'] . $matches['attr'] . '>';
-            $dropCapsLength = min($this->length, strlen($matches['content']));
+            $skip = $matches['skip'];
+            $dropCapsLength = min($this->length, mb_strlen($matches['content'], 'utf-8'));
 
-            $dropCaps = substr($text, strlen($skip), $dropCapsLength);
-            $rest = substr($text, strlen($skip) + $dropCapsLength);
-
+            $dropCaps = mb_substr($text, mb_strlen($skip, 'utf-8'), $dropCapsLength, 'utf-8');
+            //$rest = mb_substr($text, mb_strlen($skip, 'utf-8') + $dropCapsLength, null, 'utf-8');
+            $rest = sprintf('</%s>', $matches['tag']) . $matches['rest'];
             return $this->internalRenderDropCaps($skip, $dropCaps, $rest);
+        }
+        
+        // look if it starts with an HTML entity
+        if (preg_match('/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Uus', $text, $matches)) {
+
+            // ignore if it is an space
+            if ('&nbsp;' == $matches['entity']) {
+                return $text;
+            }
+            // isolate the first "$length" letters but skipping the entity
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
+            $rest = mb_substr($matches['rest'], strlen($dropCaps), null, 'utf-8');
+
+            // prepend again the entity
+            $dropCaps = $matches['entity'] . $dropCaps;
+            
+            return $this->internalRenderDropCaps('', $dropCaps, $rest);
         }
 
         // look if it starts with a non-word character(s)
-        if (preg_match('/^(\W+)/U', $text, $matches)) {
+        if (preg_match('/^(?<nonword>\W+)(?<rest>.*)$/Uus', $text, $matches)) {
 
             // isolate the first "$length" letters but skipping the non-word char(s)
-            $dropCaps = $matches[1] . mb_substr($text, mb_strlen($matches[1]), $this->length);
-            $rest = mb_substr($text, mb_strlen($matches[1]) + $this->length);
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps), null, 'utf-8');
 
+            // prepend again the non-word char(s)
+            $dropCaps = $matches['nonword'] . $dropCaps;
+            
             return $this->internalRenderDropCaps('', $dropCaps, $rest);
         }
 
         // normal case, isolate the first "$length" letters
-        $dropCaps = substr($text, 0, $this->length);
-        $rest = substr($text, $this->length);
+        $dropCaps = mb_substr($text, 0, $this->length, 'utf-8');
+        $rest = mb_substr($text, $this->length, null, 'utf-8');
 
         return $this->internalRenderDropCaps('', $dropCaps, $rest);
     }
-
+    
     /**
      *
      * @param $skip
