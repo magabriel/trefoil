@@ -231,9 +231,8 @@ class DropCaps
         }
 
         // look if it starts with a normal HTML tag (like '<span>...</span>')
-        if (preg_match('/^(?<skip><(?<tag>.*) ?(?<attr>.*)>)(?<content>.*)<\/\k<tag>>(?<rest>.*)$/Uus', $text, $matches)) {
+        if (preg_match('/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\k<tag>>(?<rest>.*)$/Uus', $text, $matches)) {
 
-            // an HTML tag
             if (strpos($matches['attr'], 'dropcaps') > 0) {
                 // already has a explicit dropcaps markup, do nothing
                 return $text;
@@ -244,8 +243,8 @@ class DropCaps
             $dropCapsLength = min($this->length, mb_strlen($matches['content'], 'utf-8'));
 
             $dropCaps = mb_substr($text, mb_strlen($skip, 'utf-8'), $dropCapsLength, 'utf-8');
-            //$rest = mb_substr($text, mb_strlen($skip, 'utf-8') + $dropCapsLength, null, 'utf-8');
-            $rest = sprintf('</%s>', $matches['tag']) . $matches['rest'];
+            $contentRest = mb_substr($matches['content'], mb_strlen(($dropCaps)), null, 'utf-8');
+            $rest = $contentRest . sprintf('</%s>', $matches['tag']) . $matches['rest'];
             return $this->internalRenderDropCaps($skip, $dropCaps, $rest);
         }
         
