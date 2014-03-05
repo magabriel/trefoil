@@ -25,6 +25,32 @@ cd trefoil/
 php composer.phar install
 ~~~
 
+Usage
+-----
+
+N> ##### TIP
+N> You should _really_ be familiar with the **easybook** documentation 
+N> <http://easybook-project.org> to understand what's going on here ;)
+
+The basic usage is the same as **easybook**: 
+
+~~~.bash
+book publish my-book-slug my-edition
+~~~
+
+**trefoil** adds a new optional argument `--themes_dir` that allows using
+custom themes stored in whatever location in the file system:
+
+~~~.bash
+book publish my-book-slug my-edition --themes_dir=../my/themes/directory
+~~~
+
+Example:
+
+~~~.bash
+book publish the-origin-of-species ebook --themes_dir=~/themes/trefoil
+~~~
+
 Extending Easybook
 ------------------
 
