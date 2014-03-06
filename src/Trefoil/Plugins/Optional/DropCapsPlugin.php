@@ -78,6 +78,11 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
         $levels = $this->getEditionOption('plugins.options.DropCaps.levels', array(1));
         $elements = $this->getEditionOption('plugins.options.DropCaps.elements', array('chapter'));
 
+        // ensure levels is an array
+        if (!is_array($levels)) {
+            $levels = array(1);
+        }
+        
         if (!in_array($this->item['config']['element'], $elements)) {
             // not for this element
             return $content;
