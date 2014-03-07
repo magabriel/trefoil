@@ -64,22 +64,25 @@ class ManualTitleLabelsPlugin extends BasePlugin implements EventSubscriberInter
         $regExp .= '^\[\[(?<label>.*)\]\] ?(?<title>.*)$'; 
         $regExp .= '/U'; // Ungreedy
 
-        $me = $this;
-        $this->item['title'] = preg_replace_callback(
+        $item = $this->item;
+        
+        $item['title'] = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) use (&$item) {
                 
                 // the new item label
-                $me->item['label'] = $matches['label'];
+                $item['label'] = $matches['label'];
                 
                 // the toc
-                $me->item['toc'][0]['label'] = $matches['label'];
-                $me->item['toc'][0]['title'] = $matches['title'];
+                $item['toc'][0]['label'] = $matches['label'];
+                $item['toc'][0]['title'] = $matches['title'];
                 
                 // the new title
                 return $matches['title'];
             },
-            $this->item['title']
+            $item['title']
         );
+        
+        $this->item = $item;
     }
 }
