@@ -16,6 +16,8 @@ or to ease applying advanced formatting.
 
 {{ file('plugins-KindleTweaksPlugin.md') }}
 
+{{ file('plugins-ManualTitleLabelsPlugin.md') }}
+
 {{ file('plugins-TableExtraPlugin.md') }}
 
 {{ file('plugins-TypographyPlugin.md') }}

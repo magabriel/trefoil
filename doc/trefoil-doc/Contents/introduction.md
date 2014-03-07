@@ -27,7 +27,7 @@ installed):**
 book publish trefoil-doc kindle
 ~~~
 
-**To get the *doc-website* version (this one):**
+**To get the *doc-website* version:**
  
 ~~~.bash
 book publish trefoil-doc doc-website
