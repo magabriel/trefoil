@@ -243,7 +243,7 @@ class DropCaps
      */
     protected function tryLetterModeNormalHtmlTag($text)
     {
-        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\k<tag>>(?<rest>.*)$/Uus';
+        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\k{tag}>(?<rest>.*)$/Uus';
 
         if (preg_match($regex, $text, $matches)) {
             if (strpos($matches['attr'], 'dropcaps') > 0) {
