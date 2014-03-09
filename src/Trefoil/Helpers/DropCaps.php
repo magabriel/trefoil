@@ -154,27 +154,27 @@ class DropCaps
     {
         // try each one of the possibilities to add drop caps
 
-        $done = $this->tryWordModeDropCaps($text);
+        $done = $this->internalTryWordModeDropCaps($text);
         if ($done) {
             return $done;
         }
 
-        $done = $this->tryLetterModeAbbrHtmlTag($text);
+        $done = $this->internalTryLetterModeAbbrHtmlTag($text);
         if ($done) {
             return $done;
         }
 
-        $done = $this->tryLetterModeNormalHtmlTag($text);
+        $done = $this->internalTryLetterModeNormalHtmlTag($text);
         if ($done) {
             return $done;
         }
 
-        $done = $this->tryLetterModeHtmlEntity($text);
+        $done = $this->internalTryLetterModeHtmlEntity($text);
         if ($done) {
             return $done;
         }
 
-        $done = $this->tryLetterModeNonWordChar($text);
+        $done = $this->internalTryLetterModeNonWordChar($text);
         if ($done) {
             return $done;
         }
@@ -193,8 +193,10 @@ class DropCaps
      * @param $text
      *
      * @return null|string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function tryWordModeDropCaps($text)
+    public function internalTryWordModeDropCaps($text)
     {
         if ('word' == $this->mode) {
 
@@ -217,8 +219,10 @@ class DropCaps
      * @param $text
      *
      * @return null|string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function tryLetterModeAbbrHtmlTag($text)
+    public function internalTryLetterModeAbbrHtmlTag($text)
     {
         $regex = '/^(?<tag><.*\/>)(?<rest>.*)$/Us';
 
@@ -241,8 +245,10 @@ class DropCaps
      * @param $text
      *
      * @return null|string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function tryLetterModeNormalHtmlTag($text)
+    public function internalTryLetterModeNormalHtmlTag($text)
     { 
         $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Uus';
 
@@ -272,8 +278,10 @@ class DropCaps
      * @param $text
      *
      * @return null|string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function tryLetterModeHtmlEntity($text)
+    public function internalTryLetterModeHtmlEntity($text)
     {
         $regex = '/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Uus';
 
@@ -302,8 +310,10 @@ class DropCaps
      * @param $text
      *
      * @return null|string
+     *
+     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    protected function tryLetterModeNonWordChar($text)
+    public function internalTryLetterModeNonWordChar($text)
     {
         $regex = '/^(?<nonword>\W+)(?<rest>.*)$/Uus';
 
