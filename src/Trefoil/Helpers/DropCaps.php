@@ -185,6 +185,7 @@ class DropCaps
         $rest = mb_substr($text, mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
         echo "\n";
+        echo 'text=' . $text . "\n";
         echo 'dropCaps='.$dropCaps."\n";
         echo 'rest=' . $rest . "\n";
         
