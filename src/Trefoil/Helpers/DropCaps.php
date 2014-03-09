@@ -181,8 +181,13 @@ class DropCaps
 
         // default case, just isolate the first "$length" letters
 
-        $dropCaps = mb_substr($text, 0, $this->length, 'utf-8');
-        $rest = mb_substr($text, mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
+        $enc = mb_internal_encoding();
+        mb_internal_encoding('UTF-8');
+        
+        $dropCaps = mb_substr($text, 0, $this->length);
+        $rest = mb_substr($text, mb_strlen($dropCaps));
+        
+        mb_internal_encoding($enc);
 
         echo "\n";
         echo 'text=' . $text . "\n";
