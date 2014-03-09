@@ -182,7 +182,7 @@ class DropCaps
         // default case, just isolate the first "$length" letters
 
         $dropCaps = mb_substr($text, 0, $this->length, 'utf-8');
-        $rest = mb_substr($text, $this->length, null, 'utf-8');
+        $rest = mb_substr($text, mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
         return $this->internalRenderDropCaps('', $dropCaps, $rest);
     }
