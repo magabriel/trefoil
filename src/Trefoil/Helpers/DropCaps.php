@@ -9,6 +9,7 @@
  */
 
 namespace Trefoil\Helpers;
+use Trefoil\Util\Toolkit;
 
 /**
  * Add drop caps (HTML markup) to a given HTML text:
@@ -243,7 +244,7 @@ class DropCaps
      */
     protected function tryLetterModeNormalHtmlTag($text)
     { 
-        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Us';
+        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Uus';
 
         if (preg_match($regex, $text, $matches)) {
             if (strpos($matches['attr'], 'dropcaps') > 0) {
@@ -256,7 +257,7 @@ class DropCaps
             $dropCapsLength = min($this->length, mb_strlen($matches['content'], 'utf-8'));
 
             $dropCaps = mb_substr($text, mb_strlen($skip, 'utf-8'), $dropCapsLength, 'utf-8');
-            $contentRest = mb_substr($matches['content'], mb_strlen(($dropCaps)), null, 'utf-8');
+            $contentRest = mb_substr($matches['content'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
             $rest = $contentRest . sprintf('</%s>', $matches['tag']) . $matches['rest'];
 
             return $this->internalRenderDropCaps($skip, $dropCaps, $rest);
@@ -274,7 +275,7 @@ class DropCaps
      */
     protected function tryLetterModeHtmlEntity($text)
     {
-        $regex = '/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Us';
+        $regex = '/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Uus';
 
         if (preg_match($regex, $text, $matches)) {
 
@@ -284,7 +285,7 @@ class DropCaps
             }
             // isolate the first "$length" letters but skipping the entity
             $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
-            $rest = mb_substr($matches['rest'], strlen($dropCaps), null, 'utf-8');
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
             // prepend again the entity
             $dropCaps = $matches['entity'] . $dropCaps;
@@ -310,7 +311,7 @@ class DropCaps
 
             // isolate the first "$length" letters but skipping the non-word char(s)
             $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
-            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps), null, 'utf-8');
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
             // prepend again the non-word char(s)
             $dropCaps = $matches['nonword'] . $dropCaps;
