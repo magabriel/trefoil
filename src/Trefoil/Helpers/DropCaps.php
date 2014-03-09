@@ -250,7 +250,7 @@ class DropCaps
      */
     public function internalTryLetterModeNormalHtmlTag($text)
     { 
-        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Uus';
+        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\k<tag>>(?<rest>.*)$/Uus';
 
         if (preg_match($regex, $text, $matches)) {
             if (strpos($matches['attr'], 'dropcaps') > 0) {
@@ -262,7 +262,7 @@ class DropCaps
             $skip = $matches['skip'];
             $dropCapsLength = min($this->length, mb_strlen($matches['content'], 'utf-8'));
 
-            $dropCaps = mb_substr($text, mb_strlen($skip, 'utf-8'), $dropCapsLength, 'utf-8');
+            $dropCaps = mb_substr($matches['content'], 0, $dropCapsLength, 'utf-8');
             $contentRest = mb_substr($matches['content'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
             $rest = $contentRest . sprintf('</%s>', $matches['tag']) . $matches['rest'];
 
