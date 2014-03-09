@@ -219,7 +219,7 @@ class DropCaps
      */
     protected function tryLetterModeAbbrHtmlTag($text)
     {
-        $regex = '/^(?<tag><.*\/>)(?<rest>.*)$/Uus';
+        $regex = '/^(?<tag><.*\/>)(?<rest>.*)$/Us';
 
         if (preg_match($regex, $text, $matches)) {
 
@@ -243,7 +243,7 @@ class DropCaps
      */
     protected function tryLetterModeNormalHtmlTag($text)
     { 
-        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Uus';
+        $regex = '/^(?<skip><(?<tag>.*) *(?<attr>.*)>)(?<content>.*)<\/\2>(?<rest>.*)$/Us';
 
         if (preg_match($regex, $text, $matches)) {
             if (strpos($matches['attr'], 'dropcaps') > 0) {
@@ -274,7 +274,7 @@ class DropCaps
      */
     protected function tryLetterModeHtmlEntity($text)
     {
-        $regex = '/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Uus';
+        $regex = '/^(?<entity>&[#[:alnum:]]*;)(?<rest>.*)$/Us';
 
         if (preg_match($regex, $text, $matches)) {
 
