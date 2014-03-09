@@ -189,11 +189,6 @@ class DropCaps
         
         mb_internal_encoding($enc);
 
-        echo "\n";
-        echo 'text=' . $text . "\n";
-        echo 'dropCaps='.$dropCaps."\n";
-        echo 'rest=' . $rest . "\n";
-        
         return $this->internalRenderDropCaps('', $dropCaps, $rest);
     }
 
@@ -239,8 +234,13 @@ class DropCaps
         if (preg_match($regex, $text, $matches)) {
 
             // isolate the first "$length" letters but skipping the tag
-            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
-            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
+            $enc = mb_internal_encoding();
+            mb_internal_encoding('UTF-8');
+
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length);
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps));
+
+            mb_internal_encoding($enc);
 
             // prepend again the tag *before* the markup
             return $this->internalRenderDropCaps($matches['tag'], $dropCaps, $rest);
@@ -269,12 +269,17 @@ class DropCaps
             }
 
             // isolate the first "$length" letters but skipping the tag
+            $enc = mb_internal_encoding();
+            mb_internal_encoding('UTF-8');
+            
             $skip = $matches['skip'];
-            $dropCapsLength = min($this->length, mb_strlen($matches['content'], 'utf-8'));
+            $dropCapsLength = min($this->length, mb_strlen($matches['content']));
 
-            $dropCaps = mb_substr($matches['content'], 0, $dropCapsLength, 'utf-8');
-            $contentRest = mb_substr($matches['content'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
+            $dropCaps = mb_substr($matches['content'], 0, $dropCapsLength);
+            $contentRest = mb_substr($matches['content'], mb_strlen($dropCaps));
             $rest = $contentRest . sprintf('</%s>', $matches['tag']) . $matches['rest'];
+
+            mb_internal_encoding($enc);
 
             return $this->internalRenderDropCaps($skip, $dropCaps, $rest);
         }
@@ -301,9 +306,16 @@ class DropCaps
             if ('&nbsp;' == $matches['entity']) {
                 return $text;
             }
+            
             // isolate the first "$length" letters but skipping the entity
-            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
-            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
+
+            $enc = mb_internal_encoding();
+            mb_internal_encoding('UTF-8');
+
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length);
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps));
+
+            mb_internal_encoding($enc);
 
             // prepend again the entity
             $dropCaps = $matches['entity'] . $dropCaps;
@@ -330,8 +342,14 @@ class DropCaps
         if (preg_match($regex, $text, $matches)) {
 
             // isolate the first "$length" letters but skipping the non-word char(s)
-            $dropCaps = mb_substr($matches['rest'], 0, $this->length, 'utf-8');
-            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
+
+            $enc = mb_internal_encoding();
+            mb_internal_encoding('UTF-8');
+            
+            $dropCaps = mb_substr($matches['rest'], 0, $this->length);
+            $rest = mb_substr($matches['rest'], mb_strlen($dropCaps));
+
+            mb_internal_encoding($enc);
 
             // prepend again the non-word char(s)
             $dropCaps = $matches['nonword'] . $dropCaps;
