@@ -184,6 +184,10 @@ class DropCaps
         $dropCaps = mb_substr($text, 0, $this->length, 'utf-8');
         $rest = mb_substr($text, mb_strlen($dropCaps, 'utf-8'), null, 'utf-8');
 
+        echo "\n";
+        echo 'dropCaps='.$dropCaps."\n";
+        echo 'rest=' . $rest . "\n";
+        
         return $this->internalRenderDropCaps('', $dropCaps, $rest);
     }
 
