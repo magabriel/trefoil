@@ -8,13 +8,13 @@
         "e-book",
         "documentation"
     ],
-    "homepage": "",
+    "homepage": "http://magabriel.github.io/trefoil-doc",
     "license": "MIT",
     "authors": [
         {
             "name": "Miguel Angel Gabriel",
             "email": "magabriel@gmail.com",
-            "homepage": ""
+            "homepage": "https://github.com/magabriel"
         }
     ],
     "repositories": [
