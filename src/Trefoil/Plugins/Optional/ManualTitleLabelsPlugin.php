@@ -12,7 +12,6 @@ namespace Trefoil\Plugins\Optional;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Trefoil\Helpers\DropCaps;
 use Trefoil\Plugins\BasePlugin;
 
 /**

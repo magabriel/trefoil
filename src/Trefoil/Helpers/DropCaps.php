@@ -9,7 +9,6 @@
  */
 
 namespace Trefoil\Helpers;
-use Trefoil\Util\Toolkit;
 
 /**
  * Add drop caps (HTML markup) to a given HTML text:
