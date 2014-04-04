@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "2d85db022468f277fa0ea5d9b8061fef",
+    "hash": "dfa59f9cb60a2c33fd2880275e740628",
     "packages": [
         {
             "name": "easybook/easybook",
@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/javiereguiluz/easybook.git",
-                "reference": "3fb20da25b263f670f644f4e21eb1753e8133e28"
+                "reference": "401fc9e545bb0eeca44dcdead9ffa2f1560f6a49"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/javiereguiluz/easybook/zipball/e660e13732657b4987bda6b27fc3f47e3356895a",
-                "reference": "3fb20da25b263f670f644f4e21eb1753e8133e28",
+                "reference": "401fc9e545bb0eeca44dcdead9ffa2f1560f6a49",
                 "shasum": ""
             },
             "require": {
@@ -64,7 +64,7 @@
                 "pdf",
                 "publish"
             ],
-            "time": "2013-11-24 19:12:07"
+            "time": "2014-04-03 18:59:13"
         },
         {
             "name": "easybook/geshi",
