@@ -102,7 +102,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     if (file_exists($themesDir)) {
                         $ownContentPaths = array(
                             // <themes-dir>/Common/Contents/<template-name>.md
-                            sprintf('%s/Contents', $themesDir),
+                            sprintf('%s/Common/Contents', $themesDir),
                             // <themes-dir>/<edition-type>/Contents/<template-name>.md
                             sprintf('%s/%s/Contents', $themesDir, $format));
 
