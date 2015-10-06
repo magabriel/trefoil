@@ -75,6 +75,9 @@ class FootnotesFixPlugin extends BasePlugin implements EventSubscriberInterface
         // fix footnotes
         $content = str_replace('id="fn:', 'id="fn-', $content);
         $content = str_replace('href="#fnref:', 'href="#fnref-', $content);
+
+        // fix return sign used
+        $content = str_replace('&#8617;', '[&crarr;]', $content);
         
         $this->item['content'] = $content;
     }
