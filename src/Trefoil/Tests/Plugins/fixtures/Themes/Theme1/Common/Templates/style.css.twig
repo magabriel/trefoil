@@ -230,6 +230,22 @@
     margin-top: 1em;
     }
 
+    /* 
+     * LiteralListsPlugin 
+     */
+    ul.literal-list {
+        list-style-type: none;
+    }
+    ul.literal-list li {
+        text-indent: -1.1em;
+    }
+    ul.literal-list li>p:first-child {
+        text-indent: -1.1em;
+    }
+    ul.literal-list li>p:not(:first-child) {
+        text-indent: 0;
+    }
+
 {% endblock %}
 
 {% block misc %}
