@@ -44,18 +44,34 @@
 - Donec odio. 
 - Quisque volutpat mattis eros. 
 
-## Ordered list containing bot a normal list and a literal list
+## Unordered list containing literal lists
 
-1. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+- One Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
    
-    - Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-    - Donec odio. 
-    - Quisque volutpat mattis eros.
+    - a) AA Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+    - b) Donec odio. 
+    - c) Quisque volutpat mattis eros.
   
-2. Donec odio. 
+- One Donec odio. 
     
-    - a) Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+    - a) BB Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
     - b) Donec odio. 
     - c) Quisque volutpat mattis eros.
    
-3. Quisque volutpat mattis eros. 
+- One Quisque volutpat mattis eros. 
+
+## Ordered list containing both a normal list and a literal list
+
+1. Two Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+   
+    - AA Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+    - Donec odio. 
+    - Quisque volutpat mattis eros.
+  
+2. Two Donec odio. 
+    
+    - a) BB Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+    - b) Donec odio. 
+    - c) Quisque volutpat mattis eros.
+   
+3. Two Quisque volutpat mattis eros. 

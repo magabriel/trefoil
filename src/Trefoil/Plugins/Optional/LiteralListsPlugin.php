@@ -70,23 +70,36 @@ class LiteralListsPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function doLiteralLists($content)
     {
-        // preg to extract whole unordered lists
-        $pregUl = '/<ul>(?<items>.*)<\/ul>/Ums';
+        // regexp to extract whole unordered lists
+        $regexpUl = '/<ul>(?<items>.*)<\/ul>/Ums';
 
         $content = preg_replace_callback(
-            $pregUl,
-            function ($matchesUl) {
+            $regexpUl,
+            function ($matchesUl) use ($regexpUl) {
 
-                // preg to extract list items in list
+                $items = $matchesUl['items'];
+                                
+                // examine the "items" replacing any embedded literalLists
+                // note that </ul> is appended because in $regexpUl the outmost </ul> is not matched
+                if (preg_match($regexpUl, $items.'</ul>', $matchesUlInteral)) {
+                    
+                    // recursive call to process the embedded list
+                    $items = $this->doLiteralLists($items.'</ul>');
+                    
+                    // remove the appended </ul>
+                    $items = substr($items, 0, -strlen('</ul>'));
+                }
+
+                // regexp to extract list items in list
                 $pregLi = '/<li>(?<li>.*)<\/li>/Ums';
 
                 // no detected by now
                 $literalListDetected = false;
 
                 // examine the first one looking for starting literal, like a) 
-                if (preg_match($pregLi, $matchesUl['items'], $matchesLi)) {
+                if (preg_match($pregLi, $items, $matchesLi)) {
 
-                    // preg to get the list literal (char + ")" or ".").
+                    // regexp to get the list literal (char + ")" or ".").
                     // note that list items can be inside a <p> tag.
                     $pregLiteral = '/^(<p>)?(?<literal>[a-zA-Z])[\)\.]/Ums';
 
@@ -99,7 +112,7 @@ class LiteralListsPlugin extends BasePlugin implements EventSubscriberInterface
                 $html = sprintf(
                     '<ul%s>%s</ul>',
                     $literalListDetected ? ' class="literal-list"' : '',
-                    $matchesUl['items']
+                    $items
                 );
 
                 return $html;
