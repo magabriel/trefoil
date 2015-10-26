@@ -11,7 +11,7 @@
         <dc:date opf:event="creation">2013-02-01</dc:date>
         <meta name="cover" content="cover" />
     </metadata>
- 
+
     <manifest>
         <item id="titlepage" href="titlepage.html" media-type="application/xhtml+xml"/>
         <item id="chapter-1" href="chapter-1.html" media-type="application/xhtml+xml" />

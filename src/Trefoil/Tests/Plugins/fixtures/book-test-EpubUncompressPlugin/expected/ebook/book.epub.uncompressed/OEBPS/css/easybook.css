@@ -1,10 +1,9 @@
 /*
-
-                     |              |    
- ,---.,---.,---.,   .|---.,---.,---.|__/ 
- |---',---|`---.|   ||   ||   ||   ||  \ 
+                     |              |
+ ,---.,---.,---.,   .|---.,---.,---.|__/
+ |---',---|`---.|   ||   ||   ||   ||  \
  `---'`---^`---'`---|`---'`---'`---'`   `
-                `---'
+                `---
      _     _            __     _ _ 
    _| |_  | |_ _ _ ___ / _|___(_) |
   |_   _| |  _| '_/ -_)  _/ _ \ | |
@@ -172,7 +171,6 @@ table.condensed td {
 
 table.bordered {
   border: 1px solid #DDDDDD;
-  border-collapse: separate;
   border-collapse: collapse;
   border-left: 0;
 }
@@ -313,7 +311,7 @@ div.twig .sy0         { color: #3E999F; }
 div.twig .kw2         { color: #4271AE; }
 
 div.container {
-    padding: .5em;  
+    padding: .5em;
 }
 
 /* ==========================================================================
@@ -388,3 +386,4 @@ div.container {
 .item.toc div.level-6 {
     margin-left: 6em;
 }
+

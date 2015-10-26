@@ -70,7 +70,7 @@ class Application extends EasybookApplication
             return $themeLabelsFile;
         }
 
-        return '';
+        return null;
     }
 
     /**
@@ -93,7 +93,7 @@ class Application extends EasybookApplication
             return $themeTitlesFile;
         }
 
-        return '';
+        return null;
     }
 
     /**

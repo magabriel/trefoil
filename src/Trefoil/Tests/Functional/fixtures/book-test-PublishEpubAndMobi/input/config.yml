@@ -1,6 +1,6 @@
 easybook:
     parameters:
-        kindlegen.path: '/my/path/kindlegen'
+        kindlegen.path: '/usr/local/bin/kindlegen'
 book:
     title:            'Test book - PublishEpubAndMobi'
     author:           'trefoil'
