@@ -39,16 +39,63 @@ class Toolkit extends EasybookToolkit
         return $existing;
     }
 
+    /**
+     * Return the current resources dir.
+     * 
+     * @param EasybookApplication $app
+     * @param null                $format
+     *
+     * @return null|string
+     */
     public static function getCurrentResourcesDir(EasybookApplication $app, $format = null)
+    {
+        $paths = self::getCurrentResourceDirs($app, $format);
+        
+        $existing = $app->getFirstExistingFile('', $paths);
+        $existing = (substr($existing, -1) === '/') ? substr($existing, 0, -1) : $existing;
+        
+        return $existing;
+    }
+
+    /**
+     * Return first existing resource by name.
+     * 
+     * @param EasybookApplication $app
+     * @param                     $resourceName
+     * @param null                $format
+     *
+     * @return null|string
+     */
+    public static function getCurrentResource(EasybookApplication $app, $resourceName, $format = null)
+    {
+        $paths = self::getCurrentResourceDirs($app, $format);
+
+        $existing = $app->getFirstExistingFile($resourceName, $paths);
+
+        return $existing;
+    }
+
+    /**
+     * Return the list of current resource directories, ordered by precedence.
+     *
+     * @param EasybookApplication $app
+     * @param null                $format
+     *
+     * @return array
+     */
+    public static function getCurrentResourceDirs(EasybookApplication $app, $format = null)
     {
         $theme = ucfirst($app->edition('theme'));
 
         if (!$format) {
-            $format = Toolkit::getCurrentFormat($app);
+            $format = self::getCurrentFormat($app);
         }
-
-        // the custom theme set for this book publishing
+        
+        // the custom theme set for this book and format 
         $localResourcesDir = realpath($app['trefoil.publishing.dir.themes']) . '/' . $theme . '/' . $format;
+
+        // the custom theme set for this book and the Common format
+        $localCommonResourcesDir = realpath($app['trefoil.publishing.dir.themes']) . '/' . $theme . '/Common';
 
         // the default trefoil themes for the format
         $defaultResourcesDir = $app['trefoil.app.dir.resources'] . '/Themes' . '/' . $theme . '/' . $format;
@@ -57,14 +104,13 @@ class Toolkit extends EasybookToolkit
         $defaultCommonResourcesDir = $app['trefoil.app.dir.resources'] . '/Themes' . '/' . $theme . '/Common';
 
         $paths = array(
-            $localResourcesDir,
-            $defaultResourcesDir,
-            $defaultCommonResourcesDir
+            $localResourcesDir . '/Resources',
+            $localCommonResourcesDir . '/Resources',
+            $defaultResourcesDir . '/Resources',
+            $defaultCommonResourcesDir . '/Resources'
         );
-
-        $existing = $app->getFirstExistingFile('Resources', $paths);
-
-        return $existing;
+        
+        return $paths;
     }
 
     public static function getCurrentFormat(EasybookApplication $app)

@@ -1,0 +1,29 @@
+book:
+    title:            'Test book - FootnotesExtraPlugin'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-02-2013'
+
+    generator:        { name: trefoil, version: DEV }
+   
+    contents:
+        - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2.md }
+        
+    editions:
+        ebook:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
+            theme:          ebook
+            toc:
+                deep:       1
+                elements:   ["appendix", "chapter", "part"]
+            isbn:           1234567890X
+            plugins:  
+                enabled:      
+                    - FootnotesFix
+                
+    

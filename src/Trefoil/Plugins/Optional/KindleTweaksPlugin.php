@@ -53,6 +53,10 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Convert paragraphs inside list elements to line breaks
+     * 
+     * ONLY replaces the first '<p>..</p>' inside the '<li>..</li>' (the one that
+     * immediately follows the '<li>') to better preserve formatting for
+     * newer readers.
      *
      * @param string $content
      *
@@ -60,27 +64,30 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function paragraphsInsideLists($content)
     {
-        $content = preg_replace_callback(
-            '/<li>(?<li>.*)<\/li>/Ums',
-            function ($matches) {
-                $li = preg_replace_callback(
-                    '/<p>(?<ptext>.*)<\/p>/Ums',
-                    function ($matches2) {
-                        return sprintf('%s<br/>', $matches2['ptext']);
-                    },
-                    $matches['li']
-                );
+        // iterate 4 times to ensure embedded lists are converted
+        for ($i=0; $i<4; $i++) {
 
-                // strip out the last <br/> (superfluous)
-                if ('<br/>' == substr($li, -strlen('<br/>'))) {
-                    $li = substr($li, 0, -strlen('<br/>'));
-                }
+            $oldContent = $content;
+            
+            $content = preg_replace_callback(
+                '/<li(?<liatt>[^>]*)>[\w\n]*<p>(?<p1>.*)<\/p>(?<rest>.*)<\/li>/Ums',
+                function ($matches) {
+                    $liatt = $matches['liatt'];
+                    $p1 = $matches['p1'];
+                    $rest = $matches['rest'];
 
-                return sprintf('<li>%s</li>', $li);
-            },
-            $content
-        );
-
+                    return sprintf('<li%s>%s%s</li>', $liatt, $p1, $rest);
+                },
+                $content
+            );
+            
+            if ($oldContent === $content) {
+                // no changes
+                break;
+            }
+            
+        }
+        
         return $content;
     }
 

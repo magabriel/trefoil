@@ -81,7 +81,7 @@ abstract class BookPublishingAllTestCase extends TestCase
                 $delete = false;
             }
         }
-
+        
         if ($delete) {
             $this->filesystem->remove($this->tmpDir);
         }

@@ -64,10 +64,9 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeLabelsDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')) . '/Translations';
-        $themeLabelsFile = $themeLabelsDir . '/' . $labelsFileName;
+        $themeLabelsFile = Toolkit::getCurrentResource($this, 'Translations/'.$labelsFileName);
 
-        if (file_exists($themeLabelsFile)) {
+        if ($themeLabelsFile) {
             return $themeLabelsFile;
         }
 
@@ -88,8 +87,7 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeTitlesDir = Toolkit::getCurrentResourcesDir($this, $this->edition('format')) . '/Translations';
-        $themeTitlesFile = $themeTitlesDir . '/' . $titlesFileName;
+        $themeTitlesFile = Toolkit::getCurrentResource($this, 'Translations/'.$titlesFileName);
 
         if (file_exists($themeTitlesFile)) {
             return $themeTitlesFile;
