@@ -52,6 +52,10 @@ abstract class BookPublishingAllTestCase extends TestCase
     protected $filesystem;
     protected $console;
     protected $isDebug;
+    
+    protected static $currentBook;
+    protected static $lastBook;
+    protected static $someEditionOfSameBookHasErrors = null;
 
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
@@ -76,13 +80,18 @@ abstract class BookPublishingAllTestCase extends TestCase
         $delete = true;
 
         if ($this->hasFailed()) {
+
+            if (static::$currentBook == static::$lastBook) {
+                static::$someEditionOfSameBookHasErrors = true; 
+            }
+
             if ($this->isDebug) {
                 echo ">>> Actual and expected results not deleted: " . $this->tmpDir;
                 $delete = false;
             }
         }
         
-        if ($delete) {
+        if ($delete && !static::$someEditionOfSameBookHasErrors) {
             $this->filesystem->remove($this->tmpDir);
         }
 
@@ -156,6 +165,12 @@ abstract class BookPublishingAllTestCase extends TestCase
     public function testBookPublish($bookName, $editionName)
     {
         $slug = $bookName;
+        
+        static::$lastBook = static::$currentBook ?: $bookName;
+        static::$currentBook = $bookName;
+        if (static::$currentBook != static::$lastBook) {
+            static::$someEditionOfSameBookHasErrors = false;
+        }
 
         $this->tmpDir = $this->tmpDirBase . '/' . $slug;
 

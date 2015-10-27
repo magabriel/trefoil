@@ -10,7 +10,7 @@
 
 namespace Trefoil\Helpers;
 
-use Easybook\Util\Slugger;
+use EasySlugger\Utf8Slugger;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -37,10 +37,10 @@ class GlossaryLoader
     protected $slugger;
 
     /**
-     * @param string  $fileName (full path) of the definition file
-     * @param Slugger $slugger  An Slugger instance
+     * @param string      $fileName (full path) of the definition file
+     * @param Utf8Slugger $slugger  An Slugger instance
      */
-    public function __construct($fileName, Slugger $slugger)
+    public function __construct($fileName, Utf8Slugger $slugger)
     {
         $this->fileName = $fileName;
         $this->slugger = $slugger;
