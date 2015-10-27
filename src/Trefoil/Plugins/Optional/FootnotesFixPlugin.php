@@ -9,12 +9,10 @@
  */
 namespace Trefoil\Plugins\Optional;
 
-use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
-use Trefoil\Util\SimpleReport;
 
 /**
  * This plugin fixes footnotes.

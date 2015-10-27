@@ -59,7 +59,7 @@ class CrawlerTools
     {
         $domNode = $node->getNode(0);
 
-        if (null == $domNode) {
+        if (null === $domNode) {
             return '';
         }
 

@@ -10,7 +10,6 @@
 
 namespace Trefoil\Providers;
 
-use Easybook\DependencyInjection\Application;
 use Easybook\Publishers\HtmlChunkedPublisher;
 use Easybook\Publishers\PdfPublisher;
 use Pimple\Container;
@@ -58,7 +57,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
                         );
                 }
 
-                if (true != $publisher->checkIfThisPublisherIsSupported()) {
+                if (true !== $publisher->checkIfThisPublisherIsSupported()) {
                     throw new \RuntimeException(
                         sprintf(
                             "Your system doesn't support publishing books with the '%s' format\n"
