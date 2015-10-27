@@ -47,7 +47,7 @@ class LinkChecker
             }
         }
 
-        if (false == $f) {
+        if (false === $f) {
             throw new \Exception(sprintf('%s %s', $msg, $rc));
         }
 

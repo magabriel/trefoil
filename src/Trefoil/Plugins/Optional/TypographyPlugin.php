@@ -114,10 +114,9 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<next>[^\< ])'; // not a < or space
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $me = $this;
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 // put a space after the <<
                 return $matches['prev'] . "<< " . $matches['next'];
             },
@@ -131,10 +130,9 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '(?<next>[^\>])'; // not a >
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        $me = $this;
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 // put a space before the <<
                 return $matches['prev'] . " >>" . $matches['next'];
             },

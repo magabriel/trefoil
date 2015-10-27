@@ -147,7 +147,7 @@ class Epub2Publisher extends HtmlPublisher
                 );
             }
         }
-        $hasCustomCss = ($customCss != null);
+        $hasCustomCss = ($customCss !== null);
 
         $bookItems = $this->app['publishing.items'];
 
@@ -262,7 +262,7 @@ class Epub2Publisher extends HtmlPublisher
     {
         $cover = null;
 
-        if (null != $image = $this->app->getCustomCoverImage()) {
+        if (null !== $image = $this->app->getCustomCoverImage()) {
             list($width, $height, $type) = getimagesize($image);
 
             $cover = array(
