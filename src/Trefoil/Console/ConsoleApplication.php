@@ -12,32 +12,40 @@ namespace Trefoil\Console;
 
 use Easybook\Console\ConsoleApplication as EasybookConsoleApplication;
 use Easybook\DependencyInjection\Application;
+use Trefoil\Console\Command\TrefoilAboutCommand;
 use Trefoil\Console\Command\TrefoilBookPublishCommand;
 use Trefoil\Console\Command\TrefoilVersionCommand;
 
 class ConsoleApplication extends EasybookConsoleApplication
 {
+    private $app;
+
+    public function getApp()
+    {
+        return $this->app;
+    }
+
     public function __construct(Application $app)
     {
         parent::__construct($app);
 
-        /** @var $myApp \Trefoil\DependencyInjection\Application */
-        $myApp = $app;
+        $this->app = $app;
 
         $this->setName('trefoil');
-        $this->setVersion($myApp->getMyVersion());
 
         $this->add(new TrefoilVersionCommand());
         $this->add(new TrefoilBookPublishCommand());
+        $this->add(new TrefoilAboutCommand($this->app->getMyVersion(), $this->app->getVersion()));
     }
 
     public function getHelp()
     {
-        $help = parent::getHelp();
+        $help = array(
+            $this->app['app.signature'],
+            '<info>trefoil</info> extends <comment>easybook</comment> providing additional features.'
+        );
 
-        $help .= "\n"
-            . '<info>trefoil</info> extends <comment>easybook</comment> providing additional features.';
+        return implode("\n", $help);
 
-        return $help;
     }
 }
