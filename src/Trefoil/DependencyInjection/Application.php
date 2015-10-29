@@ -17,7 +17,7 @@ use Trefoil\Util\Toolkit;
 
 class Application extends EasybookApplication
 {
-    const MY_VERSION = '0.3 DEV';
+    const MY_VERSION = '1.0-DEV';
 
     public function __construct()
     {
