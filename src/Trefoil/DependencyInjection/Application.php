@@ -29,7 +29,6 @@ class Application extends EasybookApplication
    _| |_  | |_ _ _ ___ / _|___(_) |
   |_   _| |  _| '_/ -_)  _/ _ \ | |
     |_|    \__|_| \___|_| \___/_|_|
-    
 SIGNATURE;
         $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" . $signature . "\n";
 
