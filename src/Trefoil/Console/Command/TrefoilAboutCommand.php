@@ -18,11 +18,11 @@ class TrefoilAboutCommand extends EasybookAboutCommand
 {
     private $appVersion;
 
-    public function __construct($appVersion)
+    public function __construct($trefoilVersion, $easybookVersion)
     {
-        $this->appVersion = $appVersion;
+        $this->appVersion = $trefoilVersion;
         
-        parent::__construct($appVersion);
+        parent::__construct($easybookVersion);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -31,6 +31,8 @@ class TrefoilAboutCommand extends EasybookAboutCommand
 
  trefoil (%s)
  %s
+ 
+ <info>trefoil</info> extends <comment>easybook</comment> providing additional features.
 COMMAND_HELP;
 
         $output->writeln(

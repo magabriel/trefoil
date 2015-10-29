@@ -32,11 +32,10 @@ class ConsoleApplication extends EasybookConsoleApplication
         $this->app = $app;
 
         $this->setName('trefoil');
-        $this->setVersion($this->app->getMyVersion());
 
         $this->add(new TrefoilVersionCommand());
         $this->add(new TrefoilBookPublishCommand());
-        $this->add(new TrefoilAboutCommand($this->app->getMyVersion()));
+        $this->add(new TrefoilAboutCommand($this->app->getMyVersion(), $this->app->getVersion()));
     }
 
     public function getHelp()
