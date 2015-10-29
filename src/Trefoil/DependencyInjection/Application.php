@@ -17,18 +17,21 @@ use Trefoil\Util\Toolkit;
 
 class Application extends EasybookApplication
 {
-    const MY_VERSION = '0.2 DEV';
+    const MY_VERSION = '0.3 DEV';
 
     public function __construct()
     {
         parent::__construct();
 
         // -- global generic parameters ---------------------------------------
-        $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" .
-            "     _     _            __     _ _ \n" .
-            "   _| |_  | |_ _ _ ___ / _|___(_) |\n" .
-            "  |_   _| |  _| '_/ -_)  _/ _ \ | |\n" .
-            "    |_|    \__|_| \___|_| \___/_|_|\n";
+        $signature = <<<SIGNATURE
+     _     _            __     _ _ 
+   _| |_  | |_ _ _ ___ / _|___(_) |
+  |_   _| |  _| '_/ -_)  _/ _ \ | |
+    |_|    \__|_| \___|_| \___/_|_|
+    
+SIGNATURE;
+        $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" . $signature . "\n";
 
         // -- global directories location -------------------------------------
         $this['trefoil.app.dir.base'] = realpath(__DIR__ . '/../../../');
@@ -64,7 +67,7 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeLabelsFile = Toolkit::getCurrentResource($this, 'Translations/'.$labelsFileName);
+        $themeLabelsFile = Toolkit::getCurrentResource($this, 'Translations/' . $labelsFileName);
 
         if ($themeLabelsFile) {
             return $themeLabelsFile;
@@ -87,7 +90,7 @@ class Application extends EasybookApplication
         }
 
         // look for a file inside the theme
-        $themeTitlesFile = Toolkit::getCurrentResource($this, 'Translations/'.$titlesFileName);
+        $themeTitlesFile = Toolkit::getCurrentResource($this, 'Translations/' . $titlesFileName);
 
         if (file_exists($themeTitlesFile)) {
             return $themeTitlesFile;
@@ -111,7 +114,7 @@ class Application extends EasybookApplication
     {
         if (is_numeric(substr($string, 0, 1))) {
             // epubcheck does not like ids starting with digit
-            $string = 'tr_'.$string;
+            $string = 'tr_' . $string;
         }
 
         return parent::slugifyUniquely($string, $separator, $prefix);
