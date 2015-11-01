@@ -29,7 +29,7 @@ class Epub2Publisher extends HtmlPublisher
 {
     // 'toc' content type usually makes no sense in epub books (see below)
     // 'cover' is a very special content for epub books
-    protected $excludedElements = array('cover', 'lot', 'lof', 'toc');
+    protected $excludedElements = array('cover', 'toc');
 
     public function loadContents()
     {
