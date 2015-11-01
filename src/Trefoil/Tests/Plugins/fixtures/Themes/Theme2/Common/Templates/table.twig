@@ -1,0 +1,9 @@
+<div class="table" id="{{ item.slug }}">
+    {% if item.caption != '' %}
+        <p class="caption"><strong>{{ item.label }}</strong> {{ item.caption }}</p>
+    {% elseif item.label != '' %}
+        <p class="caption"><strong>{{ item.label|replace({' -':''}) }}</strong></p>
+    {% endif %}
+
+    {{ item.content }}
+</div>

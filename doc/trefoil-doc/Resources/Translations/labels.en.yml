@@ -1,9 +1,0 @@
-# English translation of the strings managed by easybook
-label:
-    chapter:
-        - 'Chapter {{ item.number }}'
-        - '' # 1.1
-        - '' # 1.1.1
-        - '' # 1.1.1.1
-        - '' # 1.1.1.1.1
-        - '' # 1.1.1.1.1.1

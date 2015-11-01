@@ -1,0 +1,3 @@
+# English translation of the strings managed by easybook
+label:
+    illustration:   'Illustration {{ element.number }}.{{ item.number }}'
