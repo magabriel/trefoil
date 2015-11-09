@@ -93,11 +93,6 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         $this->init($event);
 
-        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
-            // not for this format
-            return;
-        }
-
         $this->processItem();
 
         // reload changed item
@@ -107,12 +102,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
-
-        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
-            // not for this format
-            return;
-        }
-
+        
         if ('footnotes' == $this->item['config']['element']) {
             $this->saveFootnotes();
         }
@@ -121,12 +111,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
-
-        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
-            // not for this format
-            return;
-        }
-
+        
         // create the processing report
         $this->createReport();
     }
@@ -168,9 +153,10 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {
+
                 $regExp2 = '/';
                 $regExp2 .= '<li.*id="(?<id>.*)">.*';
-                $regExp2 .= '<p>(?<text>.*)&#160;<a href="#(?<backref>.*)"';
+                $regExp2 .= '<p>(?<text>.*)&#160;<a .*href="#(?<backref>.*)"';
                 $regExp2 .= '/Ums'; // Ungreedy, multiline, dotall
 
                 preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
@@ -207,7 +193,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
 
         // PHP 5.3 compat
         $me = $this;
-
+        
         $content = preg_replace_callback(
             $regExp,
             function ($matches) use ($me) {

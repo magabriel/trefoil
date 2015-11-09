@@ -32,6 +32,9 @@ class Application extends EasybookApplication
 SIGNATURE;
         $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" . $signature . "\n";
 
+        $this['app.debug'] = true;
+        $this['app.debug.strict_variables'] = false;
+
         // -- global directories location -------------------------------------
         $this['trefoil.app.dir.base'] = realpath(__DIR__ . '/../../../');
         $this['app.dir.cache'] = $this['trefoil.app.dir.base'] . '/app/Cache';

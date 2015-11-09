@@ -18,6 +18,17 @@ class BasePublisher extends EasybookBasePublisher
 {
 
     /**
+     * It controls the book publishing workflow for this particular publisher.
+     */
+    public function publishBook()
+    {
+        $this->filterContents();
+        
+        parent::publishBook();
+    }
+    
+    
+    /**
      * It prepares the book images by copying them into the appropriate
      * temporary directory. It also prepares an array with all the images
      * data needed later to generate the full ebook contents manifest.
@@ -103,4 +114,55 @@ class BasePublisher extends EasybookBasePublisher
 
         return $imagesData;
     }
+
+    /**
+     * Retrieve the custom css file to be used with this book
+     *
+     * @return null|string
+     */
+    protected function getCustomCssFile()
+    {
+        // try the text file "style.css"
+        $customCss = $this->app->getCustomTemplate('style.css');
+        if ($customCss) {
+            return $customCss;
+        }
+
+        // try the Twig template "style.css.twig"
+        $customCss = $this->app->getCustomTemplate('style.css.twig');
+        if ($customCss) {
+            return $customCss;
+        }
+
+        return null;
+    }
+    
+    /**
+     * Filters out the content items based on certain conditions.
+     *
+     * - publising edition: if the item has "editions" array, it will only be included
+     *   in these editions.
+     * 
+     */
+    protected function filterContents()
+    {
+        $newContents = [];
+
+        $edition = $this->app['publishing.edition'];
+
+        // by default, all content items are included
+        foreach ($this->app->book('contents') as $itemConfig) {
+
+            // omit editions not in "editions" array
+            if (isset($itemConfig['editions'])) {
+                if (!in_array($edition, $itemConfig['editions'])) {
+                    continue;
+                }
+            }
+            $newContents[] = $itemConfig;
+        }
+
+        $this->app->book('contents', $newContents);
+    }
+
 }

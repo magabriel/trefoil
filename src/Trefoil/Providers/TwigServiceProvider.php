@@ -25,7 +25,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             // 'cache'         => $app['app.dir.cache'].'/Twig',
             'charset'          => $app['app.charset'],
             'debug'            => $app['app.debug'],
-            'strict_variables' => $app['app.debug'],
+            'strict_variables' => $app['app.debug.strict_variables'],
         );
 
         $app['twig.loader'] =
@@ -69,8 +69,11 @@ class TwigServiceProvider implements ServiceProviderInterface
                     // Register template paths
                     $ownTemplatePaths = array(
                         // <themes-dir>/<edition-type>/Templates/<template-name>.twig
-                        sprintf('%s/%s/Templates', $themesDir, $format));
-
+                        sprintf('%s/%s/Templates', $themesDir, $format),
+                        // <themes-dir>/<edition-name>/Templates/<template-name>.twig
+                        sprintf('%s/%s/Templates', $themesDir, $app['publishing.edition']),
+                    );
+                    
                     foreach ($ownTemplatePaths as $path) {
                         if (file_exists($path)) {
                             $loader->prependPath($path);
@@ -83,7 +86,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     // <book-dir>/Resources/Templates/<template-name>.twig
                     $app['publishing.dir.templates'],
                     // <book-dir>/Resources/Templates/<edition-type>/<template-name>.twig
-                    sprintf('%s/%s', $app['publishing.dir.templates'], strtolower($format)),
+                    sprintf('%s/%s', $app['publishing.dir.templates'], $format),
                     // <book-dir>/Resources/Templates/<edition-name>/<template-name>.twig
                     sprintf(
                         '%s/%s',
@@ -122,6 +125,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
                 $twig->addExtension(new TwigCssExtension());
+                $twig->addExtension(new \Twig_Extension_Debug());
 
                 $twig->addGlobal('app', $app);
 
