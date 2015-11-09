@@ -38,11 +38,6 @@ class FootnotesFixPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        if (!in_array($this->format, array('Epub', 'Mobi', 'Html'))) {
-            // not for this format
-            return;
-        }
-
         $this->processItem();
 
         // reload changed item

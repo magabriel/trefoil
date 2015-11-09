@@ -92,28 +92,6 @@ class Epub2Publisher extends HtmlPublisher
         $this->app['publishing.items'] = $decoratedItems;
     }
 
-    /**
-     * Retrieve the custom css file to be used with this book
-     *
-     * @return null|string
-     */
-    protected function getCustomCssFile()
-    {
-        // try the text file "style.css"
-        $customCss = $this->app->getCustomTemplate('style.css');
-        if ($customCss) {
-            return $customCss;
-        }
-
-        // try the Twig template "style.css.twig"
-        $customCss = $this->app->getCustomTemplate('style.css.twig');
-        if ($customCss) {
-            return $customCss;
-        }
-
-        return null;
-    }
-
     public function assembleBook()
     {
         $bookTmpDir = $this->prepareBookTemporaryDirectory();

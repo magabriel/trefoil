@@ -11,12 +11,12 @@
 namespace Trefoil\Providers;
 
 use Easybook\Publishers\HtmlChunkedPublisher;
-use Easybook\Publishers\PdfPublisher;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Trefoil\Publishers\Epub2Publisher;
 use Trefoil\Publishers\HtmlPublisher;
 use Trefoil\Publishers\MobiPublisher;
+use Trefoil\Publishers\PdfPublisher;
 
 class PublisherServiceProvider implements ServiceProviderInterface
 {
