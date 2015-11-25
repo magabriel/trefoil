@@ -14,7 +14,7 @@ use Easybook\Publishers\BasePublisher as EasybookBasePublisher;
 use Symfony\Component\Finder\Finder;
 use Trefoil\Util\Toolkit;
 
-class BasePublisher extends EasybookBasePublisher
+abstract class BasePublisher extends EasybookBasePublisher
 {
 
     /**

@@ -16,7 +16,9 @@ use Pimple\ServiceProviderInterface;
 use Trefoil\Publishers\Epub2Publisher;
 use Trefoil\Publishers\HtmlPublisher;
 use Trefoil\Publishers\MobiPublisher;
+use Trefoil\Publishers\PdfPrinceXmlPublisher;
 use Trefoil\Publishers\PdfPublisher;
+use Trefoil\Publishers\PdfWkhtmltopdfPublisher;
 
 class PublisherServiceProvider implements ServiceProviderInterface
 {
@@ -28,7 +30,30 @@ class PublisherServiceProvider implements ServiceProviderInterface
 
                 switch (strtolower($outputFormat)) {
                     case 'pdf':
-                        $publisher = new PdfPublisher($app);
+                        $pdfEngine = $app->edition('pdf_engine');
+
+                        switch (strtolower($pdfEngine)) {
+                            case 'wkhtmltopdf':
+                                $publisher = new PdfWkhtmltopdfPublisher($app);
+                                break;
+
+                            // PrinceXML is the default
+                            case 'princexml':
+                            case '':
+                            case null:
+                                $publisher = new PdfPrinceXmlPublisher($app);
+                                break;
+
+                            default:
+                                throw new \RuntimeException(
+                                    sprintf(
+                                        'Unknown "%s" pdf_engine for "%s" edition (allowed: "PrinceXML" (default), "wkhtmltopdf")',
+                                        $pdfEngine,
+                                        $app['publishing.edition']
+                                    )
+                                );
+                        }
+
                         break;
 
                     case 'html':
