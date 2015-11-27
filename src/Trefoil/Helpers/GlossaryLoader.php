@@ -10,7 +10,7 @@
 
 namespace Trefoil\Helpers;
 
-use EasySlugger\Utf8Slugger;
+use EasySlugger\SluggerInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -37,10 +37,10 @@ class GlossaryLoader
     protected $slugger;
 
     /**
-     * @param string      $fileName (full path) of the definition file
-     * @param Utf8Slugger $slugger  An Slugger instance
+     * @param string           $fileName (full path) of the definition file
+     * @param SluggerInterface $slugger  An Slugger instance
      */
-    public function __construct($fileName, Utf8Slugger $slugger)
+    public function __construct($fileName, SluggerInterface $slugger)
     {
         $this->fileName = $fileName;
         $this->slugger = $slugger;
@@ -138,7 +138,7 @@ class GlossaryLoader
             // with different variant
             $prefix = crc32($term . $description) . '-';
 
-            $gi->setSlug($this->slugger->slugify($term, null, $prefix));
+            $gi->setSlug($prefix . $this->slugger->slugify($term));
             $gi->setSource(basename($this->fileName));
             $gi->setDescription($description);
 

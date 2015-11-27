@@ -29,10 +29,8 @@ class GlossaryLoaderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        /* @var Utf8Slugger $slugger */
-        $slugger = $this->getMockBuilder('EasySlugger\Utf8Slugger')
-                        ->disableOriginalConstructor()
-                        ->enableArgumentCloning()->getMock();
+        // Utf8Slugger cannot be mocked because it is static
+        $slugger = new Utf8Slugger();
 
         $this->object = new GlossaryLoader(__DIR__ . '/fixtures/glossary-with-options.yml', $slugger);
     }
