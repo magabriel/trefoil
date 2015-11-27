@@ -24,6 +24,6 @@ book:
             isbn:           1234567890X
             plugins:  
                 enabled:      
-                    - FootnotesFix
+                    - FootnotesInline
                 
     

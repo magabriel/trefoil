@@ -16,6 +16,11 @@ And yet anotther[^noteC]. Lorem ipsum dolor sit amet, consectetur adipiscing eli
 
 [^noteA]: This is the text of noteA. Phasellus at lectus quis magna commodo iaculis fermentum et leo.
 
-[^noteB]: This is the text of noteB. Donec massa leo, sollicitudin sit amet sapien in, sodales sagittis felis.
+[^noteB]: 
+    This is the text of noteB. This has several paragraphs:
+  
+    Donec massa leo, sollicitudin sit amet sapien in, sodales sagittis felis.
+    
+    Phasellus at lectus quis magna commodo iaculis fermentum et leo.
 
 [^noteC]: This is the text of noteC. Nullam aliquam ut arcu vitae euismod.
