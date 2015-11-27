@@ -14,6 +14,7 @@ use Easybook\Console\ConsoleApplication as EasybookConsoleApplication;
 use Easybook\DependencyInjection\Application;
 use Trefoil\Console\Command\TrefoilAboutCommand;
 use Trefoil\Console\Command\TrefoilBookPublishCommand;
+use Trefoil\Console\Command\TrefoilTestUpdateExpectedResultsCommand;
 use Trefoil\Console\Command\TrefoilVersionCommand;
 
 class ConsoleApplication extends EasybookConsoleApplication
@@ -36,6 +37,8 @@ class ConsoleApplication extends EasybookConsoleApplication
         $this->add(new TrefoilVersionCommand());
         $this->add(new TrefoilBookPublishCommand());
         $this->add(new TrefoilAboutCommand($this->app->getMyVersion(), $this->app->getVersion()));
+        
+        $this->add(new TrefoilTestUpdateExpectedResultsCommand());
     }
 
     public function getHelp()
