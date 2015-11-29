@@ -42,11 +42,6 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->init($event);
 
-        // only for epub or mobi
-        if (!in_array($this->format, array('Epub', 'Mobi'))) {
-            return;
-        }
-
         $this->epubRename();
     }
 
