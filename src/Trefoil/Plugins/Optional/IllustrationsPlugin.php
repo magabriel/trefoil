@@ -115,7 +115,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 $caption = $matches['caption'];
 
                 $data = $this->preProcessHeaders($matches['data']);
-
+                
                 $counter++;
 
                 $slug = $this->app->slugify('Illustration ' . $parentItemNumber . '-' . $counter);
@@ -146,7 +146,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 }
 
                 $listOfTables[] = $parameters;
-
+                
                 try {
                     // render with a template
                     return $this->app->render('illustration.twig', $parameters);
@@ -154,7 +154,8 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                     // render anyway with a string
                     return sprintf(
                         '<div class="illustration" markdown="1" id="%s"><blockquote markdown="1">' .
-                        '<h6>%s%s</h6><hr/>%s' .
+                        '<div class="caption" markdown="1">%s%s<hr/></div>' .
+                        '<div class="content" markdown="1">%s</div>' .
                         '</blockquote></div>',
                         $slug,
                         $label ? $label . ' - ' : '',
@@ -193,10 +194,10 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 $level = strlen($matches['atx']);
 
                 $html = sprintf(
-                    '<h%s>%s</h%s>',
-                    $level,
+                    '<p class="heading" markdown="1">%s%s%s</p>',
+                    $level == 5 ? '**' : '*',
                     $matches['htext'],
-                    $level
+                    $level == 5 ? '**' : '*'
                 );
 
                 return $html;
@@ -206,7 +207,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
         return $content;
     }
-
+    
     /**
      * Replace all tables (in the internal list of tables) in the current item
      * with the detected illustrations.

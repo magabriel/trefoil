@@ -18,22 +18,24 @@ Sed eu justo ac nisl feugiat tempus in nec velit.
 Fusce fermentum sollicitudin finibus. Sed ut finibus nisi. 
 Proin at maximus tellus. In tempor quam non elementum consectetur. 
  
-<< "The first illustration"
+<< ========== "The first illustration" ========== 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Sed eu justo ac nisl feugiat tempus in nec velit. 
     
-##### An h5 inside the 1st illustration
+##### H5 heading inside the illustration
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Sed eu justo ac nisl feugiat tempus in nec velit. 
 
-###### An h6 inside the 1st illustration
+###### H6 heading inside the illustration
 
-Fusce fermentum sollicitudin finibus. Sed ut finibus nisi. 
-Proin at maximus tellus. In tempor quam non elementum consectetur. 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+Sed eu justo ac nisl feugiat tempus in nec velit. 
+
+*This is just italic text*
  
-<</
+<</ ==================================================  
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Sed eu justo ac nisl feugiat tempus in nec velit. 
@@ -55,13 +57,13 @@ Sed eu justo ac nisl feugiat tempus in nec velit.
 
 << ========== "The second illustration" ========== 
 
-##### An h5 inside the 2nd illustration
+##### H5 heading inside the 2nd illustration
 
 - Lorem ipsum dolor sit amet, 
 - consectetur adipiscing elit. 
 - Sed eu justo ac nisl feugiat tempus in nec velit. 
 
-###### An h6 inside the 2nd illustration
+###### H6 subheading inside the 2nd illustration
 
 1. Fusce fermentum sollicitudin finibus. Sed ut finibus nisi. 
 2. Proin at maximus tellus. In tempor quam non elementum consectetur. 
