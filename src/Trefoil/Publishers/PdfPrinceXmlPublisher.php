@@ -37,10 +37,11 @@ class PdfPrinceXmlPublisher extends PdfPublisher
     public function assembleBook()
     {
         // reuse output temp dir for easy debugging and to avoid polluting the cache dir
-        $tmpDir = $this->app['app.dir.cache'] . '/' . 'easybook_pdf';
-        if (!$this->app['filesystem']->exists($tmpDir)) {
-            $this->app['filesystem']->mkdir($tmpDir);
+        $tmpDir = $this->app['app.dir.cache'] . '/easybook_pdf';
+        if ($this->app['filesystem']->exists($tmpDir)) {
+            $this->app['filesystem']->remove($tmpDir);
         }
+        $this->app['filesystem']->mkdir($tmpDir);
 
         // consolidate book images to temp dir
         $imagesDir = $tmpDir . '/images';
