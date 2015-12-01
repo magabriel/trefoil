@@ -121,4 +121,79 @@ SIGNATURE;
 
         return parent::slugifyUniquely($string, $separator, $prefix);
     }
+
+    /**
+     * It loads the full book configuration by combining all the different sources
+     * (config.yml file, console command option and default values). It also loads
+     * the edition configuration and resolves the edition inheritance (if used).
+     *
+     * @param string $configurationViaCommand The configuration options provided via the console command
+     */
+    public function loadBookConfiguration($configurationViaCommand = '')
+    {
+        $config = $this['configurator']->loadBookConfiguration($this['publishing.dir.book'], $configurationViaCommand);
+        $this['publishing.book.config'] = $config;
+
+        // NEW in trefoil: treat "import" key as a list of directories where to look for config files
+        if (isset($config['import'])) {
+            $config = $this->loadImportedConfiguration($config['import']);
+            // Note this is a "merge" and not a "replace" 
+            $this['publishing.book.config'] = array_merge_recursive($this['publishing.book.config'], $config);
+        }
+
+        $this['validator']->validatePublishingEdition($this['publishing.edition']);
+
+        $config = $this['configurator']->loadEditionConfiguration();
+        $this['publishing.book.config'] = $config;
+
+        $config = $this['configurator']->processConfigurationValues();
+        $this['publishing.book.config'] = $config;
+    }
+
+    /**
+     * It loads the (optional) easybook configuration parameters defined by the book.
+     */
+    public function loadEasybookConfiguration()
+    {
+        $bookFileConfig = $this['configurator']->loadBookFileConfiguration($this['publishing.dir.book']);
+
+        // NEW in trefoil: treat "import" key as a list of directories where to look for config files
+        if (isset($bookFileConfig['import'])) {
+            $config = $this->loadImportedConfiguration($bookFileConfig['import']);
+            $bookFileConfig = array_replace_recursive($bookFileConfig, $config);
+        }
+        
+        if (!isset($bookFileConfig['easybook'])) {
+            return;
+        }
+
+        foreach ($bookFileConfig['easybook']['parameters'] as $option => $value) {
+            if (is_array($value)) {
+                $previousArray = $this->offsetExists($option) ? $this[$option] : array();
+                $newArray = array_merge($previousArray, $value);
+                $this[$option] = $newArray;
+            } else {
+                $this[$option] = $value;
+            }
+        }
+    }
+
+    /**
+     * Treat "import" key as a list of directories where to look for config files
+     *
+     * @param $directories
+     *
+     * @return array
+     */
+    protected function loadImportedConfiguration($directories)
+    {
+        $config = array();
+
+        foreach ($directories as $dir) {
+            $importedConfigOne = $this['configurator']->loadBookFileConfiguration($dir);
+            $config = array_merge_recursive($config, $importedConfigOne);
+        }
+
+        return $config;
+    }
 }
