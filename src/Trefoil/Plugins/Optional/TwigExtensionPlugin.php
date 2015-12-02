@@ -33,7 +33,12 @@ use Trefoil\Plugins\BasePlugin;
  * The syntax is <i>file(filename, variables, options)</i> where "variables" and "options" are
  * optional hash tables where you can pass variables {'variable': 'value'} or
  * options {'nopagebreak': true} to the included file.
- *
+ * 
+ * <li>
+ * <b>embed()</b> function is a simplified version of <i>file()</i> without any variables or options.
+ * The syntax is <i>embed(filename)</i>. No page break will be inserted after the file contents. 
+ * 
+ * 
  */
 class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -120,6 +125,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         // file()
         $twig->addFunction(new \Twig_SimpleFunction('file', array($this, 'fileFunction')));
+        
+        // embed()
+        $twig->addFunction(new \Twig_SimpleFunction('embed', array($this, 'embedFunction')));
 
         // itemtoc() and its internal counterpart
         $twig->addFunction(new \Twig_SimpleFunction('itemtoc', array($this, 'itemTocFunction')));
@@ -133,7 +141,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @param string $filename  to be included (relative to book Contents dir)
      * @param array  $variables to be passed to the template
-     * @param array  $options   (default: 'nopagebreak: true' => do not add a page break after the included text)
+     * @param array  $options   (default: 'nopagebreak: false' => add a page break after the included text)
      *
      * @return string included text with all the replacements done.
      */
@@ -152,7 +160,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         }
 
         $rendered = $this->renderString(file_get_contents($file), $variables);
-
+        
         // pagebreak is added by default
         $addPageBreak = !isset($options['nopagebreak']) || (isset($options['nopagebreak']) && !$options['nopagebreak']);
         if ($addPageBreak) {
@@ -162,6 +170,32 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         return $rendered;
     }
 
+    /**
+     * Twig function: <b>embed(filename)</b>
+     *
+     * @param string $filename  to be included (relative to book Contents dir)
+     *
+     * @return string included text with all the replacements done.
+     */
+    public function embedFunction($filename)
+    {
+        $dir = $this->app['publishing.dir.contents'];
+        $file = $dir . '/' . $filename;
+
+        if (!file_exists($file)) {
+            $this->writeLn(
+                sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
+                'error'
+            );
+
+            return $filename;
+        }
+
+        $rendered = $this->renderString(file_get_contents($file));
+
+        return $rendered;
+    }
+    
     /**
      * Twig function: <b>itemtoc()</b>
      *
