@@ -35,26 +35,13 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      * @var array
      */
     protected $footnotes = array();
-
+    
     /**
-     * Cross-references of replaced terms for reporting
-     *
-     * @var array
-     */
-    protected $xrefs = array();
-    /**
-     * Whether or not the glossary item has been generated
+     * Whether or not the footnotes item has been generated
      *
      * @var bool
      */
     protected $generated = false;
-
-    /**
-     * Whether a term has been replaced at least once into the current item
-     *
-     * @var bool
-     */
-    protected $termReplaced;
 
     /**
      * @param array $footnotes
@@ -75,7 +62,6 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
     {
         return $this->footnotes;
     }
-
 
     /* ********************************************************************************
      * Event handlers
@@ -126,7 +112,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
      */
     protected function processItem()
     {
-        if ('footnotes' != $this->item['config']['element']) {
+        if ($this->item['config']['element'] !== 'footnotes') {
             $this->extractFootnotes();
             $this->renumberReferences();
         } else {
@@ -178,7 +164,7 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
             },
             $content
         );
-
+        
         $this->item['content'] = $content;
     }
 
