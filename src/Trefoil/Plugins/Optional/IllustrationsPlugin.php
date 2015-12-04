@@ -122,7 +122,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
                 $parameters = array(
                     'item'    => array(
-                        'caption' => '',
+                        'caption' => $caption,
                         'content' => $data,
                         'label'   => '',
                         'number'  => $counter,
@@ -142,9 +142,8 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                         $label = $this->app->getLabel('table', $parameters);
                     }
                     $parameters['item']['label'] = $label;
-                    $parameters['item']['caption'] = $caption;
                 }
-
+                
                 $listOfTables[] = $parameters;
                 
                 try {
