@@ -21,8 +21,12 @@ namespace Trefoil\Helpers;
  * For the transformations to work, cell contents must follow some simple
  * rules:
  *
- * - A cell containing only '"' (a single double quote) => rowspanned cell
- *   (meaning it is joined with the same cell of the preceding row).
+ * - A cell containing only ["] (a single double quote) or ['] a single
+ *   single quote => rowspanned cell(meaning it is joined with the same
+ *   cell of the preceding row). The difference between using double
+ *   or single quotes is the vertical alignment: 
+ *      - double quote: middle alignmet.
+ *      - single quote: top alignment.
  *
  * - An empty cell => colspanned cell (meaning it is joined with the same
  *   cell of the preceding column.
@@ -185,6 +189,7 @@ class TableExtra
 
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
+                // and the single quote character as a top alignment marker
                 $quotes = array(
                     '"',
                     '&quot;',
@@ -192,7 +197,8 @@ class TableExtra
                     '&ldquo;',
                     '&#8220;',
                     '&rdquo;',
-                    '&#8221;'
+                    '&#8221;',
+                    "'"
                 );
                 if (in_array($col['contents'], $quotes)) {
 
@@ -210,13 +216,17 @@ class TableExtra
                         if (!isset($newRows[$rowspanRow][$colIndex]['rowspan'])) {
                             $newRows[$rowspanRow][$colIndex]['rowspan'] = 1;
 
-                            // set vertical alignement to 'middle'
+                            // set vertical alignement to 'middle' for double quote or
+                            // 'top' for single quote 
                             if (!isset($newRows[$rowspanRow][$colIndex]['attributes']['style'])) {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] = '';
                             } else {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= ';';
                             }
                             $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
+                            if ($col['contents'] === "'") {
+                                $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: top;';
+                            }
                         }
                         $newRows[$rowspanRow][$colIndex]['rowspan']++;
 
