@@ -10,6 +10,8 @@
 
 namespace Trefoil\Helpers;
 
+use Easybook\Parsers\ParserInterface;
+
 /**
  * This class transforms a "simple" HTML table into a "complex" table,
  * where "simple" means "without rowspan or colspan cells".
@@ -24,7 +26,7 @@ namespace Trefoil\Helpers;
  * - A cell containing only ["] (a single double quote) or ['] a single
  *   single quote => rowspanned cell(meaning it is joined with the same
  *   cell of the preceding row). The difference between using double
- *   or single quotes is the vertical alignment: 
+ *   or single quotes is the vertical alignment:
  *      - double quote: middle alignmet.
  *      - single quote: top alignment.
  *
@@ -34,6 +36,16 @@ namespace Trefoil\Helpers;
  */
 class TableExtra
 {
+    /** @var  ParserInterface */
+    protected $markdownParser;
+
+    /**
+     * @param ParserInterface $markdownParser
+     */
+    public function setMarkdownParser($markdownParser)
+    {
+        $this->markdownParser = $markdownParser;
+    }
 
     /**
      * Processes all tables in the html string
@@ -142,17 +154,112 @@ class TableExtra
     public function internalProcessExtraTable(array $table)
     {
         // process and adjusts table definition
-        $table['thead'] = $this->processRows($table['thead']);
-        $table['tbody'] = $this->processRows($table['tbody']);
 
-        if (!$table['thead'] && !$table['tbody']) {
-            $table['table'] = $this->processRows($table['table']);
+        // table with head and body
+        if ($table['thead'] || $table['tbody']) {
+
+            $table['thead'] = $this->processMultilineCells($table['thead']);
+            $table['thead'] = $this->processSpannedCells($table['thead']);
+
+            $table['tbody'] = $this->processMultilineCells($table['tbody']);
+            $table['tbody'] = $this->processSpannedCells($table['tbody']);
+
+            return $table;
         }
+
+        // table without head or body
+        $table['table'] = $this->processMultilineCells($table['table']);
+        $table['table'] = $this->processSpannedCells($table['table']);
 
         return $table;
     }
 
-    protected function processRows($rows)
+    /**
+     * Join the cells that belong to multiline cells. 
+     * 
+     * @param $rows
+     *
+     * @return array Processed table rows
+     */
+    protected function processMultilineCells(array $rows)
+    {
+        $newRows = $rows;
+        foreach ($newRows as $rowIndex => $row) {
+            
+            foreach ($row as $colIndex => $col) {
+                $cell = $newRows[$rowIndex][$colIndex];
+                $cellText = rtrim($cell['contents']);
+
+                if (substr($cellText, -1, 1) === '+') {
+                    // continued cell
+                    $newCell = array();
+                    $newCell[] = substr($cellText, 0, -1);
+
+                    // find all the continuation cells (same col)
+                    for ($nextRowIndex = $rowIndex + 1; $nextRowIndex < count($newRows); $nextRowIndex++) {
+
+                        $nextCell = $newRows[$nextRowIndex][$colIndex];
+                        $cellText = rtrim($nextCell['contents']);
+
+                        $newRows[$nextRowIndex][$colIndex]['contents'] = '';
+
+                        // continued cell?
+                        $continued = (substr($cellText, -1, 1) === '+');
+
+                        if ($continued) {
+                            // clean the ending (+)
+                            $cellText = substr($cellText, 0, -1);
+                        }
+
+                        // save cleaned text
+                        $newCell[] = $cellText;
+
+                        if (!$continued) {
+                            // no more continuations
+                            break;
+                        }
+                    }
+
+                    if ($this->markdownParser) {
+                        $parsedCell = $this->markdownParser->transform(join("\n\n", $newCell));
+                    } else {
+                        // safe default
+                        $parsedCell = join("<br/>", $newCell);
+                    }
+
+                    $newRows[$rowIndex][$colIndex]['contents'] = $parsedCell;
+                }
+            }
+        }
+        
+        // remove empty rows left by the process
+        $newRows2 = array();
+        foreach ($newRows as $rowIndex => $row) {
+
+            $emptyRow = true;
+            foreach ($row as $colIndex => $col) {
+                $cellText = trim($col['contents']);
+                if (!empty($cellText)) {
+                    $emptyRow = false;
+                }
+            }
+
+            if (!$emptyRow) {
+                $newRows2[] = $row;
+            }
+        }
+
+        return $newRows2;
+    }
+
+    /**
+     * Process spanned rows, creating the right HTML markup.
+     * 
+     * @param array $rows
+     *
+     * @return array Processed rows
+     */
+    protected function processSpannedCells(array $rows)
     {
         $newRows = $rows;
         foreach ($rows as $rowIndex => $row) {
@@ -331,4 +438,5 @@ class TableExtra
 
         return $html;
     }
+    
 }

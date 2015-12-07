@@ -1,4 +1,4 @@
-# TableExtra test
+# TableExtra alignment and spans
 
 ## 1. Normal table
 

@@ -38,6 +38,7 @@ class TableExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $item['content'];
 
         $tableExtra = new TableExtra();
+        $tableExtra->setMarkdownParser($this->app['parser']);
         $content = $tableExtra->processAllTables($content);
 
         $item['content'] = $content;
