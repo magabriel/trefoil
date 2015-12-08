@@ -13,6 +13,7 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
+
 /**
  * This plugin extends Twig to provide some useful functionalities:
  *
@@ -28,17 +29,20 @@ use Trefoil\Plugins\BasePlugin;
  * It uses de <i>itemtoc.twig</i> template that must be available either as local or global template.
  *
  * <li>
- * <b>file()</b> function works like PHP's <i>include()</i>, allowing the inclusion of another file
- * into the current item.
+ * <b>file()</b> function (deprecated, use fragment()) works like PHP's <i>include()</i>,
+ * allowing the inclusion of another file into the current item.
  * The syntax is <i>file(filename, variables, options)</i> where "variables" and "options" are
  * optional hash tables where you can pass variables {'variable': 'value'} or
  * options {'nopagebreak': true} to the included file.
- * 
+ *
  * <li>
- * <b>embed()</b> function is a simplified version of <i>file()</i> without any variables or options.
- * The syntax is <i>embed(filename)</i>. No page break will be inserted after the file contents. 
- * 
- * 
+ * <b>fragment()</b> function works like PHP's <i>include()</i>, allowing the inclusion of
+ * another file into the current item.
+ *
+ * is a simplified version of <i>file()</i> without any variables or options.
+ * The syntax is <i>fragment(filename)</i>. No page break will be inserted after the file contents.
+ *
+ *
  */
 class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -125,19 +129,21 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     {
         // file()
         $twig->addFunction(new \Twig_SimpleFunction('file', array($this, 'fileFunction')));
-        
-        // embed()
-        $twig->addFunction(new \Twig_SimpleFunction('embed', array($this, 'embedFunction')));
+
+        // fragment()
+        $twig->addFunction(new \Twig_SimpleFunction('fragment', array($this, 'fragmentFunction')));
 
         // itemtoc() and its internal counterpart
         $twig->addFunction(new \Twig_SimpleFunction('itemtoc', array($this, 'itemTocFunction')));
         $twig->addFunction(
-             new \Twig_SimpleFunction('_itemtoc_internal', array($this, 'itemTocInternalFunction'))
+            new \Twig_SimpleFunction('_itemtoc_internal', array($this, 'itemTocInternalFunction'))
         );
     }
 
     /**
      * Twig function: <b>file(filename, variables, options)</b>
+     *
+     * @deprecated
      *
      * @param string $filename  to be included (relative to book Contents dir)
      * @param array  $variables to be passed to the template
@@ -152,15 +158,15 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
         if (!file_exists($file)) {
             $this->writeLn(
-                 sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
-                 'error'
+                sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
+                'error'
             );
 
             return $filename;
         }
 
         $rendered = $this->renderString(file_get_contents($file), $variables);
-        
+
         // pagebreak is added by default
         $addPageBreak = !isset($options['nopagebreak']) || (isset($options['nopagebreak']) && !$options['nopagebreak']);
         if ($addPageBreak) {
@@ -171,31 +177,39 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     }
 
     /**
-     * Twig function: <b>embed(filename)</b>
+     * Twig function: <b>fragment(filename)</b>
      *
      * @param string $filename  to be included (relative to book Contents dir)
      *
+     * @param array  $variables to be passed to the template (example: {'name': 'John'} )
+     * @param array  $options   (example {'pagebreak' => true} will add a page break after the included text)
+     *
      * @return string included text with all the replacements done.
      */
-    public function embedFunction($filename)
+    public function fragmentFunction($filename, $variables = array(), $options = array())
     {
         $dir = $this->app['publishing.dir.contents'];
         $file = $dir . '/' . $filename;
 
         if (!file_exists($file)) {
             $this->writeLn(
-                sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
+                sprintf('Fragment file "%s" not found in "%s"', $filename, $this->item['config']['content']),
                 'error'
             );
 
             return $filename;
         }
 
-        $rendered = $this->renderString(file_get_contents($file));
+        $rendered = $this->renderString(file_get_contents($file), $variables);
 
+        // add pagebreak if asked
+        if (isset($options['pagebreak']) && $options['pagebreak']) {
+            $rendered .= '<div class="page-break"></div>';
+        }
+        
         return $rendered;
     }
-    
+
     /**
      * Twig function: <b>itemtoc()</b>
      *
@@ -231,8 +245,8 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $this->addTwigGlobals($twig);
 
         $itemtoc_deep = $this->getEditionOption(
-                             'plugins.options.TwigExtension.itemtoc.deep',
-                             $this->getEditionOption('toc.deep') + 1
+            'plugins.options.TwigExtension.itemtoc.deep',
+            $this->getEditionOption('toc.deep') + 1
         );
 
         $rendered = $twig->render($template, array('itemtoc_deep' => $itemtoc_deep));
