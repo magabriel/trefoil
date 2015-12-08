@@ -26,7 +26,23 @@ abstract class BasePublisher extends EasybookBasePublisher
         
         parent::publishBook();
     }
-    
+
+    public function parseContents()
+    {
+        parent::parseContents();
+
+        // Plugins may want to remove some content item.
+        // Remove items with 'remove' property set to true.
+        $items = array();
+        foreach ($this->app['publishing.items'] as $item) {
+            $include = !isset($item['remove']) || (isset($item['remove']) && !$item['remove']);
+            if ($include) {
+                $items[] = $item;
+            }
+        }
+
+        $this->app['publishing.items'] = $items;
+    }
     
     /**
      * It prepares the book images by copying them into the appropriate

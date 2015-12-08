@@ -117,9 +117,11 @@ class FootnotesExtraPlugin extends BasePlugin implements EventSubscriberInterfac
             $this->renumberReferences();
         } else {
             if (!$this->footnotes) {
-                // avoid empty footnotes item appearing in the book toc
+                // avoid empty footnotes item appearing in the book
                 $this->item['content'] = '';
                 $this->item['toc'] = array();
+                // instruct the publisher to remove this item
+                $this->item['remove'] = true;
                 $this->writeLn("No footnotes found in text.",'info');
             }
         }
