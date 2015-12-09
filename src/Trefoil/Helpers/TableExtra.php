@@ -13,9 +13,15 @@ namespace Trefoil\Helpers;
 use Easybook\Parsers\ParserInterface;
 
 /**
- * This class transforms a "simple" HTML table into a "complex" table,
- * where "simple" means "without rowspan or colspan cells".
+ * This class:
+ * - Transforms a "simple" HTML table into a "complex" table,
+ *   where "simple" means "without rowspan or colspan cells".
+ * - For headless tables, transforms the <td> cells in first column
+ *   within <strong> tags into <th> cells (making a vertical head). 
  *
+ * Complex tables functionality details:
+ * ------------------------------------
+ * 
  * It is designed to allow HTML tables generated from Markdown content
  * to have the extra funcionality of rowspan or colspan without having
  * to modify the parser.
@@ -155,6 +161,21 @@ class TableExtra
     {
         // process and adjusts table definition
 
+        $headless = true;
+        foreach ($table['thead'] as $row) {
+            foreach ($row as $cell) {
+                if (empty($cell['contents'])) {
+                    $headless = true;
+                    break 2;
+                }
+            }
+        }
+
+        // headless table
+        if ($headless && $table['tbody']) {
+            $table['tbody'] = $this->processFirstColumnCells($table['tbody']);
+        }
+
         // table with head and body
         if ($table['thead'] || $table['tbody']) {
 
@@ -175,8 +196,8 @@ class TableExtra
     }
 
     /**
-     * Join the cells that belong to multiline cells. 
-     * 
+     * Join the cells that belong to multiline cells.
+     *
      * @param $rows
      *
      * @return array Processed table rows
@@ -185,7 +206,7 @@ class TableExtra
     {
         $newRows = $rows;
         foreach ($newRows as $rowIndex => $row) {
-            
+
             foreach ($row as $colIndex => $col) {
                 $cell = $newRows[$rowIndex][$colIndex];
                 $cellText = rtrim($cell['contents']);
@@ -231,7 +252,7 @@ class TableExtra
                 }
             }
         }
-        
+
         // remove empty rows left by the process
         $newRows2 = array();
         foreach ($newRows as $rowIndex => $row) {
@@ -253,13 +274,42 @@ class TableExtra
     }
 
     /**
-     * Process spanned rows, creating the right HTML markup.
-     * 
+     * Converts <td> cells into <th> for first column cells that are fully bold.
+     *
      * @param array $rows
      *
      * @return array Processed rows
      */
-    protected function processSpannedCells(array $rows)
+    protected function processFirstColumnCells(array $rows)
+    {
+        $newRows = $rows;
+        foreach ($newRows as $rowIndex => $row) {
+
+            // examine first cell ir row
+            $cell = $newRows[$rowIndex][0];
+            $cellText = rtrim($cell['contents']);
+
+            $regExp = '/^<strong>.*<\/strong>$/Us';
+            if (preg_match($regExp, $cellText, $matches)) {
+                $cell['tag'] = 'th';
+
+                // change cell to <th>  
+                $newRows[$rowIndex][0]['tag'] = 'th';
+            }
+        }
+
+        return $newRows;
+    }
+
+    /**
+     * Process spanned rows, creating the right HTML markup.
+     *
+     * @param array $rows
+     *
+     * @return array Processed rows
+     */
+    protected
+    function processSpannedCells(array $rows)
     {
         $newRows = $rows;
         foreach ($rows as $rowIndex => $row) {
@@ -353,7 +403,8 @@ class TableExtra
      *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalRenderTable(array $table)
+    public
+    function internalRenderTable(array $table)
     {
         $html = '<table>';
 
@@ -378,7 +429,8 @@ class TableExtra
         return $html;
     }
 
-    protected function renderRows($rows)
+    protected
+    function renderRows($rows)
     {
         $html = '';
 
@@ -413,7 +465,8 @@ class TableExtra
      *
      * @return array of attributes
      */
-    protected function extractAttributes($string)
+    protected
+    function extractAttributes($string)
     {
         $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
@@ -428,7 +481,8 @@ class TableExtra
         return $attributes;
     }
 
-    protected function renderAttributes(array $attributes)
+    protected
+    function renderAttributes(array $attributes)
     {
         $html = '';
 
@@ -438,5 +492,5 @@ class TableExtra
 
         return $html;
     }
-    
+
 }
