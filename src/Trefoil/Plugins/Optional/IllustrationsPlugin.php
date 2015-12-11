@@ -21,12 +21,13 @@ use Trefoil\Plugins\BasePlugin;
  *
  * Expected syntax:
  *
- * << ========= "This is the illustration caption" =========
+ * << ========= "This is the illustration caption" ========= {.optional-class}
  * . . . whatever Markdown or HTML content
  * <</ =================
  *
  * where the '=' in the opening and closing block marks are optional, just to visually
- * delimit the illustration.
+ * delimit the illustration, and one or several classes can be specified between
+ * curly brackets.
  *
  * ATX-style headers can be used inside of the illustration content and
  * will not be parsed by easybook (i.e. not added labels and ignored in the TOC).
@@ -102,7 +103,8 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '^<<'; // block opening
         $regExp .= '(?<p1> +=+)?'; // caption previous delimiter (optional)
         $regExp .= ' +"(?<caption>.*)"'; // caption
-        $regExp .= '(?<p2>.*$)'; // caption post delimiter (optional)
+        $regExp .= '(?<p2>[ =]*)(?=[\n{])'; // caption post delimiter (optional)
+        $regExp .= '(?<classGroup>\{(?<class>.*)\}.*)??'; // class (optional)
         $regExp .= '(?<data>.*)'; // text inside the block
         $regExp .= '^<<\/'; // block closing
         $regExp .= '(?<p3>.*)?$'; // closing delimiter (optional)
@@ -146,16 +148,19 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 
                 $listOfTables[] = $parameters;
                 
+                $classes = implode(' ', explode(' ', str_replace('.', ' ', $matches['class'])));
+                
                 try {
                     // render with a template
                     return $this->app->render('illustration.twig', $parameters);
                 } catch (\Twig_Error_Loader $e) {
                     // render anyway with a string
                     return sprintf(
-                        '<div class="illustration" markdown="1" id="%s"><blockquote markdown="1">' .
+                        '<div class="illustration%s" markdown="1" id="%s"><blockquote markdown="1">' .
                         '<div class="caption" markdown="1">%s%s<hr/></div>' .
                         '<div class="content" markdown="1">%s</div>' .
                         '</blockquote></div>',
+                        $classes ? ' ' . $classes : '',
                         $slug,
                         $label ? $label . ' - ' : '',
                         $caption,
