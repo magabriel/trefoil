@@ -143,12 +143,15 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                     } else {
                         $label = $this->app->getLabel('table', $parameters);
                     }
-                    $parameters['item']['label'] = $label;
                 }
-                
+
                 $listOfTables[] = $parameters;
-                
+
                 $classes = implode(' ', explode(' ', str_replace('.', ' ', $matches['class'])));
+                
+                // complete the template parameters
+                $parameters['item']['label'] = $label;
+                $parameters['item']['classes'] = $classes;
                 
                 try {
                     // render with a template
@@ -160,11 +163,11 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                         '<div class="caption" markdown="1">%s%s<hr/></div>' .
                         '<div class="content" markdown="1">%s</div>' .
                         '</blockquote></div>',
-                        $classes ? ' ' . $classes : '',
-                        $slug,
-                        $label ? $label . ' - ' : '',
-                        $caption,
-                        $data
+                        $parameters['item']['classes'] ? ' ' . $parameters['item']['classes'] : '',
+                        $parameters['item']['slug'],
+                        $parameters['item']['label'] ? $parameters['item']['label']. ' - ' : '',
+                        $parameters['item']['caption'],
+                        $parameters['item']['content']
                     );
                 }
             },
