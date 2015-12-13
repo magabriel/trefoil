@@ -1,0 +1,11 @@
+.fragment {
+    color: blue;   
+}
+
+.shaded {
+    background: #ccc;
+}
+
+.bordered {
+    border: 1px solid red;
+}

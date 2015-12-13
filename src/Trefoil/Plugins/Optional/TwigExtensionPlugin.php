@@ -13,6 +13,7 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
 
 /**
  * This plugin extends Twig to provide some useful functionalities:
@@ -202,6 +203,19 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
         $rendered = $this->renderString(file_get_contents($file), $variables);
 
+        // surround contents with the (optional) tag and class
+        $tag = isset($options['tag']) ? $options['tag'] : '';
+        $attributes = array('markdown' => 1);
+        $attributes['class'] = isset($options['class']) ? $options['class'] : '';
+        if ($attributes['class'] && empty($tag)) {
+            $tag = 'div';
+        }
+
+        if ($tag) {
+            $attributes['class'] = 'fragment ' . $attributes['class'];
+            $rendered = Toolkit::renderHTMLTag($tag, $rendered, $attributes);
+        }
+        
         // add pagebreak if asked
         if (isset($options['pagebreak']) && $options['pagebreak']) {
             $rendered .= '<div class="page-break"></div>';
