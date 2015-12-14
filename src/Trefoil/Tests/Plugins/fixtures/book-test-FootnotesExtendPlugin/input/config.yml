@@ -1,0 +1,55 @@
+book:
+    title:            'Test book - FootnotesExtendPlugin'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-02-2013'
+
+    generator:        { name: trefoil, version: DEV }
+   
+    contents:
+        - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2.md }
+        
+        - { element: footnotes, number: 99 }
+        
+    editions:
+        ebook-footnotes-end:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
+            theme:          Theme1
+            toc:
+                deep:       1
+                elements:   ["appendix", "chapter", "part", "footnotes"]
+            isbn:           1234567890X
+            plugins:  
+                enabled:      
+                    - FootnotesExtend
+                    
+                options:
+                    FootnotesExtend:
+                        type: end          # [end, inject, item, inline]
+                           
+        ebook-footnotes-item:
+            extends: ebook-footnotes-end
+            plugins:
+                options:
+                    FootnotesExtend:
+                        type: item
+                        
+        ebook-footnotes-inject:
+            extends: ebook-footnotes-end
+            plugins:
+                options:
+                    FootnotesExtend:
+                        type: inject
+                        
+        ebook-footnotes-inline:
+            extends: ebook-footnotes-end
+            plugins:
+                options:
+                    FootnotesExtend:
+                        type: inline
+                        
