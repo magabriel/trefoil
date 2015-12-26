@@ -57,7 +57,7 @@ abstract class BasePlugin
      * Write an output message line
      *
      * @param string $message
-     * @param string $type    of message ('error', 'warning', 'info')
+     * @param string $type of message ('error', 'warning', 'info')
      */
     public function writeLn($message, $type = 'info')
     {
@@ -69,7 +69,7 @@ abstract class BasePlugin
      * Write an output message (w/o a line break)
      *
      * @param string $message
-     * @param string $type    of message ('error', 'warning', 'info')
+     * @param string $type of message ('error', 'warning', 'info')
      */
     public function write($message, $type = 'info')
     {
@@ -89,6 +89,16 @@ abstract class BasePlugin
         }
 
         $this->output->write(' > ' . $prefix . $msgType . $message);
+    }
+
+    /**
+     * Writes a deprecation notice.
+     * 
+     * @param string $message
+     */
+    public function deprecationNotice($message = 'This plugin is deprecated. Please use an alternative.')
+    {
+        $this->writeLn($message, 'warning');
     }
 
     protected function progressStart($limit)

@@ -9,6 +9,7 @@
  */
 namespace Trefoil\Plugins\Optional;
 
+use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,7 +17,9 @@ use Trefoil\Plugins\BasePlugin;
 
 /**
  * This plugin transforms Markdown footnotes markup into inline footnotes.
- *
+ * 
+ * @deprecated
+ * 
  * PrinceXMl manages footnotes as:
  *
  *      "text<span class="fn">Text of the footnote</span> more text"
@@ -27,6 +30,7 @@ use Trefoil\Plugins\BasePlugin;
  * Note that one limitation is that the footnote text cannot contain block
  * elements (as paragraphs, tables, lists). The plugin overcomes this
  * partially by replacing paragraph tags with <br/> tags.
+ *
  */
 class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -67,7 +71,8 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
     {
         return array(
             EasybookEvents::PRE_PARSE  => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE => array('onItemPostParse')
+            EasybookEvents::POST_PARSE => array('onItemPostParse'),
+            EasybookEvents::POST_PUBLISH => 'onPostPublish'
         );
     }
 
@@ -95,6 +100,13 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $event->setItem($this->item);
     }
 
+    public function onPostPublish(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $this->deprecationNotice();
+    }
+    
     /* ********************************************************************************
      * Implementation
      * ********************************************************************************

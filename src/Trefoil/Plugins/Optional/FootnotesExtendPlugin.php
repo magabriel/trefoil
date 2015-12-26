@@ -18,11 +18,23 @@ use Trefoil\Util\Toolkit;
 /**
  * This plugin extends footnotes to support several formats.
  *
+ * Options are specified on an per-edition basis:
+ *
+ *     editions:
+ *         <edition-name>
+ *             plugins:
+ *                 ...
+ *                 options:
+ *                     FootnotesExtend:
+ *                         type: end  # [end, inject, item, inline]
+ * 
+ * Where:
+ * 
  * - type 'end': This is the normal Markdown-rendered footnotes.
  *   They will be at the end of each book item, separated by a <hr/> tag.
  *   This is the default.
  *
- * - type 'inject: This is a variant of thpe 'end', where each item's
+ * - type 'inject: This is a variant of type 'end', where each item's
  *   footnotes will be injected to a certain injection point.
  *   Just write '<div class="footnotes"></div>' anywhere in each item
  *   where the footnotes should be injected.
@@ -34,6 +46,14 @@ use Trefoil\Util\Toolkit;
  * - type 'inline: PrinceXML support inline footnotes, where the text
  *   of the note must be inlined into the text, instead of just a
  *   reference. Prince will manage the numbering.   
+ * 
+ *   Note that Prince manages footnotes as:
+ *
+ *      "text<span class="fn">Text of the footnote</span> more text"
+ *
+ *   One limitation is that the footnote text cannot contain block
+ *   elements (as paragraphs, tables, lists). The plugin overcomes this
+ *   partially by replacing paragraph tags with <br/> tags.
  */
 class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterface
 {
