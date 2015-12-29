@@ -10,6 +10,8 @@ or to ease applying advanced formatting.
 
 {{ file('plugins-FootnotesExtraPlugin.md') }}
 
+{{ file('plugins-FootnotesExtendPlugin.md') }}
+
 {{ file('plugins-HtmlTweaksPlugin.md') }}
 
 {{ file('plugins-ImageExtraPlugin.md') }}
