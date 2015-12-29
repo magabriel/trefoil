@@ -23,7 +23,7 @@ abstract class BasePublisher extends EasybookBasePublisher
     public function publishBook()
     {
         $this->filterContents();
-        
+
         parent::publishBook();
     }
 
@@ -43,7 +43,7 @@ abstract class BasePublisher extends EasybookBasePublisher
 
         $this->app['publishing.items'] = $items;
     }
-    
+
     /**
      * It prepares the book images by copying them into the appropriate
      * temporary directory. It also prepares an array with all the images
@@ -57,12 +57,14 @@ abstract class BasePublisher extends EasybookBasePublisher
     protected function prepareBookImages($targetDir)
     {
         if (!file_exists($targetDir)) {
-            throw new \RuntimeException(sprintf(
-                                            " ERROR: Books images couldn't be copied because \n"
-                                            . " the given '%s' \n"
-                                            . " directory doesn't exist.",
-                                            $targetDir
-                                        ));
+            throw new \RuntimeException(
+                sprintf(
+                    " ERROR: Books images couldn't be copied because \n"
+                    . " the given '%s' \n"
+                    . " directory doesn't exist.",
+                    $targetDir
+                )
+            );
         }
 
         $edition = $this->app['publishing.edition'];
@@ -110,9 +112,9 @@ abstract class BasePublisher extends EasybookBasePublisher
                 foreach ($images as $image) {
 
                     $this->app['filesystem']->copy(
-                                            $image->getPathName(),
-                                            $targetDir . '/' . $image->getFileName(),
-                                            true // overwrite
+                        $image->getPathName(),
+                        $targetDir . '/' . $image->getFileName(),
+                        true // overwrite
                     );
 
                     // The right mediatype for jpeg images is jpeg, not jpg
@@ -152,33 +154,95 @@ abstract class BasePublisher extends EasybookBasePublisher
 
         return null;
     }
-    
+
     /**
      * Filters out the content items based on certain conditions.
      *
      * - publising edition: if the item has "editions" array, it will only be included
-     *   in these editions.
-     * 
+     *   if edition is in "editions" array. Prefixing it with "!" means "not for that
+     *   edition".
+     *
+     * - publising edition format: if the item has "formats" array, it will only be included
+     *   if the edition format is in "formats" array. Prefixing it with "!" means "not for that
+     *   format".
      */
     protected function filterContents()
     {
         $newContents = [];
 
-        $edition = $this->app['publishing.edition'];
-
+        $edition = strtolower($this->app['publishing.edition']);
+        $format = strtolower(Toolkit::getCurrentFormat($this->app));
+        
         // by default, all content items are included
         foreach ($this->app->book('contents') as $itemConfig) {
 
+            $contentFilters = $this->extractContentFilters($itemConfig);
+
             // omit editions not in "editions" array
-            if (isset($itemConfig['editions'])) {
-                if (!in_array($edition, $itemConfig['editions'])) {
-                    continue;
-                }
+            if (count($contentFilters['editions']) && !in_array($edition, $contentFilters['editions'])) {
+                continue;
             }
+
+            // omit editions in "not-editions" array
+            if (count($contentFilters['not-editions']) && in_array($edition, $contentFilters['not-editions'])) {
+                continue;
+            }
+
+            // omit editions which format is not in "formats" array
+            if (count($contentFilters['formats']) && !in_array($format, $contentFilters['formats'])) {
+                continue;
+            }
+
+            // omit editions which format is in "not-formats" array
+            if (count($contentFilters['not-formats']) && in_array($format, $contentFilters['not-formats'])) {
+                continue;
+            }
+            
             $newContents[] = $itemConfig;
         }
 
         $this->app->book('contents', $newContents);
+    }
+
+    /**
+     * Returns an array of content filters.
+     *
+     * @param $itemConfig
+     *
+     * @return array filters
+     */
+    protected function extractContentFilters($itemConfig)
+    {
+        $contentFilters = array(
+            'editions'     => array(),
+            'not-editions' => array(),
+            'formats'      => array(),
+            'not-formats'  => array()
+        );
+
+        if (isset($itemConfig['editions'])) {
+            
+            foreach ($itemConfig['editions'] as $ed) {
+                if (substr($ed, 0, 1) === '!') {
+                    $contentFilters['not-editions'][] = substr($ed, 1);
+                } else {
+                    $contentFilters['editions'][] = $ed;
+                }
+            }
+        }
+
+        if (isset($itemConfig['formats'])) {
+
+            foreach ($itemConfig['formats'] as $fm) {
+                if (substr($fm, 0, 1) === '!') {
+                    $contentFilters['not-formats'][] = substr($fm, 1);
+                } else {
+                    $contentFilters['formats'][] = $fm;
+                }
+            }
+        }
+        
+        return $contentFilters;
     }
 
 }

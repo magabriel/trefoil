@@ -1,0 +1,11 @@
+{% extends 'layout.twig' %}
+
+{% block body %}
+<div class="item edition">
+    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+    <h2>Edition: {{ app['publishing.edition'] }}</h2>
+    <h2>Format: {{ edition.format }}</h2>
+
+    {{ item.content }}
+</div>
+{% endblock %}

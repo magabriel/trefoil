@@ -1,0 +1,48 @@
+easybook:
+    parameters:
+        kindlegen.path: '/usr/local/bin/kindlegen'
+book:
+    title:            'Test book - FilterContents'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-02-2013'
+
+    version:          "1.0"
+
+    generator:        { name: trefoil, version: "DEV" }
+
+    contents:
+        - { element: edition }
+        - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2-ebook.md,     editions: [ebook] }
+        - { element: chapter, number: 3, content: chapter3-not-ebook.md, editions: [!ebook] }
+        - { element: chapter, number: 4, content: chapter4-epub.md,      formats: [epub] }
+        - { element: chapter, number: 5, content: chapter5-not-epub.md,  formats: [!epub] }
+        - { element: chapter, number: 6, content: chapter6-not-ebook-not-mobi.md,  editions: [!ebook], formats: [!mobi] }
+     
+    editions:
+        ebook:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
+            theme:          ebook
+            toc:
+                deep:       1
+                elements:   ["edition", "chapter"]
+            isbn:           1234567890X
+
+        ebook2:
+            extends: ebook
+                        
+        kindle:
+            extends: ebook
+            format:  mobi
+
+        kindle2:
+            extends: ebook
+            format:  mobi
+                        
+
+    
