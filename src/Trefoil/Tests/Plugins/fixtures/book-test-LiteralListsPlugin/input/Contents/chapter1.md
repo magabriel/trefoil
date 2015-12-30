@@ -24,6 +24,18 @@
 - B. Donec odio. 
 - C. Quisque volutpat mattis eros. 
 
+## Literal list type º
+ 
+- 1º Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+- 2º Donec odio. 
+- 3º Quisque volutpat mattis eros. 
+
+## Literal list type ª
+ 
+- 1ª Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+- 2ª Donec odio. 
+- 3ª Quisque volutpat mattis eros. 
+
 ## Literal list type a) with paragraphs
  
 - a) Lorem ipsum dolor sit amet, consectetuer adipiscing elit.

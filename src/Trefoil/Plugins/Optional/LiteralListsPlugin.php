@@ -99,9 +99,9 @@ class LiteralListsPlugin extends BasePlugin implements EventSubscriberInterface
                 // examine the first one looking for starting literal, like a) 
                 if (preg_match($pregLi, $items, $matchesLi)) {
 
-                    // regexp to get the list literal (char + ")" or ".").
+                    // regexp to get the list literal (char + one of ").ºª").
                     // note that list items can be inside a <p> tag.
-                    $pregLiteral = '/^(<p>)?(?<literal>[a-zA-Z])[\)\.]/Ums';
+                    $pregLiteral = '/^(<p>)?(?<literal>[a-zA-Z\d])[\)\.ºª]/Umsu';
 
                     if (preg_match($pregLiteral, $matchesLi['li'], $matchesLiteral)) {
                         $literalListDetected = true;
