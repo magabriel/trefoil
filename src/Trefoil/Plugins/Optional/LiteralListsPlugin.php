@@ -17,8 +17,11 @@ use Trefoil\Plugins\BasePlugin;
 /**
  * Support for literal lists.
  *
- * A literal list is an ordered list using literal other than numbers,
- * i.e.: a), b)... or I), II).
+ * A literal list is an ordered list using literal other than numbers:
+ * - "a)", "b)"... (a letter followed by a closing parenthesis)
+ * - "I)", "II)"...(a latin numeral followed by a closing parenthesis) 
+ * - "1º", "2º"... (a number followed by the masculine sign)
+ * - "1ª", "2ª"... (a number followed by the feminine sign)
  *
  * The plugin detects the list by the type of starting literal of the
  * first item in an unordered list, and adds class "list-literal"
