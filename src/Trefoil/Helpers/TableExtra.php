@@ -17,11 +17,12 @@ use Easybook\Parsers\ParserInterface;
  * - Transforms a "simple" HTML table into a "complex" table,
  *   where "simple" means "without rowspan or colspan cells".
  * - For headless tables, transforms the <td> cells in first column
- *   within <strong> tags into <th> cells (making a vertical head). 
- *
+ *   within <strong> tags into <th> cells (making a vertical head).
+ * - Allows multiline cells.
+ * 
  * Complex tables functionality details:
  * ------------------------------------
- * 
+ *
  * It is designed to allow HTML tables generated from Markdown content
  * to have the extra funcionality of rowspan or colspan without having
  * to modify the parser.
@@ -39,6 +40,19 @@ use Easybook\Parsers\ParserInterface;
  * - An empty cell => colspanned cell (meaning it is joined with the same
  *   cell of the preceding column.
  *
+ * Multiline cells:
+ * ---------------
+ * 
+ * If a line inside a cell ends with '+' char (plus sign) it will be joined
+ * with the next line.
+ * 
+ * Automatic head cells for headless tables:
+ * ----------------------------------------
+ *
+ * For a headless table (i.e. without headings in first row), cells in first
+ * column that are all bold (i.e. surrounded by "**") will be rendered
+ * as "<th>" tags instead of normal "<td>" tags, allowing formatting.
+ * 
  */
 class TableExtra
 {
@@ -308,9 +322,30 @@ class TableExtra
      *
      * @return array Processed rows
      */
-    protected
-    function processSpannedCells(array $rows)
+    protected function processSpannedCells(array $rows)
     {
+        // several kinds of double quote character
+        $doubleQuotes = array(
+            '"',
+            '&quot;',
+            '&#34;',
+            '&ldquo;',
+            '&#8220;',
+            '&rdquo;',
+            '&#8221;'
+        );
+
+        // several kinds of single quote character
+        $singleQuotes = array(
+            "'",
+            '&apos;',
+            '&#39;',
+            '&lsquo;',
+            '&#8216;',
+            '&rsquo;',
+            '&#8217;',
+        );
+        
         $newRows = $rows;
         foreach ($rows as $rowIndex => $row) {
 
@@ -347,17 +382,8 @@ class TableExtra
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
                 // and the single quote character as a top alignment marker
-                $quotes = array(
-                    '"',
-                    '&quot;',
-                    '&#34;',
-                    '&ldquo;',
-                    '&#8220;',
-                    '&rdquo;',
-                    '&#8221;',
-                    "'"
-                );
-                if (in_array($col['contents'], $quotes)) {
+                if (in_array($col['contents'], $doubleQuotes) || 
+                    in_array($col['contents'], $singleQuotes)) {
 
                     // find the primary rowspanned cell
                     $rowspanRow = -1;
@@ -381,7 +407,7 @@ class TableExtra
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= ';';
                             }
                             $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
-                            if ($col['contents'] === "'") {
+                            if (in_array($col['contents'], $singleQuotes)) {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: top;';
                             }
                         }
@@ -403,8 +429,7 @@ class TableExtra
      *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public
-    function internalRenderTable(array $table)
+    public function internalRenderTable(array $table)
     {
         $html = '<table>';
 
@@ -429,8 +454,7 @@ class TableExtra
         return $html;
     }
 
-    protected
-    function renderRows($rows)
+    protected function renderRows($rows)
     {
         $html = '';
 
@@ -465,8 +489,7 @@ class TableExtra
      *
      * @return array of attributes
      */
-    protected
-    function extractAttributes($string)
+    protected function extractAttributes($string)
     {
         $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
@@ -481,8 +504,7 @@ class TableExtra
         return $attributes;
     }
 
-    protected
-    function renderAttributes(array $attributes)
+    protected function renderAttributes(array $attributes)
     {
         $html = '';
 
