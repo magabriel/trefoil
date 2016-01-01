@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '0.929'
+    version:          '0.931'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -32,6 +32,9 @@ book:
         - { element: part,        number: 3,    content: part-3.md }
         - { element: chapter,     number:   6,  content: chapter6.md }
 
+        - { element: part,        number: 4,    content: part-4.md }
+        - { element: chapter,     number:   7,  content: chapter7.md }
+        
         - { element: footnotes }
         - { element: auto-glossary }
         - { element: ebook-quiz-solutions }

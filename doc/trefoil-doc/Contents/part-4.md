@@ -1,3 +1,3 @@
-# Trefoil themes
+# Other functionality
 
-**trefoil** greatly enhances the functionality of **easybook** themes. 
+Other enhancements and extra functionality in **trefoil**. 
