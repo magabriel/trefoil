@@ -2,7 +2,8 @@
 
 {{ itemtoc() }}
 
-## Content filtering
+Content filtering
+-----------------
  
 For books with several editions may be convenient to have a way to include
 some content in just one of them and not in the others, or to include
@@ -19,7 +20,7 @@ Example:
 To achieve that we can use *content filtering*. Consider the following book
 definition:
 
-~~~ 
+~~~.yaml 
 # config.yml
 book:
     . . .
@@ -54,3 +55,55 @@ If both `editions` and `formats` are used in the same item, it will only be incl
 in editions that fulfill both sets of conditions.
 
 
+Config import
+-------------
+
+In some cases may be convenient to being able to somehow "import" some book config 
+definitions into our book config, to avoid repeating common values.
+ 
+Example:
+
+- Assume we are producing a series of ten books (i.e. lessons of a course) and all of them 
+  will have the same editions: 'ebook', 'kindle' and 'print'.
+
+- We want to avoid defining again and again the same editions' definitions in all of
+  ten books' `config.yml`. 
+
+This functionality allows just that:
+
+~~~.yaml
+# my_series/config.yml
+easybook:
+    # all of easybook parameters
+    . . .        
+    
+book:
+    editions:
+        ebook:
+            # definition of ebook edition
+            . . .
+        kindle:
+            # definition of kindle edition
+            . . .
+        print:
+            # definition of print edition   
+            . . .
+~~~
+
+And then:
+
+~~~.yaml
+# my_series/book1/config.yml
+import:
+    - ".."
+      
+book:
+    title: '...'
+    . . .
+    
+    # no 'editions' definitions!
+~~~
+
+The `import` value is an array of all the directories where a suitable `config.yml` file will 
+be looked up for inclusion. The first one will be used, and used as the base definition
+in which the "local" definitions will be merged in. 
