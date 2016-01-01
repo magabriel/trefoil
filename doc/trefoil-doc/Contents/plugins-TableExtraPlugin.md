@@ -1,7 +1,12 @@
 ## TableExtraPlugin
 
-This plugin provides extra functionality to Markdown tables, adding the 
-ability to "colspan" or "rowspan" cells.
+This plugin provides extra functionality to Markdown tables: 
+
+- Ability to "colspan" or "rowspan" cells.
+
+- Multiline cells.
+
+- Automatic header cells for headless tables.
 
 ### Availability
 
@@ -42,7 +47,7 @@ Column 1  | Column 2  | Column 3
 
 #### Adding rowspanned cells
 
-A cell containig only `"` (a double quote) will be joined with the 
+A cell containig only `"` or `'` (a double or single quote) will be joined with the 
 above cell in the previous row:
  
 ~~~
@@ -50,6 +55,8 @@ Column 1  | Column 2  | Column 3
 ----------|-----------|------------
 1.One     | 1.Two     | 1.Three
   "       | 2.Two     | 2.Three
+1.One     | 1.Two     | 1.Three
+  '       | 2.Two     | 2.Three  
 ~~~
 
 This will render as:
@@ -58,7 +65,11 @@ Column 1  | Column 2  | Column 3
 ----------|-----------|------------
 1.One     | 1.Two     | 1.Three
   "       | 2.Two     | 2.Three
+1.One top | 1.Two     | 1.Three
+  '       | 2.Two     | 2.Three
  
+Usin *single quote* instead of *double quote* will make the rowspanned cell contents 
+align to the cell top of instead of the middle.
 
 #### Adding colpanned cells
 
@@ -111,4 +122,80 @@ Column 1  | Column 2  | Column 3
 3.One     | 3.Two     | 3.Three
 4.One     | 4.Two     | 4.Three
 
- 
+
+#### Multiline cells
+
+This is a table with multiline cells:
+
+~~~
+Column 1  | Column 2  | Column 3
+----------|-----------|------------
+One       | Two       | Tree: +
+          |           | - Three            +
+          |           | - Three continued  +          
+          |           | - Three continued 2
+One       | Two       | Three
+~~~
+
+Which will be rendered as:
+
+Column 1  | Column 2  | Column 3
+----------|-----------|------------
+One       | Two       | Tree: +
+          |           | - Three            +
+          |           | - Three continued  +          
+          |           | - Three continued 2
+One       | Two       | Three
+
+#### Automatic header cells for headless tables
+
+This is a headless table:
+
+~~~
+ | | |
+----------|-----------|------------
+One 1     | Two 1     | Three 1
+One 2     | Two 2     | Three 2
+~~~
+
+Normally rendered as:
+
+ | | |
+----------|-----------|------------
+One 1     | Two 1     | Three 1
+One 2     | Two 2     | Three 2
+
+By adding strong emphasis to some cells we have:
+
+~~~
+ | | |
+----------|-----------|------------
+**One 1** | Two 1     | Three 1
+One 2     | Two 2     | Three 2
+**One 3** | Two 3     | Three 3
+~~~
+
+ | | |
+----------|-----------|------------
+**One 1** | Two 1     | Three 1
+One 2     | Two 2     | Three 2
+**One 3** | Two 3     | Three 3
+
+This can lead to interesting effects:
+
+~~~
+ | | |
+----------|-----------|------------
+**One 1** | | 
+One 2     | Two 2     | Three 2
+**One 3** | |
+One 4     | Two 4     | Three 4
+~~~
+
+ | | |
+----------|-----------|------------
+**One 1** | | 
+One 2     | Two 2     | Three 2
+**One 3** | |
+One 4     | Two 4     | Three 4
+
