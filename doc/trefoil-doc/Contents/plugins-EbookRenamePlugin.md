@@ -5,7 +5,7 @@ The original `book.<ext>` file can be optionally kept.
 
 ### Availability
 
-This plugin is available for `epub` and `mobi` editions.
+This plugin is available for all editions.
 
 ### Usage
 
