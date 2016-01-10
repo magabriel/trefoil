@@ -13,6 +13,7 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
 
 /**
  * Several tweaks to make the ebook more compatible with Kindle MOBI format
@@ -53,7 +54,7 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Convert paragraphs inside list elements to line breaks
-     * 
+     *
      * ONLY replaces the first '<p>..</p>' inside the '<li>..</li>' (the one that
      * immediately follows the '<li>') to better preserve formatting for
      * newer readers.
@@ -65,10 +66,10 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     protected function paragraphsInsideLists($content)
     {
         // iterate 4 times to ensure embedded lists are converted
-        for ($i=0; $i<4; $i++) {
+        for ($i = 0; $i < 4; $i++) {
 
             $oldContent = $content;
-            
+
             $content = preg_replace_callback(
                 '/<li(?<liatt>[^>]*)>[\w\n]*<p>(?<p1>.*)<\/p>(?<rest>.*)<\/li>/Ums',
                 function ($matches) {
@@ -76,18 +77,30 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
                     $p1 = $matches['p1'];
                     $rest = $matches['rest'];
 
-                    return sprintf('<li%s>%s%s</li>', $liatt, $p1, $rest);
+                    // add class "no-p" to this <li> 
+                    $liattArray = Toolkit::parseHTMLAttributes($liatt);
+                    if (!isset($liattArray['class'])) {
+                        $liattArray['class'] = '';
+                    }
+                    $liattArray['class'] = trim($liattArray['class'] . ' no-p');
+
+                    return sprintf(
+                        '<li %s>%s%s</li>',
+                        Toolkit::renderHTMLAttributes($liattArray),
+                        $p1,
+                        $rest
+                    );
                 },
                 $content
             );
-            
+
             if ($oldContent === $content) {
                 // no changes
                 break;
             }
-            
+
         }
-        
+
         return $content;
     }
 

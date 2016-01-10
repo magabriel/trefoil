@@ -94,7 +94,7 @@ class LiteralListsPlugin extends BasePlugin implements EventSubscriberInterface
                 }
 
                 // regexp to extract list items in list
-                $pregLi = '/<li>(?<li>.*)<\/li>/Ums';
+                $pregLi = '/<li(?<liatt>[^>]*)>(?<li>.*)<\/li>/Ums';
 
                 // no detected by now
                 $literalListDetected = false;
