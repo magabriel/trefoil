@@ -29,7 +29,8 @@ use Trefoil\Util\Toolkit;
  *
  * The changes are read from a 'html-tweaks.yml' file, that could be located:
  *     - In the book /Contents directory
- *     - In the theme /Config/<format> directory
+ *     - In the theme <format>/Config directory
+ *     - In the theme Common/Config directory
  * The first one found will be used.
  *
  * Expected definition:
@@ -114,16 +115,25 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function readTweaksFile()
     {
-        // first path is the book Contents dir
         $bookDir = $this->app['publishing.dir.book'];
+        $themeDir = Toolkit::getCurrentThemeDir($this->app);
+
+        // first path is the book Contents dir
         $contentsDir = $bookDir . '/Contents';
 
-        // second path is the theme /Config dir
-        $themeDir = Toolkit::getCurrentThemeDir($this->app);
-        $configDir = sprintf('%s/%s/Config', $themeDir, $this->format);
+        // second path is the theme "<format>/Config" dir
+        $configFormatDir = sprintf('%s/%s/Config', $themeDir, $this->format);
+
+        // third path is the theme "Common/Config" dir
+        $configCommonDir = sprintf('%s/Common/Config', $themeDir);
 
         // look for either one
-        $dirs = array($contentsDir, $configDir);
+        $dirs = array(
+            $contentsDir,
+            $configFormatDir,
+            $configCommonDir
+        );
+
         $file = $this->app->getFirstExistingFile('html-tweaks.yml', $dirs);
 
         if (!$file) {
@@ -148,8 +158,15 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function processTweaks($content, array $tweaks)
     {
-        foreach ($tweaks as $tweak) {
-            $content = $this->processTweak($content, $tweak);
+        foreach ($tweaks as $tweakName => $tweak) {
+
+            $tweak['tweak-name'] = $tweakName;
+
+            if (isset($tweak['tag'])) {
+                $content = $this->processTweakTag($content, $tweak);
+            } elseif (isset($tweak['regex'])) {
+                $content = $this->processTweakRegex($content, $tweak);
+            }
         }
 
         return $content;
@@ -163,9 +180,8 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @return string
      */
-    protected function processTweak($content, $tweak)
+    protected function processTweakTag($content, $tweak)
     {
-
         $noclose = false;
 
         if ('hr' == $tweak['tag']) {
@@ -255,6 +271,28 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
             },
             $content
         );
+
+        return $content;
+    }
+
+    /**
+     * Process a regular expression tweak
+     *
+     * @param $content
+     * @param $tweak
+     *
+     * @return string
+     */
+    protected function processTweakRegex($content, $tweak)
+    {
+        if (!isset($tweak['replace'])) {
+
+            $this->writeLn(sprintf('Tweak "%s": missing "replace" expression.', $tweak['tweak-name']), 'error');
+
+            return $content;
+        }
+
+        $content = preg_replace($tweak['regex'], $tweak['replace'], $content);
 
         return $content;
     }

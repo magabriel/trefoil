@@ -36,4 +36,8 @@ tweaks:
         tweak-ul:
             tag: 'ul'
             replace: 
-                tag:  'ol'                
+                tag:  'ol'       
+                         
+        tweak-p-starts-with-lessthan:
+            regex: '/^<p>&lt;\s+(.*)<\/p>/Ums'
+            replace: '<p class="green">$1</p>'

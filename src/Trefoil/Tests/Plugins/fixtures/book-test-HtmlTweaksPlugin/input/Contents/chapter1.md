@@ -1,4 +1,4 @@
-# HtmlTweaks test
+# HtmlTweaks test: tags
 
 ## onPreParse changes
 
