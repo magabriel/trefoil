@@ -352,7 +352,7 @@ class TableExtra
             foreach ($row as $colIndex => $col) {
 
                 // an empty cell => colspanned cell
-                if (!$col['contents']) {
+                if (trim($col['contents']) === "") {
 
                     // find the primary colspanned cell (same row)
                     $colspanCol = -1;

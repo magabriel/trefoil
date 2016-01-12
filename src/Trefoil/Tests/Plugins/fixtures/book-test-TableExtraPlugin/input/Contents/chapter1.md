@@ -58,6 +58,16 @@ One                             |||
 One       | Two       | Three
 One                  || Three
 
+## 5.2 Colspan edge case: cell containing "0" must trigger colspan
+
+Cell 2 of 1st row contains a "0". 
+
+Column 1  | Column 2  | Column 3
+---------:|:----------|:----------:
+One       | 0         | Three
+One       | Two       | Three
+One                  || Three
+
 ## 6. Rowspan + colspan
 
 Column 1  | Column 2  | Column 3
