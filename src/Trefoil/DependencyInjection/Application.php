@@ -37,7 +37,10 @@ SIGNATURE;
 
         // -- global directories location -------------------------------------
         $this['trefoil.app.dir.base'] = realpath(__DIR__ . '/../../../');
-        $this['app.dir.cache'] = $this['trefoil.app.dir.base'] . '/app/Cache';
+        
+        $this['app.dir.cache'] = '/tmp/trefoil';
+        // Used to be: $this['app.dir.cache'] = $this['trefoil.app.dir.base'] . '/app/Cache';
+        
         $this['app.dir.doc'] = $this['trefoil.app.dir.base'] . '/doc';
         $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'] . '/app/Resources';
         $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'] . '/Themes';
