@@ -58,7 +58,7 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <th>Header E</th>',
             '            <th>Header F</th>',
             '        </tr>',
-            '     </thead>',
+            '    </thead>',
             '    <tbody>',
             '        <tr>',
             '            <td>Cell 1A</td>',
@@ -120,6 +120,7 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
 
         $expected = array(
             '<table>',
+            '    <tbody>',
             '        <tr>',
             '            <th>Header A</th>',
             '            <th colspan="2">Header B</th>',
@@ -140,8 +141,8 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2D</td>',
             '            <td>Cell 2F</td>',
             '        </tr>',
+            '    <tbody>',
             '</table>');
-
 
         $tableExtra = new TableExtra();
         $output = $tableExtra->processAllTables(implode("", $input));

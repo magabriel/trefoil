@@ -19,7 +19,7 @@ use Easybook\Parsers\ParserInterface;
  * - For headless tables, transforms the <td> cells in first column
  *   within <strong> tags into <th> cells (making a vertical head).
  * - Allows multiline cells.
- * 
+ *
  * Complex tables functionality details:
  * ------------------------------------
  *
@@ -42,17 +42,17 @@ use Easybook\Parsers\ParserInterface;
  *
  * Multiline cells:
  * ---------------
- * 
+ *
  * If a line inside a cell ends with '+' char (plus sign) it will be joined
  * with the next line.
- * 
+ *
  * Automatic head cells for headless tables:
  * ----------------------------------------
  *
  * For a headless table (i.e. without headings in first row), cells in first
  * column that are all bold (i.e. surrounded by "**") will be rendered
  * as "<th>" tags instead of normal "<td>" tags, allowing formatting.
- * 
+ *
  */
 class TableExtra
 {
@@ -84,12 +84,15 @@ class TableExtra
         $me = $this;
 
         $callback = function ($matches) use ($me) {
-            $table = $me->internalParseTable($matches['table']);
-            if (!$table) {
+            $table = new Table($matches['table']);
+            $table->fromHtml($matches['table']);
+
+            if ($table->isEmpty()) {
                 return $matches[0];
             }
+
             $table = $me->internalProcessExtraTable($table);
-            $html = $me->internalRenderTable($table);
+            $html = $table->toHtml();
 
             return $html;
         };
@@ -100,78 +103,13 @@ class TableExtra
     }
 
     /**
-     * @param $tableHtml
-     *
-     * @return array
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
-     */
-    public function internalParseTable($tableHtml)
-    {
-        $table = array();
-
-        $table['thead'] = $this->extractRows($tableHtml, 'thead');
-        $table['tbody'] = $this->extractRows($tableHtml, 'tbody');
-
-        if (!$table['thead'] && !$table['tbody']) {
-            $table['table'] = $this->extractRows($tableHtml, 'table');
-        }
-
-        return $table;
-    }
-
-    protected function extractRows($tableHtml, $tag = 'tbody')
-    {
-        // extract section
-        $regExp = sprintf('/<%s>(?<contents>.*)<\/%s>/Ums', $tag, $tag);
-        preg_match_all($regExp, $tableHtml, $matches, PREG_SET_ORDER);
-
-        if (!isset($matches[0]['contents'])) {
-            return array();
-        }
-
-        // extract all rows from section
-        $thead = $matches[0]['contents'];
-        $regExp = '/<tr>(?<contents>.*)<\/tr>/Ums';
-        preg_match_all($regExp, $thead, $matches, PREG_SET_ORDER);
-
-        if (!isset($matches[0]['contents'])) {
-            return array();
-        }
-
-        // extract columns from each row
-        $rows = array();
-        foreach ($matches as $matchRow) {
-
-            $tr = $matchRow['contents'];
-            $regExp = '/<(?<tag>t[hd])(?<attr>.*)>(?<contents>.*)<\/t[hd]>/Ums';
-            preg_match_all($regExp, $tr, $matchesCol, PREG_SET_ORDER);
-
-            $cols = array();
-            if ($matchesCol) {
-                foreach ($matchesCol as $matchCol) {
-                    $cols[] = array(
-                        'tag'        => $matchCol['tag'],
-                        'attributes' => $this->extractAttributes($matchCol['attr']),
-                        'contents'   => $matchCol['contents']
-                    );
-                }
-            }
-
-            $rows[] = $cols;
-        }
-
-        return $rows;
-    }
-
-    /**
      * @param array $table
      *
-     * @return array
+     * @return Table
      *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalProcessExtraTable(array $table)
+    public function internalProcessExtraTable(Table $table)
     {
         // process and adjusts table definition
 
@@ -345,7 +283,7 @@ class TableExtra
             '&rsquo;',
             '&#8217;',
         );
-        
+
         $newRows = $rows;
         foreach ($rows as $rowIndex => $row) {
 
@@ -382,8 +320,9 @@ class TableExtra
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
                 // and the single quote character as a top alignment marker
-                if (in_array($col['contents'], $doubleQuotes) || 
-                    in_array($col['contents'], $singleQuotes)) {
+                if (in_array($col['contents'], $doubleQuotes) ||
+                    in_array($col['contents'], $singleQuotes)
+                ) {
 
                     // find the primary rowspanned cell
                     $rowspanRow = -1;
@@ -421,98 +360,5 @@ class TableExtra
 
         return $newRows;
     }
-
-    /**
-     * @param array $table
-     *
-     * @return string
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
-     */
-    public function internalRenderTable(array $table)
-    {
-        $html = '<table>';
-
-        if (isset($table['thead']) && $table['thead']) {
-            $html .= '<thead>';
-            $html .= $this->renderRows($table['thead']);
-            $html .= '</thead>';
-        }
-
-        if (isset($table['tbody']) && $table['tbody']) {
-            $html .= '<tbody>';
-            $html .= $this->renderRows($table['tbody']);
-            $html .= '</tbody>';
-        }
-
-        if (isset($table['table']) && $table['table']) {
-            $html .= $this->renderRows($table['table']);
-        }
-
-        $html .= '</table>';
-
-        return $html;
-    }
-
-    protected function renderRows($rows)
-    {
-        $html = '';
-
-        foreach ($rows as $row) {
-            $html .= '<tr>';
-            foreach ($row as $col) {
-                if (!isset($col['ignore'])) {
-                    $rowspan = isset($col['rowspan']) ? sprintf('rowspan="%s"', $col['rowspan']) : '';
-                    $colspan = isset($col['colspan']) ? sprintf('colspan="%s"', $col['colspan']) : '';
-
-                    $attributes = $this->renderAttributes($col['attributes']);
-
-                    $html .= sprintf(
-                        '<%s %s %s %s>%s</%s>',
-                        $col['tag'],
-                        $rowspan,
-                        $colspan,
-                        $attributes,
-                        $col['contents'],
-                        $col['tag']
-                    );
-                }
-            }
-            $html .= '</tr>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return array of attributes
-     */
-    protected function extractAttributes($string)
-    {
-        $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
-        preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
-
-        $attributes = array();
-        if ($attrMatches) {
-            foreach ($attrMatches as $attrMatch) {
-                $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
-            }
-        }
-
-        return $attributes;
-    }
-
-    protected function renderAttributes(array $attributes)
-    {
-        $html = '';
-
-        foreach ($attributes as $name => $value) {
-            $html .= sprintf('%s="%s" ', $name, $value);
-        }
-
-        return $html;
-    }
-
+    
 }
