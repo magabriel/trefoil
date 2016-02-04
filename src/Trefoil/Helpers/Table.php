@@ -2,6 +2,15 @@
 
 namespace Trefoil\Helpers;
 
+/**
+ * Class Table abstracts the representation of a table (as in "HTML table").
+ * 
+ * This class extends ArrayObject, so an instance can be manipulated as an
+ * array.
+ *      Example: $table['tbody'][1][2] => cell[1][2] in the <tbody> section.
+ *
+ * @package Trefoil\Helpers
+ */
 class Table extends \ArrayObject
 {
     /**
@@ -9,12 +18,8 @@ class Table extends \ArrayObject
      */
     const CREATE_TBODY = 0b00000001;
 
-    public function __construct()
-    {
-    }
-
     /**
-     * @param $htmlTable
+     * @param $htmlTable HTML <table> tag
      */
     public function fromHtml($htmlTable)
     {
@@ -31,9 +36,9 @@ class Table extends \ArrayObject
         return $output;
     }
 
-
     /**
-     * @param $htmlTable
+     * @param     $htmlTable
+     * @param int $flags
      */
     public function parseHtmlTable($htmlTable, $flags = self::CREATE_TBODY)
     {
@@ -53,6 +58,12 @@ class Table extends \ArrayObject
         }
     }
 
+    /**
+     * @param        $htmlTable
+     * @param string $tag
+     *
+     * @return array of rows
+     */
     protected function extractRows($htmlTable, $tag = 'tbody')
     {
         // extract section
@@ -97,6 +108,9 @@ class Table extends \ArrayObject
         return $rows;
     }
 
+    /**
+     * @return bool True if the table have some rows
+     */
     public function isEmpty()
     {
         if (isset($this['thead']) && $this['thead']) {
@@ -145,7 +159,12 @@ class Table extends \ArrayObject
         return '<table>' . $html . '</table>';
     }
 
-    protected function renderRows($rows)
+    /**
+     * @param array $rows
+     *
+     * @return string
+     */
+    protected function renderRows(array $rows)
     {
         $html = '';
 
@@ -195,6 +214,11 @@ class Table extends \ArrayObject
         return $attributes;
     }
 
+    /**
+     * @param array $attributes
+     *
+     * @return string rendered attributes
+     */
     protected function renderAttributes(array $attributes)
     {
         $html = '';
