@@ -84,7 +84,7 @@ class TableExtra
         $me = $this;
 
         $callback = function ($matches) use ($me) {
-            $table = new Table($matches['table']);
+            $table = new Table();
             $table->fromHtml($matches['table']);
 
             if ($table->isEmpty()) {
