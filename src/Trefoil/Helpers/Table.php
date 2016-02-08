@@ -175,7 +175,7 @@ class Table extends \ArrayObject
                     $rowspan = isset($col['rowspan']) ? sprintf('rowspan="%s"', $col['rowspan']) : '';
                     $colspan = isset($col['colspan']) ? sprintf('colspan="%s"', $col['colspan']) : '';
 
-                    $attributes = $this->renderAttributes($col['attributes']);
+                    $attributes = isset($col['attributes']) ? $this->renderAttributes($col['attributes']) : '';
 
                     $html .= sprintf(
                         '<%s %s %s %s>%s</%s>',
