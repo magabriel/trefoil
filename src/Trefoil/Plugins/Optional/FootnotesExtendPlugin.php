@@ -27,9 +27,9 @@ use Trefoil\Util\Toolkit;
  *                 options:
  *                     FootnotesExtend:
  *                         type: end  # [end, inject, item, inline]
- * 
+ *
  * Where:
- * 
+ *
  * - type 'end': This is the normal Markdown-rendered footnotes.
  *   They will be at the end of each book item, separated by a <hr/> tag.
  *   This is the default.
@@ -45,8 +45,8 @@ use Trefoil\Util\Toolkit;
  *
  * - type 'inline: PrinceXML support inline footnotes, where the text
  *   of the note must be inlined into the text, instead of just a
- *   reference. Prince will manage the numbering.   
- * 
+ *   reference. Prince will manage the numbering.
+ *
  *   Note that Prince manages footnotes as:
  *
  *      "text<span class="fn">Text of the footnote</span> more text"
@@ -71,7 +71,7 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
      * @var array The extracted footnotes the current book item
      */
     protected $footnotesCurrentItem = array();
-    
+
     /**
      * @var string The current item footnotes (as text)
      */
@@ -161,6 +161,11 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $content = preg_replace('/id="fnref(\d*):/', 'id="fnref$1-', $content);
         $content = str_replace('href="#fn:', 'href="#fn-', $content);
 
+        // fix double class in footnote ref (note the ungreedy modifier)
+        $content = preg_replace(
+            '/<a class="internal"(.*) class="footnote-ref">/U', 
+            '<a class="footnote-ref internal" $1>', $content);
+        
         // fix footnotes
         $content = str_replace('id="fn:', 'id="fn-', $content);
         $content = preg_replace('/href="#fnref(\d*):/', 'href="#fnref$1-', $content);
@@ -342,7 +347,7 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
     /**
      * Inject footnotes at the injection target.
-     * 
+     *
      * The injection target is a '<div class="footnotes"></div>' placed anywhere in the item text.
      */
     protected function injectFootnotes()
