@@ -24,7 +24,7 @@
                 "name": "smartypants/typographer",
                 "version": "1.0.1",
                 "dist": {
-                    "url": "http://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
+                    "url": "https://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
                     "type": "zip"
                 },
                 "autoload": {
