@@ -153,7 +153,7 @@ class TabularList
 
         foreach (explode(' ', $ulClasses) as $class) {
             if (preg_match('/tabularlist-(\d*)$/', $class, $matches)) {
-                $this->numCategories = $matches[1];
+                $this->numCategories = (int)$matches[1];
             }
         }
     }
@@ -170,7 +170,7 @@ class TabularList
         $output = [];
 
         $ulNode->children()->each(
-            function (Crawler $liNode, $liIndex) use (&$output) {
+            function (Crawler $liNode) use (&$output) {
 
                 $cell = [];
                 $cellText = '';
@@ -210,7 +210,7 @@ class TabularList
                     $cell['text'] = $cellText;
                 }
 
-                if ($cell) {
+                if (!empty($cell)) {
                     $output[] = $cell;
                 }
             }
@@ -246,8 +246,6 @@ class TabularList
 
     protected function processList($list, $level)
     {
-        $sameRow = true;
-
         foreach ($list as $listNodeIndex => $listNode) {
 
             // if this is a 0-level node, add a new row
@@ -256,31 +254,17 @@ class TabularList
                 $this->table->addBodyRow();
             }
 
-            // start processing the node text, which each node will have
-            $cellContents = '';
-
             // extract heading from cell
             $node = $this->extractNodeText($listNode['text']);
 
-            // add new row for ro 
-            $needsRowspan = ($level > 0 && $listNodeIndex > 0) && $this->numCategories <= $this->deep;
-            $needsNewRow = $needsRowspan || $level === 0 && $listNodeIndex === 0;
-            if ($needsNewRow) {
-                $this->table->addBodyRow();
-            }
+            // add new row if needed to mantain the right table flow
+            $this->createNewRowIfNeeded($level, $listNodeIndex);
 
-            // add empty cells as rowspanned (=> with quote only)
-            if ($needsRowspan) {
-                for ($i = 0; $i < $level; $i++) {
-                    $where = $this->table->addBodyCell("'");
-                }
-            }
+            // start processing the node text, which each node will have
+            $cellContents = $node['text'];
 
-            $cellContents .= $node['text'];
-            $where = $this->table->addBodyCell($cellContents);
-            if (!$this->table->getBodyCellExtra($where['row'], $where['column'])) {
-                $this->table->setBodyCellExtra($node['heading'], $where['row'], $where['column']);
-            }
+            // create new cell from node
+            $where = $this->createCell($cellContents, $node);
 
             // process the node sublist, if present 
             if (isset($listNode['list'])) {
@@ -288,7 +272,7 @@ class TabularList
                     $this->processList($listNode['list'], $level + 1);
                 } else {
                     $cellContents .= $this->listToText($listNode['list']);
-                    $this->table->addBodyCell($cellContents, $where['row'], $where['column']);
+                    $this->table->addBodyCell($cellContents, (int)$where['row'], (int)$where['column']);
                 }
             }
         }
@@ -359,6 +343,49 @@ class TabularList
                 $this->findDeep($listNode['list'], $countLevels + 1);
             }
         }
+    }
+
+    /**
+     * Create a new row if the table needs it (depending on level, deep).
+     *
+     * @param $level
+     * @param $listNodeIndex
+     */
+    protected function createNewRowIfNeeded($level, $listNodeIndex)
+    {
+        $needsRowspan = ($level > 0 && $listNodeIndex > 0) && $this->numCategories <= $this->deep;
+        $needsNewRow = $needsRowspan || $level === 0 && $listNodeIndex === 0;
+
+        if ($needsNewRow) {
+            $this->table->addBodyRow();
+        }
+
+        // add empty cells as rowspanned (=> with quote only)
+        if ($needsRowspan) {
+            for ($i = 0; $i < $level; $i++) {
+                $this->table->addBodyCell("'");
+            }
+        }
+    }
+
+    /**
+     * @param $cellContents
+     * @param $node
+     *
+     * @return array
+     */
+    protected function createCell($cellContents, $node)
+    {
+        $where = $this->table->addBodyCell($cellContents);
+        
+        // save candidate heading in extra
+        if (!$this->table->getBodyCellExtra($where['row'], $where['column'])) {
+            $this->table->setBodyCellExtra($node['heading'], (int)$where['row'], (int)$where['column']);
+
+            return $where;
+        }
+
+        return $where;
     }
 
 }
