@@ -14,31 +14,9 @@ use Easybook\Parsers\ParserInterface;
 
 /**
  * This class:
- * - Transforms a "simple" HTML table into a "complex" table,
- *   where "simple" means "without rowspan or colspan cells".
  * - For headless tables, transforms the <td> cells in first column
  *   within <strong> tags into <th> cells (making a vertical head).
  * - Allows multiline cells.
- *
- * Complex tables functionality details:
- * ------------------------------------
- *
- * It is designed to allow HTML tables generated from Markdown content
- * to have the extra funcionality of rowspan or colspan without having
- * to modify the parser.
- *
- * For the transformations to work, cell contents must follow some simple
- * rules:
- *
- * - A cell containing only ["] (a single double quote) or ['] a single
- *   single quote => rowspanned cell(meaning it is joined with the same
- *   cell of the preceding row). The difference between using double
- *   or single quotes is the vertical alignment:
- *      - double quote: middle alignmet.
- *      - single quote: top alignment.
- *
- * - An empty cell => colspanned cell (meaning it is joined with the same
- *   cell of the preceding column.
  *
  * Multiline cells:
  * ---------------
@@ -103,10 +81,9 @@ class TableExtra
     }
 
     /**
-     * @param array $table
+     * @param Table $table
      *
      * @return Table
-     *
      * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalProcessExtraTable(Table $table)
@@ -132,17 +109,13 @@ class TableExtra
         if ($table['thead'] || $table['tbody']) {
 
             $table['thead'] = $this->processMultilineCells($table['thead']);
-            $table['thead'] = $this->processSpannedCells($table['thead']);
-
             $table['tbody'] = $this->processMultilineCells($table['tbody']);
-            $table['tbody'] = $this->processSpannedCells($table['tbody']);
 
             return $table;
         }
 
         // table without head or body
         $table['table'] = $this->processMultilineCells($table['table']);
-        $table['table'] = $this->processSpannedCells($table['table']);
 
         return $table;
     }
@@ -253,112 +226,4 @@ class TableExtra
         return $newRows;
     }
 
-    /**
-     * Process spanned rows, creating the right HTML markup.
-     *
-     * @param array $rows
-     *
-     * @return array Processed rows
-     */
-    protected function processSpannedCells(array $rows)
-    {
-        // several kinds of double quote character
-        $doubleQuotes = array(
-            '"',
-            '&quot;',
-            '&#34;',
-            '&ldquo;',
-            '&#8220;',
-            '&rdquo;',
-            '&#8221;'
-        );
-
-        // several kinds of single quote character
-        $singleQuotes = array(
-            "'",
-            '&apos;',
-            '&#39;',
-            '&lsquo;',
-            '&#8216;',
-            '&rsquo;',
-            '&#8217;',
-        );
-
-        $newRows = $rows;
-        foreach ($rows as $rowIndex => $row) {
-
-            foreach ($row as $colIndex => $col) {
-
-                // an empty cell => colspanned cell
-                if (trim($col['contents']) === "") {
-
-                    // find the primary colspanned cell (same row)
-                    $colspanCol = -1;
-                    for ($j = $colIndex - 1; $j >= 0; $j--) {
-                        if (!isset($newRows[$rowIndex][$j]['ignore']) ||
-                            (isset($newRows[$rowIndex][$j]['ignore']) && $j == 0)
-                        ) {
-                            $colspanCol = $j;
-                            break;
-                        }
-                    }
-
-                    if ($colspanCol >= 0) {
-                        // increment colspan counter
-                        if (!isset($newRows[$rowIndex][$colspanCol]['colspan'])) {
-                            $newRows[$rowIndex][$colspanCol]['colspan'] = 1;
-                        }
-                        $newRows[$rowIndex][$colspanCol]['colspan']++;
-
-                        // ignore this cell
-                        $newRows[$rowIndex][$colIndex]['ignore'] = true;
-                    }
-
-                    continue;
-                }
-
-                // a cell with only '"' as contents => rowspanned cell (same column)
-                // consider several kind of double quote character
-                // and the single quote character as a top alignment marker
-                if (in_array($col['contents'], $doubleQuotes) ||
-                    in_array($col['contents'], $singleQuotes)
-                ) {
-
-                    // find the primary rowspanned cell
-                    $rowspanRow = -1;
-                    for ($i = $rowIndex - 1; $i >= 0; $i--) {
-                        if (!isset($newRows[$i][$colIndex]['ignore'])) {
-                            $rowspanRow = $i;
-                            break;
-                        }
-                    }
-
-                    if ($rowspanRow >= 0) {
-                        // increment rowspan counter
-                        if (!isset($newRows[$rowspanRow][$colIndex]['rowspan'])) {
-                            $newRows[$rowspanRow][$colIndex]['rowspan'] = 1;
-
-                            // set vertical alignement to 'middle' for double quote or
-                            // 'top' for single quote 
-                            if (!isset($newRows[$rowspanRow][$colIndex]['attributes']['style'])) {
-                                $newRows[$rowspanRow][$colIndex]['attributes']['style'] = '';
-                            } else {
-                                $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= ';';
-                            }
-                            $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
-                            if (in_array($col['contents'], $singleQuotes)) {
-                                $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: top;';
-                            }
-                        }
-                        $newRows[$rowspanRow][$colIndex]['rowspan']++;
-
-                        $newRows[$rowIndex][$colIndex]['ignore'] = true;
-                    }
-                }
-            }
-        }
-
-        return $newRows;
-    }
-    
 }
