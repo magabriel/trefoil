@@ -1,16 +1,4 @@
-# LiteralLists test
-
-## Ordered list
-
-1. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-2. Donec odio. 
-3. Quisque volutpat mattis eros. 
-
-## Unordered list
- 
-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-- Donec odio. 
-- Quisque volutpat mattis eros. 
+# LiteralLists test - Conversion
 
 ## Literal list type a)
  
@@ -50,40 +38,3 @@
 
 - c) Quisque volutpat mattis eros. 
 
-## Unordered list after literal type list
- 
-- Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-- Donec odio. 
-- Quisque volutpat mattis eros. 
-
-## Unordered list containing literal lists
-
-- One Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-   
-    - a) AA Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-    - b) Donec odio. 
-    - c) Quisque volutpat mattis eros.
-  
-- One Donec odio. 
-    
-    - a) BB Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-    - b) Donec odio. 
-    - c) Quisque volutpat mattis eros.
-   
-- One Quisque volutpat mattis eros. 
-
-## Ordered list containing both a normal list and a literal list
-
-1. Two Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-   
-    - AA Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-    - Donec odio. 
-    - Quisque volutpat mattis eros.
-  
-2. Two Donec odio. 
-    
-    - a) BB Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-    - b) Donec odio. 
-    - c) Quisque volutpat mattis eros.
-   
-3. Two Quisque volutpat mattis eros. 

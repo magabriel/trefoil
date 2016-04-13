@@ -8,7 +8,9 @@ book:
     generator:        { name: trefoil, version: DEV }
    
     contents:
+        - { element: chapter, number: 0, content: chapter0.md }
         - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2.md }
 
     editions:
         ebook:
