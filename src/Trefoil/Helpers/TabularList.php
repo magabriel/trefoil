@@ -69,7 +69,7 @@ class TabularList
     }
 
     /**
-     * @param string   $htmlList      string with HTML <ul> tag
+     * @param string $htmlList string with HTML <ul> tag
      * @param int|null $numCategories number of list levels to be represented as categories (columns)
      *                                in the table (null=default)
      */
@@ -288,7 +288,7 @@ class TabularList
     protected function extractNodeText($text)
     {
         $node = [
-            'text'    => $text,
+            'text' => $text,
             'heading' => ''
         ];
 
@@ -325,7 +325,7 @@ class TabularList
             }
 
             if (isset($listNode['list'])) {
-                $text .= $this->listToText($listNode['list']);
+                $text .= '<li style="list-style: none; display: inline">' . $this->listToText($listNode['list']) . '</li>';
             }
         }
 
@@ -377,7 +377,7 @@ class TabularList
     protected function createCell($cellContents, $node)
     {
         $where = $this->table->addBodyCell($cellContents);
-        
+
         // save candidate heading in extra
         if (!$this->table->getBodyCellExtra($where['row'], $where['column'])) {
             $this->table->setBodyCellExtra($node['heading'], (int)$where['row'], (int)$where['column']);
