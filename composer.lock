@@ -373,7 +373,7 @@
             "version": "1.0.1",
             "dist": {
                 "type": "zip",
-                "url": "http://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
+                "url": "https://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
                 "reference": null,
                 "shasum": null
             },

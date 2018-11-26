@@ -1,0 +1,16 @@
+.illustration {
+    background: #cde;
+    border: 1px solid gray;
+}
+
+.border-red {
+    border: 2px solid red;
+}
+
+.border-blue {
+    border: 2px solid blue;
+}
+
+.shaded-green {
+    background: lightgreen;
+}

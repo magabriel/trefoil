@@ -219,12 +219,12 @@
     margin-top: .5em;
     }
 
-    ul li li {
-    list-style-type: circle;
+    ul > li ul > li {
+        list-style-type: circle;
     }
 
-    ul li li li {
-    list-style-type: square;
+    ul > li ul > li ul > li{
+        list-style-type: square;
     }
 
     dd+dt {
@@ -235,16 +235,24 @@
      * LiteralListsPlugin 
      */
     ul.literal-list>li {
-    list-style-type: none;
+        list-style-type: none;
     }
     ul.literal-list li {
-    text-indent: -1.1em;
+        text-indent: -1.1em;
     }
     ul.literal-list li>p:first-child {
-    text-indent: -1.1em;
+        text-indent: -1.1em;
     }
     ul.literal-list li>p:not(:first-child) {
-    text-indent: 0;
+        text-indent: 0;
+    }
+    ul.literal-list li > ul > li,
+    ul.literal-list li > ol > li {
+        text-indent: 0;
+    }
+    ul.literal-list>li>p:first-child>span,
+    ul.literal-list > li > span{
+        color:red;
     }
 
 

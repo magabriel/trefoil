@@ -111,7 +111,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp = '/';
         $regExp .= '(?<prev>[^\<])'; // not a <
         $regExp .= '(?<sign>\<\<)'; // 2 <
-        $regExp .= '(?<next>[^\< ])'; // not a < or space
+        $regExp .= '(?<next>[^\< \/])'; // not a < or space or / (to avoid intereference with TabularListsPlugin)
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(

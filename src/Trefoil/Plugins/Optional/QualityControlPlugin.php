@@ -28,13 +28,14 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
 {
     protected $images = array();
     protected $problems = array();
+    protected $problemsFound = false;
 
     public static function getSubscribedEvents()
     {
         return array(
             //EasybookEvents::POST_PARSE   => array('onItemPostParse', -9999), // Latest
             EasybookEvents::POST_DECORATE => array('onItemPostDecorate', -9999), // Latest
-            EasybookEvents::POST_PUBLISH => 'onPostPublish'
+            EasybookEvents::POST_PUBLISH  => 'onPostPublish'
         );
     }
 
@@ -67,6 +68,8 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $this->init($event);
 
         $this->createReport();
+
+        $this->writeResultsMessage();
     }
 
     /* ********************************************************************************
@@ -136,7 +139,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
                         // common strings
                         continue;
                     }
-                    if (false !== strpos($emph, '__' )) {
+                    if (false !== strpos($emph, '__')) {
                         // a line draw with underscores
                         continue;
                     }
@@ -193,15 +196,6 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $this->problems[$element][] = $problem;
     }
 
-    protected function saveImage($image)
-    {
-        if (!isset($this->images[$image['src']])) {
-            $this->images[$image['src']] = 0;
-        }
-
-        $this->images[$image['src']]++;
-    }
-
     protected function createReport()
     {
         // create the report
@@ -214,6 +208,15 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
         $report .= $this->getImagesNotUsedReport();
 
         file_put_contents($reportFile, $report);
+    }
+
+    protected function saveImage($image)
+    {
+        if (!isset($this->images[$image['src']])) {
+            $this->images[$image['src']] = 0;
+        }
+
+        $this->images[$image['src']]++;
     }
 
     protected function getProblemsReport()
@@ -233,11 +236,11 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             foreach ($problems as $problem) {
                 $count++;
                 $report->addLine(
-                       array(
-                           '',
-                           $problem['type'],
-                           substr($problem['object'], 0, 30),
-                           $problem['message'])
+                    array(
+                        '',
+                        $problem['type'],
+                        substr($problem['object'], 0, 30),
+                        $problem['message'])
                 );
             }
         }
@@ -246,6 +249,7 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             $report->addSummaryLine('No problems found');
         } else {
             $report->addSummaryLine(sprintf('%s problems found', $count));
+            $this->problemsFound = true;
         }
 
         return $report->getText();
@@ -286,8 +290,21 @@ class QualityControlPlugin extends BasePlugin implements EventSubscriberInterfac
             $report->addSummaryLine('No unused images');
         } else {
             $report->addSummaryLine(sprintf('%s unused images found', $count));
+            $this->problemsFound = true;
         }
 
         return $report->getText();
+    }
+
+    /**
+     * Write a message to the user about problems found.
+     */
+    protected function writeResultsMessage()
+    {
+        if (!$this->problemsFound) {
+            $this->writeLn('No quality problems');
+        } else {
+            $this->writeLn('Some quality problems detected', 'warning');
+        }
     }
 }
