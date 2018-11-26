@@ -50,10 +50,6 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# RUN wget -O phpunit https://phar.phpunit.de/phpunit-4.phar \
-#     && chmod +x phpunit \
-#     && mv phpunit /usr/bin
-
 ADD ./ /app/trefoil
 WORKDIR /app/trefoil
 
