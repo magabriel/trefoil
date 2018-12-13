@@ -36,9 +36,9 @@ where the options are:
 
 There are several ways to add drop caps to the book:
 
-1. Automatic dropcaps.
-2. Manual dropcaps HTML markup.
-3. Markdown-like manual dropcaps. 
+1. Automatic drop caps.
+2. Manual drop caps HTML markup.
+3. Markdown-like manual drop caps. 
 
 
 #### Automatic drop caps

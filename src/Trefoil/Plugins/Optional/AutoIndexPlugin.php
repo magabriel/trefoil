@@ -1,0 +1,276 @@
+<?php
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Trefoil\Plugins\Optional;
+
+use Easybook\Events\BaseEvent;
+use Easybook\Events\EasybookEvents;
+use Easybook\Events\ParseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Events\TrefoilEvents;
+use Trefoil\Helpers\Index;
+use Trefoil\Helpers\IndexItem;
+use Trefoil\Helpers\IndexLoader;
+use Trefoil\Helpers\IndexReplacer;
+use Trefoil\Helpers\TextPreserver;
+use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\SimpleReport;
+
+/**
+ * This plugin creates an automatic index from a list of terms.
+ *
+ * Configuration:
+ *
+ * - Configuration: Not used.
+ *
+ * - Index definition:
+ *
+ *     <book_dir>/
+ *         Contents/
+ *             auto-index.yml
+ *
+ * @see IndexLoader for format details.
+ * @see IndexReplacer for contents details.
+ */
+class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
+{
+
+    /**
+     * The index to apply for the current item
+     *
+     * @var Index
+     */
+    protected $index;
+
+    /**
+     * The processed index items
+     *
+     * @var Index
+     */
+    protected $processedIndex;
+
+    /**
+     * Options that govern the index processing
+     *
+     * @var array
+     */
+    protected $indexOptions = array();
+
+    /**
+     * Cross-references of replaced terms for reporting
+     *
+     * @var array
+     */
+    protected $xrefs = array();
+
+    /**
+     * Whether or not the index item has been generated
+     *
+     * @var bool
+     */
+    protected $generated = false;
+
+    /* ********************************************************************************
+     * Event handlers
+     * ********************************************************************************
+     */
+    public static function getSubscribedEvents()
+    {
+        return array(
+            TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
+            EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
+            EasybookEvents::POST_PARSE => array('onItemPostParse', -1110), // after EbookQuizPlugin to avoid interferences
+            EasybookEvents::POST_PUBLISH => 'onPostPublish');
+    }
+
+    public function onPrePublishAndReady(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $this->loadIndexTerms();
+    }
+
+    public function onItemPreParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        if ($this->item['config']['element'] == 'auto-index') {
+            $this->saveAutoindex();
+        }
+    }
+
+    public function onItemPostParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        // process this item replacing terms into
+        $this->processItem();
+
+        // reload changed item
+        $event->setItem($this->item);
+    }
+
+    public function onPostPublish(BaseEvent $event)
+    {
+        $this->init($event);
+
+        // create the processing report
+        $this->createReport();
+    }
+
+    /* ********************************************************************************
+     * Implementation
+     * ********************************************************************************
+     */
+
+    /**
+     * Load the book-wide index and options.
+     */
+    protected function loadIndexTerms()
+    {
+        // initializations
+        $this->index = new Index();
+        $this->processedIndex = new Index();
+
+        // get all the index terms from file and create the definitions data structure
+        $contentsDir = $this->app['publishing.dir.book'] . '/Contents';
+        $indexFile = $contentsDir . '/auto-index.yml';
+
+        $loader = new IndexLoader($indexFile, $this->app['slugger']);
+        $this->index = $loader->load();
+        $this->indexOptions = $loader->getOptions();
+
+        if (!$loader->isLoaded()) {
+            $this->writeLn(
+                sprintf(
+                    "No book index definition file '%s' found in the book's \"Contents\" directory.",
+                    basename($indexFile)
+                ),
+                'warning'
+            );
+        }
+    }
+
+    /**
+     * For a content item to be processed for index terms, replace glossary terms into the text.
+     */
+    public function processItem()
+    {
+        // look type of processing
+        if (in_array($this->item['config']['element'], $this->indexOptions['elements'])) {
+
+            // replace each term with an anchor from the index entry
+            $this->replaceTerms();
+
+            // append a copy of the processed definitions to the processed index
+            // to avoid losing all xrefs and anchorlinks for this item
+            $this->processedIndex->merge(clone($this->index));
+        }
+    }
+
+    /**
+     * Replace all item terms into the current item.
+     */
+    protected function replaceTerms()
+    {
+        $replacer = new IndexReplacer(
+            $this->index,
+            new TextPreserver(),
+            $this->item['content'],
+            $this->item['config']['content'],
+            $this->app['twig'],
+            $this->app['slugger']
+        );
+
+        // do the replacements
+        $this->item['content'] = $replacer->replace();
+    }
+
+    /**
+     * Save the auto index definitions to be generated on item rendering
+     */
+    protected function saveAutoindex()
+    {
+        $this->app['publishing.index.definitions'] = $this->processedIndex;
+        $this->generated = true;
+    }
+
+    /**
+     * Writes the report with the summary of processing done.
+     */
+    protected function createReport()
+    {
+        $report = '';
+        $report .= $this->getUsedTermsReport();
+        $report .= "\n\n";
+        $report .= $this->getNotUsedTermsReport();
+
+        if (!$this->generated) {
+            $this->writeLn(
+                 "No index has been generated, check for missing 'auto-index' contents element.",
+                 "error"
+            );
+        }
+
+        $outputDir = $this->app['publishing.dir.output'];
+        $reportFile = $outputDir . '/report-AutoIndexPlugin.txt';
+
+        file_put_contents($reportFile, $report);
+    }
+
+    protected function getUsedTermsReport()
+    {
+        $report = new SimpleReport();
+        $report->setTitle('AutoIndexPlugin');
+        $report->setSubtitle('Used terms');
+
+        $report->addIntroLine('Elements: ' . '"' . join('", "', $this->indexOptions['elements']) . '"');
+
+        $report->setHeaders(array('Term', 'Variant', 'Item', 'Count', 'Source'));
+
+        $report->setColumnsWidth(array(30, 30, 30, 5, 30));
+        $report->setColumnsAlignment(array('', '', '', 'right', ''));
+
+        foreach ($this->processedIndex as $processedItem) {
+            /* @var indexItem $processedItem */
+            $auxTerm = $processedItem->getTerm();
+            foreach ($processedItem->getXref() as $variant => $items) {
+                $auxVariant = $variant;
+                foreach ($items as $item => $count) {
+                    $report->addline(array($auxTerm, $auxVariant, $item, $count, $processedItem->getSource()));
+                    $auxTerm = '';
+                    $auxVariant = '';
+                }
+            }
+        }
+
+        return $report->getText();
+    }
+
+    protected function getNotUsedTermsReport()
+    {
+        $report = new SimpleReport();
+        $report->setTitle('AutoindexPlugin');
+        $report->setSubtitle('Not used terms');
+
+        $report->setHeaders(array('Term', 'Source'));
+
+        $report->setColumnsWidth(array(30, 30));
+
+        foreach ($this->processedIndex as $item) {
+            /* @var indexItem $item */
+            if (!count($item->getXref())) {
+                $report->addLine(array($item->getTerm(), $item->getSource()));
+            }
+        }
+
+        return $report->getText();
+    }
+}

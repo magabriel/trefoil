@@ -1,0 +1,38 @@
+================================================================================
+AutoIndexPlugin
+Used terms
+================================================================================
+
+ Elements: "chapter"
+
+Term                           Variant                        Item                           Count Source                         
+------------------------------ ------------------------------ ------------------------------ ----- ------------------------------ 
+term4 one                      term4 one                      chapter2.md                        1 auto-index.yml                 
+term4 three                    term4 three                    chapter2.md                        1 auto-index.yml                 
+term4 two                      term4 two                      chapter2.md                        1 auto-index.yml                 
+term0                          term0                          chapter1.md                        2 auto-index.yml                 
+term2[s]                       term2                          chapter1.md                        1 auto-index.yml                 
+                               term2s                         chapter1.md                        1 auto-index.yml                 
+term3[es]                      term3                          chapter1.md                        1 auto-index.yml                 
+                               term3es                        chapter1.md                        1 auto-index.yml                 
+term10                         term10                         chapter4.md                        1 auto-index.yml                 
+term11a                        term11a                        chapter4.md                        2 auto-index.yml                 
+term11b                        term11b                        chapter4.md                        2 auto-index.yml                 
+term 21                        term 21                        chapter4.md                        2 manual                         
+term 22                        term 22                        chapter4.md                        1 manual                         
+term1                          term1                          chapter1.md                        1 auto-index.yml                 
+term20                         term20                         chapter4.md                        2 manual                         
+term5 four                     term5 four                     chapter2.md                        1 auto-index.yml                 
+term5 [one|two]                term5 one                      chapter2.md                        1 auto-index.yml                 
+                               term5 two                      chapter2.md                        1 auto-index.yml                 
+term5 three                    term5 three                    chapter2.md                        1 auto-index.yml                 
+
+
+================================================================================
+AutoindexPlugin
+Not used terms
+================================================================================
+
+Term                           Source                         
+------------------------------ ------------------------------ 
+non-existing-term              auto-index.yml                 

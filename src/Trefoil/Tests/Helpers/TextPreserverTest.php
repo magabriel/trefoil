@@ -62,7 +62,26 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase
         $this->object->setText($html);
         $this->object->preserveHtmlTags(array('a'));
 
-        $this->assertNotEquals($html, $this->object->getText());
+        $this->assertNotContains("Lorem", $this->object->getText());
+        $this->assertNotContains("ipsum", $this->object->getText());
+
+        $this->object->restore();
+        $this->assertEquals($html, $this->object->getText());
+    }
+
+    public function testPreserveHtmlTagsWithEmbeddedTags()
+    {
+        $html = '<div class="myclass">';
+        $html .= '<a href="http://example.com/image.gif">Lorem <span>ipsum</span> dolor</a>';
+        $html .= '</div>';
+
+        $this->object->setText($html);
+        $this->object->preserveHtmlTags(array('a'));
+
+        $this->assertNotContains("Lorem", $this->object->getText());
+        $this->assertNotContains("ipsum", $this->object->getText());
+        $this->assertNotContains("dolor", $this->object->getText());
+        $this->assertNotContains("span", $this->object->getText());
 
         $this->object->restore();
         $this->assertEquals($html, $this->object->getText());

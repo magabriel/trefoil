@@ -72,7 +72,7 @@
                     {% endif %}
                     {% set partStarted = true %}
                 {% elseif item.config.element != 'chapter' and partStarted %}
-                    {{ helper.tocItemtEnd('end part') }}
+                    {{ helper.tocItemEnd('end part') }}
                     {% set partStarted = false %}
                 {% endif %}
 

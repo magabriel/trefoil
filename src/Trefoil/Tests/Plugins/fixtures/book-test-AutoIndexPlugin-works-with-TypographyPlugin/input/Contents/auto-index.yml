@@ -1,0 +1,11 @@
+#index:
+#    options:
+#        # Elements to process (default: "chapter")
+#        elements: ["chapter"]
+#
+#    terms:
+#        non-existing-term:
+#
+#    manual-terms:
+#        term10: "Term 10"
+

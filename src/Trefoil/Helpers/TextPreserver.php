@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Helpers;
 
 /**
@@ -39,30 +40,54 @@ class TextPreserver
 
     public function preserveHtmlTags($tags = array())
     {
-        // replace all the contents of the tags with a placeholder
-        $regex = sprintf('/<(?<tag>(%s)[> ].*)>(?<content>.*)</Ums', implode('|', $tags));
+        if (count($tags) == 0) {
+            $tags = array('a', 'pre', 'code');
+        }
 
-        // PHP 5.3 compat
-        $me = $this;
+        // replace all the contents of the given tags with a placeholder
+        foreach ($tags as $tag) {
+            $pattern = '/';
+            $pattern .= '<%s(?<attrs>[^>]*)>'; // opening tag with optional attributes
+            $pattern .= '(?<content>.*)';
+            $pattern .= '<\/%s>'; // closing tag
+            $pattern .= '/Ums'; // Ungreedy, multiline, dotall
+            $regex = sprintf($pattern, $tag, $tag);
 
-        $this->text = preg_replace_callback(
-            $regex,
-            function ($matches) use ($me) {
-                $tag = $matches['tag'];
-                $content = $matches['content'];
+            // PHP 5.3 compat
+            $me = $this;
 
-                $placeHolder = $me->internalCreatePlacehoder($content, 'tag');
+            $this->text = preg_replace_callback(
+                $regex,
+                function ($matches) use ($me, $tag) {
+                    $content = $matches['content'];
+                    $attrs = $matches['attrs'];
+                    $placeHolder = $me->internalCreatePlacehoder($content, 'tag');
 
-                return sprintf('<%s>%s<', $tag, $placeHolder);
-
-            },
-            $this->text
-        );
-
+                    return sprintf('<%s%s>%s</%s>', $tag, $attrs, $placeHolder, $tag);
+                },
+                $this->text
+            );
+        }
     }
 
     public function preserveHtmlTagAttributes($attributes = array())
     {
+        if (count($attributes) == 0) {
+            $attributes = array(
+                'alt',
+                'class',
+                'data',
+                'id',
+                'href',
+                'name',
+                'rel',
+                'src',
+                'title',
+                'value',
+            );
+        }
+        // no attributes, so use a default list
+
         // replace all the contents of the attribute with a placeholder
         $regex = sprintf('/(?<attr>%s)="(?<value>.*)"/Ums', implode('|', $attributes));
 
@@ -74,7 +99,6 @@ class TextPreserver
             function ($matches) use ($me) {
                 $attr = $matches['attr'];
                 $value = $matches['value'];
-
                 $placeHolder = $me->internalCreatePlacehoder($value, 'attr');
 
                 return sprintf('%s="%s"', $attr, $placeHolder);

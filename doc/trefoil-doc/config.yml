@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '0.935'
+    version:          '0.1060'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -36,6 +36,7 @@ book:
         - { element: chapter,     number:   7,  content: chapter7.md }
         
         - { element: footnotes }
+        - { element: auto-index }
         - { element: auto-glossary }
         - { element: ebook-quiz-solutions }
 
@@ -54,11 +55,12 @@ book:
             theme:          TrefoilDoc
             toc:
                 deep:       3
-                elements:   ["appendix", "chapter", "part", "introduction"]
+                elements:   ["appendix", "chapter", "part", "introduction", "auto-index"]
 
             plugins:
                 enabled:
                     - AutoGlossary
+                    - AutoIndex
                     - DropCaps
                     - EbookRename
                     #- EpubCheck                # Uncomment to run the check

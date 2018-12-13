@@ -14,13 +14,19 @@ or to ease applying advanced formatting.
 
 {{ file('plugins-HtmlTweaksPlugin.md') }}
 
+{{ file('plugins-IllustrationsPlugin.md') }}
+
 {{ file('plugins-ImageExtraPlugin.md') }}
 
 {{ file('plugins-KindleTweaksPlugin.md') }}
 
+{{ file('plugins-LiteralListsPlugin.md') }}
+
 {{ file('plugins-ManualTitleLabelsPlugin.md') }}
 
 {{ file('plugins-TableExtraPlugin.md') }}
+
+{{ file('plugins-TabularListsPlugin.md') }}
 
 {{ file('plugins-TypographyPlugin.md') }}
 
