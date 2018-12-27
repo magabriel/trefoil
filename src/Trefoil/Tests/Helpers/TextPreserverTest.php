@@ -50,6 +50,51 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Trefoil\Helpers\TextPreserver::reserveMarkdownCodeBlocks
+     * @covers Trefoil\Helpers\TextPreserver::restore
+     */
+    public function testPreserveMarkdownCodeBlocks()
+    {
+        $markdown = <<<TEXT
+Lorem ipsum.
+
+~~~
+A fenced code block
+~~~
+
+Dolor sit amet `{@ an inline code block @}` lorem ipsum.
+
+~~~.php
+echo 'A PHP fenced code block';
+
+echo 'With multiple lines';
+~~~
+
+~~~.html
+{@ tabularlist_begin() @}
+    
+    ...the markdown list definition
+    
+{@ tabularlist_end() @}
+~~~
+
+~~~ .html
+<div>An HTML code block with the language specifier separated from the fence</div>
+~~~
+            
+TEXT;
+
+        $this->object->setText($markdown);
+        $this->object->preserveMarkdowmCodeBlocks();
+
+        $this->assertNotContains("~~~", $this->object->getText());
+        $this->assertNotContains("`", $this->object->getText());
+
+        $this->object->restore();
+        $this->assertEquals($markdown, $this->object->getText());
+    }
+
+    /**
      * @covers Trefoil\Helpers\TextPreserver::preserveHtmlTags
      * @covers Trefoil\Helpers\TextPreserver::restore
      */

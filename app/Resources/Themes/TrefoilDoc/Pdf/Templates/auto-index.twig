@@ -1,0 +1,34 @@
+<div class="item auto-index">
+    <h1 id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+
+    {{ item.content }}
+
+    {% set initial = "" %}
+    {% set group = "" %}
+    {% for term, data in app.get('publishing.index.definitions') %}
+        {% if data.anchorLinks|length > 0 %}
+            {% if data.group|first|upper != initial %}
+                {% set initial = data.group|first|upper %}
+                <h5>{{ initial }}</h5>
+            {% endif %}
+
+            <div class="links">
+                {% set hasEntries = (data.text != data.group) %}
+                {% if data.group != group %}
+                    <span class="group {{ hasEntries ? "with-entries" : "" }}">{{ data.group }}</span>
+                {% endif %}
+                {% set group = data.group %}
+
+                {% if data.text != group %}
+                    <span class="entry">{{ data.text }}</span>
+                {% endif %}
+
+                {% for reference in data.anchorLinks %}
+                    <a href="#auto-index-term-{{ reference }}">[&#8618;]</a>
+                {% endfor %}
+
+            </div>
+        {% endif %}
+    {% endfor %}
+
+</div>

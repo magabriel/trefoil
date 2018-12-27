@@ -21,7 +21,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $list->fromHtml('');
         $output = $list->toHtmlTable();
 
-        $this->assertEmpty($output);
+        $this->assertEmpty($output, "Empty list");
     }
 
     public function testSimpleListDefault()
@@ -29,7 +29,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-simple-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-simple-list-expected.html';
 
-        $this->executeTestSimpleList($input, $expected);
+        $this->executeTestSimpleList($input, $expected, null, "Simple list default");
     }
 
     public function testSimpleList0Categories()
@@ -37,7 +37,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-simple-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-simple-list-expected-0-categories.html';
 
-        $this->executeTestSimpleList($input, $expected, 0);
+        $this->executeTestSimpleList($input, $expected, 0, "Simple list 0 categories");
     }
 
     public function testSimpleList2Categories()
@@ -45,7 +45,15 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-simple-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-simple-list-expected-2-categories.html';
 
-        $this->executeTestSimpleList($input, $expected, 2);
+        $this->executeTestSimpleList($input, $expected, 2, "Simple list 2 categories");
+    }
+
+    public function testSimpleListMultiattribute()
+    {
+        $input = __DIR__ . '/fixtures/tabularlist-test-simple-list-multiattribute.html';
+        $expected = __DIR__ . '/fixtures/tabularlist-test-simple-list-multiattribute-expected.html';
+
+        $this->executeTestSimpleList($input, $expected, 5, "Simple list multiattribute");
     }
 
     public function testRowspanListDefault()
@@ -53,7 +61,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-expected.html';
 
-        $this->executeTestSimpleList($input, $expected);
+        $this->executeTestSimpleList($input, $expected, null, "Rowspan list default");
     }
 
     public function testRowspanList0Categories()
@@ -61,7 +69,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-expected-0-categories.html';
 
-        $this->executeTestSimpleList($input, $expected, 0);
+        $this->executeTestSimpleList($input, $expected, 0,"Rowspan list 0 categories");
     }
 
     public function testRowspanList1Category()
@@ -69,7 +77,7 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-expected-1-categories.html';
 
-        $this->executeTestSimpleList($input, $expected, 1);
+        $this->executeTestSimpleList($input, $expected, 1, "Rowspan list 1 category");
     }
 
     public function testRowspanList2Category()
@@ -77,10 +85,26 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list.html';
         $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-expected-2-categories.html';
 
-        $this->executeTestSimpleList($input, $expected, 2);
+        $this->executeTestSimpleList($input, $expected, 2, "Rowspan list 2 categories");
     }
 
-    protected function executeTestSimpleList($inputFile, $expectedFile, $numCategories = null)
+    public function testRowspanListMultiattribute()
+    {
+        $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-multiattribute.html';
+        $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-multiattribute-expected.html';
+
+        $this->executeTestSimpleList($input, $expected, 5, "Rowspan list multiattribute");
+    }
+
+    public function testRowspanListMultiattributeWithCategoriesGreaterThanDeep()
+    {
+        $input = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-multiattribute.html';
+        $expected = __DIR__ . '/fixtures/tabularlist-test-rowspan-list-multiattribute-expected.html';
+
+        $this->executeTestSimpleList($input, $expected, 4, "Rowspan list multiattribute greater than deep");
+    }
+
+    protected function executeTestSimpleList($inputFile, $expectedFile, $numCategories = null, $message = "")
     {
         $input = file_get_contents($inputFile);
         $expected = file_get_contents($expectedFile);
@@ -102,6 +126,6 @@ class TabularListTest extends \PHPUnit_Framework_TestCase
         // make them comparable
         $output = tidy_repair_string($output, array('indent' => true), 'utf8');
         $expected = tidy_repair_string($expected, array('indent' => true), 'utf8');
-        $this->assertEquals($expected, $output);
+        $this->assertEquals($expected, $output, $message);
     }
 }

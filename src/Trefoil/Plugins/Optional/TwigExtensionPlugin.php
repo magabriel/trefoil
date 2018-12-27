@@ -7,6 +7,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
@@ -50,7 +51,7 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            EasybookEvents::PRE_PARSE  => 'onItemPreParse',
+            EasybookEvents::PRE_PARSE => 'onItemPreParse',
             EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
         );
     }
@@ -215,12 +216,12 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
             $attributes['class'] = 'fragment ' . $attributes['class'];
             $rendered = Toolkit::renderHTMLTag($tag, $rendered, $attributes);
         }
-        
+
         // add pagebreak if asked
         if (isset($options['pagebreak']) && $options['pagebreak']) {
             $rendered .= '<div class="page-break"></div>';
         }
-        
+
         return $rendered;
     }
 

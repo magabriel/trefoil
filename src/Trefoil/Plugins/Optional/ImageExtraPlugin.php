@@ -18,11 +18,18 @@ use Trefoil\Plugins\BasePlugin;
 /**
  * This plugin brings support to extended image syntax:
  *
- * ![caption](image.name?class="myclass"&style="any_css_style_specification")
+ * - Explicit image path to provode compatibility with editors like MdCharm:
  *
- * Example:
+ * ![caption](my/images/image.name]
+ *
+ * - Extended image syntax with optional CSS class and style:
  *
  * ![this is an image](image.jpg?class="my-image-class"&style="border:_1px_solid_blue;_padding:_10px;")
+ *
+ * - Support for extended image styles (specifiable as classes) in themes as predefined
+ *   classes: *narrower*, *narrow**, *half*, and *wide*
+ *
+ * ![a narrow image](image.jpg?class="narrow")
  *
  */
 class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface

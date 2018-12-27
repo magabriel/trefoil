@@ -2,7 +2,7 @@ Introduction
 ============
 
 This is the documentation of **trefoil**, a project conceived as an extension
-to **easybook** (<http://easybook-project.org>). 
+to **easybook** (<https://easycorp.io/EasyBook>). 
 
 **trefoil** extends **easybook** to provide additional features for publication
 of *ebooks*, both fiction and non-fiction.
@@ -25,6 +25,12 @@ installed):**
  
 ~~~.bash
 book publish trefoil-doc kindle
+~~~
+
+**To get the *pdf* version:**
+ 
+~~~.bash
+book publish trefoil-doc print
 ~~~
 
 **To get the *doc-website* version:**

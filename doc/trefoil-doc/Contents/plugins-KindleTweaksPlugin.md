@@ -20,7 +20,6 @@ N> the plugin is available also for `Epub` editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:

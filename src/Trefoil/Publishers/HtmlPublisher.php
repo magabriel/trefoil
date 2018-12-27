@@ -50,6 +50,8 @@ class HtmlPublisher extends BasePublisher
         );
 
         // copy book images
-        $this->prepareBookImages($this->app['publishing.dir.output'] . '/images');
+        $targetImagesDir = $this->app['publishing.dir.output'] . '/images';
+        $this->app['filesystem']->mkDir($targetImagesDir);
+        $this->prepareBookImages($targetImagesDir);
     }
 }

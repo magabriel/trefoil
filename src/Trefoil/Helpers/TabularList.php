@@ -63,13 +63,20 @@ class TabularList
      */
     protected $deep = 0;
 
+    /**
+     * If a zero categories table needs headings.
+     *
+     * @var bool
+     */
+    protected $needsHeadingsForZeroCategories = false;
+
     public function __construct()
     {
         $this->table = new Table();
     }
 
     /**
-     * @param string $htmlList string with HTML <ul> tag
+     * @param string   $htmlList      string with HTML <ul> tag
      * @param int|null $numCategories number of list levels to be represented as categories (columns)
      *                                in the table (null=default)
      */
@@ -116,11 +123,13 @@ class TabularList
         // find max deep of tree and set default numcategories
         $this->findDeep($listAsArray);
         if ($this->numCategories === null) {
-            $this->numCategories = $this->deep;
+            $this->numCategories = $this->deep + 1;
         }
 
-        // ensure numcategories is never greater than deep
-        $this->numCategories = min($this->numCategories, $this->deep);
+        if ($this->numCategories == 1) {
+            $this->numCategories = 0;
+            $this->needsHeadingsForZeroCategories = true;
+        }
 
         $this->prepareTableDefinition($listAsArray);
     }
@@ -134,9 +143,9 @@ class TabularList
      */
     protected function prepareHtmlList($htmlList)
     {
-        $htmlList = preg_replace('/<li>(?!<p>)([^(<\/li>)]*)\n/U', '<li><p>$1</p>' . "\n", $htmlList);
-        $htmlList = preg_replace('/<li>(?!<p>)(.*)(?!<\/li>])\n/U', '<li><p>$1</p>' . "\n", $htmlList);
-        $htmlList = preg_replace('/<li>(?!<p>)(.*)<\/li>/U', '<li><p>$1</p></li>', $htmlList);
+        $htmlList = preg_replace('/<li>(?!<p>)/U', '<li><p>', $htmlList);
+        $htmlList = preg_replace('/(?<!<\/p>)<\/li>/U', '</p></li>', $htmlList);
+
         $htmlList = preg_replace('/<b>/U', '<strong>', $htmlList);
         $htmlList = preg_replace('/<\/b>/U', '</strong>', $htmlList);
 
@@ -225,13 +234,12 @@ class TabularList
     protected function prepareTableDefinition(array $listAsArray)
     {
         // make the table body from the list
-        $this->processList($listAsArray, 0);
+        $this->processListToTable($listAsArray);
 
         // ensure we have headings
         foreach ($this->table['tbody'] as $row) {
             $colIndex = 0;
             foreach ($row as $cell) {
-
                 // detected heading for cell is in the extra
                 $heading = isset($cell['extra']) ? $cell['extra'] : '';
                 $existingHeading = $this->table->getHeadingCell($colIndex);
@@ -244,7 +252,7 @@ class TabularList
         }
     }
 
-    protected function processList($list, $level)
+    protected function processListToTable($list, $level = 0)
     {
         foreach ($list as $listNodeIndex => $listNode) {
 
@@ -268,8 +276,8 @@ class TabularList
 
             // process the node sublist, if present 
             if (isset($listNode['list'])) {
-                if ($level < $this->numCategories) {
-                    $this->processList($listNode['list'], $level + 1);
+                if ($level + 1 < $this->numCategories) {
+                    $this->processListToTable($listNode['list'], $level + 1);
                 } else {
                     $cellContents .= $this->listToText($listNode['list']);
                     $this->table->addBodyCell($cellContents, (int)$where['row'], (int)$where['column']);
@@ -292,6 +300,11 @@ class TabularList
             'heading' => ''
         ];
 
+        // if we don't use categories then we don't need headings
+        if ($this->numCategories == 0 && !$this->needsHeadingsForZeroCategories) {
+            return $node;
+        }
+
         // extract heading
         $matches = [];
 
@@ -302,6 +315,8 @@ class TabularList
         )) {
             $node['heading'] = $matches['heading'];
             $node['text'] = trim(substr($node['text'], strlen($matches['all'])));
+            // remove final paragraph closing tag
+            $node['text'] = str_replace('</p>', '', $node['text']);
         }
 
         return $node;
@@ -353,8 +368,18 @@ class TabularList
      */
     protected function createNewRowIfNeeded($level, $listNodeIndex)
     {
-        $needsRowspan = ($level > 0 && $listNodeIndex > 0) && $this->numCategories <= $this->deep;
+        $needsRowspan = ($level > 0 && $listNodeIndex > 0);
         $needsNewRow = $needsRowspan || $level === 0 && $listNodeIndex === 0;
+
+        // if we need more categories than the list's deep it means that
+        // the last level is a list and we are going to represent it as additional categories.
+        if ($this->numCategories > $this->deep) {
+            // if we are at the latest level (the deepest list), we don't want rowspan or a new row
+            if ($level === $this->deep - 1) {
+                $needsRowspan = false;
+                $needsNewRow = false;
+            }
+        }
 
         if ($needsNewRow) {
             $this->table->addBodyRow();

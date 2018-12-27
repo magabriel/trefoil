@@ -7,11 +7,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Helpers\TextPreserver;
 use Trefoil\Plugins\BasePlugin;
 
 /**
@@ -48,12 +50,16 @@ use Trefoil\Plugins\BasePlugin;
  */
 class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 {
+    const SAVED_TEXT_BEGIN = '<<saved-text-';
+    const SAVED_TEXT_END = '->>';
+
     protected $illustrations = [];
+    protected $savedText = [];
 
     public static function getSubscribedEvents()
     {
         return [
-            EasybookEvents::PRE_PARSE  => ['onItemPreParse', -100],
+            EasybookEvents::PRE_PARSE => ['onItemPreParse', -100],
             EasybookEvents::POST_PARSE => ['onItemPostParse', -1100]
         ];
     }
@@ -67,20 +73,34 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $event->getItemProperty('original');
 
-        $content = $this->parseAndRenderIllustrations($content);
+        $content = $this->processItem($content);
 
         $event->setItemProperty('original', $content);
     }
 
-    public function onItemPostParse(ParseEvent $event)
+    /**
+     * Process the current item, parsing and rendering all the illustrations.
+     *
+     * @param $content
+     *
+     * @return mixed
+     */
+    protected function processItem($content)
     {
-        $this->init($event);
+        $this->app['publishing.active_item.illustrations'] = [];
 
-        $content = $event->getItemProperty('content');
+        $preserver = new TextPreserver();
+        $preserver->setText($content);
+        $preserver->preserveMarkdowmCodeBlocks();
+        $content = $preserver->getText();
 
-        $this->replaceTablesWithIllustrations();
+        $content = $this->parseAndRenderIllustrations($content);
 
-        $event->setItemProperty('content', $content);
+        $preserver->setText($content);
+        $preserver->restore();
+        $content = $preserver->getText();
+
+        return $content;
     }
 
     /**
@@ -92,8 +112,6 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function parseAndRenderIllustrations($content)
     {
-        $this->app['publishing.active_item.illustrations'] = [];
-
         $addIllustrationsLabels = in_array('illustration', $this->app->edition('labels') ?: array());
         $listOfTables = [];
         $parentItemNumber = $this->item['config']['number'];
@@ -117,18 +135,18 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 $caption = $matches['caption'];
 
                 $data = $this->preProcessHeaders($matches['data']);
-                
+
                 $counter++;
 
                 $slug = $this->app->slugify('Illustration ' . $parentItemNumber . '-' . $counter);
 
                 $parameters = array(
-                    'item'    => array(
+                    'item' => array(
                         'caption' => $caption,
                         'content' => $data,
-                        'label'   => '',
-                        'number'  => $counter,
-                        'slug'    => $slug,
+                        'label' => '',
+                        'number' => $counter,
+                        'slug' => $slug,
                     ),
                     'element' => array(
                         'number' => $parentItemNumber,
@@ -148,11 +166,11 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 $listOfTables[] = $parameters;
 
                 $classes = implode(' ', explode(' ', str_replace('.', ' ', $matches['class'])));
-                
+
                 // complete the template parameters
                 $parameters['item']['label'] = $label;
                 $parameters['item']['classes'] = $classes;
-                
+
                 try {
                     // render with a template
                     return $this->app->render('illustration.twig', $parameters);
@@ -165,7 +183,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                         '</blockquote></div>',
                         $parameters['item']['classes'] ? ' ' . $parameters['item']['classes'] : '',
                         $parameters['item']['slug'],
-                        $parameters['item']['label'] ? $parameters['item']['label']. ' - ' : '',
+                        $parameters['item']['label'] ? $parameters['item']['label'] . ' - ' : '',
                         $parameters['item']['caption'],
                         $parameters['item']['content']
                     );
@@ -214,7 +232,18 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
         return $content;
     }
-    
+
+    public function onItemPostParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        $content = $event->getItemProperty('content');
+
+        $this->replaceTablesWithIllustrations();
+
+        $event->setItemProperty('content', $content);
+    }
+
     /**
      * Replace all tables (in the internal list of tables) in the current item
      * with the detected illustrations.

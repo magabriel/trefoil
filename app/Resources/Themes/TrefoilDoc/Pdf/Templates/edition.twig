@@ -1,0 +1,88 @@
+<div class="item edition">
+  
+  <div class="credits">
+  {% spaceless %}
+
+      {% if book.reviewer %}
+          <p><i>Revisión técnica:</i>
+          {% if book.reviewer is iterable %}
+              {{ book.reviewer|join(', ') }}
+          {% else %}
+              {{ book.reviewer }}
+          {% endif %}
+          </p>
+      {% endif %}
+
+      {% if book.editor %}
+          <p><i>Dirección editorial:</i>
+          {% if book.editor is iterable %}
+              {{ book.editor|join(', ') }}
+          {% else %}
+              {{ book.editor }}
+          {% endif %}
+          </p>
+      {% endif %}
+      
+      {% if book.designer %}
+          <p><i>Diseño y adaptación técnica:</i>
+          {% if book.designer is iterable %}
+                {{ book.designer|join(', ') }}<br/>
+          {% else %}
+              {{ book.designer }}
+          {% endif %}
+          </p>
+      {% endif %}
+
+  {% endspaceless %}
+  </div>
+  
+  <div class="nocredits">
+    <div class="data">
+    {% spaceless %}
+
+      {% if edition.isbn %}
+          ISBN {{ edition.isbn }}
+
+      {% endif %}
+      {% if book.version %}
+      {% elseif book.edition %}
+          Edición {{ book.edition }} - {{ book.publication_date|default('now')|date('YmdHi') }}
+      {% else %}
+          {{ book.publication_date|default('now')|date('YmdHi') }}
+      {% endif %}
+
+      {% endspaceless %}
+    </div>
+    
+    <hr/>
+    
+    <div class="copyright">
+      {% spaceless %}
+
+      {# &copy; {{ "now"|date("Y") }} - {{ book.copyright|default(book.publisher)|default(book.author) }} #}
+
+      {% if book.copyright %}
+          &copy; {{ book.copyright }}
+      {% endif %}
+
+      {% if book.author %}
+          &copy; {{ book.author }}
+      {% endif %}
+      {% if book.authors is defined %}
+          &copy; {{ book.authors|slice(0, -1)|join(', ') ~ (book.authors|length > 1 ? ' y ' : '') ~ book.authors|last() }}
+      {% endif %}
+
+      {% block content %}
+          {{ item.content }}
+      {% endblock %}
+
+      {% endspaceless %}
+    </div>
+    
+    {% if book.version %}
+        <div style="font-size:.7em">Versión {{ book.edition }}.{{ book.version }} - {{ book.publication_date|default('now')|date('YmdHi') }}</div>
+    {% endif %}
+
+  </div>
+
+</div>

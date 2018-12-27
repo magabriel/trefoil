@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="{{ book.language }}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!-- Metadata used by PrinceXML to set PDF metadata -->
+{% if book.version and edition.debug %}
+    <title>{{ book.title }} ({{ book.version }})</title>
+{% else %}
+    <title>{{ book.title }}</title>
+{% endif %}    
+    <meta name="author" content="{{ book.author | default(book.authors|join(', ')) }}" />
+    <meta name="subject" content="{{ book.subject | join(', ') }}{{ book.subtitle ? ', ' ~ book.subtitle : '' }}"/>
+    <meta name="date" content="{{ book.publication_date|date('Y') }}"/>
+    <meta name="generator" content="{{ book.generator.name~' '~book.generator.version }}"/>
+    <meta name="keywords" content=""/>
+</head>
+
+<body>
+
+{% for item in items %}
+    {{ item.content }}
+{% endfor %}
+
+{% if edition.pdf_engine == 'wkhtmltopdf' %}
+    {% include 'wkhtmltopdf-book-body.twig' %}
+{% endif %}
+</body>
+</html>

@@ -6,12 +6,12 @@ easybook:
         epubcheck.path: '/usr/local/bin/epubcheck.jar'
 book:
     title:            'Trefoil documentation'
-    author:           ''
-    edition:          '2014'
+    author:           'Miguel A. Gabriel - magabriel@gmail.com'
+    edition:          '2018'
     language:         en
     publication_date: ~
 
-    version:          '0.1060'
+    version:          '1.188'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -66,7 +66,8 @@ book:
                     #- EpubCheck                # Uncomment to run the check
                     - QualityControl
                     - EpubUncompress
-                    - FootnotesExtra
+                    #- FootnotesExtra           # Deprecated
+                    - FootnotesExtend
                     - HtmlTweaks
                     - ImageExtra
                     #- KindleTweaks             # disabled because interferes with EbookQuiz
@@ -76,6 +77,9 @@ book:
                     - Typography
                     - VersionUpdater
                     - EbookQuiz
+                    - Illustrations
+                    - LiteralLists
+                    - TabularLists
 
                 options:
                     DropCaps:
@@ -99,6 +103,9 @@ book:
                         checkboxes: true
                         fix_spanish_style_dialog: false
 
+                    FootnotesExtend:
+                        type: item  # (end, inject, item, inline)
+
         ebook:
             extends:         base-edition
             format:          epub
@@ -111,7 +118,43 @@ book:
             extends:         base-edition
             format:          html
             include_styles:  true
-            #images_base_dir: /images/doc-en/
             highlight_code:  true
             toc:
                 deep:        3
+
+        doc-website-local: # Like doc-website for local test
+            extends:         base-edition
+            format:          html
+            include_styles:  true
+            highlight_code:  true
+            toc:
+                deep:        3
+            is_local:        true # forces usage of explicit https to load net resources
+
+        print:
+            extends:         base-edition
+            format:          pdf
+            margin:
+                top:        25mm
+                bottom:     25mm
+                inner:      30mm
+                outter:     20mm
+            page_size:      A4
+            toc:
+                deep:       4
+                elements:
+                    - toc
+                    - lot
+                    - appendix
+                    - chapter
+                    - part
+                    - introduction
+                    - footnotes
+                    - auto-index
+                    - glossary
+
+            two_sided:      false
+            plugins:
+                options:
+                    FootnotesExtend:
+                        type: inject

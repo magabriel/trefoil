@@ -16,8 +16,7 @@
         {% endif %}
 
         {% if book.author %}
-            <h4>{{ app.labels.label.author | default('Author') }}:</h4>
-            <p>&nbsp;&nbsp;{{ book.author }}</p>
+            <h4>{{ book.author }}</h4>
         {% endif %}
         {% if book.authors is defined %}
             <h4>{{ app.labels.label.authors | default('Authors') }}:</h4>

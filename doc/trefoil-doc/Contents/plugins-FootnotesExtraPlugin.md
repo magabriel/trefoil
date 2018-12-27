@@ -8,14 +8,13 @@ transform them into endnotes (i.e. at the end of the book).
 This plugin is available for all editions.
 
 N> ##### Deprecated
-N> This plugin is deprecated. Use **FootnotesExtendPlugin** instead
+N> This plugin is deprecated. Use [FootnotesExtendPlugin](#footnotesextendplugin) instead
 
 ### Usage
 
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -27,7 +26,7 @@ book:
 The Markdown parser converts footnotes into hyperlinks, where the link target 
 is the note text at the bottom of the document.
 
-While this behavior[^note1] is adequate for printed books, ebooks are a different 
+While this behavior is adequate for printed books, ebooks are a different 
 mattter. The "footnotes at the end of the chapter" approach does not work
 well for electronic reading devices or applications because the notes stand 
 in the way of the normal reading flow.
@@ -45,9 +44,12 @@ N> Create an adequate implementation for editions different from `epub` and `mob
 {% endif %}
 ### Output
 
-The plugin will generate a report[^note2] in the output directory called `report-FootnotesPlugin.txt`
+N> ##### Note
+N> As this plugin is deprecated, it is not active for this book. 
+N> Use [FootnotesExtendPlugin](#footnotesextendplugin) instead.
+N> 
+N> The following example is left here for documentation purposes but it will not be rendered.
+
+The plugin will generate a report in the output directory called `report-FootnotesPlugin.txt`
 with a summary of terms processed and problems found.
-
-[^note1]: This is a footnote just for showing an example.
-
-[^note2]: Another footnote, also with dummy text just to have something to work with .
+ 

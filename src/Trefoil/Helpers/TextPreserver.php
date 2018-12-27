@@ -38,6 +38,31 @@ class TextPreserver
         return $this->text;
     }
 
+    public function preserveMarkdowmCodeBlocks()
+    {
+        $regExp = '/';
+        $regExp .= '(?<codeblock>'; // code block capture group
+        $regExp .= '(?<fenced>^~~~.*[^(?~~~)]+^~~~)'; // fenced code block
+        $regExp .= '|'; // or
+        $regExp .= '(?<inline>`[^`\n]+`)'; // inline code block
+        $regExp .= ')'; // code block capture group ends
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
+
+        $this->text = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                $content = $matches['codeblock'];
+
+                $key = crc32($content);
+                $this->savedText[$key] = $content;
+                $placeHolder = $this->internalCreatePlacehoder($content, 'code');
+
+                return $placeHolder;
+            },
+            $this->text
+        );
+    }
+
     public function preserveHtmlTags($tags = array())
     {
         if (count($tags) == 0) {
@@ -53,15 +78,12 @@ class TextPreserver
             $pattern .= '/Ums'; // Ungreedy, multiline, dotall
             $regex = sprintf($pattern, $tag, $tag);
 
-            // PHP 5.3 compat
-            $me = $this;
-
             $this->text = preg_replace_callback(
                 $regex,
-                function ($matches) use ($me, $tag) {
+                function ($matches) use ($tag) {
                     $content = $matches['content'];
                     $attrs = $matches['attrs'];
-                    $placeHolder = $me->internalCreatePlacehoder($content, 'tag');
+                    $placeHolder = $this->internalCreatePlacehoder($content, 'tag');
 
                     return sprintf('<%s%s>%s</%s>', $tag, $attrs, $placeHolder, $tag);
                 },
@@ -91,15 +113,12 @@ class TextPreserver
         // replace all the contents of the attribute with a placeholder
         $regex = sprintf('/(?<attr>%s)="(?<value>.*)"/Ums', implode('|', $attributes));
 
-        // // PHP 5.3 compat
-        $me = $this;
-
         $this->text = preg_replace_callback(
             $regex,
-            function ($matches) use ($me) {
+            function ($matches) {
                 $attr = $matches['attr'];
                 $value = $matches['value'];
-                $placeHolder = $me->internalCreatePlacehoder($value, 'attr');
+                $placeHolder = $this->internalCreatePlacehoder($value, 'attr');
 
                 return sprintf('%s="%s"', $attr, $placeHolder);
             },
@@ -112,8 +131,6 @@ class TextPreserver
      * @param string $prefix
      *
      * @return string
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
      */
     public function internalCreatePlacehoder($string, $prefix = 'str')
     {

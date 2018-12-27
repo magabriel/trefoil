@@ -1,0 +1,26 @@
+<div class="item cover">
+
+  {% if edition.has_cover_image %}
+    <img src="images/cover.jpg" style="height: 100%; width:100%;"/>
+  {% else %}
+  
+    <h1>{{ book.title }}</h1>
+    
+    {% if book.subtitle %}
+      <h2 class="title">{{ book.subtitle }}</h2>
+    {% endif %}
+      {% if book.collection %}
+        <h3 class="collection">{{ book.collection }}</h3>
+      {% endif %}
+      {% if book.author%}
+        <h4 class="author">{{ book.author }}</h4>
+      {% endif %}
+      {% if book.authors %}
+        {% for author in book.authors %}
+              <h5 class="author">{{ author }}</h5>
+        {% endfor %}
+    {% endif %}
+
+  {% endif %}
+      
+</div>

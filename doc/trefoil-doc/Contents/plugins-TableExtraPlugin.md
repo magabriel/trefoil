@@ -18,7 +18,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -69,9 +68,9 @@ Column 1  | Column 2  | Column 3
   '       | 2.Two     | 2.Three
  
 Usin *single quote* instead of *double quote* will make the rowspanned cell contents 
-align to the cell top of instead of the middle.
+align to the cell top of instead than the middle.
 
-#### Adding colpanned cells
+#### Adding colspanned cells
 
 An empty cell will be joined whith the preceding cell in the same row:
 
@@ -91,7 +90,7 @@ Column 1  | Column 2  | Column 3
 
 T> ##### Tip
 T> To avoid a blank cell to be interpreted as colspanned, enter `&nbsp;` 
-as its contents, as in the following example.
+T> as its contents, as in the following example.
 
 Column 1  | Column 2  | Column 3
 ----------|-----------|------------

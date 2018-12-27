@@ -18,12 +18,10 @@ use Trefoil\Util\Toolkit;
 /**
  * Several tweaks to make the ebook more compatible with Kindle MOBI format
  *
- * <li>
- * <b>Paragraphs inside lists:</b> Convert all &lt;p&gt tags inside a &lt;li&gt; tag
- * to line breaks (&lt;br/&gt;).
+ * - **Paragraphs inside lists:** Convert all `<p>` tags inside a `<li>` tag
+ * to line breaks (`<br/>`).
  *
- * <li>
- * <b>Table cell alignment:</b> Assign explicit alignment to table cell tags via style tag.
+ * - **Table cell alignment:** Assign explicit alignment to table cell tags via style tag.
  *
  */
 class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
@@ -55,8 +53,8 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     /**
      * Convert paragraphs inside list elements to line breaks
      *
-     * ONLY replaces the first '<p>..</p>' inside the '<li>..</li>' (the one that
-     * immediately follows the '<li>') to better preserve formatting for
+     * ONLY replaces the first `<p>..</p>` inside the `<li>..</li>` (the one that
+     * immediately follows the `<li>`) to better preserve formatting for
      * newer readers.
      *
      * @param string $content
@@ -105,7 +103,7 @@ class KindleTweaksPlugin extends BasePlugin implements EventSubscriberInterface
     }
 
     /**
-     * Assing explicit alignment via style to table cells
+     * Assign explicit alignment via style to table cells
      *
      * @param string $content
      *

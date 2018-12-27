@@ -1,0 +1,25 @@
+/*
+ * LiteralListsPlugin
+ */
+
+ul.literal-list > li {
+    list-style-type: none;
+}
+
+ul.literal-list > li {
+    text-indent: -1.1em;
+}
+
+ul.literal-list > li > p:first-child {
+    text-indent: -1.1em;
+}
+
+ul.literal-list > li > p:not(:first-child) {
+    text-indent: 0;
+}
+
+/* If using KindleTweaksPlugin, undo the indent compensation */
+ul.literal-list > li.no-p > p:first-child {
+    text-indent: 0;
+}
+

@@ -1,3 +1,7 @@
+easybook:
+    parameters:
+        parser.options:
+            code_block_type: fenced
 book:
     title:            'Test book - IllustrationsPlugin'
     author:           'trefoil'
@@ -13,13 +17,14 @@ book:
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
         - { element: chapter, number: 3, content: chapter3.md }
+        - { element: chapter, number: 4, content: chapter4.md }
 
         - { element: lot }
 
     editions:
         ebook:
             format:         epub
-            highlight_code: false
+            highlight_code: true
             include_styles: true
             labels:         ['appendix', 'chapter', 'figure', 'illustration']  # labels also available for: "figure", "table"
             theme:          Theme2
@@ -27,8 +32,8 @@ book:
                 deep:       1
                 elements:   ["appendix", "chapter", "part", "lot", "lof"]
             isbn:           1234567890X
-            plugins:      
-                enabled:  
+            plugins:
+                enabled:
                     - Illustrations
                                                      
     

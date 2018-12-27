@@ -13,11 +13,10 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
-                enabled: [ HTMLTweaks ]
+                enabled: [ HtmlTweaks ]                
 ~~~ 
 
 The actual tweaks definitions are read from a separate `yaml` file:
@@ -25,7 +24,9 @@ The actual tweaks definitions are read from a separate `yaml` file:
 ~~~.yaml
 # <book-dir>/Contents/html-tweaks.yml
 #  or
-# <current-theme>/Config/html-tweaks.yml
+# <current-theme>/<format>/Config/html-tweaks.yml
+#  or
+# <current-theme>/Common/Config/html-tweaks.yml
 tweaks:
     # replacements to be made at onPreParse time
     onPreParse:        
@@ -51,7 +52,7 @@ tweaks:
         another-tweak-name:
             tag: 'tag name'
             # same options than onPreParse
-            ----
+            ...
 ~~~ 
 
 ### Description
@@ -78,7 +79,8 @@ N> book contents directory.
 The tweaks' definitions are read from file `html-tweaks.yml`, that can be located:
 
 - In the book `/Contents` directory
-- In the theme `/Config/<format>` directory
+- In the theme `/<format>/Config` directory
+- In the theme `/Common/Config` directory
  
 The first one found will be used. This allows distributing the tweaks as part of the
 theme, or customizing them for an specific book.
@@ -92,9 +94,10 @@ tweaks will work on the HTML produced by the Markdown processor.
 ~~~.yaml
 # <book-dir>/Contents/html-tweaks.yml
 #  or
-# <current-theme>/Config/html-tweaks.yml
+# <current-theme>/<format>/Config/html-tweaks.yml
+#  or
+# <current-theme>/Common/Config/html-tweaks.yml
 tweaks:
-
     onPreParse:
         # enclose contents of all divs of class "one" with box1
         tweak-div-one:                                 
