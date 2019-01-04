@@ -14,22 +14,33 @@ use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\TextPreserver;
+use Trefoil\Helpers\TrefoilMarkerProcessor;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
 
 /**
  * Manage the illustrations in the book item.
  *
  * An illustration is a block delimited by '<<' and '<</' marks.
  *
- * Expected syntax:
+ * Expected syntax using trefoil markers:
  *
- * << ========= "This is the illustration caption" ========= {.optional-class}
- * . . . whatever Markdown or HTML content
- * <</ =================
+ *   {@ ======== illustration_begin("This is the illustration caption", ".optional-class" @}
+ *   . . . whatever Markdown or HTML content
+ *   {@ ======== illustration_end() @}
  *
- * where the '=' in the opening and closing block marks are optional, just to visually
- * delimit the illustration, and one or several classes can be specified between
- * curly brackets.
+ *   where the '=' in the opening and closing trefoil marks are optional, just to visually
+ *   delimit the illustration.
+ *
+ * OLD syntax (deprecated):
+ *
+ *   << ========= "This is the illustration caption" ========= {.optional-class}
+ *   . . . whatever Markdown or HTML content
+ *   <</ =================
+ *
+ *   where the '=' in the opening and closing block marks are optional, just to visually
+ *   delimit the illustration, and one or several classes can be specified between
+ *   curly brackets.
  *
  * ATX-style headers can be used inside of the illustration content and
  * will not be parsed by easybook (i.e. not added labels and ignored in the TOC).
@@ -50,17 +61,18 @@ use Trefoil\Plugins\BasePlugin;
  */
 class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    const SAVED_TEXT_BEGIN = '<<saved-text-';
-    const SAVED_TEXT_END = '->>';
+    /**
+     * @var int Number of currently open illustration_ calls
+     */
+    protected $illustrationCalls = 0;
 
     protected $illustrations = [];
-    protected $savedText = [];
 
     public static function getSubscribedEvents()
     {
         return [
             EasybookEvents::PRE_PARSE => ['onItemPreParse', -100],
-            EasybookEvents::POST_PARSE => ['onItemPostParse', -1100]
+            EasybookEvents::POST_PARSE => ['onItemPostParse', -1100] // after ParserPlugin
         ];
     }
 
@@ -76,6 +88,13 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
         $content = $this->processItem($content);
 
         $event->setItemProperty('original', $content);
+
+        $msg = (new \ReflectionClass($this))->getShortName() . ': ' . $this->item['config']['content'] . ': ';
+        if ($this->illustrationCalls > 0) {
+            throw new PluginException($msg . 'illustration_begin() call without ending previous.');
+        } else if ($this->illustrationCalls < 0) {
+            throw new PluginException($msg . 'illustration_end() call without illustration_begin().');
+        }
     }
 
     /**
@@ -89,22 +108,60 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->app['publishing.active_item.illustrations'] = [];
 
-        $preserver = new TextPreserver();
-        $preserver->setText($content);
-        $preserver->preserveMarkdowmCodeBlocks();
-        $content = $preserver->getText();
+        $content = $this->processTrefoilMarkers($content);
 
-        $content = $this->parseAndRenderIllustrations($content);
-
-        $preserver->setText($content);
-        $preserver->restore();
-        $content = $preserver->getText();
+        $content = $this->processIllustrations($content);
 
         return $content;
     }
 
     /**
+     * Parse the trefoil markers and translate them to the old syntax.
+     *
+     * @param $content
+     * @return string
+     */
+    protected function processTrefoilMarkers($content)
+    {
+        $processor = new TrefoilMarkerProcessor();
+
+        $processor->registerMarker('illustration_begin',
+            function ($caption, $class = '') {
+                $this->illustrationCalls++;
+                $classes = [];
+                foreach (explode(' ', $class) as $className) {
+                    if ($className !== '') {
+                        if (substr($className, 0, 1) !== '.') {
+                            $className = '.' . trim($className);
+                        }
+                        $classes[] = $className;
+                    }
+                };
+
+                $classList = join(' ', $classes);
+                if ($classList !== '') {
+                    return sprintf('<< "%s" {%s}', $caption, $classList);
+                }
+
+                return sprintf('<< "%s"', $caption);
+            }
+        );
+
+        $processor->registerMarker('illustration_end',
+            function () {
+                $this->illustrationCalls--;
+                return '<</';
+            }
+        );
+
+        return $processor->parse($content);
+    }
+
+    /**
      * Parse illustrations and convert them to HTML.
+     *
+     * It is needed on PreParse because it needs to be done *before* easybook parses the
+     * markdown headers inside the illustration, to keep it from labeling and adding them to the toc.
      *
      * @param $content
      *
@@ -152,7 +209,6 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                         'number' => $parentItemNumber,
                     ),
                 );
-
                 // the publishing edition wants to label illustrations
                 $label = '';
                 if ($addIllustrationsLabels) {
@@ -162,6 +218,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                         $label = $this->app->getLabel('table', $parameters);
                     }
                 }
+                $parameters['item']['label'] = $label;
 
                 $listOfTables[] = $parameters;
 
@@ -193,6 +250,28 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
         );
 
         $this->app['publishing.active_item.illustrations'] = $listOfTables;
+
+        return $content;
+    }
+
+    /**
+     * Parse and render all illustrations (preserving the code blocks first).
+     *
+     * @param $content
+     * @return string
+     */
+    protected function processIllustrations($content)
+    {
+        $preserver = new TextPreserver();
+        $preserver->setText($content);
+        $preserver->preserveMarkdowmCodeBlocks();
+        $content = $preserver->getText();
+
+        $content = $this->parseAndRenderIllustrations($content);
+
+        $preserver->setText($content);
+        $preserver->restore();
+        $content = $preserver->getText();
 
         return $content;
     }
@@ -250,26 +329,29 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function replaceTablesWithIllustrations()
     {
-        $newTables = [];
+        $tablesExceptFromCurrentItem = [];
 
-        // filter out the tables of this item
+        // filter out the tables in this item
         foreach ($this->app['publishing.list.tables'] as $itemTables) {
             $newItemTables = [];
-
             foreach ($itemTables as $table) {
-                if ($table['element']['number'] !== $this->item['config']['number']) {
+                // only add not-tables
+                if (!Toolkit::stringStartsWith($table['item']['content'], '<table>')) {
                     $newItemTables[] = $table;
                 }
             }
-
             if (count($newItemTables)) {
-                $newTables[] = $newItemTables;
+                $tablesExceptFromCurrentItem[] = $newItemTables;
             }
         }
 
-        // and append the illustrations of this item
-        $this->app['publishing.list.tables'] = $newTables;
-        $this->app->append('publishing.list.tables', array_values($this->app['publishing.active_item.illustrations']));
+        // and append the illustrations in this item
+        $illustrationsInThisItem = $this->app['publishing.active_item.illustrations'];
+        if (count($illustrationsInThisItem) > 0) {
+            $tablesExceptFromCurrentItem[] = array_values($this->app['publishing.active_item.illustrations']);
+        }
+
+        $this->app['publishing.list.tables'] = $tablesExceptFromCurrentItem;
     }
 
 }

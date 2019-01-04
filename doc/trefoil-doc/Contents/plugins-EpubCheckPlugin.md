@@ -14,7 +14,6 @@ This plugin is available for `epub` editions.
 # <book-dir>/config.yml 
 easybook:
     parameters:
-        ...
         epubcheck.path: '/path/to/epubcheck.jar'
         epubcheck.command_options: ''
 

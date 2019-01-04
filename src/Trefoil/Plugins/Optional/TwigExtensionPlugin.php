@@ -41,9 +41,9 @@ use Trefoil\Util\Toolkit;
  * <b>fragment()</b> function works like PHP's <i>include()</i>, allowing the inclusion of
  * another file into the current item.
  *
- * is a simplified version of <i>file()</i> without any variables or options.
- * The syntax is <i>fragment(filename)</i>. No page break will be inserted after the file contents.
- *
+ * The syntax is <i>fragment(filename, variables, options)</i> where "variables" and "options" are
+ * optional hash tables where you can pass variables {'variable': 'value'} or
+ * options {'pagebreak': true} to cause inserting a page break after the included fragment.
  *
  */
 class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface

@@ -27,10 +27,8 @@ book's `config.yml`:
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
-            ...
             theme: TrefoilTwo
 ~~~
 
@@ -125,7 +123,7 @@ packed into the final book for a given edition with the following configuration:
 ~~~.yaml
 book:
     editions:
-        <edition-name>:
+        edition-name:
             include_fonts:  true
             fonts: 
                 - Inconsolata-Regular

@@ -14,8 +14,13 @@
                                 </a></li>
                         {% else %}
                             <li>
-                                <span>{{ entry.element.number }}.{{ entry.item.number }}</span>
-                                <a href="#{{ entry.item.slug }}">{{ entry.item.caption }}</a>
+                                <a href="#{{ entry.item.slug }}">
+                                    {% if entry.item.label is empty %}
+                                        {{ entry.item.caption }}
+                                    {% else %}
+                                        <span>{{ entry.item.label }}</span>- {{ entry.item.caption }}
+                                    {% endif %}
+                                </a>
                             </li>
                         {% endif %}
                     {% endfor %}

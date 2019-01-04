@@ -38,19 +38,32 @@ table with some text (as a caption, for example). This plugin provides such
 functionality with a simple syntax:
 
 ~~~.markdown
+{@ ======== illustration_begin("This is the illustration caption" ".optional-class") @}
+. . . whatever Markdown or HTML content
+{@ ======== illustration_end() @}
+~~~
+
+where `illustration_begin()` and `illustration_end()` are *trefoil markers*.
+
+The `.optional-class`is one or several CSS classes to be applied to style the illustration.
+
+N> ##### What are Trefoil markers?
+N> Trefoil markers are a kind of function call wich produces HTML code to be 
+N> processed later. They are similar to `Twig` function calls but are enclosed 
+N> between `{@ ... @}` delimiters.
+N> 
+N> The "======" series between the opening `{@` and the function name is an optional
+N> delimiter to help visually identifiying the block in the text.
+
+
+**Old syntax (deprecated)**
+
+~~~.markdown
 << ========= "This is the illustration caption" ========= {.optional-class}
 . . . whatever Markdown or HTML content
 <</ =================
 ~~~
 
-where:
-
-- `<<` and `<</` marks are delimiters for the begining and end of the illustration.
-
-- `=` in the opening and closing block marks are optional, just to visually
-  delimit the illustration.
-  
-- `.optional-class`is one or several CSS classes to be applied to style the illustration.
 
 ATX-style headers can be used inside the illustration content and
 will not be parsed by easybook (i.e. not added labels and ignored in the TOC).
@@ -61,40 +74,48 @@ but the plugin will apply a default rendering if the template is not present.
 ### Example
 
 ~~~.markdown
-<< ========= "The example illustration" ========= {.class1 .class2}
+{@ ======== illustration_begin("A list as an illustration", ".class1 .class2") @}
 
-A list:
+This is a list:
 
 - One.
 - Two.
 - Three.
 
-And a table:
+{@ ======== illustration_end() @}
+
+{@ ======== illustration_begin("A table as an illustration", ".class1 .class2") @}
+
+This is a table:
 
 | Header 1  | Header 2  
 | --------- | ----------
 | One       | One text.
 | Two       | Two text.
 
-<</ =================
+{@ ======== illustration_end() @}
 ~~~
 
 Will be rendered as:
 
-<< ========= "The example illustration." ========= {.class1 .class2}
+{@ ======== illustration_begin("A list as an illustration", ".class1 .class2") @}
 
-A list:
+This is a list:
 
 - One.
 - Two.
 - Three.
 
-And a table:
+{@ ======== illustration_end() @}
+
+{@ ======== illustration_begin("A table as an illustration", ".class1 .class2") @}
+
+This is a table:
 
 | Header 1  | Header 2  
 | --------- | ----------
 | One       | One text.
 | Two       | Two text.
 
-<</ =================
+{@ ======== illustration_end() @}
 

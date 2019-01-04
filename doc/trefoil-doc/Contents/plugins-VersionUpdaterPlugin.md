@@ -13,10 +13,8 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ...
     version: '1.0'  # This is the version string
 
-    ....
     editions:
         <edition-name>
             plugins:

@@ -23,14 +23,12 @@ definition:
 ~~~.yaml 
 # config.yml
 book:
-    . . .
     contents:
         - { element: edition }
         - { element: toc }
         - { element: usage-instructions, content: usage-instructions.md, editions: [ebook, kindle] }
         - { element: print-instructions, content: print-instructions.md, formats: [pdf] }
         - { element: chapter,     number:   1,  content: chapter1.md }
-        . . .
 ~~~ 
 
 #### Syntax
@@ -75,19 +73,15 @@ This functionality allows just that:
 # my_series/config.yml
 easybook:
     # all of easybook parameters
-    . . .        
     
 book:
     editions:
         ebook:
             # definition of ebook edition
-            . . .
         kindle:
             # definition of kindle edition
-            . . .
         print:
             # definition of print edition   
-            . . .
 ~~~
 
 And then:
@@ -99,7 +93,6 @@ import:
       
 book:
     title: '...'
-    . . .
     
     # no 'editions' definitions!
 ~~~

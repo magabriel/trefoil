@@ -81,12 +81,27 @@ dd, dt {
 /* @headings
    -------------------------------------------------------------------------- */
 
+    /* Set the PDF bookmark levels depending on the existence of parts in the book.
+     * In a book with parts, the parts themselves are level 1 and others are up from 2.
+     */
+    {% set hasParts = false %}
+    {% for item in app['publishing.items'] %}
+        {% if item.config.element == 'part' %}
+            {% set hasParts = true %}
+        {% endif %}
+    {% endfor %}
+    {% set tocDeep = edition.toc.deep - (hasParts ? 1 : 0) %}
+
   /* Reset bookmarks for prince for all headings
    */
   h1,h2,h3,h4,h5,h6 { prince-bookmark-level: none }
   {% for element in edition.toc.elements %}
-    {% for level in 1..edition.toc.deep %}
-      .{{ element }} h{{ level }} { prince-bookmark-level: {{ level }} }
+    {% for level in 1..tocDeep %}
+        {% set theLevel = level %}
+        {% if hasParts and element == "chapter" %}
+            {% set theLevel = theLevel + 1 %}
+        {% endif %}
+      .{{ element }} h{{ level }} { prince-bookmark-level: {{ theLevel }} }
     {% endfor %}
   {% endfor %}
     
@@ -109,7 +124,7 @@ dd, dt {
    /* Reset bookmarks for prince for block classes
     */
     {% set classes_to_reset_headings = [
-        'marco', 'cuadro', 'bloque', 'glosario', 'auto-glossary', 'activity', 'activity-solution', 'questions', 'questions-solutions', 'exposition'
+        'activity', 'activity-solution', 'questions', 'questions-solutions', 'exposition'
     ] %}
     
     {% for level in 1..6 %} 
@@ -203,39 +218,11 @@ dd, dt {
         page-break-inside: avoid;
     }
 
-    .cuadro {
-        page-break-inside: avoid;
-    }
-
-    .cuadro-tabla-falsa blockquote h5,
-    .cuadro-tabla-falsa blockquote h6 {
-        page-break-inside: avoid !important;
-        page-break-before: avoid !important;
-        page-break-after: avoid !important;
-    }
-
 {% endblock %}
 
 {% block images %}
 {{ parent() }}
 
-    /* PrinceXML needs the top margin of the next paragraph removed */
-    div.image.right+p,
-    div.image.left+p, 
-    div.figure.right+p,
-    div.figure.left+p {
+    {% include 'style.ImageExtra.css.twig' %}
 
-      margin-top: -1.3em;
-      padding-top: 0;
-    }
-
-    /* And nudge the img a litle to the top to align with the prceding/next paragraph */
-    div.image.right img,
-    div.image.left img,
-    div.figure.right img,
-    div.figure.left img {
-      margin-top: .3em;
-      margin-bottom: -.3em;
-    }
-    
 {% endblock %}

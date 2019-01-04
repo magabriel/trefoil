@@ -71,12 +71,16 @@ class TrefoilMarkerProcessor
         $preserver->preserveMarkdowmCodeBlocks();
         $text = $preserver->getText();
 
-        // capture all trefoil blocks
+        // capture all trefoil markers
         $regExp = '/';
-        $regExp .= '(?<trefoilblock>';
+        $regExp .= '(?<trefoilmarker>';
         $regExp .= '{@ +'; // block opening delimiter followed by one or more blanks
-        $regExp .= '(' . join('|', $this->functionNames) . ')'; // one of the functions to process.
-        $regExp .= '[^\n]*'; // block content
+        $regExp .= '=*[ \n]*'; // optional visual delimiter: a series of "=" followed by optional blanks
+        $regExp .= '(?<function>'; // begin function call
+        $regExp .= '(' . join('|', $this->functionNames) . ')'; // one of the functions to process
+        $regExp .= ' *\('; // zero or more blanks and opening parenthesis
+        $regExp .= '.*(?=@})'; // rest of block content up until the closing (positive lookahead)
+        $regExp .= ')'; // end function call
         $regExp .= '@}'; // block closing
         $regExp .= ')';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
@@ -84,9 +88,9 @@ class TrefoilMarkerProcessor
         $text = preg_replace_callback(
             $regExp,
             function ($matches) {
-                $twigBlock = str_replace(['{@', '@}'], ['{{', '}}'], $matches['trefoilblock']);
+                $twigCall = '{{' . $matches['function'] . '}}';
 
-                return $this->twig->render($twigBlock);
+                return $this->twig->render($twigCall);
             },
             $text
         );

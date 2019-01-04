@@ -191,4 +191,15 @@ class Toolkit extends EasybookToolkit
         return sprintf('<%s%s />', $tag, $strAttributes);
     }
 
+    /**
+     * Return true if the $haystack starts with the $needle,
+     *
+     * @param $haystack
+     * @param $needle
+     * @return bool
+     */
+    public static function stringStartsWith($haystack, $needle) {
+        return substr($haystack, 0, strlen($needle)) === $needle;
+    }
+
 }

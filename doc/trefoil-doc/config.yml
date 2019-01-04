@@ -11,11 +11,12 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.188'
+    version:          '1.425'
 
     generator:        { name: trefoil, version: DEV }
 
     contents:
+        - { element: cover,        editions: [print] }
         - { element: edition }
         - { element: toc }
         - { element: introduction, content: introduction.md }
@@ -38,6 +39,8 @@ book:
         - { element: footnotes }
         - { element: auto-index }
         - { element: auto-glossary }
+        - { element: lot }
+        - { element: lof }
         - { element: ebook-quiz-solutions }
 
     editions:
@@ -51,12 +54,20 @@ book:
                 - Inconsolata-Regular
                 - Inconsolata-Bold
 
-            labels:         ['appendix', 'chapter', 'figure', 'part']
+            labels:         ['appendix', 'chapter', 'figure', 'part', 'illustration']
             theme:          TrefoilDoc
             toc:
-                deep:       3
-                elements:   ["appendix", "chapter", "part", "introduction", "auto-index"]
-
+                deep:        3
+                elements:
+                    - appendix
+                    - chapter
+                    - part
+                    - introduction
+                    - auto-index
+                    - auto-glossary
+                    - toc
+                    - lof
+                    - lot
             plugins:
                 enabled:
                     - AutoGlossary
@@ -119,42 +130,27 @@ book:
             format:          html
             include_styles:  true
             highlight_code:  true
-            toc:
-                deep:        3
 
         doc-website-local: # Like doc-website for local test
             extends:         base-edition
             format:          html
             include_styles:  true
             highlight_code:  true
-            toc:
-                deep:        3
             is_local:        true # forces usage of explicit https to load net resources
 
         print:
+            debug: true
             extends:         base-edition
             format:          pdf
+            has_cover_image: true
             margin:
                 top:        25mm
                 bottom:     25mm
                 inner:      30mm
                 outter:     20mm
             page_size:      A4
-            toc:
-                deep:       4
-                elements:
-                    - toc
-                    - lot
-                    - appendix
-                    - chapter
-                    - part
-                    - introduction
-                    - footnotes
-                    - auto-index
-                    - glossary
-
             two_sided:      false
             plugins:
                 options:
                     FootnotesExtend:
-                        type: inject
+                        type: inline

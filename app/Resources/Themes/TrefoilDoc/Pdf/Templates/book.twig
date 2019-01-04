@@ -14,6 +14,9 @@
     <meta name="date" content="{{ book.publication_date|date('Y') }}"/>
     <meta name="generator" content="{{ book.generator.name~' '~book.generator.version }}"/>
     <meta name="keywords" content=""/>
+{% if edition.debug %}
+    <link rel="stylesheet" href="default_styles.css"/>
+{% endif %}
 </head>
 
 <body>

@@ -1,16 +1,16 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-    <div class="item lot">
+    <div class="item lof">
         <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
     
         <ul>
-            {% for item in app.get('publishing.list.tables') %}
+            {% for item in app.get('publishing.list.images') %}
                 {% if item|length > 0 %}
                     {% for entry in item %}
                         {% if entry.item.caption is empty %}
                             <li><a href="#{{ entry.item.slug }}">
-                                    <span>{{ app.getLabel('table', entry) }}</span>
+                                    <span>{{ app.getLabel('figure', entry) }}</span>
                                 </a></li>
                         {% else %}
                             <li>
