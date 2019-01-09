@@ -9,6 +9,12 @@ index:
         "example index term 1":
         "example index term 2":
 
+        theme[s]: themes
+        html:
+        markdown:
+        template[s]: templates
+
+        plugin:
         plugins:
             terms:
                 convenient enhancements: enhancements
@@ -21,7 +27,7 @@ index:
             terms:
                 adding drop caps: adding
                 manual drop caps: manual
-        themes:
+
         easybook:
             terms:
                 extending:

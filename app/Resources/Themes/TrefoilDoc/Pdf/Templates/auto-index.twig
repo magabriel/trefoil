@@ -1,6 +1,6 @@
-<div class="item auto-index">
-    <h1 id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+{% extends '@theme/item.twig' %}
 
+{% block content %}
     {{ item.content }}
 
     {% set initial = "" %}
@@ -23,12 +23,18 @@
                     <span class="entry">{{ data.text }}</span>
                 {% endif %}
 
+                <span class="backlinks">
                 {% for reference in data.anchorLinks %}
-                    <a href="#auto-index-term-{{ reference }}">[&#8618;]</a>
+                    <a class="backlink" href="#auto-index-term-{{ reference }}">{# content added by javascript #}</a>
                 {% endfor %}
-
+                </span>
+                {#<div class="debug-backlinks">#}
+                {#{% for reference in data.anchorLinks %}#}
+                    {#<a class="backlink" href="#auto-index-term-{{ reference }}">#}{# content added by javascript #}{#</a>#}
+                {#{% endfor %}#}
+                {#</div>#}
             </div>
         {% endif %}
     {% endfor %}
 
-</div>
+{% endblock %}

@@ -7,11 +7,11 @@ easybook:
 book:
     title:            'Trefoil documentation'
     author:           'Miguel A. Gabriel - magabriel@gmail.com'
-    edition:          '2018'
+    edition:          '2019'
     language:         en
     publication_date: ~
 
-    version:          '1.425'
+    version:          '1.745'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -38,9 +38,9 @@ book:
         
         - { element: footnotes }
         - { element: auto-index }
-        - { element: auto-glossary }
         - { element: lot }
         - { element: lof }
+        - { element: auto-glossary, editions:[ebook, kindle, print] }
         - { element: ebook-quiz-solutions }
 
     editions:
@@ -137,6 +137,16 @@ book:
             include_styles:  true
             highlight_code:  true
             is_local:        true # forces usage of explicit https to load net resources
+            toc:
+                deep:        3
+                elements:
+                    - appendix
+                    - chapter
+                    - part
+                    - introduction
+                    - auto-index
+                    - lof
+                    - lot
 
         print:
             debug: true

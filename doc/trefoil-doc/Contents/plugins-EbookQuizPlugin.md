@@ -10,9 +10,8 @@ This plugin is available for all editions (read below note on compatibility).
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -120,12 +119,12 @@ The different quiz types share a common syntax, with the following remarks:
 
 #### ABC-type quiz syntax
 
-<div class="code markdown"><pre>
-&lt;div markdown="1" class="quiz-activity" data-id="quiz-id-1">
+~~~.markdown
+<div markdown="1" class="quiz-activity" data-id="quiz-id-1">
 ##### Activity 1 heading
 ###### Activity subheading (optional).
 
-Activity description (optional). Lorem ipsum dolor sit amet, 
+Activity description (optional). Lorem ipsum dolor sit amet,
 consetetur sadipscing elitr, sed diam non umyeirmod.
 
 1. First question.
@@ -141,21 +140,21 @@ consetetur sadipscing elitr, sed diam non umyeirmod.
         
         This is an optional explanation.
         
-        Lorem ipsum dolor sit amet, consetetur 
-        sadipscing elitr, sed diam nonumyeirmod 
-        tempor invidunt ut labore et dolore magna 
-        aliquyam erat, sed diamvoluptua. 
+        Lorem ipsum dolor sit amet, consetetur
+        sadipscing elitr, sed diam nonumyeirmod
+        tempor invidunt ut labore et dolore magna
+        aliquyam erat, sed diamvoluptua.
     
     3. Third response.
     4. Fourth response.
   
-&lt;/div>
-</pre></div>
+</div>
+~~~
 
 #### YNB-type quiz syntax
 
-<div class="code markdown"><pre>
-&lt;div markdown="1" class="quiz-activity" data-id="quiz-id-2">
+~~~.markdown
+<div markdown="1" class="quiz-activity" data-id="quiz-id-2">
 ##### Activity 2 heading
 ###### Activity subheading (optional).
 
@@ -177,13 +176,13 @@ consetetur sadipscing elitr, sed diam non umyeirmod.
         
         This is the correct response (false).
     
-&lt;/div>
-</pre></div>
+</div>
+~~~
 
 #### Questionnaire-type quiz syntax
 
-<div class="code markdown"><pre>
-&lt;div markdown="1" class="quiz-questionnaire" data-id="quiz-id-3" >
+~~~.markdown
+<div markdown="1" class="quiz-questionnaire" data-id="quiz-id-3" >
 ##### Questionnaire 1 heading
 ###### Questionnaire subheading (optional).
 
@@ -204,8 +203,8 @@ consetetur sadipscing elitr, sed diam non umyeirmod.
     
     The solution to the third question (optional).
 
-&lt;/div>
-</pre></div>
+</div>
+~~~
 
 
 ### Rendered examples
@@ -218,6 +217,11 @@ N> ##### NOTE
 N> The following rendered version of the examples uses plain HTML
 N> to implement the user interactions. No Javascript or other
 N> scripting language are allowed by the edition format.
+N> 
+N> To get the full funcionality of the rendered quizes you need an
+N> ebook reader whith supoort for page breaks. If you are reading 
+N> this in a reader which does not support page breaks the examples 
+N> **will not render properly**.
 
 {% else %}
 

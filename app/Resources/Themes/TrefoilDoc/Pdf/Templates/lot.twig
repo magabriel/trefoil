@@ -1,7 +1,6 @@
-<div class="item lot">
+{% extends '@theme/item.twig' %}
 
-<h1>{{ item.title }}</h1>
-
+{% block content %}
 <ul>
 {% for item in app.get('publishing.list.tables') %}
     {% if item|length > 0 %}
@@ -23,5 +22,4 @@
     {% endif %}
 {% endfor %}
 </ul>
-
-</div>
+{% endblock%}

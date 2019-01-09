@@ -13,8 +13,9 @@
     </li>
 {% endmacro %}
 
-<div class="item toc">
-    <h1 class="title" id="{{ item.slug }}"><span>{{ item.label }}</span> {{ item.title }}</h1>
+{% extends '@theme/item.twig' %}
+
+{% block content %}
     <ul class="toc_data">
         {% set hasParts = false %}
         {% for item in app['publishing.items'] %}
@@ -66,4 +67,4 @@
             {% endif %}
         {% endfor %}
     </ul>
-</div>
+{% endblock %}

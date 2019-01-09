@@ -1,0 +1,10 @@
+/* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata
+-------------------------------------------------------------------------- */
+{% set fontsdir=app.get('trefoil.publishing.dir.themes') ~ '/' ~ edition.theme ~ '/Common/Resources/Fonts' %}
+
+@font-face {
+    font-family: inconsolata;
+    font-style: normal;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Inconsolata/Inconsolata.ttf");
+}

@@ -274,5 +274,4 @@ Rendering examples:
 The plugin tries its best to produce a readable table which is consistent with the 
 input tabularlist.
 
-### How to automatically adapt to different edition types
 

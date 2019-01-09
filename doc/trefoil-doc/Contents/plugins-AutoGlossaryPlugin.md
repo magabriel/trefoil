@@ -12,7 +12,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -55,9 +54,9 @@ glossary:
     #   "term [one|two]": Definition which is 
     #              applied to "term one" and "term two"
     ####
-    terms: 
+    terms:
         "term": Definition
-~~~        
+~~~
 
 The glossary definitions for each book item are named after the item it applies to 
 (so the glossary for `chapter1.md` item should be `chapter1-auto-glossary.yml`)
@@ -78,7 +77,7 @@ glossary:
     #   "term [one|two]": Definition which is 
     #              applied to "term one" and "term two"
     ####
-    terms: 
+    terms:
         "term": Definition
 ~~~        
 
@@ -92,7 +91,7 @@ The glossary term definitions are of the form `"term": Term definition`, where e
 
 ~~~.yaml
 glossary:
-    terms: 
+    terms:
         # literal expression
         "Lorem ipsum": Pseudo-latin text used as filler or dummy text.
         
@@ -141,7 +140,7 @@ N> The autoglossary version for `epub` and `mobi` edition uses plain HTML to imp
 N> the user interactions. 
 N> No Javascript or other scripting language are allowed by the edition format.
 
-{% else %}
+{% elseif app.edition('format') in ['html'] %}
 
 N> ##### NOTE
 N> The version of the autoglossary in this documentation is not the same than the one you will get 
@@ -150,6 +149,16 @@ N> as this documentation uses `Twitter Bootstrap 3`, it has some additional diff
 N> 
 N> - The `epub` or `mobi` versions are rendered using only HTML.
 N> - This version uses Javascript to implement the user interactions.
+N> 
+N> Please generate the `epub` or `mobi` versions of this documentation
+N> to fully appreciate the differences.
+
+{% elseif app.edition('format') in ['pdf'] %}
+
+N> ##### NOTE
+N> The version of the autoglossary in this documentation is not the same than the one you will get 
+N> for an  `epub` or `mobi` ebook because of the limited capabilities of the format. The `pdf` 
+N> glossary is a traditional book glossary with added "return" links to each term occurrence.
 N> 
 N> Please generate the `epub` or `mobi` versions of this documentation
 N> to fully appreciate the differences.

@@ -5,6 +5,13 @@
 {% block common %}
 /* @common
    -------------------------------------------------------------------------- */
+
+.item h1.title,
+.item h2.title,
+.item h3.title {
+    text-align: left;
+}
+
 .item {
 {% if edition.two_sided %} page-break-before: right;
 {% endif %} page: page_normal;
@@ -483,6 +490,39 @@ sup {
 .item.toc ul li.level-6 {
     margin-left: 3em;
 }
+
+/* @auto-glossary
+   -------------------------------------------------------------------------- */
+div.item.auto-glossary .backlink {
+    content: " ({{ app.getLabel('page')|capitalize }} " target-counter(attr(href), page) ")";
+}
+
+div.item.auto-glossary a.backlink {
+    text-decoration: none;
+}
+
+/* @auto-index
+   -------------------------------------------------------------------------- */
+@media (scripting: initial-only) {
+    div.item.auto-index .backlink {
+        content: prince-script(addIndexEntry, attr(href), target-counter(attr(href), page));
+    }
+}
+
+@media (scripting: none) {
+    div.item.auto-index .backlink {
+        content: target-counter(attr(href), page);
+    }
+}
+
+div.item.auto-index a.backlink {
+    text-decoration: none;
+}
+
+div.item.auto-index .backlinks {
+    margin-left: .5em;
+}
+
 
 {% endblock %}
 {% endblock %}

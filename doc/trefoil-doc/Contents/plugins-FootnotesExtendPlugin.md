@@ -113,5 +113,5 @@ N> You can see an example of footnotes in this section (look at the source text)
 
 [^note1]: This is a footnote just for showing an example.
 
-[^note2]: Another footnote, also with dummy text just to have something to work with .
+[^note2]: Another footnote, also with dummy text just to have something to work with.
 

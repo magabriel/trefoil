@@ -1,27 +1,23 @@
-<div class="item lof">
+{% extends '@theme/item.twig' %}
 
-<h1>{{ item.title }}</h1>
-
+{% block content %}
 <ul>
-{% for item in app.get('publishing.list.images') %}
-    {% if item|length > 0 %}
-        {% for entry in item %}
-            {% if entry.item.caption is empty %}
-                <li><a href="#{{ entry.item.slug }}">
-                    <span>{{ app.getLabel('figure', entry) }}</span>
-                </a></li>
-            {% else %}
-                <li><a href="#{{ entry.item.slug }}">
-                  {% if entry.item.label is empty %}
-                      {{ entry.item.caption }}
-                  {% else %}
-                      <span>{{ entry.item.label }}</span>- {{ entry.item.caption }}
-                  {% endif %}
-                </a></li>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
-{% endfor %}
+    {% for item in app.get('publishing.list.images') %}
+        {% if item|length > 0 %}
+            {% for entry in item %}
+                {% if entry.item.caption is empty %}
+                    <li><a href="#{{ entry.item.slug }}"> <span>{{ app.getLabel('figure', entry) }}</span> </a></li>
+                {% else %}
+                    <li><a href="#{{ entry.item.slug }}">
+                            {% if entry.item.label is empty %}
+                                {{ entry.item.caption }}
+                            {% else %}
+                                <span>{{ entry.item.label }}</span>- {{ entry.item.caption }}
+                            {% endif %}
+                        </a></li>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
 </ul>
-
-</div>
+{% endblock %}

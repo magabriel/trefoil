@@ -32,17 +32,22 @@ class MobiPublisher extends Epub2Publisher
 
         $epubFilePath = $this->app['publishing.dir.output'] . '/book.epub';
 
-        $command = sprintf(
-            "%s %s -o book.mobi %s",
-            $this->app['kindlegen.path'],
-            $this->app['kindlegen.command_options'],
-            $epubFilePath
-        );
+        if (!file_exists($this->app['kindlegen.path'])) {
+            $this->app['console.output']->write("\n\n" .
+                sprintf('Kindlegen executable not found in %s', $this->app['kindlegen.path']) . "\n\n");
+        } else {
+            $command = sprintf(
+                "%s %s -o book.mobi %s",
+                $this->app['kindlegen.path'],
+                $this->app['kindlegen.command_options'],
+                $epubFilePath
+            );
 
-        $process = new Process($command);
-        $process->run();
+            $process = new Process($command);
+            $process->run();
 
-        $this->app['console.output']->write("\n\n" . $process->getOutput() . "\n\n");
+            $this->app['console.output']->write("\n\n" . $process->getOutput() . "\n\n");
+        }
 
         // remove the book.epub file used to generate the book.mobi file
         $this->app['filesystem']->remove($epubFilePath);

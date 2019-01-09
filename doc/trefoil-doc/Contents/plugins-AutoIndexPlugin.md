@@ -13,7 +13,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -29,7 +28,7 @@ finding where in the book a topic is written about).
 The index definition file is called `auto-index.yml` and has the following format.
 
 ~~~.yaml
-# <book-dir>/Contents/auto-index.yml 
+# <book-dir>/Contents/auto-index.yml
 index:
     options: # optional section
          # items where the auto index terms should be applied
@@ -58,7 +57,7 @@ index:
             text: "Term text for group" (optional)
             terms:
                 subterm-key-1: "subterm 1 text" (optional)
-                ...
+                # ...
                 subterm-key-n: "subterm n text" (optional)
 ~~~
 
@@ -82,17 +81,17 @@ A simple term has the form:
 
 ~~~.yaml
 terms:
-    term: text
+    term: some text
 ~~~
 
 where `term` is the word or expression to be indexed if found in the book text, and 
-`text` is the optional text to be used in the index entry as a replacement for the `term`.  
+`some text` is the optional text to be used in the index entry as a replacement for the `term`.  
 
 Example:
     
 ~~~.yaml
 terms:
-    JSON: 
+    JSON:
     yaml: YAML file format
 ~~~
     
@@ -105,7 +104,7 @@ index entries that cover several cases (like singular and plural forms of a word
 
 ~~~.yaml
 terms:
-    telephone[s]: # "telephone" or "telephones" 
+    telephone[s]: # "telephone" or "telephones"
     media [file|document]: # "media file" or "media document"
 ~~~
  
@@ -119,7 +118,7 @@ terms:
         text: "Term text" # optional
         terms:
             "subterm 1": "subterm 1 text" # optional
-            ...
+            # ...
             "subterm n": "subterm n text" # optional
 ~~~
 
@@ -175,7 +174,7 @@ manual-terms:
         text: "Term text for group" (optional)
         terms:
             subterm-key-1: "subterm 1 text" (optional)
-            ...
+            # ...
             subterm-key-n: "subterm n text" (optional)
 ~~~
 

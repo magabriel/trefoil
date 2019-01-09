@@ -1,5 +1,17 @@
 {% extends '@theme_common/style.css.twig' %}
 
+{% block custom %}
+/* ==========================================================================
+   @custom
+   ========================================================================== */
+{{ parent() }}
+{{ include('css/font_alte_haas_grotesk.twig') }}
+{{ include('css/font_neuton.twig') }}
+{{ include('css/font_open_sans.twig') }}
+{{ include('css/font_tex_gyre_heros.twig') }}
+{{ include('css/font_inconsolata.twig') }}
+{% endblock %}
+
 {% block layout %}
 /* ==========================================================================
    @layout
@@ -14,7 +26,7 @@
      -------------------------------------------------------------------------- */
      
   body {
-      font: 11pt/1.3 open-sans,sans-serif;
+      font: 10pt/1.3 open-sans,sans-serif;
   }
 
 {% endblock %}
@@ -115,10 +127,6 @@ dd, dt {
     hr {
       border-width: 1px;
       border-bottom: 0;
-    }
-    
-    .cuadro {
-      font-size: .9em;
     }
     
    /* Reset bookmarks for prince for block classes

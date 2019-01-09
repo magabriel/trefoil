@@ -135,10 +135,11 @@
 
                 {# empty or special item (anything different from 'chapter' and 'appendix' #}
             {% else %}
-                {{ helper.subItemStart(1) }}
+                {#{{ helper.subItemStart(1) }}#}
                 {{ helper.tocItemStart(1, item) }}
-                {{ helper.tocItem(1, item, entry) }}
+                {{ helper.tocItem(1, item, item) }}
                 {{ helper.tocItemEnd(1) }}
+                {#{{ helper.subItemEnd(1) }}#}
             {% endif %}
         {% endif %}
     {% endfor %}
