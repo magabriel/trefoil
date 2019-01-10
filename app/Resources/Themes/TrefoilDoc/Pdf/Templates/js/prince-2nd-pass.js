@@ -30,7 +30,7 @@ function rewriteSpan(span) {
         firstHref: '',
         lastPage: -1,
         lastHref: ''
-    }
+    };
 
     var links = span.getElementsByTagName("a");
 
