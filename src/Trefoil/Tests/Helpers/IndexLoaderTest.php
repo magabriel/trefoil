@@ -4,13 +4,15 @@ declare(strict_types=1);
 namespace Trefoil\Helpers;
 
 use EasySlugger\Utf8Slugger;
+use PHPUnit\Framework\TestCase;
+
 
 /**
  * Class IndexLoaderTest
  *
  * @package Trefoil\Helpers
  */
-class IndexLoaderTest extends \PHPUnit_Framework_TestCase
+class IndexLoaderTest extends TestCase
 {
 
     public function testLoadFromYamlString(): void

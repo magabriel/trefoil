@@ -11,13 +11,14 @@ declare(strict_types=1);
 namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\TableExtra;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TableExtraTest
  *
  * @package Trefoil\Tests\Helpers
  */
-class TableExtraTest extends \PHPUnit_Framework_TestCase
+class TableExtraTest extends TestCase
 {
 
     public function testConvertWellFormedTable(): void

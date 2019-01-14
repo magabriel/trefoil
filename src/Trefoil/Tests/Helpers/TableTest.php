@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\Table;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TableTest
  *
  * @package Trefoil\Tests\Helpers
  */
-class TableTest extends \PHPUnit_Framework_TestCase
+class TableTest extends TestCase
 {
 
     public function setUp()

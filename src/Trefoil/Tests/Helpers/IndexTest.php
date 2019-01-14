@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class IndexTest
  *
  * @package Trefoil\Helpers
  */
-class IndexTest extends \PHPUnit_Framework_TestCase
+class IndexTest extends TestCase
 {
     public function testAdd(): void
     {
@@ -22,6 +24,26 @@ class IndexTest extends \PHPUnit_Framework_TestCase
         static::assertEquals(1, $index->count());
 
         static::assertEquals($item, $index->getIterator()->current());
+    }
+
+    /**
+     * @param string $term
+     * @param string $group
+     * @param string $text
+     * @return IndexItem
+     */
+    protected function createItem(string $term,
+                                  string $group = '',
+                                  string $text = ''): IndexItem
+    {
+        $item = new IndexItem();
+        $item->setTerm($term);
+        $item->setSlug($term.'-slug');
+        $item->setGroup($group);
+        $item->setText($text);
+        $item->setSource($term.'-source');
+
+        return $item;
     }
 
     public function testRemove(): void
@@ -92,24 +114,5 @@ class IndexTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('term3', $list[2]->getTerm());
         static::assertEquals('term1', $list[3]->getTerm());
         static::assertEquals('term0', $list[4]->getTerm());
-    }
-
-    /**
-     * @param string $term
-     * @param string $group
-     * @param string $text
-     * @return IndexItem
-     */
-    protected function createItem(string $term,
-                                  string $group = '',
-                                  string $text = ''): IndexItem
-    {
-        $item = new IndexItem();
-        $item->setTerm($term);
-        $item->setSlug($term .'-slug');
-        $item->setGroup($group);
-        $item->setText($text);
-        $item->setSource($term .'-source');
-        return $item;
     }
 }

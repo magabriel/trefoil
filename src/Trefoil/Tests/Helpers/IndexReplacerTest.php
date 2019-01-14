@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class IndexReplacerTest
  *
  * @package Trefoil\Helpers
  */
-class IndexReplacerTest extends \PHPUnit_Framework_TestCase
+class IndexReplacerTest extends TestCase
 {
 
     public function testReplace(): void

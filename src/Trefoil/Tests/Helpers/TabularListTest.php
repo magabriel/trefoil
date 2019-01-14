@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\TabularList;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class TabularListTest
  *
  * @package Trefoil\Tests\Helpers
  */
-class TabularListTest extends \PHPUnit_Framework_TestCase
+class TabularListTest extends TestCase
 {
 
     public function setUp()

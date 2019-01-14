@@ -10,6 +10,7 @@ declare(strict_types=1);
  */
 namespace Trefoil\Tests\Helpers;
 
+use PHPUnit\Framework\TestCase;
 use Trefoil\Helpers\DropCaps;
 
 /**
@@ -17,7 +18,7 @@ use Trefoil\Helpers\DropCaps;
  *
  * @package Trefoil\Tests\Helpers
  */
-class DropCapsTest extends \PHPUnit_Framework_TestCase
+class DropCapsTest extends TestCase
 {
     public function setUp()
     {

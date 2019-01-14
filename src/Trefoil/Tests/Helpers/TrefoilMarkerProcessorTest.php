@@ -9,26 +9,30 @@ declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
+use PHPUnit\Framework\TestCase;
+
 
 /**
  * Class TrefoilMarkerProcessorTest
  *
  * @package Trefoil\Helpers
  */
-class TrefoilMarkerProcessorTest extends \PHPUnit_Framework_TestCase
+class TrefoilMarkerProcessorTest extends TestCase
 {
 
     public function testParse(): void
     {
         $processor = new TrefoilMarkerProcessor();
         $processor->registerMarker(
-            'one', function (){
-            return 'expanded1';
-        });
+            'one',
+            function () {
+                return 'expanded1';
+            });
         $processor->registerMarker(
-            'two', function ($thing){
-            return 'expanded2-'.$thing;
-        });
+            'two',
+            function ($thing) {
+                return 'expanded2-'.$thing;
+            });
 
         $input = <<<TEXT
 Lorem ipsum {@ one() @}.
@@ -51,13 +55,15 @@ TEXT;
     {
         $processor = new TrefoilMarkerProcessor();
         $processor->registerMarker(
-            'one', function (){
-            return 'expanded1';
-        });
+            'one',
+            function () {
+                return 'expanded1';
+            });
         $processor->registerMarker(
-            'two', function ($thing){
-            return 'expanded2-'.$thing;
-        });
+            'two',
+            function ($thing) {
+                return 'expanded2-'.$thing;
+            });
 
         $input = <<<TEXT
 Lorem ipsum {@ ========================= one() @}.
