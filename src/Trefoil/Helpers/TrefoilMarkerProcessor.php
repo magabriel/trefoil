@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
@@ -6,14 +7,11 @@ namespace Trefoil\Helpers;
  * Class TrefoilMarkerProcessor.
  *
  * This class processes trefoil markers.
- *
  * A trefoil marker is a block containing the call to one of the trefoil
  * expanded syntax functions, like: '{@ my_function() @}'.
- *
  * The class will convert those blocks to Twig and execute them as if they
  * were writen with Twig syntax (so the above example will be converted
  * to '{{ my_function() }}' and executed.
- *
  * It is needed to be able to add custom block markers using Twig syntax
  * without interfering with the "Twig in content" functionality of
  * TwigExtensionPlugin.
@@ -23,7 +21,7 @@ namespace Trefoil\Helpers;
 class TrefoilMarkerProcessor
 {
     /**
-     * @var string
+     * @var string[]
      */
     protected $functionNames = [];
 
@@ -35,14 +33,13 @@ class TrefoilMarkerProcessor
     public function __construct()
     {
         // we use a separate Twig environment for this
-        $this->twig = new \Twig_Environment(new \Twig_Loader_String(),
-            [
-                'debug' => true,
-                'cache' => false,
-                'strict_variables' => true,
-                'autoescape' => false
-            ]
-        );
+        $this->twig = new \Twig_Environment(
+            new \Twig_Loader_String(), [
+            'debug'            => true,
+            'cache'            => false,
+            'strict_variables' => true,
+            'autoescape'       => false,
+        ]);
     }
 
     /**
@@ -51,7 +48,8 @@ class TrefoilMarkerProcessor
      * @param          $trefoilMarkerName
      * @param callable $code
      */
-    public function registerMarker($trefoilMarkerName, callable $code)
+    public function registerMarker($trefoilMarkerName,
+                                   callable $code): void
     {
         $this->twig->addFunction(new \Twig_SimpleFunction($trefoilMarkerName, $code));
         $this->functionNames[] = $trefoilMarkerName;
@@ -60,10 +58,10 @@ class TrefoilMarkerProcessor
     /**
      * Parse a text to execute configured trefoil markers.
      *
-     * @param $text string
+     * @param string $text
      * @return string|null
      */
-    public function parse($text)
+    public function parse($text): ?string
     {
         // preserve all existing markdown code blocks to avoid being processed inside
         $preserver = new TextPreserver();
@@ -77,7 +75,7 @@ class TrefoilMarkerProcessor
         $regExp .= '{@ +'; // block opening delimiter followed by one or more blanks
         $regExp .= '=*[ \n]*'; // optional visual delimiter: a series of "=" followed by optional blanks
         $regExp .= '(?<function>'; // begin function call
-        $regExp .= '(' . join('|', $this->functionNames) . ')'; // one of the functions to process
+        $regExp .= '('.implode('|', $this->functionNames).')'; // one of the functions to process
         $regExp .= ' *\('; // zero or more blanks and opening parenthesis
         $regExp .= '.*(?=@})'; // rest of block content up until the closing (positive lookahead)
         $regExp .= ')'; // end function call
@@ -88,12 +86,11 @@ class TrefoilMarkerProcessor
         $text = preg_replace_callback(
             $regExp,
             function ($matches) {
-                $twigCall = '{{' . $matches['function'] . '}}';
+                $twigCall = '{{'.$matches['function'].'}}';
 
                 return $this->twig->render($twigCall);
             },
-            $text
-        );
+            $text);
 
         // restore the existing markdown code blocks
         $preserver->setText($text);

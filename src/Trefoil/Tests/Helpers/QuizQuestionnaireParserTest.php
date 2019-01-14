@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -38,10 +39,7 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers Trefoil\Helpers\QuizQuestionnaireParser::parse
-     */
-    public function testParseQuestionnaireWithResponses()
+    public function testParseQuestionnaireWithResponses(): void
     {
         $questionnaire = $this->loadFixture(__DIR__ . '/fixtures/questionnaire-responses.md');
         $expected = $this->loadExpected(__DIR__ . '/fixtures/questionnaire-responses-expected.yml');
@@ -49,13 +47,10 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
         // internal id is calculated as a hash from source and cannot be predicted
         $expected->setInternalId($questionnaire->getInternalId());
 
-        $this->assertEquals($expected, $questionnaire);
+        static::assertEquals($expected, $questionnaire);
     }
 
-    /**
-     * @covers Trefoil\Helpers\QuizQuestionnaireParser::parse
-     */
-    public function testParseQuestionnaireWithoutResponses()
+    public function testParseQuestionnaireWithoutResponses(): void
     {
         $questionnaire = $this->loadFixture(__DIR__ . '/fixtures/questionnaire-no-responses.md');
         $expected = $this->loadExpected(__DIR__ . '/fixtures/questionnaire-no-responses-expected.yml');
@@ -63,10 +58,15 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
         // internal id is calculated as a hash from source and cannot be predicted
         $expected->setInternalId($questionnaire->getInternalId());
 
-        $this->assertEquals($expected, $questionnaire);
+        static::assertEquals($expected, $questionnaire);
     }
 
-    protected function loadFixture($mdFile)
+    /**
+     * @param $mdFile
+     * @return QuizItem
+     * @throws \Exception
+     */
+    protected function loadFixture($mdFile): QuizItem
     {
         $fixture = file_get_contents($mdFile);
         $markdown = new MarkdownExtra();
@@ -74,12 +74,14 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
 
         $parser = new QuizQuestionnaireParser($text);
 
-        $questionnaire = $parser->parse();
-
-        return $questionnaire;
+        return $parser->parse();
     }
 
-    protected function loadExpected($ymlFile)
+    /**
+     * @param $ymlFile
+     * @return QuizQuestionnaire
+     */
+    protected function loadExpected($ymlFile): QuizQuestionnaire
     {
         $yml = Yaml::parse(file_get_contents($ymlFile));
 
@@ -92,7 +94,8 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
         $expected->setSubHeading($questionnaire['subheading']);
         $expected->setIntroduction($this->clean($questionnaire['introduction']));
 
-        $questions = array();
+        $questions = [];
+        /** @var string[][][] $questionnaire */
         foreach ($questionnaire['questions'] as $question) {
             $questionObj = new QuizQuestionnaireQuestion();
             $questionObj->setText($question['text']);
@@ -107,12 +110,16 @@ class QuizQuestionnaireParserTest extends PHPUnit_Framework_TestCase
         return $expected;
     }
 
+    /**
+     * @param $string
+     * @return mixed|null
+     */
     protected function clean($string)
     {
         if (null === $string) {
             return null;
         }
 
-        return str_replace(array('> <', "\n"), array('><', ''), $string);
+        return str_replace(['> <', "\n"], ['><', ''], $string);
     }
 }

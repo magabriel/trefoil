@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -40,9 +41,9 @@ abstract class QuizItem
     /**
      * Options
      *
-     * @var Array of options
+     * @var array of options
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * The heading
@@ -75,7 +76,7 @@ abstract class QuizItem
     /**
      * @param string $heading
      */
-    public function setHeading($heading)
+    public function setHeading($heading): void
     {
         $this->heading = $heading;
     }
@@ -83,7 +84,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getHeading()
+    public function getHeading(): string
     {
         return $this->heading;
     }
@@ -91,7 +92,7 @@ abstract class QuizItem
     /**
      * @param string $id
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -99,7 +100,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -107,7 +108,7 @@ abstract class QuizItem
     /**
      * @param string $internalId
      */
-    public function setInternalId($internalId)
+    public function setInternalId($internalId): void
     {
         $this->internalId = $internalId;
     }
@@ -115,7 +116,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getInternalId()
+    public function getInternalId(): string
     {
         return $this->internalId;
     }
@@ -123,7 +124,7 @@ abstract class QuizItem
     /**
      * @param string $introduction
      */
-    public function setIntroduction($introduction)
+    public function setIntroduction($introduction): void
     {
         $this->introduction = $introduction;
     }
@@ -131,23 +132,23 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getIntroduction()
+    public function getIntroduction(): ?string
     {
         return $this->introduction;
     }
 
     /**
-     * @param Array $options
+     * @param array $options
      */
-    public function setOptions($options)
+    public function setOptions($options): void
     {
         $this->options = $options;
     }
 
     /**
-     * @return Array
+     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -155,7 +156,7 @@ abstract class QuizItem
     /**
      * @param string $subHeading
      */
-    public function setSubHeading($subHeading)
+    public function setSubHeading($subHeading): void
     {
         $this->subHeading = $subHeading;
     }
@@ -163,7 +164,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getSubHeading()
+    public function getSubHeading(): ?string
     {
         return $this->subHeading;
     }
@@ -171,7 +172,7 @@ abstract class QuizItem
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType($type): void
     {
         $this->type = $type;
     }
@@ -179,7 +180,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -187,7 +188,7 @@ abstract class QuizItem
     /**
      * @param string $xref
      */
-    public function setXref($xref)
+    public function setXref($xref): void
     {
         $this->xref = $xref;
     }
@@ -195,7 +196,7 @@ abstract class QuizItem
     /**
      * @return string
      */
-    public function getXref()
+    public function getXref(): string
     {
         return $this->xref;
     }

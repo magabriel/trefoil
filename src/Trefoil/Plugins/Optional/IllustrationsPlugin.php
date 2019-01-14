@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -13,6 +14,7 @@ namespace Trefoil\Plugins\Optional;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Exception\PluginException;
 use Trefoil\Helpers\TextPreserver;
 use Trefoil\Helpers\TrefoilMarkerProcessor;
 use Trefoil\Plugins\BasePlugin;
@@ -20,44 +22,31 @@ use Trefoil\Util\Toolkit;
 
 /**
  * Manage the illustrations in the book item.
- *
  * An illustration is a block delimited by '<<' and '<</' marks.
- *
  * Expected syntax using trefoil markers:
- *
  *   {@ ======== illustration_begin("This is the illustration caption", ".optional-class" @}
  *   . . . whatever Markdown or HTML content
  *   {@ ======== illustration_end() @}
- *
  *   where the '=' in the opening and closing trefoil marks are optional, just to visually
  *   delimit the illustration.
- *
  * OLD syntax (deprecated):
- *
  *   << ========= "This is the illustration caption" ========= {.optional-class}
  *   . . . whatever Markdown or HTML content
  *   <</ =================
- *
  *   where the '=' in the opening and closing block marks are optional, just to visually
  *   delimit the illustration, and one or several classes can be specified between
  *   curly brackets.
- *
  * ATX-style headers can be used inside of the illustration content and
  * will not be parsed by easybook (i.e. not added labels and ignored in the TOC).
- *
  * WARNINGS:
- *
  *  - When enabled, this functionality will take over the "tables" numbering
  *    and listing of easybook. If a table is needed as an illustration it will
  *    need to be done with this new markup.
  *    Ordinary tables (outside an illustration markup) will be ignored and just
  *    parsed as Markdown tables, not easybook tables.
- *
  *  - It needs the "lot.twig" templates present in the theme if used.
- *
  *  - Illustration HTML can be customized with "illustration.twig" template, but
  *    the plugin will apply a default HTML if the template is not present.
- *
  */
 class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -68,16 +57,21 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected $illustrations = [];
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
-            EasybookEvents::PRE_PARSE => ['onItemPreParse', -100],
+            EasybookEvents::PRE_PARSE  => ['onItemPreParse', -100],
             EasybookEvents::POST_PARSE => ['onItemPostParse', -1100] // after ParserPlugin
         ];
     }
 
     /**
      * @param ParseEvent $event
+     * @throws PluginException
+     * @throws \ReflectionException
      */
     public function onItemPreParse(ParseEvent $event)
     {
@@ -89,11 +83,13 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
         $event->setItemProperty('original', $content);
 
-        $msg = (new \ReflectionClass($this))->getShortName() . ': ' . $this->item['config']['content'] . ': ';
+        $msg = (new \ReflectionClass($this))->getShortName().': '.$this->item['config']['content'].': ';
         if ($this->illustrationCalls > 0) {
-            throw new PluginException($msg . 'illustration_begin() call without ending previous.');
-        } else if ($this->illustrationCalls < 0) {
-            throw new PluginException($msg . 'illustration_end() call without illustration_begin().');
+            throw new PluginException($msg.'illustration_begin() call without ending previous.');
+        }
+
+        if ($this->illustrationCalls < 0) {
+            throw new PluginException($msg.'illustration_end() call without illustration_begin().');
         }
     }
 
@@ -101,7 +97,6 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      * Process the current item, parsing and rendering all the illustrations.
      *
      * @param $content
-     *
      * @return mixed
      */
     protected function processItem($content)
@@ -121,55 +116,55 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $content
      * @return string
      */
-    protected function processTrefoilMarkers($content)
+    protected function processTrefoilMarkers($content): string
     {
         $processor = new TrefoilMarkerProcessor();
 
-        $processor->registerMarker('illustration_begin',
-            function ($caption, $class = '') {
+        $processor->registerMarker(
+            'illustration_begin',
+            function ($caption,
+                      $class = '') {
                 $this->illustrationCalls++;
                 $classes = [];
                 foreach (explode(' ', $class) as $className) {
                     if ($className !== '') {
                         if (substr($className, 0, 1) !== '.') {
-                            $className = '.' . trim($className);
+                            $className = '.'.trim($className);
                         }
                         $classes[] = $className;
                     }
-                };
+                }
 
-                $classList = join(' ', $classes);
+                $classList = implode(' ', $classes);
                 if ($classList !== '') {
                     return sprintf('<< "%s" {%s}', $caption, $classList);
                 }
 
                 return sprintf('<< "%s"', $caption);
-            }
-        );
+            });
 
-        $processor->registerMarker('illustration_end',
+        $processor->registerMarker(
+            'illustration_end',
             function () {
                 $this->illustrationCalls--;
+
                 return '<</';
-            }
-        );
+            });
 
         return $processor->parse($content);
     }
 
     /**
      * Parse illustrations and convert them to HTML.
-     *
      * It is needed on PreParse because it needs to be done *before* easybook parses the
      * markdown headers inside the illustration, to keep it from labeling and adding them to the toc.
      *
      * @param $content
-     *
      * @return mixed
      */
     protected function parseAndRenderIllustrations($content)
     {
-        $addIllustrationsLabels = in_array('illustration', $this->app->edition('labels') ?: array());
+        $addIllustrationsLabels = in_array('illustration', $this->app->edition('labels') ?: [], true);
         $listOfTables = [];
         $parentItemNumber = $this->item['config']['number'];
         $counter = 0;
@@ -187,7 +182,16 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($parentItemNumber, &$addIllustrationsLabels, &$listOfTables, &$counter) {
+            function ($matches) use
+            (
+                $parentItemNumber,
+                &
+                $addIllustrationsLabels,
+                &
+                $listOfTables,
+                &
+                $counter
+            ) {
 
                 $caption = $matches['caption'];
 
@@ -195,20 +199,20 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
                 $counter++;
 
-                $slug = $this->app->slugify('Illustration ' . $parentItemNumber . '-' . $counter);
+                $slug = $this->app->slugify('Illustration '.$parentItemNumber.'-'.$counter);
 
-                $parameters = array(
-                    'item' => array(
+                $parameters = [
+                    'item'    => [
                         'caption' => $caption,
                         'content' => $data,
-                        'label' => '',
-                        'number' => $counter,
-                        'slug' => $slug,
-                    ),
-                    'element' => array(
+                        'label'   => '',
+                        'number'  => $counter,
+                        'slug'    => $slug,
+                    ],
+                    'element' => [
                         'number' => $parentItemNumber,
-                    ),
-                );
+                    ],
+                ];
                 // the publishing edition wants to label illustrations
                 $label = '';
                 if ($addIllustrationsLabels) {
@@ -234,20 +238,15 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
                 } catch (\Twig_Error_Loader $e) {
                     // render anyway with a string
                     return sprintf(
-                        '<div class="illustration%s" markdown="1" id="%s"><blockquote markdown="1">' .
-                        '<div class="caption" markdown="1">%s%s<hr/></div>' .
-                        '<div class="content" markdown="1">%s</div>' .
-                        '</blockquote></div>',
-                        $parameters['item']['classes'] ? ' ' . $parameters['item']['classes'] : '',
+                        '<div class="illustration%s" markdown="1" id="%s"><blockquote markdown="1">'.'<div class="caption" markdown="1">%s%s<hr/></div>'.'<div class="content" markdown="1">%s</div>'.'</blockquote></div>',
+                        $parameters['item']['classes'] ? ' '.$parameters['item']['classes'] : '',
                         $parameters['item']['slug'],
-                        $parameters['item']['label'] ? $parameters['item']['label'] . ' - ' : '',
+                        $parameters['item']['label'] ? $parameters['item']['label'].' - ' : '',
                         $parameters['item']['caption'],
-                        $parameters['item']['content']
-                    );
+                        $parameters['item']['content']);
                 }
             },
-            $content
-        );
+            $content);
 
         $this->app['publishing.active_item.illustrations'] = $listOfTables;
 
@@ -260,7 +259,7 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $content
      * @return string
      */
-    protected function processIllustrations($content)
+    protected function processIllustrations($content): string
     {
         $preserver = new TextPreserver();
         $preserver->setText($content);
@@ -281,7 +280,6 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
      * to keep easybook from parsing them (so it does not add labels and ids).
      *
      * @param $content
-     *
      * @return mixed
      */
     protected function preProcessHeaders($content)
@@ -299,19 +297,20 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
 
                 $html = sprintf(
                     '<p class="heading" markdown="1">%s%s%s</p>',
-                    $level == 5 ? '**' : '*',
+                    $level === 5 ? '**' : '*',
                     $matches['htext'],
-                    $level == 5 ? '**' : '*'
-                );
+                    $level === 5 ? '**' : '*');
 
                 return $html;
             },
-            $content
-        );
+            $content);
 
         return $content;
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -332,8 +331,10 @@ class IllustrationsPlugin extends BasePlugin implements EventSubscriberInterface
         $tablesExceptFromCurrentItem = [];
 
         // filter out the tables in this item
+        /** @var string[] $itemTables */
         foreach ($this->app['publishing.list.tables'] as $itemTables) {
             $newItemTables = [];
+            /** @var string[][] $table */
             foreach ($itemTables as $table) {
                 // only add not-tables
                 if (!Toolkit::stringStartsWith($table['item']['content'], '<table>')) {

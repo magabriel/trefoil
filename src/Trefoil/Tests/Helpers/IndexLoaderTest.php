@@ -1,14 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
-use EasySlugger\Slugger;
 use EasySlugger\Utf8Slugger;
 
+/**
+ * Class IndexLoaderTest
+ *
+ * @package Trefoil\Helpers
+ */
 class IndexLoaderTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testLoadFromYamlString()
+    public function testLoadFromYamlString(): void
     {
         $yaml = /** @lang yaml */
             <<<YAML
@@ -40,9 +45,9 @@ YAML;
         $loader = new IndexLoader($yaml, $slugger);
         $index = $loader->loadFromYamlString();
 
-        $this->assertTrue($loader->isLoaded());
-        $this->assertEquals(['elements' => ['chapter', 'edition']], $loader->getOptions());
-        $this->assertEquals(9, $index->count(), "Count total items");
+        static::assertTrue($loader->isLoaded());
+        static::assertEquals(['elements' => ['chapter', 'edition']], $loader->getOptions());
+        static::assertEquals(9, $index->count(), 'Count total items');
 
         $manual = 0;
         /** @var IndexItem $indexItem */
@@ -50,7 +55,7 @@ YAML;
             $manual += $indexItem->isManual() ? 1 : 0;
         }
 
-        $this->assertEquals(5, $manual, "Count manual items");
+        static::assertEquals(5, $manual, 'Count manual items');
     }
 }
 

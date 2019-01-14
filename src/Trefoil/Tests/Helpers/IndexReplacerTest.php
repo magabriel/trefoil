@@ -1,86 +1,101 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miguelangel
- * Date: 4/12/18
- * Time: 21:57
- */
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
 
-use EasySlugger\Slugger;
-use EasySlugger\Utf8Slugger;
-
+/**
+ * Class IndexReplacerTest
+ *
+ * @package Trefoil\Helpers
+ */
 class IndexReplacerTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testReplace()
+    public function testReplace(): void
     {
         $replacer = $this->createReplacer();
         $replaced = $replacer->replace();
 
-        $this->assertEquals($this->getExpectedText(), $replaced);
+        static::assertEquals($this->getExpectedText(), $replaced);
     }
 
+    /**
+     * @return IndexReplacer
+     */
     protected function createReplacer(): IndexReplacer
     {
         $replacer = new IndexReplacer(
             $this->createIndex(),
             new TextPreserver(),
-            $this->getText(),
-            "text-id",
+            $this->getText(), 'text-id',
             $this->createTwig()
         );
 
         return $replacer;
     }
 
+    /**
+     * @return \Twig_Environment
+     */
     protected function createTwig(): \Twig_Environment
     {
         $loader = new \Twig_Loader_Array([]);
         $loader->setTemplate('auto-index-term.twig',
             '{{ term }}<a class="auto-index-term" id="term-{{ reference }}"/>'
         );
-        $twig = new \Twig_Environment($loader, array(
+        $twig = new \Twig_Environment($loader, [
             'debug' => true,
             'cache' => false,
             'strict_variables' => true,
             'autoescape' => false,
-        ));
+        ]);
 
         return $twig;
     }
 
+    /**
+     * @return Index
+     */
     protected function createIndex(): Index
     {
         $index = new Index();
 
-        $index->add($this->createItem("term0"));
-        $index->add($this->createItem("term1"));
+        $index->add($this->createItem('term0'));
+        $index->add($this->createItem('term1'));
 
-        $index->add($this->createItem("term2", "", "", true));
-        $index->add($this->createItem("term3", "", "", true));
-        $index->add($this->createItem("term4", "", "", true));
+        $index->add($this->createItem('term2', '', '', true));
+        $index->add($this->createItem('term3', '', '', true));
+        $index->add($this->createItem('term4', '', '', true));
 
         return $index;
     }
 
+    /**
+     * @param string $term
+     * @param string $group
+     * @param string $text
+     * @param bool   $isManual
+     * @return IndexItem
+     */
     protected function createItem(string $term,
-                                  string $group = "",
-                                  string $text = "",
+                                  string $group = '',
+                                  string $text = '',
                                   bool $isManual = false): IndexItem
     {
         $item = new IndexItem();
         $item->setTerm($term);
-        $item->setSlug($term . "-slug");
+        $item->setSlug($term .'-slug');
         $item->setGroup($group);
         $item->setText($text);
-        $item->setSource($term . "-source");
+        $item->setSource($term .'-source');
         $item->setManual($isManual);
         return $item;
     }
 
+    /**
+     * @return string
+     */
     protected function getText(): string
     {
         return /** @lang HTML */
@@ -97,6 +112,9 @@ class IndexReplacerTest extends \PHPUnit_Framework_TestCase
 TAG;
     }
 
+    /**
+     * @return string
+     */
     protected function getExpectedText(): string
     {
         return /** @lang HTML */

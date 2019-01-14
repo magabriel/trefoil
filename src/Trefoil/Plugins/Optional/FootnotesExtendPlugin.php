@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
@@ -17,9 +19,7 @@ use Trefoil\Util\Toolkit;
 
 /**
  * This plugin extends footnotes to support several formats.
- *
  * Options are specified on an per-edition basis:
- *
  *     editions:
  *         <edition-name>
  *             plugins:
@@ -27,40 +27,32 @@ use Trefoil\Util\Toolkit;
  *                 options:
  *                     FootnotesExtend:
  *                         type: end  # [end, inject, item, inline]
- *
  * Where:
- *
  * - type 'end': This is the normal Markdown-rendered footnotes.
  *   They will be at the end of each book item, separated by a <hr/> tag.
  *   This is the default.
- *
  * - type 'inject: This is a variant of type 'end', where each item's
  *   footnotes will be injected to a certain injection point.
  *   Just write '<div class="footnotes"></div>' anywhere in each item
  *   where the footnotes should be injected.
- *
  * - type 'item': All the footnotes in the book will be collected and
  *   rendered in a separated item called 'footnotes' that need to
  *   exist in the book.
- *
  * - type 'inline: PrinceXML support inline footnotes, where the text
  *   of the note must be inlined into the text, instead of just a
  *   reference. Prince will manage the numbering.
- *
  *   Note that Prince manages footnotes as:
- *
  *      "text<span class="fn">Text of the footnote</span> more text"
- *
  *   One limitation is that the footnote text cannot contain block
  *   elements (as paragraphs, tables, lists). The plugin overcomes this
  *   partially by replacing paragraph tags with <br/> tags.
  */
 class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    const FOOTNOTES_TYPE_END = 'end';
-    const FOOTNOTES_TYPE_ITEM = 'item';
-    const FOOTNOTES_TYPE_INJECT = 'inject';
-    const FOOTNOTES_TYPE_INLINE = 'inline';
+    public const FOOTNOTES_TYPE_END = 'end';
+    public const FOOTNOTES_TYPE_ITEM = 'item';
+    public const FOOTNOTES_TYPE_INJECT = 'inject';
+    public const FOOTNOTES_TYPE_INLINE = 'inline';
 
     /**
      * @var string Type of footnotes to generate
@@ -70,7 +62,7 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
     /**
      * @var array The extracted footnotes the current book item
      */
-    protected $footnotesCurrentItem = array();
+    protected $footnotesCurrentItem = [];
 
     /**
      * @var string The current item footnotes (as text)
@@ -81,13 +73,19 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
      * Event handlers
      * ********************************************************************************
      */
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::POST_PARSE => array('onItemPostParse')
-        );
+        return [
+            EasybookEvents::POST_PARSE => ['onItemPostParse'],
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -110,10 +108,10 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
     {
         // lazy initialize
         if (!isset($this->app['publishing.footnotes.items'])) {
-            $this->app['publishing.footnotes.items'] = array();
+            $this->app['publishing.footnotes.items'] = [];
         }
 
-        $this->footnotesCurrentItem = array();
+        $this->footnotesCurrentItem = [];
 
         // options
         $this->footnotesType = $this->getEditionOption('plugins.options.FootnotesExtend.type', 'end');
@@ -163,9 +161,10 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
         // fix double class in footnote ref (note the ungreedy modifier)
         $content = preg_replace(
-            '/<a class="internal"(.*) class="footnote-ref">/U', 
-            '<a class="footnote-ref internal" $1>', $content);
-        
+            '/<a class="internal"(.*) class="footnote-ref">/U',
+            '<a class="footnote-ref internal" $1>',
+            $content);
+
         // fix footnotes
         $content = str_replace('id="fn:', 'id="fn-', $content);
         $content = preg_replace('/href="#fnref(\d*):/', 'href="#fnref$1-', $content);
@@ -189,12 +188,9 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
 
                 $this->itemFootnotesText = $matches[0];
 
@@ -205,16 +201,17 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
                 preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
 
+                /** @var string[] $matches2 */
                 if ($matches2) {
+                    /** @var string[] $match2 */
                     foreach ($matches2 as $match2) {
-                        $footnote = array(
+                        $footnote = [
                             'item'       => $this->item['toc'][0]['slug'],
                             'text'       => $match2['text'],
                             'id'         => $match2['id'],
-                            'text'       => $match2['text'],
                             'backref'    => $match2['backref'],
-                            'new_number' => count($this->app['publishing.footnotes.items']) + 1
-                        );
+                            'new_number' => count($this->app['publishing.footnotes.items']) + 1,
+                        ];
 
                         // save for current item
                         $this->footnotesCurrentItem[$match2['id']] = $footnote;
@@ -228,15 +225,13 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
                 return '';
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }
 
     /**
      * Inline footnotes in the text, after the note reference.
-     *
      * This is only useful for renderers that support automatic
      * inline footnotes, like PrinceXML.
      */
@@ -249,13 +244,10 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $regExp .= '<a(?<prev>.*)href="#(?<href>fn-.*)"(?<post>.*)>(?<number>.*)<\/a><\/sup>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
-                $footnotes = $me->footnotesCurrentItem;
+            function ($matches) {
+                $footnotes = $this->footnotesCurrentItem;
                 $footnote = $footnotes[$matches['href']];
                 $text = $footnote['text'];
 
@@ -267,19 +259,16 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                 $text = str_replace(
                     ['<p>', '</p>'],
                     ['<span class="p">', '<br/></span>'],
-                    $text
-                );
-                $text = '<span class="p" >' . $text . '</span>';
+                    $text);
+                $text = '<span class="p" >'.$text.'</span>';
 
                 $html = sprintf(
                     '<span class="fn">%s</span>',
-                    $text
-                );
+                    $text);
 
                 return $html;
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }
@@ -296,12 +285,9 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $regExp .= '<a(?<prev>.*)href="#(?<href>fn-.*)"(?<post>.*)>(?<number>.*)<\/a>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 $newNumber = $this->app['publishing.footnotes.items'][$matches['href']]['new_number'];
 
                 $html = sprintf(
@@ -310,13 +296,11 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                     $matches['prev'],
                     $matches['href'],
                     $matches['post'],
-                    $newNumber
-                );
+                    $newNumber);
 
                 return $html;
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }
@@ -347,7 +331,6 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
     /**
      * Inject footnotes at the injection target.
-     *
      * The injection target is a '<div class="footnotes"></div>' placed anywhere in the item text.
      */
     protected function injectFootnotes()
@@ -358,26 +341,20 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $regExp .= '<div class="footnotes">\s*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function () {
 
                 $footnotes = $this->app->render(
                     '_footnotes.twig',
-                    array('footnotes' => $this->footnotesCurrentItem)
-                );
+                    ['footnotes' => $this->footnotesCurrentItem]);
 
                 return Toolkit::renderHTMLTag(
                     'div',
                     $footnotes,
-                    array('class' => 'footnotes')
-                );
+                    ['class' => 'footnotes']);
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }
@@ -403,9 +380,9 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
         // instruct the publisher to remove 'footnotes' item from book
         // if footnotes type is 'item' but not footnotes
-        if (count($this->app['publishing.footnotes.items']) == 0) {
+        if (count($this->app['publishing.footnotes.items']) === 0) {
             $this->item['remove'] = true;
-            $this->writeLn("No footnotes found in text.", 'info');
+            $this->writeLn('No footnotes found in text.');
         }
 
     }

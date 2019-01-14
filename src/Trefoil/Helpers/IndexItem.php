@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -21,9 +22,9 @@ class IndexItem
     protected $group;
     protected $slug;
     protected $source;
-    protected $variants = array();
-    protected $xref = array();
-    protected $anchorLinks = array();
+    protected $variants = [];
+    protected $xref = [];
+    protected $anchorLinks = [];
     protected $manual = false;
 
     /**
@@ -32,10 +33,10 @@ class IndexItem
      * @param string $variant The term variant
      * @param string $where The location where it was found
      */
-    public function addXref($variant, $where)
+    public function addXref($variant, $where): void
     {
         if (!isset($this->xref[$variant])) {
-            $this->xref[$variant] = array();
+            $this->xref[$variant] = [];
         }
 
         if (!isset($this->xref[$variant][$where])) {
@@ -45,7 +46,7 @@ class IndexItem
         $this->xref[$variant][$where]++;
     }
 
-    public function getXref()
+    public function getXref(): array
     {
         return $this->xref;
     }
@@ -55,7 +56,7 @@ class IndexItem
         return $this->term;
     }
 
-    public function setTerm($term)
+    public function setTerm($term): void
     {
         $this->term = $term;
     }
@@ -65,7 +66,7 @@ class IndexItem
         return $this->slug;
     }
 
-    public function setSlug($slug)
+    public function setSlug($slug): void
     {
         $this->slug = $slug;
     }
@@ -75,22 +76,22 @@ class IndexItem
         return $this->source;
     }
 
-    public function setSource($source)
+    public function setSource($source): void
     {
         $this->source = $source;
     }
 
-    public function getVariants()
+    public function getVariants(): array
     {
         return $this->variants;
     }
 
-    public function setVariants($variants)
+    public function setVariants($variants): void
     {
         $this->variants = $variants;
     }
 
-    public function getAnchorLinks()
+    public function getAnchorLinks(): array
     {
         return $this->anchorLinks;
     }
@@ -100,7 +101,7 @@ class IndexItem
      *
      * @param string $anchorLink
      */
-    public function addAnchorLink($anchorLink)
+    public function addAnchorLink($anchorLink): void
     {
         $this->anchorLinks[] = $anchorLink;
     }
@@ -116,7 +117,7 @@ class IndexItem
     /**
      * @param mixed $text
      */
-    public function setText($text)
+    public function setText($text): void
     {
         $this->text = $text;
     }
@@ -132,7 +133,7 @@ class IndexItem
     /**
      * @param mixed $group
      */
-    public function setGroup($group)
+    public function setGroup($group): void
     {
         $this->group = $group;
     }

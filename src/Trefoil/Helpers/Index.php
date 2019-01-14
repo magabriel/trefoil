@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -31,12 +32,12 @@ class Index implements \IteratorAggregate
     /**
      * @var IndexItem[]
      */
-    protected $items = array();
+    protected $items = [];
 
     /**
      * @param IndexItem $item
      */
-    public function add(IndexItem $item)
+    public function add(IndexItem $item): void
     {
         $this->explodeVariants($item);
         $this->items[$item->getSlug()] = $item;
@@ -45,25 +46,25 @@ class Index implements \IteratorAggregate
     /**
      * @param IndexItem $item
      */
-    public function remove(IndexItem $item)
+    public function remove(IndexItem $item): void
     {
         foreach ($this->items as $key => $existingItem) {
-            if ($existingItem->getTerm() == $item->getTerm()) {
+            if ($existingItem->getTerm() === $item->getTerm()) {
                 unset($this->items[$key]);
                 break;
             }
         }
     }
 
+
     /**
-     * @param string $term
-     *
-     * @return IndexItem
+     * @param $term
+     * @return IndexItem|null
      */
-    public function get($term)
+    public function get($term): ?IndexItem
     {
         foreach ($this->items as $item) {
-            if ($item->getTerm() == $term) {
+            if ($item->getTerm() === $term) {
                 return $item;
             }
         }
@@ -71,16 +72,16 @@ class Index implements \IteratorAggregate
         return null;
     }
 
+
     /**
-     * @param string $term
-     *
-     * @return IndexItem
+     * @param $variant
+     * @return IndexItem|null
      */
-    public function getItemWithVariant($variant)
+    public function getItemWithVariant($variant): ?IndexItem
     {
         foreach ($this->items as $item) {
             foreach ($item->getVariants() as $itemVariant) {
-                if ($itemVariant == $variant) {
+                if ($itemVariant === $variant) {
                     return $item;
                 }
             }
@@ -94,7 +95,7 @@ class Index implements \IteratorAggregate
      *
      * @param Index $index
      */
-    public function merge(Index $index)
+    public function merge(Index $index): void
     {
         foreach ($index as $item) {
             $this->add($item);
@@ -137,7 +138,7 @@ class Index implements \IteratorAggregate
      *
      * @param IndexItem $item
      */
-    protected function explodeVariants(IndexItem $item)
+    protected function explodeVariants(IndexItem $item): void
     {
         $regExp = '/';
         $regExp .= '(?<root>[\w\s-]*)'; // root of the term (can contain in-between spaces or dashes)
@@ -146,12 +147,12 @@ class Index implements \IteratorAggregate
         $regExp .= '\])?'; // closing square bracket
         $regExp .= '/u'; // unicode
 
-        $variants = array();
+        $variants = [];
 
         if (preg_match($regExp, $item->getTerm(), $parts)) {
             if ($parts && array_key_exists('suffixes', $parts)) {
                 $suffixes = explode('|', $parts['suffixes']);
-                if (count($suffixes) == 1) {
+                if (count($suffixes) === 1) {
                     // exactly one suffix means root without and with suffix (i.e. 'word[s]')
                     $variants[] = $parts['root'];
                     $variants[] = $parts['root'] . $suffixes[0];

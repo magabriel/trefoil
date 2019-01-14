@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
@@ -17,14 +19,10 @@ use Trefoil\Plugins\BasePlugin;
 
 /**
  * Add drop caps to the book.
- *
  * For formats: all
- *
  * It provides two working modes:
- *
  * 1.- Automatic dropcaps: Depending on the options set in the plugins configuration
  *     section inside the book's config.yml:
- *
  *     editions:
  *         <edition-name>
  *             plugins:
@@ -35,24 +33,26 @@ use Trefoil\Plugins\BasePlugin;
  *                         mode:       letter        # letter, word (default: letter)
  *                         length:     1             # number of letters or words to highlight (default: 1)
  *                         coverage:   ['chapter']   # book elements to process
- *
  * 2. Manual dropcaps: Besides adding the HTML markup directly, which off course is still
  *    possible, a Markdown-like markup is provided for greater convenience:
- *
  *    [[T]]his text has first-letter dropcaps.
- *
  *    [[But]] this text has first-word dropcaps.
- *
  */
 class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1100)
-        );
+        return [
+            EasybookEvents::POST_PARSE => ['onItemPostParse', -1100],
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -68,22 +68,21 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
      * Add drop caps markup
      *
      * @param string $content
-     *
      * @return string
      */
-    protected function addDropCaps($content)
+    protected function addDropCaps($content): string
     {
         $length = $this->getEditionOption('plugins.options.DropCaps.length', 1);
         $mode = $this->getEditionOption('plugins.options.DropCaps.mode', 'letter');
-        $levels = $this->getEditionOption('plugins.options.DropCaps.levels', array(1));
-        $elements = $this->getEditionOption('plugins.options.DropCaps.elements', array('chapter'));
+        $levels = $this->getEditionOption('plugins.options.DropCaps.levels', [1]);
+        $elements = $this->getEditionOption('plugins.options.DropCaps.elements', ['chapter']);
 
         // ensure levels is an array
         if (!is_array($levels)) {
-            $levels = array(1);
+            $levels = [1];
         }
-        
-        if (!in_array($this->item['config']['element'], $elements)) {
+
+        if (!in_array($this->item['config']['element'], $elements, true)) {
             // not for this element
             return $content;
         }
@@ -97,7 +96,7 @@ class DropCapsPlugin extends BasePlugin implements EventSubscriberInterface
          * because it doesn't have a preceding heading tag (it will be under
          * the H1 item title tag that is not there yet),
          */
-        if (in_array(1, $levels)) {
+        if (in_array(1, $levels, true)) {
             $dropCaps->createForFirstParagraph();
         }
 

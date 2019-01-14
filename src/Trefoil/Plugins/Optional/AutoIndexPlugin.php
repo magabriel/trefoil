@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -25,13 +26,9 @@ use Trefoil\Util\SimpleReport;
 
 /**
  * This plugin creates an automatic index from a list of terms.
- *
  * Configuration:
- *
  * - Configuration: Not used.
- *
  * - Index definition:
- *
  *     <book_dir>/
  *         Contents/
  *             auto-index.yml
@@ -61,14 +58,14 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @var array
      */
-    protected $indexOptions = array();
+    protected $indexOptions = [];
 
     /**
      * Cross-references of replaced terms for reporting
      *
      * @var array
      */
-    protected $xrefs = array();
+    protected $xrefs = [];
 
     /**
      * Whether or not the index item has been generated
@@ -81,15 +78,23 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
      * Event handlers
      * ********************************************************************************
      */
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             TrefoilEvents::PRE_PUBLISH_AND_READY => 'onPrePublishAndReady',
-            EasybookEvents::PRE_PARSE => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1110), // after EbookQuizPlugin to avoid interferences
-            EasybookEvents::POST_PUBLISH => 'onPostPublish');
+            EasybookEvents::PRE_PARSE            => ['onItemPreParse', +100],
+            EasybookEvents::POST_PARSE           => ['onItemPostParse', -1110],
+            // after EbookQuizPlugin to avoid interferences
+            EasybookEvents::POST_PUBLISH         => 'onPostPublish',
+        ];
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPrePublishAndReady(BaseEvent $event)
     {
         $this->init($event);
@@ -97,15 +102,21 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
         $this->loadIndexTerms();
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
 
-        if ($this->item['config']['element'] == 'auto-index') {
+        if ($this->item['config']['element'] === 'auto-index') {
             $this->saveAutoindex();
         }
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -117,6 +128,9 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
@@ -140,8 +154,8 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
         $this->processedIndex = new Index();
 
         // get all the index terms from file and create the definitions data structure
-        $contentsDir = $this->app['publishing.dir.book'] . '/Contents';
-        $indexFile = $contentsDir . '/auto-index.yml';
+        $contentsDir = $this->app['publishing.dir.book'].'/Contents';
+        $indexFile = $contentsDir.'/auto-index.yml';
 
         $loader = new IndexLoader($indexFile, $this->app['slugger']);
         $this->index = $loader->load();
@@ -151,10 +165,8 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
             $this->writeLn(
                 sprintf(
                     "No book index definition file '%s' found in the book's \"Contents\" directory.",
-                    basename($indexFile)
-                ),
-                'warning'
-            );
+                    basename($indexFile)),
+                'warning');
         }
     }
 
@@ -164,14 +176,14 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
     public function processItem()
     {
         // look type of processing
-        if (in_array($this->item['config']['element'], $this->indexOptions['elements'])) {
+        if (in_array($this->item['config']['element'], $this->indexOptions['elements'], true)) {
 
             // replace each term with an anchor from the index entry
             $this->replaceTerms();
 
             // append a copy of the processed definitions to the processed index
             // to avoid losing all xrefs and anchorlinks for this item
-            $this->processedIndex->merge(clone($this->index));
+            $this->processedIndex->merge(clone $this->index);
         }
     }
 
@@ -186,8 +198,7 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
             $this->item['content'],
             $this->item['config']['content'],
             $this->app['twig'],
-            $this->app['slugger']
-        );
+            $this->app['slugger']);
 
         // do the replacements
         $this->item['content'] = $replacer->replace();
@@ -214,37 +225,40 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
 
         if (!$this->generated) {
             $this->writeLn(
-                 "No index has been generated, check for missing 'auto-index' contents element.",
-                 "error"
-            );
+                "No index has been generated, check for missing 'auto-index' contents element.",
+                'error');
         }
 
         $outputDir = $this->app['publishing.dir.output'];
-        $reportFile = $outputDir . '/report-AutoIndexPlugin.txt';
+        $reportFile = $outputDir.'/report-AutoIndexPlugin.txt';
 
         file_put_contents($reportFile, $report);
     }
 
-    protected function getUsedTermsReport()
+    /**
+     * @return string
+     */
+    protected function getUsedTermsReport(): string
     {
         $report = new SimpleReport();
         $report->setTitle('AutoIndexPlugin');
         $report->setSubtitle('Used terms');
 
-        $report->addIntroLine('Elements: ' . '"' . join('", "', $this->indexOptions['elements']) . '"');
+        $report->addIntroLine('Elements: '.'"'.implode('", "', $this->indexOptions['elements']).'"');
 
-        $report->setHeaders(array('Term', 'Variant', 'Item', 'Count', 'Source'));
+        $report->setHeaders(['Term', 'Variant', 'Item', 'Count', 'Source']);
 
-        $report->setColumnsWidth(array(30, 30, 30, 5, 30));
-        $report->setColumnsAlignment(array('', '', '', 'right', ''));
+        $report->setColumnsWidth([30, 30, 30, 5, 30]);
+        $report->setColumnsAlignment(['', '', '', 'right', '']);
 
         foreach ($this->processedIndex as $processedItem) {
             /* @var indexItem $processedItem */
             $auxTerm = $processedItem->getTerm();
             foreach ($processedItem->getXref() as $variant => $items) {
                 $auxVariant = $variant;
+                /** @var array $items */
                 foreach ($items as $item => $count) {
-                    $report->addline(array($auxTerm, $auxVariant, $item, $count, $processedItem->getSource()));
+                    $report->addLine([$auxTerm, $auxVariant, $item, $count, $processedItem->getSource()]);
                     $auxTerm = '';
                     $auxVariant = '';
                 }
@@ -254,20 +268,23 @@ class AutoIndexPlugin extends BasePlugin implements EventSubscriberInterface
         return $report->getText();
     }
 
-    protected function getNotUsedTermsReport()
+    /**
+     * @return string
+     */
+    protected function getNotUsedTermsReport(): string
     {
         $report = new SimpleReport();
         $report->setTitle('AutoindexPlugin');
         $report->setSubtitle('Not used terms');
 
-        $report->setHeaders(array('Term', 'Source'));
+        $report->setHeaders(['Term', 'Source']);
 
-        $report->setColumnsWidth(array(30, 30));
+        $report->setColumnsWidth([30, 30]);
 
         foreach ($this->processedIndex as $item) {
             /* @var indexItem $item */
             if (!count($item->getXref())) {
-                $report->addLine(array($item->getTerm(), $item->getSource()));
+                $report->addLine([$item->getTerm(), $item->getSource()]);
             }
         }
 

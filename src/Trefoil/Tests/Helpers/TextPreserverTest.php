@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -39,21 +40,13 @@ class TextPreserverTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers Trefoil\Helpers\TextPreserver::setText
-     * @covers Trefoil\Helpers\TextPreserver::getText
-     */
-    public function testNoChange()
+    public function testNoChange(): void
     {
         $this->object->setText('Lorem ipsum');
-        $this->assertEquals('Lorem ipsum', $this->object->getText());
+        static::assertEquals('Lorem ipsum', $this->object->getText());
     }
 
-    /**
-     * @covers Trefoil\Helpers\TextPreserver::reserveMarkdownCodeBlocks
-     * @covers Trefoil\Helpers\TextPreserver::restore
-     */
-    public function testPreserveMarkdownCodeBlocks()
+    public function testPreserveMarkdownCodeBlocks(): void
     {
         $markdown = <<<TEXT
 Lorem ipsum.
@@ -87,74 +80,63 @@ TEXT;
         $this->object->setText($markdown);
         $this->object->preserveMarkdowmCodeBlocks();
 
-        $this->assertNotContains("~~~", $this->object->getText());
-        $this->assertNotContains("`", $this->object->getText());
+        static::assertNotContains('~~~', $this->object->getText());
+        static::assertNotContains('`', $this->object->getText());
 
         $this->object->restore();
-        $this->assertEquals($markdown, $this->object->getText());
+        static::assertEquals($markdown, $this->object->getText());
     }
 
-    /**
-     * @covers Trefoil\Helpers\TextPreserver::preserveHtmlTags
-     * @covers Trefoil\Helpers\TextPreserver::restore
-     */
-    public function testPreserveHtmlTags()
+    public function testPreserveHtmlTags(): void
     {
         $html = '<div class="myclass">';
         $html .= '<a href="http://example.com/image.gif">Lorem ipsum</a>';
         $html .= '</div>';
 
         $this->object->setText($html);
-        $this->object->preserveHtmlTags(array('a'));
+        $this->object->preserveHtmlTags(['a']);
 
-        $this->assertNotContains("Lorem", $this->object->getText());
-        $this->assertNotContains("ipsum", $this->object->getText());
+        static::assertNotContains('Lorem', $this->object->getText());
+        static::assertNotContains('ipsum', $this->object->getText());
 
         $this->object->restore();
-        $this->assertEquals($html, $this->object->getText());
+        static::assertEquals($html, $this->object->getText());
     }
 
-    public function testPreserveHtmlTagsWithEmbeddedTags()
+    public function testPreserveHtmlTagsWithEmbeddedTags(): void
     {
         $html = '<div class="myclass">';
         $html .= '<a href="http://example.com/image.gif">Lorem <span>ipsum</span> dolor</a>';
         $html .= '</div>';
 
         $this->object->setText($html);
-        $this->object->preserveHtmlTags(array('a'));
+        $this->object->preserveHtmlTags(['a']);
 
-        $this->assertNotContains("Lorem", $this->object->getText());
-        $this->assertNotContains("ipsum", $this->object->getText());
-        $this->assertNotContains("dolor", $this->object->getText());
-        $this->assertNotContains("span", $this->object->getText());
+        static::assertNotContains('Lorem', $this->object->getText());
+        static::assertNotContains('ipsum', $this->object->getText());
+        static::assertNotContains('dolor', $this->object->getText());
+        static::assertNotContains('span', $this->object->getText());
 
         $this->object->restore();
-        $this->assertEquals($html, $this->object->getText());
+        static::assertEquals($html, $this->object->getText());
     }
 
-    /**
-     * @covers Trefoil\Helpers\TextPreserver::preserveHtmlTagAttributes
-     * @covers Trefoil\Helpers\TextPreserver::restore
-     */
-    public function testPreserveHtmlTagAttributes()
+    public function testPreserveHtmlTagAttributes(): void
     {
         $html = '<div class="myclass">';
         $html .= '<a href="http://example.com/image.gif">Lorem ipsum</a>';
         $html .= '</div>';
 
         $this->object->setText($html);
-        $this->object->preserveHtmlTagAttributes(array('href', 'class'));
+        $this->object->preserveHtmlTagAttributes(['href', 'class']);
 
-        $this->assertNotEquals($html, $this->object->getText());
+        static::assertNotEquals($html, $this->object->getText());
 
         $this->object->restore();
-        $this->assertEquals($html, $this->object->getText());
+        static::assertEquals($html, $this->object->getText());
     }
 
-    /**
-     * @covers Trefoil\Helpers\TextPreserver::internalCreatePlacehoder
-     */
-    public function testCreatePlacehoder()
+    public function testCreatePlacehoder(): void
     {
         $value = 'myvalue';
         $placeholder = $this->object->internalCreatePlacehoder($value, 'prefix');
@@ -163,10 +145,10 @@ TEXT;
         $html2 = str_replace('myvalue', $placeholder, $html);
 
         $this->object->setText($html2);
-        $this->assertEquals($html2, $this->object->getText());
+        static::assertEquals($html2, $this->object->getText());
 
         $this->object->restore();
-        $this->assertEquals($html, $this->object->getText());
+        static::assertEquals($html, $this->object->getText());
     }
 
 }

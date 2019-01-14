@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -21,12 +22,13 @@ class MobiPublisher extends Epub2Publisher
 
     // Kindle Publishing Guidelines rule that ebooks
     // should contain an HTML TOC, so it cannot be excluded
-    protected $excludedElements = array(
+    protected $excludedElements = [
         'cover',
         'lot',
-        'lof');
+        'lof'
+    ];
 
-    public function assembleBook()
+    public function assembleBook(): void
     {
         parent::assembleBook();
 
@@ -37,7 +39,7 @@ class MobiPublisher extends Epub2Publisher
                 sprintf('Kindlegen executable not found in %s', $this->app['kindlegen.path']) . "\n\n");
         } else {
             $command = sprintf(
-                "%s %s -o book.mobi %s",
+                '%s %s -o book.mobi %s',
                 $this->app['kindlegen.path'],
                 $this->app['kindlegen.command_options'],
                 $epubFilePath

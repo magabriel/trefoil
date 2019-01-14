@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -20,12 +21,10 @@ use Symfony\Component\Yaml\Yaml;
  *         options: # optional section
  *              # items where the auto index terms should be applied
  *              elements: [chapter] # default
- *
  *          # definitions of automatically-added terms
  *          terms:
  *              # A simple term definition:
  *              term: text (optional)
- *
  *              #A complex term definition (group):
  *              term:
  *                  text: "Term text" (optional)
@@ -33,12 +32,10 @@ use Symfony\Component\Yaml\Yaml;
  *                      "subterm 1": "subterm 1 text" (optional)
  *                      ...
  *                      "subterm n": "subterm n text" (optional)
- *
  *          # definitions of manually-added terms
  *          manual-terms:
  *              # A simple term definition:
  *              term-key-1: text (optional)
- *
  *              #A complex term definition (group):
  *              group-name:
  *                  text: "Term text for group" (optional)
@@ -53,17 +50,18 @@ use Symfony\Component\Yaml\Yaml;
 class IndexLoader
 {
     protected $fileNameOrYamlString;
-    protected $terms;
-    protected $manualTerms;
+    protected $terms = [];
+    protected $manualTerms = [];
     protected $options;
     protected $loaded = false;
     protected $slugger;
 
     /**
-     * @param string $fileNameOrYamlString (full path) of the definition file or a YAML string to parse
-     * @param SluggerInterface $slugger An Slugger instance
+     * @param string           $fileNameOrYamlString (full path) of the definition file or a YAML string to parse
+     * @param SluggerInterface $slugger              An Slugger instance
      */
-    public function __construct($fileNameOrYamlString, SluggerInterface $slugger)
+    public function __construct(string $fileNameOrYamlString,
+                                SluggerInterface $slugger)
     {
         $this->fileNameOrYamlString = $fileNameOrYamlString;
         $this->slugger = $slugger;
@@ -78,71 +76,63 @@ class IndexLoader
     {
         // definitely a filename
         $this->readFromFile($this->fileNameOrYamlString);
-        $index = $this->parse($this->fileNameOrYamlString);
 
-        return $index;
-    }
-
-    public function loadFromYamlString(): Index
-    {
-        // definitely a Yaml string
-        $this->readFromYamlString($this->fileNameOrYamlString);
-        $index = $this->parse("placeholder-filename");
-
-        return $index;
-    }
-
-    /**
-     * True if the definition file could not been loaded (i.e. not found)
-     *
-     * @return boolean
-     */
-    public function isLoaded()
-    {
-        return $this->loaded;
-    }
-
-    /**
-     * @return array
-     */
-    public function getOptions()
-    {
-        return $this->options;
+        return $this->parse($this->fileNameOrYamlString);
     }
 
     /**
      * Read the options file
      *
+     * @param $fileName
      */
-    protected function readFromFile($fileName)
+    protected function readFromFile(string $fileName): void
     {
         $this->loaded = false;
 
         if (file_exists($fileName)) {
-            $indexDefinition = Yaml::parse($fileName) ?: array();
+            $indexDefinition = Yaml::parse($fileName) ?: [];
             $this->loaded = true;
         } else {
-            $indexDefinition = array();
+            $indexDefinition = [];
         }
 
         $this->applyDefaultsToIndexDefinition($indexDefinition);
 
     }
 
-    protected function readFromYamlString($yamlString)
+    /**
+     * @param array $indexDefinition
+     */
+    protected function applyDefaultsToIndexDefinition(array $indexDefinition): void
     {
-        $indexDefinition = Yaml::parse($yamlString);
-        $this->loaded = true;
+        // defaults
+        $default = [
+            'index' => [
+                'terms'        => [],
+                'manual-terms' => [],
+            ],
+        ];
 
-        $this->applyDefaultsToIndexDefinition($indexDefinition);
+        $default['index']['options'] = [
+            'elements' => [
+                'chapter',
+            ],
+        ];
+
+        $indexDefinition = array_replace_recursive($default, $indexDefinition);
+
+        $this->terms = $indexDefinition['index']['terms'];
+        $this->manualTerms = $indexDefinition['index']['manual-terms'];
+        $this->options = $indexDefinition['index']['options'];
     }
 
     /**
      * Parse the loaded definitions into a Index object.
      *
+     * @param $fileName
      * @return \Trefoil\Helpers\Index
      */
-    protected function parse($fileName): Index
+    protected function parse(string $fileName): Index
     {
         $index = new Index();
 
@@ -160,18 +150,24 @@ class IndexLoader
     }
 
     /**
-     * @param $fileName
-     * @param $term
-     * @param $definition
+     * @param string            $term
+     * @param null|string|array $definition
+     * @param string            $fileName
+     * @param Index             $index
+     * @param bool              $isManual
      */
-    protected function parseTermToIndex($term, $definition, $fileName, Index $index, $isManual = false): void
+    protected function parseTermToIndex(string $term,
+                                        $definition,
+                                        string $fileName,
+                                        Index $index,
+                                        bool $isManual = false): void
     {
         /*
          * A simple term definition:
          *     term: text (optional)
          * Create a single item for it.
          */
-        if (is_string($definition) || is_null($definition)) {
+        if (is_string($definition) || $definition === null) {
             $item = $this->createItem($term, $fileName);
             $text = $definition ?: $term;
             $group = $text;
@@ -179,6 +175,7 @@ class IndexLoader
             $item->setGroup($group);
             $item->setManual($isManual);
             $index->add($item);
+
             return;
         }
 
@@ -192,8 +189,9 @@ class IndexLoader
          *              "subterm n": "subterm n text" (optional)
          * Create an item for each one.
          */
-        $text = isset($definition['text']) ? $definition['text'] : $term;
+        $text = $definition['text'] ?? $term;
         $group = $text;
+        /** @var array[][] $definition */
         foreach ($definition['terms'] as $term2 => $definition2) {
             $item = $this->createItem($term2, $fileName);
             $text = is_string($definition2) ? $definition2 : $term2;
@@ -209,41 +207,57 @@ class IndexLoader
      * @param $fileName
      * @return IndexItem
      */
-    protected function createItem($term, $fileName): IndexItem
+    protected function createItem(string $term,
+                                  string $fileName): IndexItem
     {
         $item = new IndexItem();
         $item->setTerm($term);
         $item->setSource(basename($fileName));
         // ensure uniqueness of slug to avoid collisions
-        $prefix = crc32($term) . '-';
-        $item->setSlug($prefix . $this->slugger->slugify($term));
+        $prefix = crc32($term).'-';
+        $item->setSlug($prefix.$this->slugger::slugify($term));
+
         return $item;
     }
 
     /**
-     * @param array $indexDefinition
+     * @return Index
      */
-    protected function applyDefaultsToIndexDefinition(array $indexDefinition): void
+    public function loadFromYamlString(): Index
     {
-        // defaults
-        $default = [
-            'index' => [
-                'terms' => [],
-                'manual-terms' => []
-            ]
-        ];
+        // definitely a Yaml string
+        $this->readFromYamlString($this->fileNameOrYamlString);
 
-        $default['index']['options'] = [
-            'elements' => [
-                'chapter'
-            ]
-        ];
+        return $this->parse('placeholder-filename');
+    }
 
-        $indexDefinition = array_replace_recursive($default, $indexDefinition);
+    /**
+     * @param $yamlString
+     */
+    protected function readFromYamlString(string $yamlString): void
+    {
+        $indexDefinition = Yaml::parse($yamlString);
+        $this->loaded = true;
 
-        $this->terms = $indexDefinition['index']['terms'];
-        $this->manualTerms = $indexDefinition['index']['manual-terms'];
-        $this->options = $indexDefinition['index']['options'];
+        $this->applyDefaultsToIndexDefinition($indexDefinition);
+    }
+
+    /**
+     * True if the definition file could not been loaded (i.e. not found)
+     *
+     * @return boolean
+     */
+    public function isLoaded(): bool
+    {
+        return $this->loaded;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 
 }

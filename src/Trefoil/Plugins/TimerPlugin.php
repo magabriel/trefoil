@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -22,12 +23,15 @@ use Easybook\Events\BaseEvent;
  */
 class TimerPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::PRE_PUBLISH  => array('registerPublicationStart', +2000), // before everything
-            EasybookEvents::POST_PUBLISH => array('registerPublicationEnd', -2000) // after everything
-        );
+        return [
+            EasybookEvents::PRE_PUBLISH  => ['registerPublicationStart', +2000], // before everything
+            EasybookEvents::POST_PUBLISH => ['registerPublicationEnd', -2000] // after everything
+        ];
     }
 
     /**

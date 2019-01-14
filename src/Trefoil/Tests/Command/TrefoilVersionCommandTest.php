@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -8,9 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Trefoil\Console\Command;
+namespace Trefoil\Tests\Command;
 
 use Symfony\Component\Console\Tester\CommandTester;
+use Trefoil\Console\Command\TrefoilVersionCommand;
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
 
@@ -20,6 +22,9 @@ use Trefoil\DependencyInjection\Application;
 class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var ConsoleApplication
+     */
     protected $console;
 
     /**
@@ -44,21 +49,27 @@ class TrefoilVersionCommandTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testDisplayVersion()
+    public function testDisplayVersion(): void
     {
+        /**
+         * @var $command TrefoilVersionCommand
+         */
         $command = $this->console->find('version');
 
         $tester = new CommandTester($command);
         $tester->execute(
-               array(
+            [
                    'command' => $command->getName()
-               )
+            ]
         );
 
+        /**
+         * @var $app Application
+         */
         $app = $command->getApp();
 
-        $this->assertContains('easybook installed version: ' . $app->getVersion(), $tester->getDisplay());
-        $this->assertContains('trefoil  installed version: ' . $app->getMyVersion(), $tester->getDisplay());
+        static::assertContains('easybook installed version: ' . $app->getVersion(), $tester->getDisplay());
+        static::assertContains('trefoil  installed version: ' . $app->getMyVersion(), $tester->getDisplay());
     }
 
 }

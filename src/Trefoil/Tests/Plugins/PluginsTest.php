@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -13,7 +14,7 @@ use Trefoil\Tests\BookPublishingAllTestCase;
 
 class PluginsTest extends BookPublishingAllTestCase
 {
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 

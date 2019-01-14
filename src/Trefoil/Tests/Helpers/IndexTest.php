@@ -1,79 +1,85 @@
 <?php
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
+/**
+ * Class IndexTest
+ *
+ * @package Trefoil\Helpers
+ */
 class IndexTest extends \PHPUnit_Framework_TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $index = new Index();
 
-        $this->assertEquals(0, $index->count());
+        static::assertEquals(0, $index->count());
 
-        $item = $this->createItem("term0");
+        $item = $this->createItem('term0');
         $index->add($item);
 
-        $this->assertEquals(1, $index->count());
+        static::assertEquals(1, $index->count());
 
-        $this->assertEquals($item, $index->getIterator()->current());
+        static::assertEquals($item, $index->getIterator()->current());
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $index = new Index();
 
-        $this->assertEquals(0, $index->count());
+        static::assertEquals(0, $index->count());
 
-        $item = $this->createItem("term0");
+        $item = $this->createItem('term0');
         $index->add($item);
 
-        $this->assertEquals(1, $index->count());
+        static::assertEquals(1, $index->count());
 
         $index->remove($item);
 
-        $this->assertEquals(0, $index->count());
+        static::assertEquals(0, $index->count());
     }
 
-    public function testExplodeVariants()
+    public function testExplodeVariants(): void
     {
         $index = new Index();
 
-        $this->assertEquals(0, $index->count());
+        static::assertEquals(0, $index->count());
 
-        $index->add($this->createItem("term0-[a|b]"));
-        $index->add($this->createItem("term1[s]"));
+        $index->add($this->createItem('term0-[a|b]'));
+        $index->add($this->createItem('term1[s]'));
 
-        $this->assertEquals(2, $index->count());
-        $this->assertEquals(["term0-a", "term0-b"], $index->get("term0-[a|b]")->getVariants());
-        $this->assertEquals(["term1", "term1s"], $index->get("term1[s]")->getVariants());
+        static::assertEquals(2, $index->count());
+        static::assertEquals(['term0-a', 'term0-b'], $index->get('term0-[a|b]')->getVariants());
+        static::assertEquals(['term1', 'term1s'], $index->get('term1[s]')->getVariants());
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $index = new Index();
-        $index->add($this->createItem("term0-[a|b]"));
-        $index->add($this->createItem("term1[s]"));
+        $index->add($this->createItem('term0-[a|b]'));
+        $index->add($this->createItem('term1[s]'));
 
-        $this->assertEquals(2, $index->count());
+        static::assertEquals(2, $index->count());
 
         $index2 = new Index();
-        $index2->add($this->createItem("term2"));
+        $index2->add($this->createItem('term2'));
 
         $index->merge($index2);
 
-        $this->assertEquals(3, $index->count());
+        static::assertEquals(3, $index->count());
     }
 
-    public function testIteratorIsSortedByGroupAndText()
+    public function testIteratorIsSortedByGroupAndText(): void
     {
         $index = new Index();
 
-        $index->add($this->createItem("term0", "group1", "text4"));
-        $index->add($this->createItem("term1", "group1", "text2"));
+        $index->add($this->createItem('term0', 'group1', 'text4'));
+        $index->add($this->createItem('term1', 'group1', 'text2'));
 
-        $index->add($this->createItem("term2", "group0", "text1"));
-        $index->add($this->createItem("term3", "group0", "text3"));
-        $index->add($this->createItem("term4", "group0", "text0"));
+        $index->add($this->createItem('term2', 'group0', 'text1'));
+        $index->add($this->createItem('term3', 'group0', 'text3'));
+        $index->add($this->createItem('term4', 'group0', 'text0'));
 
         /** @var IndexItem[] $list */
         $list = [];
@@ -81,11 +87,11 @@ class IndexTest extends \PHPUnit_Framework_TestCase
             $list[] = $indexItem;
         }
 
-        $this->assertEquals("term4", $list[0]->getTerm());
-        $this->assertEquals("term2", $list[1]->getTerm());
-        $this->assertEquals("term3", $list[2]->getTerm());
-        $this->assertEquals("term1", $list[3]->getTerm());
-        $this->assertEquals("term0", $list[4]->getTerm());
+        static::assertEquals('term4', $list[0]->getTerm());
+        static::assertEquals('term2', $list[1]->getTerm());
+        static::assertEquals('term3', $list[2]->getTerm());
+        static::assertEquals('term1', $list[3]->getTerm());
+        static::assertEquals('term0', $list[4]->getTerm());
     }
 
     /**
@@ -95,15 +101,15 @@ class IndexTest extends \PHPUnit_Framework_TestCase
      * @return IndexItem
      */
     protected function createItem(string $term,
-                                  string $group = "",
-                                  string $text = ""): IndexItem
+                                  string $group = '',
+                                  string $text = ''): IndexItem
     {
         $item = new IndexItem();
         $item->setTerm($term);
-        $item->setSlug($term . "-slug");
+        $item->setSlug($term .'-slug');
         $item->setGroup($group);
         $item->setText($text);
-        $item->setSource($term . "-source");
+        $item->setSource($term .'-source');
         return $item;
     }
 }

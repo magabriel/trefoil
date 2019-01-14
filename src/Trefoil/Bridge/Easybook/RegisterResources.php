@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -12,26 +13,41 @@ namespace Trefoil\Bridge\Easybook;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
+use Trefoil\DependencyInjection\Application;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Util\Toolkit;
 
 /**
  * Register our own resources into easybook
- *
  */
 class RegisterResources implements EventSubscriberInterface
 {
+    /**
+     * @var Application
+     */
     protected $app;
+
+    /**
+     * @var ConsoleOutput
+     */
     protected $output;
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(EasybookEvents::PRE_PUBLISH => 'onPrePublish');
+        return [EasybookEvents::PRE_PUBLISH => 'onPrePublish'];
     }
 
-    public function onPrePublish(BaseEvent $event)
+    /**
+     * @param BaseEvent $event
+     * @throws \Exception
+     */
+    public function onPrePublish(BaseEvent $event): void
     {
         $this->app = $event->app;
         $this->output = $event->app['console.output'];
@@ -40,7 +56,6 @@ class RegisterResources implements EventSubscriberInterface
 
         $this->registerOwnThemes();
 
-        /** @var \Easybook\DependencyInjection\Application $app */
         $app = $this->app;
         $app->dispatch(
             TrefoilEvents::PRE_PUBLISH_AND_READY,
@@ -49,12 +64,14 @@ class RegisterResources implements EventSubscriberInterface
     }
 
     /**
-     * Register our own plugins
+     * Register our own plugins.
+     *
+     * @throws \Exception
      */
-    public function registerOwnPlugins()
+    public function registerOwnPlugins(): void
     {
         // register mandatory plugins
-        $this->registerEventSubscribers(__DIR__ . '/../../Plugins', 'Trefoil\\Plugins\\');
+        $this->registerEventSubscribers(__DIR__.'/../../Plugins', 'Trefoil\\Plugins\\');
 
         // register optional plugins
         $edition = $this->app['publishing.edition'];
@@ -69,21 +86,21 @@ class RegisterResources implements EventSubscriberInterface
             return;
         }
 
+        /** @var string[] $enabledPlugins */
         $enabledPlugins = $bookEditions[$edition]['plugins']['enabled'];
 
         $registered = $this->registerEventSubscribers(
-                           __DIR__ . '/../../Plugins/Optional',
-                           'Trefoil\\Plugins\\Optional\\',
-                           $enabledPlugins
+            __DIR__.'/../../Plugins/Optional',
+            'Trefoil\\Plugins\\Optional\\',
+            $enabledPlugins
         );
 
         // tell the user
         foreach ($enabledPlugins as $plugin) {
-            if (!in_array($plugin, $registered)) {
-                throw new \Exception(
-                    'Enabled plugin was not registered: ' . $plugin);
+            if (!in_array($plugin, $registered, true)) {
+                throw new \RuntimeException('Enabled plugin was not registered: '.$plugin);
             }
-            $this->output->writeLn(sprintf(" > Using plugin %s", $plugin));
+            $this->output->writeln(sprintf(' > Using plugin %s', $plugin));
         }
     }
 
@@ -92,27 +109,29 @@ class RegisterResources implements EventSubscriberInterface
      * @param       $namespace
      * @param array $selectedPlugins List of plugins to register,
      *                               or null to register all
-     *
      * @return array
+     * @throws \ReflectionException
      */
-    private function registerEventSubscribers($dir,
-                                              $namespace,
-                                              array $selectedPlugins = null)
-    {
+    private function registerEventSubscribers(
+        string $dir,
+        string $namespace,
+        array $selectedPlugins = null
+    ): array {
+
         if (!file_exists($dir)) {
-            return array();
+            return [];
         }
 
         // find and register all plugins in dir
         $files = Finder::create()->files()->name('*Plugin.php')->depth(0)->in($dir);
 
-        $registered = array();
+        $registered = [];
         foreach ($files as $file) {
             $className = $file->getBasename('.php'); // strip .php extension
 
             $pluginName = $file->getBasename('Plugin.php');
 
-            if ($selectedPlugins !== null && !in_array($pluginName, $selectedPlugins)) {
+            if ($selectedPlugins !== null && !in_array($pluginName, $selectedPlugins, true)) {
                 continue;
             }
 
@@ -128,36 +147,38 @@ class RegisterResources implements EventSubscriberInterface
      *
      * @param $namespace
      * @param $className
+     * @throws \ReflectionException
      */
-    protected function registerPlugin($namespace, $className)
+    protected function registerPlugin(string $namespace, string $className): void
     {
-        $r = new \ReflectionClass($namespace . $className);
+        $r = new \ReflectionClass($namespace.$className);
 
-        if ($r->implementsInterface('Symfony\\Component\\EventDispatcher\\EventSubscriberInterface')) {
-            $this->app->get('dispatcher')->addSubscriber($r->newInstance());
+        if ($r->implementsInterface(EventSubscriberInterface::class)) {
+            $this->app['dispatcher']->addSubscriber($r->newInstance());
         }
     }
 
-    protected function registerOwnThemes()
+    /**
+     * Themes get actually registered in the TwigServiceProvider class.
+     * Here we only tell the user what's being used.
+     */
+    protected function registerOwnThemes(): void
     {
-        // themes get actually registered in the TwigServiceProvider class
-        // here we only tell the user what's being used
-
         $theme = ucfirst($this->app->edition('theme'));
 
-        $themesDir = toolkit::getCurrentThemeDir($this->app);
-        if (!file_exists($themesDir)) {
-            $this->output->writeLn(
-                         sprintf(
-                             " > <bg=yellow;fg=black> WARNING </> " .
-                             "Theme %s not found in themes directory, assuming default easybook theme",
-                             $theme
-                         )
+        $themesDir = Toolkit::getCurrentThemeDir($this->app);
+        if ($themesDir !== null && !file_exists($themesDir)) {
+            $this->output->writeln(
+                sprintf(
+                    ' > <bg=yellow;fg=black> WARNING </> '.
+                    'Theme %s not found in themes directory, assuming default easybook theme',
+                    $theme
+                )
             );
 
             return;
         }
 
-        $this->output->writeLn(sprintf(" > Using theme  %s from %s", $theme, $themesDir));
+        $this->output->writeln(sprintf(' > Using theme  %s from %s', $theme, $themesDir));
     }
 }

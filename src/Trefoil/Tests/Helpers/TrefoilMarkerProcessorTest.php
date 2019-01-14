@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: miguelangel
@@ -9,16 +10,23 @@
 namespace Trefoil\Helpers;
 
 
+/**
+ * Class TrefoilMarkerProcessorTest
+ *
+ * @package Trefoil\Helpers
+ */
 class TrefoilMarkerProcessorTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testParse()
+    public function testParse(): void
     {
         $processor = new TrefoilMarkerProcessor();
-        $processor->registerMarker("one", function (){
+        $processor->registerMarker(
+            'one', function (){
             return 'expanded1';
         });
-        $processor->registerMarker("two", function ($thing){
+        $processor->registerMarker(
+            'two', function ($thing){
             return 'expanded2-'.$thing;
         });
 
@@ -36,16 +44,18 @@ TEXT;
 
         $actual = $processor->parse($input);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 
-    public function testParseWithSeparators()
+    public function testParseWithSeparators(): void
     {
         $processor = new TrefoilMarkerProcessor();
-        $processor->registerMarker("one", function (){
+        $processor->registerMarker(
+            'one', function (){
             return 'expanded1';
         });
-        $processor->registerMarker("two", function ($thing){
+        $processor->registerMarker(
+            'two', function ($thing){
             return 'expanded2-'.$thing;
         });
 
@@ -66,6 +76,6 @@ TEXT;
 
         $actual = $processor->parse($input);
 
-        $this->assertEquals($expected, $actual);
+        static::assertEquals($expected, $actual);
     }
 }

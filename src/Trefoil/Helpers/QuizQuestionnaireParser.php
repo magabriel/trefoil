@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -49,7 +50,12 @@ class QuizQuestionnaireParser extends QuizItemParser
      */
     protected $quizQuestionnaire;
 
-    public function __construct($text)
+    /**
+     * QuizQuestionnaireParser constructor.
+     *
+     * @param string $text
+     */
+    public function __construct(string $text)
     {
         $this->quizQuestionnaire = new QuizQuestionnaire();
         parent::__construct($text, $this->quizQuestionnaire);
@@ -73,14 +79,13 @@ class QuizQuestionnaireParser extends QuizItemParser
      * @param Crawler $crawler pointing to "div" node of the quiz item
      *
      * @throws \RuntimeException
-     * @return array             with questionnaire values
      */
-    protected function parseBody(Crawler $crawler)
+    protected function parseBody(Crawler $crawler): void
     {
         // 'ol' node contains all the questions
         $olNode = $crawler->filter('div>ol');
 
-        if (0 == $olNode->count()) {
+        if (0 === $olNode->count()) {
             throw new \RuntimeException(
                 sprintf(
                     'No questions found for questionnaire id "%s"' . "\n"
@@ -89,7 +94,7 @@ class QuizQuestionnaireParser extends QuizItemParser
         }
 
         // collect questions
-        $questionsList = array();
+        $questionsList = [];
 
         $qnodes = $olNode->children();
 
@@ -101,7 +106,7 @@ class QuizQuestionnaireParser extends QuizItemParser
 
             $qnodeNodes = $qnode->children();
 
-            if (0 == $qnodeNodes->count()) {
+            if (0 === $qnodeNodes->count()) {
                 // this "li" question node doesn't have anything in it except some text
                 $question->setText('<p>' . $qnode->text() . '</p>');
             } else {
@@ -110,7 +115,7 @@ class QuizQuestionnaireParser extends QuizItemParser
                     $qnodeNode = new Crawler($qnodeDomNode);
 
                     $nodeName = CrawlerTools::getNodeName($qnodeNode);
-                    if ('h6' == $nodeName) {
+                    if ('h6' === $nodeName) {
                         // solution heading
                         $question->setSolution('');
                         $question->setHeading($qnodeNode->text());

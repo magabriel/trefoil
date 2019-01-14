@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -44,37 +45,27 @@ class GlossaryLoaderTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    /**
-     * @covers Trefoil\Helpers\GlossaryLoader::load
-     * @covers Trefoil\Helpers\GlossaryLoader::isLoaded
-     * @covers Trefoil\Helpers\GlossaryLoader::getOptions
-     */
-    public function testLoadWithOptions()
+    public function testLoadWithOptions(): void
     {
         $this->object->load(true);
 
-        $this->assertTrue($this->object->isLoaded());
+        static::assertTrue($this->object->isLoaded());
 
-        $options = array(
+        $options = [
             'coverage' => 'first',
-            'elements' => array("chapter", "prologue")
-        );
+            'elements' => ['chapter', 'prologue']
+        ];
 
-        $this->assertEquals($options, $this->object->getOptions());
+        static::assertEquals($options, $this->object->getOptions());
     }
 
-    /**
-     * @covers Trefoil\Helpers\GlossaryLoader::load
-     * @covers Trefoil\Helpers\GlossaryLoader::isLoaded
-     * @covers Trefoil\Helpers\GlossaryLoader::getOptions
-     */
-    public function testLoadWithoutOptions()
+    public function testLoadWithoutOptions(): void
     {
-        $this->object->load(false);
+        $this->object->load();
 
-        $this->assertTrue($this->object->isLoaded());
+        static::assertTrue($this->object->isLoaded());
 
-        $this->assertEquals(null, $this->object->getOptions());
+        static::assertEquals(null, $this->object->getOptions());
     }
 
 

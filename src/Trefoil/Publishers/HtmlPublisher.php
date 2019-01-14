@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -17,13 +18,13 @@ namespace Trefoil\Publishers;
  */
 class HtmlPublisher extends BasePublisher
 {
-    public function assembleBook()
+    public function assembleBook(): void
     {
         // generate easybook CSS file
         if ($this->app->edition('include_styles')) {
             $this->app->render(
-                      '@theme/style.css.twig',
-                      array('resources_dir' => $this->app['app.dir.resources'] . '/'),
+                '@theme/style.css.twig',
+                ['resources_dir' => $this->app['app.dir.resources'] . '/'],
                       $this->app['publishing.dir.output'] . '/css/easybook.css'
             );
         }
@@ -41,11 +42,11 @@ class HtmlPublisher extends BasePublisher
 
         // implode all the contents to create the whole book
         $this->app->render(
-                  'book.twig',
-                  array(
+            'book.twig',
+            [
                       'items'          => $this->app['publishing.items'],
                       'has_custom_css' => $hasCustomCss
-                  ),
+            ],
                   $this->app['publishing.dir.output'] . '/book.html'
         );
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -42,7 +43,7 @@ abstract class BasePlugin
      *
      * @param BaseEvent $event
      */
-    public function init(BaseEvent $event)
+    public function init(BaseEvent $event): void
     {
         $this->event = $event;
         $this->app = $event->app;
@@ -59,10 +60,10 @@ abstract class BasePlugin
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info')
      */
-    public function writeLn($message, $type = 'info')
+    public function writeLn($message, $type = 'info'): void
     {
         $this->write($message, $type);
-        $this->output->writeLn('');
+        $this->output->writeln('');
     }
 
     /**
@@ -71,9 +72,9 @@ abstract class BasePlugin
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info')
      */
-    public function write($message, $type = 'info')
+    public function write($message, $type = 'info'): void
     {
-        $class = join('', array_slice(explode('\\', get_called_class()), -1));
+        $class = implode('', array_slice(explode('\\', static::class), -1));
         $prefix = sprintf('%s: ', $class);
 
         $msgType = '';
@@ -96,22 +97,25 @@ abstract class BasePlugin
      * 
      * @param string $message
      */
-    public function deprecationNotice($message = 'This plugin is deprecated. Please use an alternative.')
+    public function deprecationNotice($message = 'This plugin is deprecated. Please use an alternative.'): void
     {
         $this->writeLn($message, 'warning');
     }
 
-    protected function progressStart($limit)
+    /**
+     * @param int $limit
+     */
+    protected function progressStart(int $limit): void
     {
         $this->app['console.progress']->start($this->output, $limit);
     }
 
-    protected function progressAdvance()
+    protected function progressAdvance(): void
     {
         $this->app['console.progress']->advance();
     }
 
-    protected function progressFinish()
+    protected function progressFinish(): void
     {
         $this->app['console.progress']->finish();
     }
@@ -169,9 +173,9 @@ abstract class BasePlugin
 
                 if (array_key_exists($joinKeys, $option)) {
                     return $option[$joinKeys];
-                } else {
-                    return $default;
                 }
+
+                return $default;
             }
         }
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -30,8 +31,8 @@ use Symfony\Component\Yaml\Yaml;
 class GlossaryLoader
 {
 
-    protected $fileName;
-    protected $terms;
+    protected $fileName = '';
+    protected $terms = [];
     protected $options;
     protected $loaded = false;
     protected $slugger;
@@ -53,12 +54,11 @@ class GlossaryLoader
      *
      * @return Glossary
      */
-    public function load($hasOptions = false)
+    public function load($hasOptions = false): Glossary
     {
         $this->readFromFile($hasOptions);
-        $glossary = $this->parse();
 
-        return $glossary;
+        return $this->parse();
     }
 
     /**
@@ -66,7 +66,7 @@ class GlossaryLoader
      *
      * @return boolean
      */
-    public function isLoaded()
+    public function isLoaded(): bool
     {
         return $this->loaded;
     }
@@ -74,7 +74,7 @@ class GlossaryLoader
     /**
      * @return array
      */
-    public function getOptions()
+    public function getOptions(): ?array
     {
         return $this->options;
     }
@@ -84,7 +84,7 @@ class GlossaryLoader
      *
      * @param bool $hasOptions Whether the file also has an 'options' section
      */
-    protected function readFromFile($hasOptions = false)
+    protected function readFromFile($hasOptions = false): void
     {
         $this->loaded = false;
 
@@ -92,23 +92,23 @@ class GlossaryLoader
             $glossaryDefinition = Yaml::parse($this->fileName);
             $this->loaded = true;
         } else {
-            $glossaryDefinition = array();
+            $glossaryDefinition = [];
         }
 
         // defaults
-        $default = array(
-            'glossary' => array(
-                'terms' => array()
-            )
-        );
+        $default = [
+            'glossary' => [
+                'terms' => []
+            ]
+        ];
 
         if ($hasOptions) {
-            $default['glossary']['options'] = array(
+            $default['glossary']['options'] = [
                 'coverage' => 'item',
-                'elements' => array(
+                'elements' => [
                     'chapter'
-                )
-            );
+                ]
+            ];
         }
 
         $glossaryDefinition = array_replace_recursive($default, $glossaryDefinition);
@@ -124,7 +124,7 @@ class GlossaryLoader
      *
      * @return \Trefoil\Helpers\Glossary
      */
-    protected function parse()
+    protected function parse(): Glossary
     {
         $glossary = new Glossary();
 
@@ -138,7 +138,7 @@ class GlossaryLoader
             // with different variant
             $prefix = crc32($term . $description) . '-';
 
-            $gi->setSlug($prefix . $this->slugger->slugify($term));
+            $gi->setSlug($prefix . $this->slugger::slugify($term));
             $gi->setSource(basename($this->fileName));
             $gi->setDescription($description);
 

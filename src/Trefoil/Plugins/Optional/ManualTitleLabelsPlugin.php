@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
@@ -16,72 +18,74 @@ use Trefoil\Plugins\BasePlugin;
 
 /**
  * Add manual title labels to book items.
- *
  * For formats: all
- *
  * Item labels are rendered with different markup than the title, creating a nice effect,
  * like "Chapter 1 - The first chapter title" ("Chapter 1" is the label while "The first
  * chapter title" is the title).
- * 
- * Automatic labels can be added to item titles by easybook using its labeling mechanism, 
+ * Automatic labels can be added to item titles by easybook using its labeling mechanism,
  * but sometimes it could be useful having a way to manually specify labels using markup
  * in the source file.
- *
  * This plugin provides simple markup to achieve just this, just enclosing the label part
  * in "[[..]]".
- *
  * Example:
- * 
  *   # [[Chapter 1]] The first chapter title
- * 
  */
 class ManualTitleLabelsPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1100) // apter ParserPlugin
-        );
+        return [
+            EasybookEvents::POST_PARSE => ['onItemPostParse', -1100] // apter ParserPlugin
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
         $this->addTitleLabel();
-        
+
         $event->setItem($this->item);
     }
 
     /**
-     * Look for '[[label]] title' markup in title and update 
+     * Look for '[[label]] title' markup in title and update
      * the item accordingly.
      */
     protected function addTitleLabel()
     {
         $regExp = '/';
-        $regExp .= '^\[\[(?<label>.*)\]\] ?(?<title>.*)$'; 
+        $regExp .= '^\[\[(?<label>.*)\]\] ?(?<title>.*)$';
         $regExp .= '/U'; // Ungreedy
 
         $item = $this->item;
-        
+
         $item['title'] = preg_replace_callback(
             $regExp,
-            function ($matches) use (&$item) {
-                
+            function ($matches) use
+            (
+                &
+                $item
+            ) {
+
                 // the new item label
                 $item['label'] = $matches['label'];
-                
+
                 // the toc
                 $item['toc'][0]['label'] = $matches['label'];
                 $item['toc'][0]['title'] = $matches['title'];
-                
+
                 // the new title
                 return $matches['title'];
             },
-            $item['title']
-        );
-        
+            $item['title']);
+
         $this->item = $item;
     }
 }

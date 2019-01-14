@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -10,12 +11,10 @@
 
 namespace Trefoil\Helpers;
 
-use EasySlugger\Slugger;
 use EasySlugger\SluggerInterface;
 
 /**
  * Replaces terms of an index into a given text (HTML).
- *
  */
 class IndexReplacer
 {
@@ -55,6 +54,11 @@ class IndexReplacer
     private $twig;
 
     /**
+     * @var SluggerInterface
+     */
+    private $slugger;
+
+    /**
      * @param Index             $index         The index object
      * @param TextPreserver     $textPreserver A TextPreserver instance
      * @param string            $text          The text to replace into
@@ -64,8 +68,8 @@ class IndexReplacer
      */
     public function __construct(Index $index,
                                 TextPreserver $textPreserver,
-                                $text,
-                                $textId,
+                                string $text,
+                                string $textId,
                                 \Twig_Environment $twig,
                                 SluggerInterface $slugger = null // just for testing, it cannot be mocked
     )
@@ -85,7 +89,7 @@ class IndexReplacer
      *
      * @return string
      */
-    public function replace()
+    public function replace(): string
     {
         // set the TextPeserver instance for this text processing
         $this->textPreserver->setText($this->text);
@@ -102,12 +106,10 @@ class IndexReplacer
         // replace all index marks in the text
         $text = $this->replaceManualIndexMarks($text);
 
-        // process each variant of each term
-        foreach ($this->index as $indexItem/* @var $indexItem IndexItem */) {
+        // process each variant of each non-manual term
+        foreach ($this->index as $indexItem/* @var IndexItem $indexItem */) {
             foreach ($indexItem->getVariants() as $variant) {
-                if ($indexItem->isManual()) {
-//                    $text = $this->replaceManualTermVariant($text, $indexItem, $variant);
-                } else {
+                if (!$indexItem->isManual()) {
                     $text = $this->replaceTermVariant($text, $indexItem, $variant);
                 }
             }
@@ -122,9 +124,7 @@ class IndexReplacer
 
     /**
      * Replace all manual index marks with the corresponding anchor link target.
-     *
      * Cases:
-     *
      *   in text           | indexed term        | Notes
      *   ----------------- | ------------------- | -------------------
      *   |a word|          | a word              |
@@ -135,7 +135,7 @@ class IndexReplacer
      * @param $text
      * @return string
      */
-    private function replaceManualIndexMarks($text)
+    private function replaceManualIndexMarks($text): string
     {
         $indexMark = "\|@\|";
         $word = "[\w-]+";
@@ -143,7 +143,7 @@ class IndexReplacer
         $pattern = '/';
         $pattern .= '(?:'; // start non-capturing term and mark
         $pattern .= '(?:'; // start non-capturing group for term and delimiters
-        $pattern .= '(?<pre>\W)(?<term>' . $word . ')'; // a word string
+        $pattern .= '(?<pre>\W)(?<term>'.$word.')'; // a word string
         $pattern .= '|';
         $pattern .= '(?<pre>")(?<term>.+)(?<post>")'; // a double quoted string
         $pattern .= '|';
@@ -169,25 +169,24 @@ class IndexReplacer
         $pattern .= '/UmuJ'; // Ungreedy, multiline, unicode, allow duplicate subpattern names
 
         // replace all occurrences with a index link
-        $text = preg_replace_callback(
-            $pattern,
-            function ($matches) use ($indexMark) {
+        $text = preg_replace_callback($pattern,
+            function ($matches) {
                 // extract what to replace
-                $pre = isset($matches['pre']) ? $matches['pre'] : "";
+                $pre = $matches['pre'] ?? '';
                 $term = $matches['term'];
-                $post = isset($matches['post']) ? $matches['post'] : "";
+                $post = $matches['post'] ?? '';
 
                 // look if the term is configured
                 $indexItem = $this->index->getItemWithVariant($term);
 
-                if ($indexItem == null) {
+                if ($indexItem === null) {
                     $indexItem = new IndexItem();
                     $indexItem->setTerm($term);
                     $indexItem->setText($term);
                     $indexItem->setGroup($term);
                     $indexItem->setSource('manual');
                     if ($this->slugger !== null) {
-                        $slug = crc32($term) . '-' . $this->slugger->slugify($term);
+                        $slug = crc32($term).'-'.$this->slugger::slugify($term);
                     } else {
                         // do our best (just for testing - slugger cannot be mocked)
                         $slug = str_replace(' ', '-', $term);
@@ -205,21 +204,18 @@ class IndexReplacer
                 $this->index->add($indexItem);
 
                 // reconstruct the original tag with the modified text
-                return $pre . $newContent . $post;
+                return $pre.$newContent.$post;
             },
-            $text
-        );
+                                      $text);
 
         return $text;
     }
 
     /**
      * Replace a single manual index term with the rendered template.
-     *
      * The rendering expects a Twig template called "auto-index-term.twig" to be loadable.
      * Sample template (note that {{ term }} is not used but it is mantained for compatibilty
      * with the automatic index terms case):
-     *
      *      {% spaceless %}
      *          {{ term }}<a class="auto-index-term" id="auto-index-term-{{ reference }}"/>
      *      {% endspaceless %}
@@ -231,7 +227,8 @@ class IndexReplacer
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function replaceManualTermIntoString(IndexItem $indexItem, $term)
+    protected function replaceManualTermIntoString(IndexItem $indexItem,
+                                                   string $term): string
     {
         /* create the anchor link from the slug
          * and get the number given to the anchor link just created
@@ -254,14 +251,13 @@ class IndexReplacer
      * Save an anchor link to be registered later
      *
      * @param IndexItem $indexItem
-     *
-     * @return int The anchor link saved
+     * @return string The anchor link saved
      */
-    protected function saveAnchorLink(IndexItem $indexItem)
+    protected function saveAnchorLink(IndexItem $indexItem): string
     {
         $count = count($indexItem->getAnchorLinks());
 
-        $savedAnchorLink = $indexItem->getSlug() . '-' . $count;
+        $savedAnchorLink = $indexItem->getSlug().'-'.$count;
         $indexItem->addAnchorLink($savedAnchorLink);
 
         return $savedAnchorLink;
@@ -269,37 +265,36 @@ class IndexReplacer
 
     /**
      * Render an index term with the corresponding template.
-     *
      * It expects a Twig template called "auto-index-term.twig" to be loadable.
-     *
      * Sample template:
-     *
      *      {% spaceless %}
      *          {{ term }}<a class="auto-index-term" id="auto-index-term-{{ reference }}"/>
      *      {% endspaceless %}
      *
      * @param  string   $reference
      * @param string    $term
-     * @param IndexItem $item
+     * @param IndexItem $indexItem
      * @return string
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function renderIndexTerm($reference, $term, IndexItem $indexItem)
+    protected function renderIndexTerm($reference,
+                                       $term,
+                                       IndexItem $indexItem): string
     {
         return $this->twig->render('auto-index-term.twig',
-            array(
-                'reference' => $reference,
-                'term' => $term,
-                'item' => $indexItem
-            ));
+                                   [
+                                       'reference' => $reference,
+                                       'term'      => $term,
+                                       'item'      => $indexItem,
+                                   ]);
     }
 
     /**
      * @return string
      */
-    protected function getTextId()
+    protected function getTextId(): string
     {
         return $this->textId;
     }
@@ -310,54 +305,53 @@ class IndexReplacer
      * @param string    $text
      * @param IndexItem $indexItem
      * @param string    $variant The variant to replace
-     *
      * @return string
      */
-    protected function replaceTermVariant($text, IndexItem $indexItem, $variant)
+    protected function replaceTermVariant($text,
+                                          IndexItem $indexItem,
+                                          $variant): string
     {
         // construct regexp to replace only into certain tags
-        $tags = array('p', 'li', 'dd');
+        $tags = ['p', 'li', 'dd'];
 
-        $patterns = array();
+        $patterns = [];
         foreach ($tags as $tag) {
             $pattern = '/';
             $pattern .= '<(?<tag>%s)(?<attrs>[^>]*)>'; // opening tag with optional attributes
             $pattern .= '(?<content>.*)'; // content
             $pattern .= '<\/%s>'; // closing tag
             $pattern .= '/Ums'; // Ungreedy, multiline, dotall
+            /** @noinspection PrintfScanfArgumentsInspection */
             $patterns[] = sprintf($pattern, $tag, $tag);
         }
 
         // replace all occurrences of $variant into text $item with a index link
-        // PHP 5.3 compat
-        $me = $this;
-
-        $text = preg_replace_callback(
-            $patterns,
-            function ($matches) use ($me, $indexItem, $variant) {
+        $text = preg_replace_callback($patterns,
+            function ($matches) use
+            (
+                $indexItem,
+                $variant
+            ) {
                 // extract what to replace
                 $tag = $matches['tag'];
                 $tagContent = $matches['content'];
                 $attrs = $matches['attrs'];
 
                 // do the replacement
-                $newContent = $me->replaceTermVariantIntoString($tagContent, $indexItem, $variant);
+                $newContent = $this->replaceTermVariantIntoString($tagContent, $indexItem, $variant);
 
                 // reconstruct the original tag with the modified text
                 return sprintf('<%s%s>%s</%s>', $tag, $attrs, $newContent, $tag);
             },
-            $text
-        );
+                                      $text);
 
         return $text;
     }
 
     /**
      * Replace a term variant into a given string
-     *
      * The rendering expects a Twig template called "auto-index-term.twig" to be loadable.
      * Sample template:
-     *
      *      {% spaceless %}
      *          {{ term }}<a class="auto-index-term" id="auto-index-term-{{ reference }}"/>
      *      {% endspaceless %}
@@ -365,26 +359,30 @@ class IndexReplacer
      * @param string    $text
      * @param IndexItem $indexItem
      * @param string    $variant The variant to replace
-     *
      * @return string
      */
-    protected function replaceTermVariantIntoString($text, IndexItem $indexItem, $variant)
+    protected function replaceTermVariantIntoString(string $text,
+                                                    IndexItem $indexItem,
+                                                    string $variant): string
     {
         // construct the regexp to replace inside the tag content
         $regExp = '/';
         $regExp .= '(?<prev>^|\W)'; // previous delimiter or start of string
-        $regExp .= '(?<term>' . $variant . ')'; // the term to replace
+        $regExp .= '(?<term>'.$variant.')'; // the term to replace
         $regExp .= '(?<after>\W|$)'; // following delimiter or end of string
         $regExp .= '/ui'; // unicode, case-insensitive
 
         // replace all ocurrences of $variant into $tagContent with a index link
 
         $textPreserver = $this->textPreserver;
-        $twig = $this->twig;
 
-        $text = preg_replace_callback(
-            $regExp,
-            function ($matches) use ($indexItem, $variant, $textPreserver, $twig) {
+        $text = preg_replace_callback($regExp,
+            function ($matches) use
+            (
+                $indexItem,
+                $variant,
+                $textPreserver
+            ) {
                 $previous = $matches['prev'];
                 $term = $matches['term'];
                 $after = $matches['after'];
@@ -407,10 +405,9 @@ class IndexReplacer
                 $indexItem->addXref($variant, $this->getTextId());
 
                 // return reconstructed match
-                return $previous . $replacement . $after;
+                return $previous.$replacement.$after;
             },
-            $text
-        );
+                                      $text);
 
         return $text;
     }

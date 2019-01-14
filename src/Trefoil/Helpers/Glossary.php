@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -12,18 +13,14 @@ namespace Trefoil\Helpers;
 
 /**
  * A Glossary object.
- *
  * A glossary item (a term and its description) can be a literal or a variant definition:
- *
  *     term => definition
  *     or
  *     term => variant
- *
  * Variants can be specified of the form 'root[suffix]', where suffix can be '[one]' or '[one|two|..]'
  * Examples:
  *   'cat[s]' => 'cat' and 'cats'
  *   'star [wars|trek]' => 'star wars' and 'star trek'
- *
  */
 class Glossary implements \IteratorAggregate
 {
@@ -31,24 +28,15 @@ class Glossary implements \IteratorAggregate
     /**
      * @var GlossaryItem[]
      */
-    protected $items = array();
+    protected $items = [];
 
     /**
      * @param GlossaryItem $item
      */
-    public function add(GlossaryItem $item)
-    {
-        $this->explodeVariants($item);
-        $this->items[$item->getSlug()] = $item;
-    }
-
-    /**
-     * @param GlossaryItem $item
-     */
-    public function remove(GlossaryItem $item)
+    public function remove(GlossaryItem $item): void
     {
         foreach ($this->items as $key => $existingItem) {
-            if ($existingItem->getTerm() == $item->getTerm()) {
+            if ($existingItem->getTerm() === $item->getTerm()) {
                 unset($this->items[$key]);
                 break;
             }
@@ -57,13 +45,12 @@ class Glossary implements \IteratorAggregate
 
     /**
      * @param string $term
-     *
      * @return GlossaryItem
      */
-    public function get($term)
+    public function get($term): ?GlossaryItem
     {
         foreach ($this->items as $item) {
-            if ($item->getTerm() == $term) {
+            if ($item->getTerm() === $term) {
                 return $item;
             }
         }
@@ -76,7 +63,7 @@ class Glossary implements \IteratorAggregate
      *
      * @param Glossary $glossary
      */
-    public function merge(Glossary $glossary)
+    public function merge(Glossary $glossary): void
     {
         foreach ($glossary as $item) {
             $this->add($item);
@@ -84,21 +71,12 @@ class Glossary implements \IteratorAggregate
     }
 
     /**
-     * Number of items in glossary
-     *
-     * @return number
+     * @param GlossaryItem $item
      */
-    public function count()
+    public function add(GlossaryItem $item): void
     {
-        return count($this->items);
-    }
-
-    /**
-     * @see IteratorAggregate::getIterator()
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->items);
+        $this->explodeVariants($item);
+        $this->items[$item->getSlug()] = $item;
     }
 
     /**
@@ -110,7 +88,7 @@ class Glossary implements \IteratorAggregate
      *
      * @param GlossaryItem $item
      */
-    protected function explodeVariants(GlossaryItem $item)
+    protected function explodeVariants(GlossaryItem $item): void
     {
         $regExp = '/';
         $regExp .= '(?<root>[\w\s-]*)'; // root of the term (can contain in-between spaces or dashes)
@@ -119,19 +97,19 @@ class Glossary implements \IteratorAggregate
         $regExp .= '\])?'; // closing square bracket
         $regExp .= '/u'; // unicode
 
-        $variants = array();
+        $variants = [];
 
         if (preg_match($regExp, $item->getTerm(), $parts)) {
             if ($parts && array_key_exists('suffixes', $parts)) {
                 $suffixes = explode('|', $parts['suffixes']);
-                if (1 == count($suffixes)) {
+                if (1 === count($suffixes)) {
                     // exactly one suffix means root without and with suffix (i.e. 'word[s]')
                     $variants[] = $parts['root'];
-                    $variants[] = $parts['root'] . $suffixes[0];
+                    $variants[] = $parts['root'].$suffixes[0];
                 } else {
                     // more than one suffix means all the variations (i.e. 'entit[y|ies]')
                     foreach ($suffixes as $suffix) {
-                        $variants[] = $parts['root'] . $suffix;
+                        $variants[] = $parts['root'].$suffix;
                     }
                 }
             } else {
@@ -141,6 +119,24 @@ class Glossary implements \IteratorAggregate
         }
 
         $item->setVariants($variants);
+    }
+
+    /**
+     * Number of items in glossary
+     *
+     * @return int
+     */
+    public function count(): int
+    {
+        return count($this->items);
+    }
+
+    /**
+     * @see IteratorAggregate::getIterator()
+     */
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator($this->items);
     }
 
 }

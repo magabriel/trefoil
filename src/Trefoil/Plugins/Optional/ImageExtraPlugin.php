@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,30 +8,25 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Trefoil\Util\Toolkit;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
+
 /**
  * This plugin brings support to extended image syntax:
- *
  * - Explicit image path to provode compatibility with editors like MdCharm:
- *
  * ![caption](my/images/image.name]
- *
  * - Extended image syntax with optional CSS class and style:
- *
  * ![this is an image](image.jpg?class="my-image-class"&style="border:_1px_solid_blue;_padding:_10px;")
- *
  * - Support for extended image styles (specifiable as classes) in themes as predefined
  *   classes: *narrower*, *narrow**, *half*, and *wide*
- *
  * ![a narrow image](image.jpg?class="narrow")
- *
  */
 class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -39,17 +35,23 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @var string
      */
-    const SPACE_REPLACEMENT = '¬|{^';
+    public const SPACE_REPLACEMENT = '¬|{^';
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::PRE_PARSE  => array('onItemPreParse', -100), // after TwigExtensionPlugin
-            EasybookEvents::POST_PARSE => 'onItemPostParse',    // after content has been parsed
+        return [
+            EasybookEvents::PRE_PARSE     => ['onItemPreParse', -100], // after TwigExtensionPlugin
+            EasybookEvents::POST_PARSE    => 'onItemPostParse',    // after content has been parsed
             EasybookEvents::POST_DECORATE => 'onItemPostDecorate' // after templates have been rendered
-        );
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
@@ -61,6 +63,9 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItemProperty('original', $content);
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onItemPostParse(BaseEvent $event)
     {
         $this->init($event);
@@ -70,6 +75,9 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onItemPostDecorate(BaseEvent $event)
     {
         $this->init($event);
@@ -79,6 +87,10 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
+    /**
+     * @param $content
+     * @return string|string[]|null
+     */
     public function preProcessImages($content)
     {
         $regExp = '/';
@@ -86,12 +98,9 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '\((?<image>.*)\)'; // the image specification
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 $image = $matches['image'];
                 $arguments = '';
 
@@ -115,44 +124,42 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                      * (this is because of the way Markdown parses the image specification)
                      */
                     if (isset($args['class'])) {
-                        $args['class'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['class']);
+                        $args['class'] = str_replace(' ', $this::SPACE_REPLACEMENT, $args['class']);
                     }
 
                     if (isset($args['style'])) {
-                        $args['style'] = str_replace(' ', $me::SPACE_REPLACEMENT, $args['style']);
+                        $args['style'] = str_replace(' ', $this::SPACE_REPLACEMENT, $args['style']);
                     }
 
-                    $arguments = $me->internalRenderArguments($args);
+                    $arguments = $this->internalRenderArguments($args);
                 }
 
-                return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?' . $arguments : ''));
+                return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?'.$arguments : ''));
             },
-            $content
-        );
+            $content);
 
         return $content;
     }
 
+    /**
+     * @param $content
+     * @return mixed|string|string[]|null
+     */
     public function processImages($content)
     {
         $regExp = '/';
         $regExp .= '<img +(?<image>.*)>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 $image = Toolkit::parseHTMLAttributes($matches['image']);
-                $image = $me->internalProcessExtraImage($image);
-                $html = Toolkit::renderHTMLTag('img', null, $image);
+                $image = $this->internalProcessExtraImage($image);
 
-                return $html;
+                return Toolkit::renderHTMLTag('img', null, $image);
             },
-            $content
-        );
+            $content);
 
         // ensure there is no space replacements left (it can happen if
         // some of the image tags were not rendered because they were
@@ -164,15 +171,12 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * @param array $image
-     *
      * @return array
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalProcessExtraImage(array $image)
+    protected function internalProcessExtraImage(array $image): array
     {
         // replace typographic quotes (just in case, may be set by SmartyPants)
-        $src = str_replace(array('&#8221;', '&#8217;'), '"', $image['src']);
+        $src = str_replace(['&#8221;', '&#8217;'], '"', $image['src']);
 
         // get the query
         $parts = explode('?', html_entity_decode($src));
@@ -191,14 +195,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         // assign them
         if (isset($args['class'])) {
             $args['class'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['class']);
-            $image['class'] = isset($image['class']) ? $image['class'] . ' ' . $args['class'] : $args['class'];
+            $image['class'] = isset($image['class']) ? $image['class'].' '.$args['class'] : $args['class'];
             unset($args['class']);
         }
 
         if (isset($args['style'])) {
             // replace back all spaces
             $args['style'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['style']);
-            $image['style'] = isset($image['style']) ? $image['style'] . ';' . $args['style'] : $args['style'];
+            $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
             unset($args['style']);
         }
 
@@ -209,14 +213,11 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * @param array $arguments
-     *
      * @return string
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalRenderArguments(array $arguments)
+    protected function internalRenderArguments(array $arguments): string
     {
-        $argArray = array();
+        $argArray = [];
 
         foreach ($arguments as $name => $value) {
             $argArray[] = sprintf('%s="%s"', $name, $value);

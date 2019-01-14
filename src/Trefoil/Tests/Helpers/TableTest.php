@@ -1,9 +1,15 @@
 <?php
+declare(strict_types=1);
 
-namespace Trefoil\Test\Helpers;
+namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\Table;
 
+/**
+ * Class TableTest
+ *
+ * @package Trefoil\Tests\Helpers
+ */
 class TableTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -15,23 +21,23 @@ class TableTest extends \PHPUnit_Framework_TestCase
     {
     }
 
-    public function testNoTable()
+    public function testNoTable(): void
     {
         $input = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 
         $table = new Table();
         $table->fromHtml($input);
         
-        $this->assertTrue($table->isEmpty());
+        static::assertTrue($table->isEmpty());
         
         $output = $table->toHtml();
         
-        $this->assertEmpty($output);
+        static::assertEmpty($output);
     }
     
-    public function testFromHtmlWithSimpleTable()
+    public function testFromHtmlWithSimpleTable(): void
     {
-        $input = array(
+        $input = [
             '<table>',
             '        <tr>',
             '            <th>Header A</th>',
@@ -48,9 +54,10 @@ class TableTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2B</td>',
             '            <td>Cell 2C</td>', 
             '        </tr>',
-            '</table>');
+            '</table>'
+        ];
 
-        $expected = array(
+        $expected = [
             '<table>',
             '    <tbody>',
             '        <tr>',
@@ -69,22 +76,23 @@ class TableTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2C</td>',
             '        </tr>',
             '    </tbody>',
-            '</table>');
+            '</table>'
+        ];
             
         $table = new Table();
         $table->fromHtml(implode('', $input));
         $output = $table->toHtml();
 
         // make them comparable
-        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
+        $output = tidy_repair_string($output, ['indent' => true], 'utf8');
+        $expected = tidy_repair_string(implode('', $expected), ['indent' => true], 'utf8');
 
-        $this->assertEquals($expected, $output);
+        static::assertEquals($expected, $output);
     }
 
-    public function testFromHtmlWithCompleteTable()
+    public function testFromHtmlWithCompleteTable(): void
     {
-        $input = array(
+        $input = [
             '<table>',
             '    <thead>',
             '        <tr>',
@@ -105,7 +113,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2C</td>',
             '        </tr>',
             '    </tbody>',
-            '</table>');
+            '</table>'
+        ];
 
         $expected = $input;
 
@@ -114,15 +123,15 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $output = $table->toHtml();
 
         // make them comparable
-        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
+        $output = tidy_repair_string($output, ['indent' => true], 'utf8');
+        $expected = tidy_repair_string(implode('', $expected), ['indent' => true], 'utf8');
 
-        $this->assertEquals($expected, $output);
+        static::assertEquals($expected, $output);
     }
 
-    public function testArrayObject()
+    public function testArrayObject(): void
     {
-        $input = array(
+        $input = [
             '<table>',
             '    <thead>',
             '        <tr>',
@@ -143,9 +152,10 @@ class TableTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2C</td>',
             '        </tr>',
             '    </tbody>',
-            '</table>');
+            '</table>'
+        ];
 
-        $expected = array(
+        $expected = [
             '<table>',
             '    <thead>',
             '        <tr>',
@@ -165,7 +175,8 @@ class TableTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2C</td>',
             '        </tr>',
             '    </tbody>',
-            '</table>');
+            '</table>'
+        ];
         
         $table = new Table();
         $table->fromHtml(implode('', $input));
@@ -180,9 +191,9 @@ class TableTest extends \PHPUnit_Framework_TestCase
         $output = $table->toHtml();
 
         // make them comparable
-        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
+        $output = tidy_repair_string($output, ['indent' => true], 'utf8');
+        $expected = tidy_repair_string(implode('', $expected), ['indent' => true], 'utf8');
 
-        $this->assertEquals($expected, $output);
+        static::assertEquals($expected, $output);
     }
 }

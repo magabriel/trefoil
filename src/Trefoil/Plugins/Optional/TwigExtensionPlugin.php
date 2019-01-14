@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -18,44 +19,47 @@ use Trefoil\Util\Toolkit;
 
 /**
  * This plugin extends Twig to provide some useful functionalities:
- *
  * <li>
  * <b>Use configuration options in book contents</b> (instead of only in templates).
  * For example, in "chapter1.md" you can write "The title is {{ book.title }}".
  * This is mainly useful with user-defined configuration options.
- *
  * <li>
  * <b>itemtoc()</b> function automatically generates the Table of Contents of the current item.
  * The deep of the itemtoc can be tweaked by the configuration option <i>edition.itemtoc.deep</i>,
  * which defaults to one less than the main TOC deep <i>edition.toc.deep</i>.
  * It uses de <i>itemtoc.twig</i> template that must be available either as local or global template.
- *
  * <li>
  * <b>file()</b> function (deprecated, use fragment()) works like PHP's <i>include()</i>,
  * allowing the inclusion of another file into the current item.
  * The syntax is <i>file(filename, variables, options)</i> where "variables" and "options" are
  * optional hash tables where you can pass variables {'variable': 'value'} or
  * options {'nopagebreak': true} to the included file.
- *
  * <li>
  * <b>fragment()</b> function works like PHP's <i>include()</i>, allowing the inclusion of
  * another file into the current item.
- *
  * The syntax is <i>fragment(filename, variables, options)</i> where "variables" and "options" are
  * optional hash tables where you can pass variables {'variable': 'value'} or
  * options {'pagebreak': true} to cause inserting a page break after the included fragment.
- *
  */
 class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::PRE_PARSE => 'onItemPreParse',
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1010)
-        );
+        return [
+            EasybookEvents::PRE_PARSE  => 'onItemPreParse',
+            EasybookEvents::POST_PARSE => ['onItemPostParse', -1010],
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
@@ -75,6 +79,12 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItemProperty('original', $content);
     }
 
+    /**
+     * @param ParseEvent $event
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -98,7 +108,16 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItemProperty('content', $content);
     }
 
-    protected function renderString($string, $variables = array())
+    /**
+     * @param       $string
+     * @param array $variables
+     * @return string
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    protected function renderString($string,
+                                    $variables = []): string
     {
         // we need a new Twig String Renderer environment
         $twig = new \Twig_Environment(new \Twig_Loader_String(), $this->app['twig.options']);
@@ -109,6 +128,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         return $twig->render($string, $variables);
     }
 
+    /**
+     * @param \Twig_Environment $twig
+     */
     protected function addTwigGlobals(\Twig_Environment $twig)
     {
         $twig->addGlobal('app', $this->app);
@@ -126,43 +148,46 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
     /**
      * Register all the extensions here.
+     *
+     * @param \Twig_Environment $twig
      */
     protected function registerExtensions(\Twig_Environment $twig)
     {
         // file()
-        $twig->addFunction(new \Twig_SimpleFunction('file', array($this, 'fileFunction')));
+        $twig->addFunction(new \Twig_SimpleFunction('file', [$this, 'fileFunction']));
 
         // fragment()
-        $twig->addFunction(new \Twig_SimpleFunction('fragment', array($this, 'fragmentFunction')));
+        $twig->addFunction(new \Twig_SimpleFunction('fragment', [$this, 'fragmentFunction']));
 
         // itemtoc() and its internal counterpart
-        $twig->addFunction(new \Twig_SimpleFunction('itemtoc', array($this, 'itemTocFunction')));
+        $twig->addFunction(new \Twig_SimpleFunction('itemtoc', [$this, 'itemTocFunction']));
         $twig->addFunction(
-            new \Twig_SimpleFunction('_itemtoc_internal', array($this, 'itemTocInternalFunction'))
-        );
+            new \Twig_SimpleFunction('_itemtoc_internal', [$this, 'itemTocInternalFunction']));
     }
 
     /**
      * Twig function: <b>file(filename, variables, options)</b>
      *
      * @deprecated
-     *
      * @param string $filename  to be included (relative to book Contents dir)
      * @param array  $variables to be passed to the template
      * @param array  $options   (default: 'nopagebreak: false' => add a page break after the included text)
-     *
      * @return string included text with all the replacements done.
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function fileFunction($filename, $variables = array(), $options = array())
+    public function fileFunction($filename,
+                                 $variables = [],
+                                 $options = []): string
     {
         $dir = $this->app['publishing.dir.contents'];
-        $file = $dir . '/' . $filename;
+        $file = $dir.'/'.$filename;
 
         if (!file_exists($file)) {
             $this->writeLn(
                 sprintf('Included content file "%s" not found in "%s"', $filename, $this->item['config']['content']),
-                'error'
-            );
+                'error');
 
             return $filename;
         }
@@ -182,22 +207,24 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      * Twig function: <b>fragment(filename)</b>
      *
      * @param string $filename  to be included (relative to book Contents dir)
-     *
      * @param array  $variables to be passed to the template (example: {'name': 'John'} )
      * @param array  $options   (example {'pagebreak' => true} will add a page break after the included text)
-     *
      * @return string included text with all the replacements done.
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function fragmentFunction($filename, $variables = array(), $options = array())
+    public function fragmentFunction($filename,
+                                     $variables = [],
+                                     $options = []): string
     {
         $dir = $this->app['publishing.dir.contents'];
-        $file = $dir . '/' . $filename;
+        $file = $dir.'/'.$filename;
 
         if (!file_exists($file)) {
             $this->writeLn(
                 sprintf('Fragment file "%s" not found in "%s"', $filename, $this->item['config']['content']),
-                'error'
-            );
+                'error');
 
             return $filename;
         }
@@ -205,15 +232,15 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
         $rendered = $this->renderString(file_get_contents($file), $variables);
 
         // surround contents with the (optional) tag and class
-        $tag = isset($options['tag']) ? $options['tag'] : '';
-        $attributes = array('markdown' => 1);
-        $attributes['class'] = isset($options['class']) ? $options['class'] : '';
-        if ($attributes['class'] && empty($tag)) {
+        $tag = $options['tag'] ?? '';
+        $attributes = ['markdown' => 1];
+        $attributes['class'] = $options['class'] ?? '';
+        if (empty($tag) && $attributes['class']) {
             $tag = 'div';
         }
 
         if ($tag) {
-            $attributes['class'] = 'fragment ' . $attributes['class'];
+            $attributes['class'] = 'fragment '.$attributes['class'];
             $rendered = Toolkit::renderHTMLTag($tag, $rendered, $attributes);
         }
 
@@ -229,12 +256,11 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      * Twig function: <b>itemtoc()</b>
      *
      * @return string The _itemtoc_internal() function call
-     *
      * Generating the item toc requires two phases to ensure that included files got parsed after being
      * included (with file()). The second phase does the actual rendering of the itemtoc
      * template.
      */
-    public function itemTocFunction()
+    public function itemTocFunction(): string
     {
         return '{{ _itemtoc_internal() }}';
     }
@@ -247,11 +273,9 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
      *
      * @uses Configuration option <i>edition.plugins.TwigExtension.itemtoc.deep</i>
      *       (default: <i>edition.toc.deep + 1 </i>
-     *
      * @return string The item toc rendered
-     *
      */
-    public function itemTocInternalFunction()
+    public function itemTocInternalFunction(): string
     {
         $template = 'itemtoc.twig';
 
@@ -261,11 +285,8 @@ class TwigExtensionPlugin extends BasePlugin implements EventSubscriberInterface
 
         $itemtoc_deep = $this->getEditionOption(
             'plugins.options.TwigExtension.itemtoc.deep',
-            $this->getEditionOption('toc.deep') + 1
-        );
+            $this->getEditionOption('toc.deep') + 1);
 
-        $rendered = $twig->render($template, array('itemtoc_deep' => $itemtoc_deep));
-
-        return $rendered;
+        return $twig->render($template, ['itemtoc_deep' => $itemtoc_deep]);
     }
 }

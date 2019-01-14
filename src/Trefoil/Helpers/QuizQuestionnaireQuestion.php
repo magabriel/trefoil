@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -42,7 +43,7 @@ class QuizQuestionnaireQuestion
     /**
      * @param string $heading
      */
-    public function setHeading($heading)
+    public function setHeading($heading): void
     {
         $this->heading = $heading;
     }
@@ -50,7 +51,7 @@ class QuizQuestionnaireQuestion
     /**
      * @return string
      */
-    public function getHeading()
+    public function getHeading(): ?string
     {
         return $this->heading;
     }
@@ -58,7 +59,7 @@ class QuizQuestionnaireQuestion
     /**
      * @param string $solution
      */
-    public function setSolution($solution)
+    public function setSolution($solution): void
     {
         $this->solution = $solution;
     }
@@ -66,7 +67,7 @@ class QuizQuestionnaireQuestion
     /**
      * @return string
      */
-    public function getSolution()
+    public function getSolution(): ?string
     {
         return $this->solution;
     }
@@ -74,7 +75,7 @@ class QuizQuestionnaireQuestion
     /**
      * @param string $text
      */
-    public function setText($text)
+    public function setText($text): void
     {
         $this->text = $text;
     }
@@ -82,7 +83,7 @@ class QuizQuestionnaireQuestion
     /**
      * @return string
      */
-    public function getText()
+    public function getText(): ?string
     {
         return $this->text;
     }
