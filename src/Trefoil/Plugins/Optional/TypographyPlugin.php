@@ -13,6 +13,7 @@ namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Michelf\SmartyPantsTypographer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
 
@@ -105,7 +106,7 @@ class TypographyPlugin extends BasePlugin implements EventSubscriberInterface
         $options .= 'f-'; // do not add space inside angle quotes
 
         // and go!!
-        $content = \SmartyPants($content, $options);
+        $content = SmartyPantsTypographer::defaultTransform($content, $options);
 
         return $content;
     }

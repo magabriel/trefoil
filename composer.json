@@ -41,9 +41,9 @@
     ],
     "require": {
         "easybook/easybook": "dev-add-wkhtmltopdf-support",
-        "smartypants/typographer": "~1.0",
         "symfony/dom-crawler": "~2.3",
-        "symfony/css-selector": "~2.3"
+        "symfony/css-selector": "~2.3",
+        "michelf/php-smartypants": "~1.8.1"
     },
     "autoload": {
         "psr-0": {
