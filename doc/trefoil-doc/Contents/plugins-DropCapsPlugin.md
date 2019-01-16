@@ -81,7 +81,6 @@ will produce the following HTML:
 
 ~~~.html
 <p class="has-dropcaps"><span class="dropcaps">T</span>his text has first-letter drop caps.</p>
-
 <p class="has-dropcaps"><span class="dropcaps">But</span> this text has first-word drop caps.</p>
 ~~~
 

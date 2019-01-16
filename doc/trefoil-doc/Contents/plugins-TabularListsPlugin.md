@@ -14,13 +14,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
             plugins:
                 enabled: [ TabularLists ]       
-~~~ 
+~~~
 
 To activate this feature for a certain list, it must be enclosed between
 the following markup:

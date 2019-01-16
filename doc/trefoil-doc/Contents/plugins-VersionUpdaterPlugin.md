@@ -14,7 +14,6 @@ This plugin is available for all editions.
 # <book-dir>/config.yml 
 book:
     version: '1.0'  # This is the version string
-
     editions:
         <edition-name>
             plugins:
@@ -23,7 +22,7 @@ book:
                     VersionUpdater:
                         increment_ver: false # don't increment the version (default)
                         increment_rev: true  # increment the revision (default)
-~~~ 
+~~~
 
 ### Description
 

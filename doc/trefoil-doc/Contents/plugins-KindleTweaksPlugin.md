@@ -18,13 +18,13 @@ N> the plugin is available also for `Epub` editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
             plugins:
                 enabled: [ KindleTweaks ]
-~~~ 
+~~~
 
 ### Description
 

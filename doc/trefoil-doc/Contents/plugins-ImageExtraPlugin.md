@@ -9,13 +9,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
             plugins:
                 enabled: [ ImageExtra ]
-~~~ 
+~~~
 
 ### Description
 
@@ -32,7 +32,7 @@ provide live preview for images (like the fabulous [MdCharm](http://www.mdcharm.
 for this to work the image path must point to the relative location of the image:
 
 ~~~.markdown
-# This is the easybook way, 
+# This is the easybook way,
 # but the preview won't work:
 ![This is image 1](image1.jpeg)
 

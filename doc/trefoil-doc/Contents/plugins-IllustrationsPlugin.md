@@ -23,11 +23,11 @@ book:
     editions:
         <edition-name>
             plugins:
-                enabled: [ Illustrations ]       
+                enabled: [ Illustrations ]
                 options:
                     FootnotesExtend:
                         type: end  # (end, inject, item, inline)  
-~~~ 
+~~~
 
 ### Description
 

@@ -19,10 +19,10 @@ book:
                 options:
                     EbookQuiz:
                         ynb:
-                            yes: [ 'Yes', 'True' ]
-                            no: [ 'No', 'False' ]
-                            both: [ 'Both' ]                           
-~~~ 
+                            yes: [ "Yes", "True" ]
+                            no: [ "No", "False" ]
+                            both: [ "Both" ]                 
+~~~
 
 ### Description
 

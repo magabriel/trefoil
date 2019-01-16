@@ -25,7 +25,7 @@ To use them, as always, just put the name of the theme in the
 book's `config.yml`:
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
@@ -124,8 +124,8 @@ packed into the final book for a given edition with the following configuration:
 book:
     editions:
         edition-name:
-            include_fonts:  true
-            fonts: 
+            include_fonts: true
+            fonts:
                 - Inconsolata-Regular
                 - Inconsolata-Bold
 ~~~

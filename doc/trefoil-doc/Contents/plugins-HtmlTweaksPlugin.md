@@ -11,13 +11,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
             plugins:
-                enabled: [ HtmlTweaks ]                
-~~~ 
+                enabled: [ HtmlTweaks ]            
+~~~
 
 The actual tweaks definitions are read from a separate `yaml` file:
 
@@ -29,7 +29,7 @@ The actual tweaks definitions are read from a separate `yaml` file:
 # <current-theme>/Common/Config/html-tweaks.yml
 tweaks:
     # replacements to be made at onPreParse time
-    onPreParse:        
+    onPreParse:
         tweak-name-free:                 # just a name
             tag: 'tag name'              # tag name to find
             class: 'class-name'          # OPTIONAL class name of tag
@@ -52,8 +52,8 @@ tweaks:
         another-tweak-name:
             tag: 'tag name'
             # same options than onPreParse
-            ...
-~~~ 
+            # ...
+~~~
 
 ### Description
 
@@ -106,7 +106,7 @@ tweaks:
             insert:
                 open:  '<div class="box1" markdown="1">'
                 close: '</div>'
-
+                
         # surround all divs of class "two" with box2
         tweak-div-two:                                 
             tag: 'div'
@@ -120,7 +120,7 @@ tweaks:
             tag: 'span'
             replace: 
                 tag:  'div'                  
-                    
+                
     onPostParse:
         # enclose contents of 'pre' tags between lines
         tweak-pre:                                 
@@ -128,7 +128,7 @@ tweaks:
             insert:
                 open:  '======\n'
                 close: '\n------'
-        
+                
         # surround tables with box1
         tweak-table:
             tag: 'table'

@@ -10,7 +10,7 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
@@ -19,7 +19,7 @@ book:
                 options:
                     AutoGlossary:
                         pagebreaks: true  # use pagebreaks between defined terms          
-~~~ 
+~~~
 
 The terms' definitions are read from two files:
 
@@ -29,7 +29,7 @@ The terms' definitions are read from two files:
 The global glossary definition is called `auto-glossary.yml`:
 
 ~~~.yaml
-# <book-dir>/Contents/auto-glossary.yml 
+# <book-dir>/Contents/auto-glossary.yml
 # Global glossary definitions
 glossary:
     options: 
@@ -62,7 +62,7 @@ The glossary definitions for each book item are named after the item it applies 
 (so the glossary for `chapter1.md` item should be `chapter1-auto-glossary.yml`)
 
 ~~~.yaml
-# <book-dir>/Contents/chapter1-auto-glossary.yml 
+# <book-dir>/Contents/chapter1-auto-glossary.yml
 # Glossary definitions for chapter 1 
 glossary:
     ####
@@ -79,7 +79,7 @@ glossary:
     ####
     terms:
         "term": Definition
-~~~        
+~~~
 
 ### Description
 
@@ -94,7 +94,6 @@ glossary:
     terms:
         # literal expression
         "Lorem ipsum": Pseudo-latin text used as filler or dummy text.
-        
         # variant expressions 
         "car[s]": Definition which is applied to "car" and "cars"
         "orange [car|truck]": Definition which is applied to "orange car" and "orange truck"

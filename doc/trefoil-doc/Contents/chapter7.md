@@ -20,7 +20,7 @@ Example:
 To achieve that we can use *content filtering*. Consider the following book
 definition:
 
-~~~.yaml 
+~~~.yaml
 # config.yml
 book:
     contents:
@@ -28,8 +28,8 @@ book:
         - { element: toc }
         - { element: usage-instructions, content: usage-instructions.md, editions: [ebook, kindle] }
         - { element: print-instructions, content: print-instructions.md, formats: [pdf] }
-        - { element: chapter,     number:   1,  content: chapter1.md }
-~~~ 
+        - { element: chapter, number: 1, content: chapter1.md }
+~~~
 
 #### Syntax
 
@@ -73,7 +73,6 @@ This functionality allows just that:
 # my_series/config.yml
 easybook:
     # all of easybook parameters
-    
 book:
     editions:
         ebook:

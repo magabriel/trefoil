@@ -11,13 +11,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
     editions:
         <edition-name>
             plugins:
                 enabled: [ AutoIndex ]
-~~~        
+~~~
 
 ### Description
 
@@ -44,7 +44,7 @@ index:
             text: "Term text" (optional)
             terms:
                 "subterm 1": "subterm 1 text" (optional)
-                ...
+                # ...
                 "subterm n": "subterm n text" (optional)
 
     # definitions for manually-added terms
@@ -169,7 +169,7 @@ The definition file can **optionally** contain something similar to:
 # manual terms definition
 manual-terms:
     term1: This is a term
-     #A complex term definition (group):
+     # A complex term definition (group):
     term2-group:
         text: "Term text for group" (optional)
         terms:

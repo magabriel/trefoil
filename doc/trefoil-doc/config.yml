@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.750'
+    version:          '1.862'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -77,7 +77,6 @@ book:
                     #- EpubCheck                # Uncomment to run the check
                     - QualityControl
                     - EpubUncompress
-                    #- FootnotesExtra           # Deprecated
                     - FootnotesExtend
                     - HtmlTweaks
                     - ImageExtra
