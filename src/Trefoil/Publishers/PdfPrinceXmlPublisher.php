@@ -80,7 +80,7 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         }
 
         $customCss = $this->getCustomCssFile();
-        if (file_exists($customCss)) {
+        if ($customCss !== null && file_exists($customCss)) {
             $prince->addStyleSheet($customCss);
         }
 

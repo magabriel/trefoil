@@ -124,19 +124,16 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                 break;
 
             case self::FOOTNOTES_TYPE_INLINE:
-
                 $this->extractFootnotes();
                 $this->inlineFootnotes();
                 break;
 
             case self::FOOTNOTES_TYPE_ITEM:
-
                 $this->extractFootnotes();
                 $this->renumberReferences();
                 break;
 
             case self::FOOTNOTES_TYPE_INJECT:
-
                 $this->saveInjectionTarget();
                 $this->extractFootnotes();
                 $this->restoreInjectionTarget();
@@ -185,7 +182,7 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
         $this->itemFootnotesText = '';
 
         $regExp = '/';
-        $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
+        $regExp .= '<div class="footnotes"[^>]*>.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
@@ -195,7 +192,7 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                 $this->itemFootnotesText = $matches[0];
 
                 $regExp2 = '/';
-                $regExp2 .= '<li.*id="(?<id>.*)">.*';
+                $regExp2 .= '<li.*id="(?<id>.*)"[^>]*>.*';
                 $regExp2 .= '<p>(?<text>.*)&#160;<a .*href="#(?<backref>.*)"';
                 $regExp2 .= '/Ums'; // Ungreedy, multiline, dotall
 
@@ -241,7 +238,8 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
 
         $regExp = '/';
         $regExp .= '<sup id="(?<supid>fnref.?-.*)">';
-        $regExp .= '<a(?<prev>.*)href="#(?<href>fn-.*)"(?<post>.*)>(?<number>.*)<\/a><\/sup>';
+        // HACK: the </a> is ommited in the content (which is incorrect) and probably a nasty bug in our code.
+        $regExp .= '<a(?<prev>.*)href="#(?<href>fn-.*)"(?<post>.*)>(?<number>.*)(<\/a>)?<\/sup>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(

@@ -19,32 +19,19 @@
     ],
     "repositories": [
         {
-            "type": "package",
-            "package": {
-                "name": "smartypants/typographer",
-                "version": "1.0.1",
-                "dist": {
-                    "url": "https://littoral.michelf.ca/code/php-smartypants/php-smartypants-typographer-1.0.1.zip",
-                    "type": "zip"
-                },
-                "autoload": {
-                    "files": [
-                        "smartypants.php"
-                    ]
-                }
-            }            
-        },
-        {
             "type": "vcs",
             "url": "git@github.com:magabriel/easybook.git"
         }
     ],
     "require": {
-        "easybook/easybook": "dev-add-wkhtmltopdf-support",
-        "symfony/dom-crawler": "~2.3",
-        "symfony/css-selector": "~2.3",
-        "michelf/php-smartypants": "~1.8.1",
-        "phpunit/phpunit": "~7.4.5"
+        "php": ">=7.2",
+        "easybook/easybook": "dev-upgrade-versions",
+        "symfony/dom-crawler": "^2.3",
+        "symfony/css-selector": "^2.3",
+        "michelf/php-smartypants": "^1.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
     },
     "autoload": {
         "psr-0": {

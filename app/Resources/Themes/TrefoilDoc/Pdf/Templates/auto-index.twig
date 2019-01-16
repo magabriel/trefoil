@@ -5,36 +5,38 @@
 
     {% set initial = "" %}
     {% set group = "" %}
-    {% for term, data in app.get('publishing.index.definitions') %}
-        {% if data.anchorLinks|length > 0 %}
-            {% if data.group|first|upper != initial %}
-                {% set initial = data.group|first|upper %}
-                <h5>{{ initial }}</h5>
-            {% endif %}
-
-            <div class="links">
-                {% set hasEntries = (data.text != data.group) %}
-                {% if data.group != group %}
-                    <span class="group {{ hasEntries ? "with-entries" : "" }}">{{ data.group }}</span>
-                {% endif %}
-                {% set group = data.group %}
-
-                {% if data.text != group %}
-                    <span class="entry">{{ data.text }}</span>
+    {% if app['publishing.index.definitions'] is defined %}
+        {% for term, data in app['publishing.index.definitions'] %}
+            {% if data.anchorLinks|length > 0 %}
+                {% if data.group|first|upper != initial %}
+                    {% set initial = data.group|first|upper %}
+                    <h5>{{ initial }}</h5>
                 {% endif %}
 
-                <span class="backlinks">
+                <div class="links">
+                    {% set hasEntries = (data.text != data.group) %}
+                    {% if data.group != group %}
+                        <span class="group {{ hasEntries ? "with-entries" : "" }}">{{ data.group }}</span>
+                    {% endif %}
+                    {% set group = data.group %}
+
+                    {% if data.text != group %}
+                        <span class="entry">{{ data.text }}</span>
+                    {% endif %}
+
+                    <span class="backlinks">
                 {% for reference in data.anchorLinks %}
                     <a class="backlink" href="#auto-index-term-{{ reference }}">{# content added by javascript #}</a>
                 {% endfor %}
                 </span>
-                {#<div class="debug-backlinks">#}
-                {#{% for reference in data.anchorLinks %}#}
+                    {#<div class="debug-backlinks">#}
+                    {#{% for reference in data.anchorLinks %}#}
                     {#<a class="backlink" href="#auto-index-term-{{ reference }}">#}{# content added by javascript #}{#</a>#}
-                {#{% endfor %}#}
-                {#</div>#}
-            </div>
-        {% endif %}
-    {% endfor %}
+                    {#{% endfor %}#}
+                    {#</div>#}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 
 {% endblock %}

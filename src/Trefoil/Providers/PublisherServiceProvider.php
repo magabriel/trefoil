@@ -39,7 +39,7 @@ class PublisherServiceProvider implements ServiceProviderInterface
 
             switch (strtolower($outputFormat)) {
                 case 'pdf':
-                    $pdfEngine = $app->edition('pdf_engine');
+                    $pdfEngine = $app->edition('pdf_engine') ?? '';
 
                     switch (strtolower($pdfEngine)) {
                         case 'wkhtmltopdf':

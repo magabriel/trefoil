@@ -131,7 +131,7 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $content = $this->item['content'];
 
         $regExp = '/';
-        $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
+        $regExp .= '<div class="footnotes"[^>]*>.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
@@ -139,7 +139,7 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
             function ($matches) {
 
                 $regExp2 = '/';
-                $regExp2 .= '<li.*id="(?<id>.*)">.*';
+                $regExp2 .= '<li.*id="(?<id>.*)"[^>]*>.*';
                 $regExp2 .= '<p>(?<text>.*)&#160;<a .*href="#(?<backref>.*)"';
                 $regExp2 .= '/Ums'; // Ungreedy, multiline, dotall
 
