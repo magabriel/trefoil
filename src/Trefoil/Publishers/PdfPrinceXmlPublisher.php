@@ -86,7 +86,7 @@ class PdfPrinceXmlPublisher extends PdfPublisher
 
         // Optional first-pass script
         $js = $this->getJavascriptFile('prince-1st-pass.js');
-        if (file_exists($js)) {
+        if ($js !== null && file_exists($js)) {
             $prince->addScript($js);
             $prince->setJavaScript(true);
         }
@@ -107,7 +107,7 @@ class PdfPrinceXmlPublisher extends PdfPublisher
 
         // Optional second-pass script
         $js = $this->getJavascriptFile('prince-2nd-pass.js');
-        if (file_exists($js)) {
+        if ($js !== null && file_exists($js)) {
             $prince->addScript($js);
             $prince->setJavaScript(true);
 
