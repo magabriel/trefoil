@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.862'
+    version:          '1.869'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -129,13 +129,23 @@ book:
             format:          html
             include_styles:  true
             highlight_code:  true
+            toc:
+              deep:        3
+              elements:
+                - appendix
+                - chapter
+                - part
+                - introduction
+                - auto-index
+                - lof
+                - lot
 
         doc-website-local: # Like doc-website for local test
-            extends:         base-edition
+            extends:         base-edition # Cannot extend from an already-extended edition
             format:          html
             include_styles:  true
             highlight_code:  true
-            is_local:        true # forces usage of explicit https to load net resources
+            is_local:        true # Forces usage of explicit https to load net resources
             toc:
                 deep:        3
                 elements:
