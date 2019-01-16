@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -10,13 +11,19 @@
 namespace Trefoil\Tests\Helpers;
 
 use Trefoil\Helpers\TableExtra;
+use PHPUnit\Framework\TestCase;
 
-class TableExtraTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class TableExtraTest
+ *
+ * @package Trefoil\Tests\Helpers
+ */
+class TableExtraTest extends TestCase
 {
 
-    public function testConvertWellFormedTable()
+    public function testConvertWellFormedTable(): void
     {
-        $input = array(
+        $input = [
             '<table>',
             '    <thead>',
             '        <tr>',
@@ -46,9 +53,10 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2F</td>',
             '        </tr>',
             '     </tbody>',
-            '</table>');
+            '</table>'
+        ];
 
-        $expected = array(
+        $expected = [
             '<table>',
             '    <thead>',
             '        <tr>',
@@ -74,23 +82,24 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2F</td>',
             '        </tr>',
             '     </tbody>',
-            '</table>');
+            '</table>'
+        ];
 
 
         $tableExtra = new TableExtra();
-        $output = $tableExtra->processAllTables(implode("", $input));
+        $output = $tableExtra->processAllTables(implode('', $input));
 
-        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
+        $output = tidy_repair_string($output, ['indent' => true], 'utf8');
+        $expected = tidy_repair_string(implode('', $expected), ['indent' => true], 'utf8');
 
         //print_r($output);
 
-        $this->assertEquals($expected, $output);
+        static::assertEquals($expected, $output);
     }
 
-    public function testConvertSimpleTable()
+    public function testConvertSimpleTable(): void
     {
-        $input = array(
+        $input = [
             '<table>',
             '        <tr>',
             '            <th>Header A</th>',
@@ -116,9 +125,10 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <td>&#8221;</td>', // cell with '"' -> rowspan
             '            <td>Cell 2F</td>',
             '        </tr>',
-            '</table>');
+            '</table>'
+        ];
 
-        $expected = array(
+        $expected = [
             '<table>',
             '    <tbody>',
             '        <tr>',
@@ -142,15 +152,16 @@ class TableExtraTest extends \PHPUnit_Framework_TestCase
             '            <td>Cell 2F</td>',
             '        </tr>',
             '    <tbody>',
-            '</table>');
+            '</table>'
+        ];
 
         $tableExtra = new TableExtra();
-        $output = $tableExtra->processAllTables(implode("", $input));
+        $output = $tableExtra->processAllTables(implode('', $input));
 
-        $output = tidy_repair_string($output, array('indent' => true), 'utf8');
-        $expected = tidy_repair_string(implode("", $expected), array('indent' => true), 'utf8');
+        $output = tidy_repair_string($output, ['indent' => true], 'utf8');
+        $expected = tidy_repair_string(implode('', $expected), ['indent' => true], 'utf8');
 
-        $this->assertEquals($expected, $output);
+        static::assertEquals($expected, $output);
     }
 
 }

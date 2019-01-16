@@ -1,0 +1,38 @@
+/* Neuton : http://www.fontsquirrel.com/fonts/neuton
+-------------------------------------------------------------------------- */
+{% set fontsdir=app.get('trefoil.publishing.dir.themes') ~ '/' ~ edition.theme ~ '/Common/Resources/Fonts' %}
+
+@font-face {
+    font-family: neuton;
+    font-style: normal;
+    font-weight: 300;
+    src: url("{{ fontsdir }}/Neuton/Neuton-Light.ttf");
+}
+
+@font-face {
+    font-family: neuton;
+    font-style: normal;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Neuton/Neuton-Regular.ttf");
+}
+
+@font-face {
+    font-family: neuton;
+    font-style: normal;
+    font-weight: 700;
+    src: url("{{ fontsdir }}/Neuton/Neuton-Bold.ttf");
+}
+
+@font-face {
+    font-family: neuton;
+    font-style: italic;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Neuton/Neuton-Italic.ttf");
+}
+
+@font-face {
+    font-family: neuton;
+    font-style: italic;
+    font-weight: 700;
+    src: url("{{ fontsdir }}/Neuton/Neuton-Italic.ttf");
+}

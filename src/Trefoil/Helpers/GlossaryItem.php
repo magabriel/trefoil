@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -15,13 +16,13 @@ namespace Trefoil\Helpers;
  */
 class GlossaryItem
 {
-    protected $term;
-    protected $description;
-    protected $slug;
-    protected $source;
-    protected $variants = array();
-    protected $xref = array();
-    protected $anchorLinks = array();
+    protected $term = '';
+    protected $description = '';
+    protected $slug = '';
+    protected $source = '';
+    protected $variants = [];
+    protected $xref = [];
+    protected $anchorLinks = [];
 
     /**
      * Add a cross-reference to the list
@@ -29,10 +30,10 @@ class GlossaryItem
      * @param string $variant The term variant
      * @param string $where   The location where it was found
      */
-    public function addXref($variant, $where)
+    public function addXref($variant, $where): void
     {
         if (!isset($this->xref[$variant])) {
-            $this->xref[$variant] = array();
+            $this->xref[$variant] = [];
         }
 
         if (!isset($this->xref[$variant][$where])) {
@@ -42,62 +43,62 @@ class GlossaryItem
         $this->xref[$variant][$where]++;
     }
 
-    public function getXref()
+    public function getXref(): array
     {
         return $this->xref;
     }
 
-    public function getTerm()
+    public function getTerm(): string
     {
         return $this->term;
     }
 
-    public function setTerm($term)
+    public function setTerm($term): void
     {
         $this->term = $term;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         $this->description = $description;
     }
 
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function setSlug($slug)
+    public function setSlug($slug): void
     {
         $this->slug = $slug;
     }
 
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
 
-    public function setSource($source)
+    public function setSource($source): void
     {
         $this->source = $source;
     }
 
-    public function getVariants()
+    public function getVariants(): array
     {
         return $this->variants;
     }
 
-    public function setVariants($variants)
+    public function setVariants($variants): void
     {
         $this->variants = $variants;
     }
 
-    public function getAnchorLinks()
+    public function getAnchorLinks(): array
     {
         return $this->anchorLinks;
     }
@@ -107,7 +108,7 @@ class GlossaryItem
      *
      * @param string $anchorLink
      */
-    public function addAnchorLink($anchorLink)
+    public function addAnchorLink($anchorLink): void
     {
         $this->anchorLinks[] = $anchorLink;
     }

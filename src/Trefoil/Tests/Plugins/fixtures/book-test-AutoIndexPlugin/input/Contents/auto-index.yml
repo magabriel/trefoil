@@ -1,0 +1,32 @@
+index:
+    options: 
+        # Elements to process (default: "chapter")
+        elements: ["chapter"]
+
+    terms:
+        non-existing-term:
+        term0: "Normal - term0"
+        term1:
+        term2[s]: "Plural - term2"
+        term3[es]: "Plural - term3"
+        term4:
+            text: "Group term4"
+            terms:
+                term4 one: "one term4"
+                term4 two: "with two"
+                term4 three:
+
+        term5:
+            terms:
+                term5 [one|two]: "term5 one or two"
+                term5 three:
+                term5 four:
+
+    manual-terms:
+        term10: "Term 10"
+        term11:
+            text: "Term 11 group"
+            terms:
+                term11a: "with a"
+                term11b: "with b"
+

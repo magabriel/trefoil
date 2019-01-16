@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -14,30 +15,34 @@ namespace Trefoil\Helpers;
  */
 class LinkChecker
 {
-    public function check($url)
+    /**
+     * @param string $url
+     * @return bool
+     */
+    public function check(string $url): bool
     {
         if (empty($url)) {
             throw new \InvalidArgumentException('Url not set');
         }
 
         // Make Sure We Have protocol added to the URL
-        if (stripos($url, "http://") === false && stripos($url, "https://") === false) {
+        if (stripos($url, 'http://') === false && stripos($url, 'https://') === false) {
             $url = 'http://' . $url;
         }
 
-        $options = array('http' => array('user_agent' => 'Mozilla / 5.0 (X11; Linux i686; rv:12.0) Gecko / 20100101 Firefox / 12.0'));
+        $options = ['http' => ['user_agent' => 'Mozilla / 5.0 (X11; Linux i686; rv:12.0) Gecko / 20100101 Firefox / 12.0']];
         $context = stream_context_create($options);
         
         $rc = '';
         $msg = 'Invalid host';
 
         /** @noinspection PhpUsageOfSilenceOperatorInspection */
-        $f = @fopen(html_entity_decode($url), "r", null, $context);
+        $f = @fopen(html_entity_decode($url), 'r', false, $context);
         if ($f) {
             fclose($f);
         }
 
-        if (isset($http_response_header) && isset($http_response_header[0])) {
+        if (isset($http_response_header[0])) {
             $parts = explode(' ', $http_response_header[0]);
             if (count($parts) > 1) {
                 $rc = $parts[1];
@@ -48,7 +53,7 @@ class LinkChecker
         }
 
         if (false === $f) {
-            throw new \Exception(sprintf('%s %s', $msg, $rc));
+            throw new \RuntimeException(sprintf('%s %s', $msg, $rc));
         }
 
         return true;

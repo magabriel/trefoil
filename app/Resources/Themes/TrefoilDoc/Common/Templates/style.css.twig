@@ -16,20 +16,26 @@
    @typography
    ========================================================================== #}
 {% block typography %}
-{% if edition.include_fonts %}
-    /* Custom fonts
-       ========================================================================= */
-    /* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */
-    @font-face {
-        font-family: inconsolata;
-        src: url("{{ resources_dir }}/fonts/Inconsolata-Regular.ttf")
-    }
-    @font-face {
-        font-family: inconsolata;
-        font-weight: bold;
-        src: url("{{ resources_dir }}/fonts/Inconsolata-Bold.ttf")
-    }
-{% endif %}
+{#{% if edition.include_fonts %}#}
+    {#/* Custom fonts#}
+       {#========================================================================= */#}
+    {#/* Inconsolata : http://www.google.com/webfonts/specimen/Inconsolata */#}
+    {#@font-face {#}
+        {#font-family: inconsolata;#}
+        {#src: url("{{ resources_dir }}/fonts/Inconsolata-Regular.ttf")#}
+    {#}#}
+    {#@font-face {#}
+        {#font-family: inconsolata;#}
+        {#font-weight: bold;#}
+        {#src: url("{{ resources_dir }}/fonts/Inconsolata-Bold.ttf")#}
+    {#}#}
+{#{% endif %}#}
+
+{# @custom
+   -------------------------------------------------------------------------- #}
+{% block custom %}
+{{ parent() }}
+{% endblock %}
 
 {# @body
    -------------------------------------------------------------------------- #}
@@ -626,6 +632,9 @@
 {# NON-STANDARD ITEMS STYLES
    -------------------------------------------------------------------------- #}
     {% include 'style.AutoGlossary.css.twig' %}
+    {% include 'style.AutoIndex.css.twig' %}
     {% include 'style.Footnotes.css.twig' %}
+    {% include 'style.Illustrations.css.twig' %}
+    {% include 'style.LiteralLists.css.twig' %}
 
 {% endblock %} {# @items #}

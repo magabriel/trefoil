@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * This file is part of the trefoil application.
@@ -22,7 +23,7 @@ use ZendPdf\PdfDocument;
 abstract class PdfPublisher extends BasePublisher
 {
 
-    public function loadContents()
+    public function loadContents(): void
     {
         parent::loadContents();
 
@@ -30,12 +31,13 @@ abstract class PdfPublisher extends BasePublisher
         // remove the default 'cover' element to prevent
         // publishing a book with two covers
         if (null !== $this->getCustomCover()) {
-            $bookItems = array();
+            $bookItems = [];
 
             // remove any element of type 'cover' from the
             // publishing items
+            /** @var string[][] $item */
             foreach ($this->app['publishing.items'] as $item) {
-                if ('cover' != $item['config']['element']) {
+                if ('cover' !== $item['config']['element']) {
                     $bookItems[] = $item;
                 }
             }
@@ -53,7 +55,7 @@ abstract class PdfPublisher extends BasePublisher
      *
      * @protected (set to public to be able to unit test it)
      */
-    public function addBookCover($bookFilePath, $coverFilePath)
+    public function addBookCover($bookFilePath, $coverFilePath): void
     {
         if (!empty($coverFilePath)) {
             $pdfBook = PdfDocument::load($bookFilePath);
@@ -78,13 +80,13 @@ abstract class PdfPublisher extends BasePublisher
      *
      * @protected (set to public to be able to unit test it)
      */
-    public function getCustomCover($coverFileName = 'cover.pdf')
+    public function getCustomCover($coverFileName = 'cover.pdf'): ?string
     {
-        $paths = array(
+        $paths = [
             $this->app['publishing.dir.templates'] . '/' . $this->app['publishing.edition'],
             $this->app['publishing.dir.templates'] . '/pdf',
             $this->app['publishing.dir.templates'],
-        );
+        ];
 
         return $this->app->getFirstExistingFile($coverFileName, $paths);
     }

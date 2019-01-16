@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,21 +8,20 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Plugins\BasePlugin;
+
 /**
  * Plugin to update the version in the book config.yml file.
- *
  * The following book configuration option must be defined:
- *
  *     book:
  *         ...
  *         version: "1.0" # current version string, of form "version.revision"
- *
  *         editions:
  *             <edition>:
  *                 plugins:
@@ -30,28 +30,30 @@ use Trefoil\Plugins\BasePlugin;
  *                         VersionUpdater:
  *                             increment_ver: false # don't increment the version part (default)
  *                             increment_rev: true  # increment the revision part (default)
- *
  * After execution the book config.yml file will be updated with the
  * new version string:
- *
  *     book:
  *         ...
  *         version: "1.1"
- *
  * The plugin runs just after the book publishing has finished, so the
  * new version will be used the <i>next</i> time it gets published.
- *
  */
 class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             // runs in the first place after publishing
-            EasybookEvents::POST_PUBLISH => array('onPostPublish', 1000)
-        );
+            EasybookEvents::POST_PUBLISH => ['onPostPublish', 1000],
+        ];
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
@@ -78,7 +80,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
      *
      * @return string
      */
-    protected function calculateNewVersion()
+    protected function calculateNewVersion(): string
     {
         // read current version
         $versionString = $this->app->book('version');
@@ -91,19 +93,17 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
         $parts = explode('.', $versionString);
 
         // check for correctness
-        if (count($parts) <> 2) {
+        if (count($parts) !== 2) {
             $this->writeLn(
-                 sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
-                 'error'
-            );
+                sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
+                'error');
 
             return $versionString;
         }
         if (!ctype_digit($parts[0]) || !ctype_digit($parts[1])) {
             $this->writeLn(
-                 sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
-                 'error'
-            );
+                sprintf('Malformed version string "%s". Expected "int.int"', $versionString),
+                'error');
 
             return $versionString;
         }
@@ -123,9 +123,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
             $parts[1] = 0;
         }
 
-        $newVersionString = implode('.', $parts);
-
-        return $newVersionString;
+        return implode('.', $parts);
     }
 
     /**
@@ -136,7 +134,7 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
      */
     protected function updateConfigFile($newVersionString)
     {
-        $configFile = $this->app['publishing.dir.book'] . '/config.yml';
+        $configFile = $this->app['publishing.dir.book'].'/config.yml';
 
         $config = file_get_contents($configFile);
 
@@ -150,16 +148,15 @@ class VersionUpdaterPlugin extends BasePlugin implements EventSubscriberInterfac
 
         $config = preg_replace_callback(
             $regExp,
-            function ($matches) use ($newVersionString) {
-                $new = $matches['indent'] .
-                    $matches['label'] .
-                    $matches['spaces'] .
-                    $matches['delim'] . $newVersionString . $matches['delim'];
+            function ($matches) use
+            (
+                $newVersionString
+            ) {
+                $new = $matches['indent'].$matches['label'].$matches['spaces'].$matches['delim'].$newVersionString.$matches['delim'];
 
                 return $new;
             },
-            $config
-        );
+            $config);
 
         file_put_contents($configFile, $config);
     }

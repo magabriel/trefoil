@@ -1,3 +1,4 @@
 # English translation of easybook default titles
 title:
     lot:             'List of Illustrations' # Remove if using original easybook Tables funcionality
+    auto-glossary:   'Glossary'

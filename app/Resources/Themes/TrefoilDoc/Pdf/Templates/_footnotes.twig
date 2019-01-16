@@ -1,0 +1,8 @@
+<ol>
+    {% for footnote in footnotes %}
+        <li id="{{ footnote.id }}">
+            <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote"
+                                           class="internal footnote-backref">[↵]</a></p>
+        </li>
+    {% endfor %} 
+</ol>

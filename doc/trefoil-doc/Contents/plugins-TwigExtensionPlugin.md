@@ -11,7 +11,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -111,13 +110,13 @@ N> of this book.
 Sometimes it could be useful to divide a large chapter into smaller pieces, and then including
 all the pieces into the chapter's content.
 
-This plugin provides a `file()` Twig function that works pretty much like PHP's `include()`function, 
+This plugin provides a `fragment()` Twig function that works pretty much like PHP's `include()`function, 
 allowing the inclusion of another file. 
 
 Usage: 
 
 <div class="code"><pre>
-&#123;&#123; file(filename, variables, options) &#125;&#125;
+&#123;&#123; fragment(filename, variables, options) &#125;&#125;
 </pre></div>
 
 where "variables" and "options" are optional hash tables where you can pass variables to the 
@@ -125,11 +124,13 @@ included file as in `{'variable': 'value'}`, or options that affect the renderin
 
 The available options are:
 
-- `{'nopagebreak': false}`: do not insert a page break after the included file (`true` by default)
- 
+- `{'pagebreak': true}`: insert a page break after the included file (`false` by default)
+
 N> ##### Note
 N> You can see an example in the source text of this chapter. Pagebreaks will only work on `Kindle`
 N> readers and certain `epub` readers.
+ 
+**Deprecation notice:** The former `file()` function is deprecated. Please use `fragment()` instead.
  
  
  

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
@@ -17,20 +19,15 @@ use Trefoil\Plugins\BasePlugin;
 
 /**
  * This plugin transforms Markdown footnotes markup into inline footnotes.
- * 
+ *
  * @deprecated
- * 
  * PrinceXMl manages footnotes as:
- *
  *      "text<span class="fn">Text of the footnote</span> more text"
- *
  * This plugin transforms the Markdown-generated footnotes to the PrinceXML
  * format.
- *
  * Note that one limitation is that the footnote text cannot contain block
  * elements (as paragraphs, tables, lists). The plugin overcomes this
  * partially by replacing paragraph tags with <br/> tags.
- *
  */
 class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -40,24 +37,20 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
      *
      * @var array
      */
-    protected $footnotes = array();
+    protected $footnotes = [];
 
     /**
      * @param array $footnotes
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function setFootnotes($footnotes)
+    protected function setFootnotes($footnotes)
     {
         $this->footnotes = $footnotes;
     }
 
     /**
      * @return array
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function getFootnotes()
+    protected function getFootnotes(): array
     {
         return $this->footnotes;
     }
@@ -67,22 +60,28 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
      * Event handlers
      * ********************************************************************************
      */
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::PRE_PARSE  => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE => array('onItemPostParse'),
-            EasybookEvents::POST_PUBLISH => 'onPostPublish'
-        );
+        return [
+            EasybookEvents::PRE_PARSE    => ['onItemPreParse', +100],
+            EasybookEvents::POST_PARSE   => ['onItemPostParse'],
+            EasybookEvents::POST_PUBLISH => 'onPostPublish',
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
 
         if ($this->item['config']['element'] === 'footnotes') {
 
-            $this->app['publishing.footnotes.items'] = array();
+            $this->app['publishing.footnotes.items'] = [];
 
             return;
         }
@@ -90,6 +89,9 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $this->saveFootnotes();
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -100,13 +102,16 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $event->setItem($this->item);
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
 
         $this->deprecationNotice();
     }
-    
+
     /* ********************************************************************************
      * Implementation
      * ********************************************************************************
@@ -126,37 +131,35 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $content = $this->item['content'];
 
         $regExp = '/';
-        $regExp .= '<div class="footnotes">.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
+        $regExp .= '<div class="footnotes"[^>]*>.*<ol>(?<fns>.*)<\/ol>.*<\/div>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
-
-        // PHP 5.3 compat
-        $me = $this;
 
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
 
                 $regExp2 = '/';
-                $regExp2 .= '<li.*id="(?<id>.*)">.*';
+                $regExp2 .= '<li.*id="(?<id>.*)"[^>]*>.*';
                 $regExp2 .= '<p>(?<text>.*)&#160;<a .*href="#(?<backref>.*)"';
                 $regExp2 .= '/Ums'; // Ungreedy, multiline, dotall
 
                 preg_match_all($regExp2, $matches[0], $matches2, PREG_SET_ORDER);
 
+                /** @var string[] $matches2 */
                 if ($matches2) {
+                    /** @var string[] $match2 */
                     foreach ($matches2 as $match2) {
-                        $footnotes = $me->getFootnotes();
-                        $footnotes[$match2['id']] = array(
-                            'text' => $match2['text']
-                        );
-                        $me->setFootnotes($footnotes);
+                        $footnotes = $this->getFootnotes();
+                        $footnotes[$match2['id']] = [
+                            'text' => $match2['text'],
+                        ];
+                        $this->setFootnotes($footnotes);
                     }
                 }
 
                 return '';
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }
@@ -170,13 +173,10 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
         $regExp .= '<a(?<prev>.*)href="#(?<href>fn:.*)"(?<post>.*)>(?<number>.*)<\/a><\/sup>';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
-                $footnotes = $me->getFootnotes();
+            function ($matches) {
+                $footnotes = $this->getFootnotes();
                 $footnote = $footnotes[$matches['href']];
                 $text = $footnote['text'];
 
@@ -188,19 +188,16 @@ class FootnotesInlinePlugin extends BasePlugin implements EventSubscriberInterfa
                 $text = str_replace(
                     ['<p>', '</p>'],
                     ['<span class="p">', '<br/></span>'],
-                    $text
-                );
-                $text = '<span class="p" >' . $text . '</span>';
+                    $text);
+                $text = '<span class="p" >'.$text.'</span>';
 
                 $html = sprintf(
                     '<span class="fn">%s</span>',
-                    $text
-                );
+                    $text);
 
                 return $html;
             },
-            $content
-        );
+            $content);
 
         $this->item['content'] = $content;
     }

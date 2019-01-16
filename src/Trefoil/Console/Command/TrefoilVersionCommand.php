@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -14,11 +15,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Trefoil\DependencyInjection\Application;
 
+/**
+ * Class TrefoilVersionCommand
+ *
+ * @package Trefoil\Console\Command
+ */
 class TrefoilVersionCommand extends EasybookVersionCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
-        $this->setDefinition(array())
+        $this->setDefinition([])
              ->setName('version')
              ->setDescription('Shows installed easybook + trefoil version')
              ->setHelp(
@@ -26,13 +32,17 @@ class TrefoilVersionCommand extends EasybookVersionCommand
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         /** @var Application $app */
         $app = $this->app;
 
         $output->writeln(
-               array(
+            [
                    '',
                    $app['app.signature'],
                    ' <info>easybook</info> installed version: '
@@ -40,7 +50,7 @@ class TrefoilVersionCommand extends EasybookVersionCommand
                    ' <info>trefoil</info>  installed version: '
                    . '<comment>' . $app->getMyVersion() . '</comment>',
                    '',
-               )
+            ]
         );
     }
 }

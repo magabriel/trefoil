@@ -1,0 +1,104 @@
+{% extends '@theme/item.twig' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+    <div class="edition-data">
+        {% spaceless %}
+
+            <h2>{{ book.title }}</h2>
+            {% if book.subtitle is defined %}
+                <h3>{{ book.subtitle }}</h3>
+            {% endif %}
+            {% if book.series is defined %}
+                <h3>{{ app.labels.label.series | default('Series') }} "{{ book.series }}"</h3>
+            {% endif %}
+
+            {% if book.author %}
+                {#<h4>{{ app.labels.label.author | default('Author') }}:</h4>#}
+                <p><strong>{{ book.author }}</strong></p>
+            {% endif %}
+            {% if book.authors is defined %}
+                <h4>{{ app.labels.label.authors | default('Authors') }}:</h4>
+                <p>
+                    {% for author in book.authors %}
+                        &nbsp;&nbsp;{{ author }}<br/>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if book.reviewer %}
+                <h4>{{ app.labels.label.technical_reviewer | default('Technical reviewer') }}:</h4>
+                <p>&nbsp;&nbsp;{{ book.reviewer }}</p>
+            {% endif %}
+            {% if book.reviewers is defined %}
+                <h4>{{ app.labels.label.technical_reviewers | default('Technical reviewers') }}:</h4>
+                <p>
+                    {% for reviewer in book.reviewers %}
+                        &nbsp;&nbsp;{{ reviewer }}<br/>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if book.editor %}
+                <h4>{{ app.labels.label.editor | default('Editor') }}:</h4>
+                <p>&nbsp;&nbsp;{{ book.editor }}</p>
+            {% endif %}
+            {% if book.editors is defined %}
+                <h4>{{ app.labels.label.editors | default('Editors') }}:</h4>
+                <p>
+                    {% for editor in book.editors %}
+                        &nbsp;&nbsp;{{ editor }}<br/>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if book.designer %}
+                <h4>{{ app.labels.label.designer | default('Designer') }}:</h4>
+                <p>&nbsp;&nbsp;{{ book.designer }}</p>
+            {% endif %}
+            {% if book.designers is defined %}
+                <h4>{{ app.labels.label.designers | default('Designers') }}:</h4>
+                <p>
+                    {% for designer in book.designers %}
+                        &nbsp;&nbsp;{{ designer }}<br/>
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            {% if book.publisher is defined %}
+                <h4>{{ app.labels.label.publisher | default('Publisher') }}:</h4>
+                <p>&nbsp;&nbsp;{{ book.publisher }}</p>
+            {% endif %}
+
+            {% if book.publishing_label is defined %}
+                <h4>{{ app.labels.label.publishing_label | default('Publishing label') }}:</h4>
+                <p>&nbsp;&nbsp; {{ book.publishing_label }}</p>
+            {% endif %}
+
+        {% endspaceless %}
+    </div>
+
+    <p><img class="logo" src="images/logo_publisher.gif" alt="{{ book.publisher }}" /></p>
+
+    <br/>
+
+    &copy; {{ "now"|date("Y") }} - {{ book.copyright|default(book.publisher)|default(book.author) }}
+
+    {% if edition.isbn %}
+        <p>ISBN {{ edition.isbn }}</p>
+    {% endif %}
+
+    {% if book.version %}
+        <p>{{ app.labels.label.version | default('Version') }} {{ book.edition }}.{{ book.version }} - {{ book.publication_date|default('now')|date('YmdHi') }}</p>
+    {% elseif book.edition %}
+        <p>{{ app.labels.label.edition | default('Edition') }} {{ book.edition }} - {{ book.publication_date|default('now')|date('YmdHi') }}</p>
+    {% else %}
+        <p>{{ book.publication_date|default('now')|date('Y-m-d') }}</p>
+    {% endif %}
+
+    {{ item.content }}
+
+{% endblock %}

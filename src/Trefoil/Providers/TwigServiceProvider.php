@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -16,23 +17,35 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Trefoil\Util\Toolkit;
 
+/**
+ * Class TwigServiceProvider
+ *
+ * @package Trefoil\Providers
+ */
 class TwigServiceProvider implements ServiceProviderInterface
 {
-    public function register(Container $app)
+    /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @param Container $app
+     */
+    public function register(Container $app): void
     {
-        $app['twig.options'] = array(
+        $app['twig.options'] = [
             'autoescape'       => false,
             // 'cache'         => $app['app.dir.cache'].'/Twig',
             'charset'          => $app['app.charset'],
             'debug'            => $app['app.debug'],
             'strict_variables' => $app['app.debug.strict_variables'],
-        );
+        ];
 
         $app['twig.loader'] =
             function () use ($app) {
 
-                /* @var Application $var */
-
+                /** @var Application $app */
                 $theme = ucfirst($app->edition('theme'));
                 $format = Toolkit::camelize($app->edition('format'), true);
 
@@ -58,7 +71,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
                 // look if we have a custom theme set
                 $themesDir = Toolkit::getCurrentThemeDir($app);
-                if (file_exists($themesDir)) {
+                if ($themesDir !== null && file_exists($themesDir)) {
                     // Theme common (common styles per edition theme)
                     // <themes-dir>/Common/Templates/<template-name>.twig
                     $baseThemeDir = sprintf('%s/Common/Templates', $themesDir);
@@ -67,12 +80,12 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $loader->prependPath($baseThemeDir, 'theme_common');
 
                     // Register template paths
-                    $ownTemplatePaths = array(
+                    $ownTemplatePaths = [
                         // <themes-dir>/<edition-type>/Templates/<template-name>.twig
                         sprintf('%s/%s/Templates', $themesDir, $format),
                         // <themes-dir>/<edition-name>/Templates/<template-name>.twig
                         sprintf('%s/%s/Templates', $themesDir, $app['publishing.edition']),
-                    );
+                    ];
                     
                     foreach ($ownTemplatePaths as $path) {
                         if (file_exists($path)) {
@@ -82,7 +95,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     }
                 }
 
-                $userTemplatePaths = array(
+                $userTemplatePaths = [
                     // <book-dir>/Resources/Templates/<template-name>.twig
                     $app['publishing.dir.templates'],
                     // <book-dir>/Resources/Templates/<edition-type>/<template-name>.twig
@@ -93,7 +106,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                         $app['publishing.dir.templates'],
                         $app['publishing.edition']
                     ),
-                );
+                ];
 
                 foreach ($userTemplatePaths as $path) {
                     if (file_exists($path)) {
@@ -102,12 +115,13 @@ class TwigServiceProvider implements ServiceProviderInterface
                 }
 
                 // Register content paths
-                if (file_exists($themesDir)) {
-                    $ownContentPaths = array(
+                if ($themesDir !== null && file_exists($themesDir)) {
+                    $ownContentPaths = [
                         // <themes-dir>/Common/Contents/<template-name>.md
                         sprintf('%s/Common/Contents', $themesDir),
                         // <themes-dir>/<edition-type>/Contents/<template-name>.md
-                        sprintf('%s/%s/Contents', $themesDir, $format));
+                        sprintf('%s/%s/Contents', $themesDir, $format)
+                    ];
 
                     foreach ($ownContentPaths as $path) {
                         if (file_exists($path)) {
@@ -121,7 +135,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         $app['twig'] =
             function () use ($app) {
-                /* @var Application $var */
+                /* @var Application $app */
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
                 $twig->addExtension(new TwigCssExtension());

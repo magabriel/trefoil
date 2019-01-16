@@ -1,0 +1,37 @@
+index:
+    options: 
+        # Elements to process (default: "chapter")
+        elements: ["chapter"]
+
+
+    # definitions for automatic index terms
+    terms:
+        "example index term 1":
+        "example index term 2":
+
+        theme[s]: themes
+        html:
+        markdown:
+        template[s]: templates
+
+        plugin:
+        plugins:
+            terms:
+                convenient enhancements: enhancements
+                utility plugins: utility
+                advanced: book formatting
+                plugins are namespaced: namespaced
+                enable only certain plugins: enabling
+
+        "drop caps":
+            terms:
+                adding drop caps: adding
+                manual drop caps: manual
+
+        easybook:
+            terms:
+                extending:
+
+    # definitions for manually-added terms
+    manual-terms:
+        term3: example index term 3

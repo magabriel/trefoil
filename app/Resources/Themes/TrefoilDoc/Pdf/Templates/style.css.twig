@@ -1,0 +1,236 @@
+{% extends '@theme_common/style.css.twig' %}
+
+{% block custom %}
+/* ==========================================================================
+   @custom
+   ========================================================================== */
+{{ parent() }}
+{{ include('css/font_alte_haas_grotesk.twig') }}
+{{ include('css/font_neuton.twig') }}
+{{ include('css/font_open_sans.twig') }}
+{{ include('css/font_tex_gyre_heros.twig') }}
+{{ include('css/font_inconsolata.twig') }}
+{% endblock %}
+
+{% block layout %}
+/* ==========================================================================
+   @layout
+   ========================================================================== */
+  {{ parent() }}
+  {% include "css/layout.css.twig" %}
+{% endblock %}
+
+{% block body %}
+  {{ parent() }}
+  /* @body
+     -------------------------------------------------------------------------- */
+     
+  body {
+      font: 10pt/1.3 open-sans,sans-serif;
+  }
+
+{% endblock %}
+
+{% block paragraphs %}
+{{ parent() }}
+/* @paragraphs
+   -------------------------------------------------------------------------- */
+
+  p {
+    prince-hyphenate-before: 3;
+    prince-hyphenate-after: 3;
+    prince-hyphenate-lines: 2;
+    widows: 3;
+    orphans: 3;
+  }
+
+{% endblock %}
+
+
+{% block lists %}
+{{ parent() }}
+/* @lists
+   -------------------------------------------------------------------------- */
+
+dd, dt {
+    text-align: justify;
+}
+
+{% endblock %}
+
+
+{% block items %}
+/* ==========================================================================
+   @items
+   ========================================================================== */
+  {{ parent() }}
+  {% include "css/items.css.twig" %}
+{% endblock %}
+
+
+{% block edition %}
+{{ parent() }}
+/* @edition
+   -------------------------------------------------------------------------- */
+
+  /* Reset bookmarks for prince for headings 2..6 in item.edition
+   */
+  {% for level in 2..6 %}
+    .item.edition h{{ level }} { prince-bookmark-level: none }
+  {% endfor %}
+
+  .item.edition .logos {
+    text-align: center !important;
+  }
+    
+  .item.edition .logos img {
+  }
+
+{% endblock %}
+
+{% block headings %}
+{{ parent() }}
+/* @headings
+   -------------------------------------------------------------------------- */
+
+    /* Set the PDF bookmark levels depending on the existence of parts in the book.
+     * In a book with parts, the parts themselves are level 1 and others are up from 2.
+     */
+    {% set hasParts = false %}
+    {% for item in app['publishing.items'] %}
+        {% if item.config.element == 'part' %}
+            {% set hasParts = true %}
+        {% endif %}
+    {% endfor %}
+    {% set tocDeep = edition.toc.deep - (hasParts ? 1 : 0) %}
+
+  /* Reset bookmarks for prince for all headings
+   */
+  h1,h2,h3,h4,h5,h6 { prince-bookmark-level: none }
+  {% for element in edition.toc.elements %}
+    {% for level in 1..tocDeep %}
+        {% set theLevel = level %}
+        {% if hasParts and element == "chapter" %}
+            {% set theLevel = theLevel + 1 %}
+        {% endif %}
+      .{{ element }} h{{ level }} { prince-bookmark-level: {{ theLevel }} }
+    {% endfor %}
+  {% endfor %}
+    
+{% endblock %}
+
+{% block misc %}
+{{ parent() }}
+/* @misc
+   -------------------------------------------------------------------------- */
+
+    hr {
+      border-width: 1px;
+      border-bottom: 0;
+    }
+    
+   /* Reset bookmarks for prince for block classes
+    */
+    {% set classes_to_reset_headings = [
+        'activity', 'activity-solution', 'questions', 'questions-solutions', 'exposition'
+    ] %}
+    
+    {% for level in 1..6 %} 
+      {% for class in classes_to_reset_headings %} 
+          .{{ class }} h{{ level }} { prince-bookmark-level: none } 
+      {% endfor %}
+    {% endfor %}
+    
+    .illustration, 
+    .figure,
+    .image {
+        /* prince will float this item to the next page unless it fits,
+           leaving no blank space
+        */
+        float: top unless-fit;
+    }
+    
+    .illustration .image, 
+    .illustration table {
+        float: none;
+    }
+    
+    .fn {
+        display: prince-footnote;
+        counter-increment: footnote;
+        font-size: 9pt !important;
+        text-indent: 0;
+        line-height: 1.2;
+        margin-bottom: .5em;
+    }
+
+    .fn::footnote-call {
+        content: counter(footnote);
+        font: 7pt tex-heros, sans-serif;
+        vertical-align: super;
+        line-height: none;
+    }
+    .fn::footnote-marker {
+        content: counter(footnote) ".";
+        font: 9pt tex-heros, sans-serif;
+        padding: 0 4pt 0 8pt;
+    }
+    
+{% endblock %}
+
+{% block links %}
+{{ parent() }}
+/* @links
+   -------------------------------------------------------------------------- */
+   
+    a {
+        color: #448;
+    }
+    
+    a.internal {
+        color: {{ color_black }};
+    }
+    
+    a::after  {
+        border: none;
+        content: "";
+    }
+    
+    sup a::after {
+        content: "" !important;
+    }
+    
+    .footnotes a.internal::after {
+        font-size: .7em;
+        vertical-align: top; 
+/*
+        content: " ({{ app.getLabel('page') }} " target-counter(attr(href), page) ")";
+*/
+        content: "" !important;
+    }
+    
+    .footnote-backref {
+        color: #888 !important;
+    }
+    
+    .footnote-ref {
+        font-size: .9em;
+    }
+
+{% endblock %}
+
+{% block tables %}
+{{ parent() }}
+
+    table {
+        page-break-inside: avoid;
+    }
+
+{% endblock %}
+
+{% block images %}
+{{ parent() }}
+
+    {% include 'style.ImageExtra.css.twig' %}
+
+{% endblock %}

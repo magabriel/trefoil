@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
@@ -40,12 +41,12 @@ class Table extends \ArrayObject
     /**
      * Create <tbody> section if the table does not have it
      */
-    const CREATE_TBODY = 0b00000001;
+    public const CREATE_TBODY = 0b00000001;
 
     /**
-     * @param $htmlTable string HTML <table> tag
+     * @param string $htmlTable HTML <table> tag
      */
-    public function fromHtml($htmlTable)
+    public function fromHtml($htmlTable): void
     {
         $this->parseHtmlTable($htmlTable);
     }
@@ -53,7 +54,7 @@ class Table extends \ArrayObject
     /**
      * @return string Table rendered to HTML
      */
-    public function toHtml()
+    public function toHtml(): string
     {
         return $this->renderTableToHtml();
     }
@@ -62,7 +63,7 @@ class Table extends \ArrayObject
      * @param     $htmlTable
      * @param int $flags
      */
-    protected function parseHtmlTable($htmlTable, $flags = self::CREATE_TBODY)
+    protected function parseHtmlTable($htmlTable, $flags = self::CREATE_TBODY): void
     {
         // init the ArrayObject
         $this->exchangeArray([]);
@@ -85,7 +86,7 @@ class Table extends \ArrayObject
      * @param string $contents
      * @param int    $column
      */
-    public function addHeadingCell($contents, $column = null)
+    public function addHeadingCell($contents, $column = null): void
     {
         if ($column === null) {
             $column = count($this['thead'][0]);
@@ -102,25 +103,21 @@ class Table extends \ArrayObject
      *
      * @return null|array cell
      */
-    public function getHeadingCell($column)
+    public function getHeadingCell($column): ?array
     {
-        if (isset($this['thead'][0][$column])) {
-            return $this['thead'][0][$column];
-        }
-
-        return null;
+        return $this['thead'][0][$column] ?? null;
     }
 
     /**
      * @param array $cell
      * @param int   $column
      */
-    public function setHeadingCell(array $cell, $column)
+    public function setHeadingCell(array $cell, $column): void
     {
         $this['thead'][0][$column] = $cell;
     }
 
-    public function addBodyRow()
+    public function addBodyRow(): void
     {
         if (!isset($this['tbody'])) {
             $this['tbody'] = [];
@@ -129,6 +126,9 @@ class Table extends \ArrayObject
         $this['tbody'][] = [];
     }
 
+    /**
+     * @return int
+     */
     public function getBodyRowsCount()
     {
         if (isset($this['tbody'])) {
@@ -138,6 +138,10 @@ class Table extends \ArrayObject
         return 0;
     }
 
+    /**
+     * @param $row
+     * @return int
+     */
     public function getBodyCellsCount($row)
     {
         if (isset($this['tbody'][$row])) {
@@ -154,7 +158,7 @@ class Table extends \ArrayObject
      *
      * @return array
      */
-    public function addBodyCell($contents, $row = null, $column = null)
+    public function addBodyCell($contents, $row = null, $column = null): array
     {
         if (!isset($this['tbody'])) {
             $this['tbody'][] = [];
@@ -181,11 +185,21 @@ class Table extends \ArrayObject
         return ['row' => $row, 'column' => $column];
     }
 
-    public function setBodyCellExtra($extra, $row, $column)
+    /**
+     * @param $extra
+     * @param $row
+     * @param $column
+     */
+    public function setBodyCellExtra($extra, $row, $column): void
     {
         $this['tbody'][$row][$column]['extra'] = $extra;
     }
 
+    /**
+     * @param $row
+     * @param $column
+     * @return |null
+     */
     public function getBodyCellExtra($row, $column)
     {
         if (!isset($this['tbody'][$row][$column]['extra'])) {
@@ -195,12 +209,22 @@ class Table extends \ArrayObject
         return $this['tbody'][$row][$column]['extra'];
     }
 
-    public function setColspan($colspan, $row, $column)
+    /**
+     * @param $colspan
+     * @param $row
+     * @param $column
+     */
+    public function setColspan($colspan, $row, $column): void
     {
         $this['tbody'][$row][$column]['colspan'] = $colspan;
     }
 
-    public function setRowsspan($rowsspan, $row, $column)
+    /**
+     * @param $rowsspan
+     * @param $row
+     * @param $column
+     */
+    public function setRowsspan($rowsspan, $row, $column): void
     {
         $this['tbody'][$row][$column]['rowspan'] = $rowsspan;
     }
@@ -212,21 +236,17 @@ class Table extends \ArrayObject
      *
      * @return null|array cell
      */
-    public function getBodyCell($row, $column)
+    public function getBodyCell($row, $column): ?array
     {
-        if (isset($this['tbody'][$row][$column])) {
-            return $this['tbody'][$row][$column];
-        }
-
-        return null;
+        return $this['tbody'][$row][$column] ?? null;
     }
 
     /**
-     * @param $cell array
+     * @param array $cell
      * @param $row
      * @param $column
      */
-    public function setBodyCell(array $cell, $row, $column)
+    public function setBodyCell(array $cell, $row, $column): void
     {
         $this['tbody'][$row][$column] = $cell;
     }
@@ -237,14 +257,14 @@ class Table extends \ArrayObject
      *
      * @return array of rows
      */
-    protected function extractHtmlRows($htmlTable, $tag = 'tbody')
+    protected function extractHtmlRows($htmlTable, $tag = 'tbody'): array
     {
         // extract section
         $regExp = sprintf('/<%s>(?<contents>.*)<\/%s>/Ums', $tag, $tag);
         preg_match_all($regExp, $htmlTable, $matches, PREG_SET_ORDER);
 
         if (!isset($matches[0]['contents'])) {
-            return array();
+            return [];
         }
 
         // extract all rows from section
@@ -253,25 +273,27 @@ class Table extends \ArrayObject
         preg_match_all($regExp, $thead, $matches, PREG_SET_ORDER);
 
         if (!isset($matches[0]['contents'])) {
-            return array();
+            return [];
         }
 
         // extract columns from each row
-        $rows = array();
+        $rows = [];
+        /** @var array $matches */
         foreach ($matches as $matchRow) {
 
             $tr = $matchRow['contents'];
             $regExp = '/<(?<tag>t[hd])(?<attr>.*)>(?<contents>.*)<\/t[hd]>/Ums';
             preg_match_all($regExp, $tr, $matchesCol, PREG_SET_ORDER);
 
-            $cols = array();
+            $cols = [];
+            /** @var array $matchesCol */
             if ($matchesCol) {
                 foreach ($matchesCol as $matchCol) {
-                    $cols[] = array(
+                    $cols[] = [
                         'tag'        => $matchCol['tag'],
                         'attributes' => $this->extractAttributes($matchCol['attr']),
                         'contents'   => $matchCol['contents']
-                    );
+                    ];
                 }
             }
 
@@ -284,7 +306,7 @@ class Table extends \ArrayObject
     /**
      * @return bool True if the table does not have any rows
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         if (isset($this['thead']) && $this['thead']) {
             return false;
@@ -305,7 +327,7 @@ class Table extends \ArrayObject
      * @return string
      *
      */
-    protected function renderTableToHtml()
+    protected function renderTableToHtml(): string
     {
         $html = '';
 
@@ -337,7 +359,7 @@ class Table extends \ArrayObject
      *
      * @return string
      */
-    protected function renderHtmlRows(array $rows)
+    protected function renderHtmlRows(array $rows): string
     {
         $html = '';
 
@@ -346,6 +368,7 @@ class Table extends \ArrayObject
         foreach ($rows as $row) {
             $html .= '<tr>';
 
+            /** @var array $row */
             foreach ($row as $col) {
                 if (!isset($col['ignore'])) {
                     $rowspan = isset($col['rowspan']) ? sprintf('rowspan="%s"', $col['rowspan']) : '';
@@ -376,12 +399,13 @@ class Table extends \ArrayObject
      *
      * @return array of attributes
      */
-    protected function extractAttributes($string)
+    protected function extractAttributes($string): array
     {
         $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
         preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
 
-        $attributes = array();
+        $attributes = [];
+        /** @var array $attrMatches */
         if ($attrMatches) {
             foreach ($attrMatches as $attrMatch) {
                 $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
@@ -396,7 +420,7 @@ class Table extends \ArrayObject
      *
      * @return string rendered attributes
      */
-    protected function renderAttributes(array $attributes)
+    protected function renderAttributes(array $attributes): string
     {
         $html = '';
 
@@ -414,10 +438,10 @@ class Table extends \ArrayObject
      *
      * @return array Processed rows
      */
-    protected function processSpannedCells(array $rows)
+    protected function processSpannedCells(array $rows): array
     {
         // several kinds of double quote character
-        $doubleQuotes = array(
+        $doubleQuotes = [
             '"',
             '&quot;',
             '&#34;',
@@ -425,10 +449,10 @@ class Table extends \ArrayObject
             '&#8220;',
             '&rdquo;',
             '&#8221;'
-        );
+        ];
 
         // several kinds of single quote character
-        $singleQuotes = array(
+        $singleQuotes = [
             "'",
             '&apos;',
             '&#39;',
@@ -436,21 +460,22 @@ class Table extends \ArrayObject
             '&#8216;',
             '&rsquo;',
             '&#8217;',
-        );
+        ];
 
         $newRows = $rows;
         foreach ($rows as $rowIndex => $row) {
 
+            /** @var array $row */
             foreach ($row as $colIndex => $col) {
 
                 // an empty cell => colspanned cell
-                if (trim($col['contents']) === "") {
+                if (trim($col['contents']) === '') {
 
                     // find the primary colspanned cell (same row)
                     $colspanCol = -1;
                     for ($j = $colIndex - 1; $j >= 0; $j--) {
                         if (!isset($newRows[$rowIndex][$j]['ignore']) ||
-                            (isset($newRows[$rowIndex][$j]['ignore']) && $j == 0)
+                            (isset($newRows[$rowIndex][$j]['ignore']) && $j === 0)
                         ) {
                             $colspanCol = $j;
                             break;
@@ -474,8 +499,7 @@ class Table extends \ArrayObject
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
                 // and the single quote character as a top alignment marker
-                if (in_array($col['contents'], $doubleQuotes) ||
-                    in_array($col['contents'], $singleQuotes)
+                if (in_array($col['contents'], $doubleQuotes, true) || in_array($col['contents'], $singleQuotes, true)
                 ) {
 
                     // find the primary rowspanned cell
@@ -499,9 +523,10 @@ class Table extends \ArrayObject
                             } else {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= ';';
                             }
-                            $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
-                            if (in_array($col['contents'], $singleQuotes)) {
+                            if (in_array($col['contents'], $singleQuotes, true)) {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: top;';
+                            } else {
+                                $newRows[$rowspanRow][$colIndex]['attributes']['style'] .= 'vertical-align: middle;';
                             }
                         }
                         $newRows[$rowspanRow][$colIndex]['rowspan']++;

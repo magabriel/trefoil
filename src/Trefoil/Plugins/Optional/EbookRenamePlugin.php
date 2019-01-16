@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
@@ -17,7 +19,6 @@ use Trefoil\Plugins\BasePlugin;
 
 /**
  * plugin to rename the generated file book.<ext> to <something-else>.<ext>
- *
  */
 class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
 {
@@ -26,18 +27,24 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
      * Allowed variables are:
      * - 'publishing.book.slug'
      * - any 'book' or 'edition' config variable
-     *
      * Example: "{publishing.book.slug}-{book.version}_{edition.isbn}"
      */
-    const RENAME_SCHEMA_DEFAULT = "{publishing.book.slug}-{book.version}";
+    public const RENAME_SCHEMA_DEFAULT = '{publishing.book.slug}-{book.version}';
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             // runs in the last place
-            EasybookEvents::POST_PUBLISH => array('onPostPublish', -1000));
+            EasybookEvents::POST_PUBLISH => ['onPostPublish', -1000],
+        ];
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
@@ -52,7 +59,7 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
         $extension = strtolower($this->format);
 
         // check output file generated
-        $oldFile = $outputDir . '/book.' . $extension;
+        $oldFile = $outputDir.'/book.'.$extension;
         if (!file_exists($oldFile)) {
             return;
         }
@@ -64,19 +71,18 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
         // resolve it
         $newName = $this->resolveNamingSchema($newNameSchema);
 
-        $newFile = $outputDir . '/' . $newName . '.' . $extension;
+        $newFile = $outputDir.'/'.$newName.'.'.$extension;
 
         if (file_exists($newFile)) {
             $this->app['filesystem']->remove($newFile);
         }
 
         // rename it to an aux name
-        $newFileAux = $newFile . '.aux';
+        $newFileAux = $newFile.'.aux';
         $this->app['filesystem']->rename($oldFile, $newFileAux);
 
         // delete other versions
-        $files = Finder::create()->files()->name('*.' . $extension)
-                       ->in($outputDir);
+        $files = Finder::create()->files()->name('*.'.$extension)->in($outputDir);
         $this->app['filesystem']->remove($files);
 
         // and let the new version with its real name
@@ -91,21 +97,25 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
         }
     }
 
-    protected function resolveNamingSchema($namingSchema)
+    /**
+     * @param $namingSchema
+     * @return string
+     */
+    protected function resolveNamingSchema($namingSchema): string
     {
         // replace single by double curly brackets
-        $namingSchema = str_replace('{', '{{', $namingSchema);
-        $namingSchema = str_replace('}', '}}', $namingSchema);
+        $namingSchema = str_replace(['{', '}'], ['{{', '}}'], $namingSchema);
 
         // add 'publishing' values to the twig variables
-        $vars = array(
-            'publishing' => array(
-                'book' => array(
-                    'slug' => $this->app['publishing.book.slug'])));
+        $vars = [
+            'publishing' => [
+                'book' => [
+                    'slug' => $this->app['publishing.book.slug'],
+                ],
+            ],
+        ];
 
-        $name = $this->app->renderString($namingSchema, $vars);
-
-        return $name;
+        return $this->app->renderString($namingSchema, $vars);
     }
 
 }

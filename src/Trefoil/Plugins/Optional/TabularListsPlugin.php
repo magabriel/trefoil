@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,23 +8,123 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Trefoil\Exception\PluginException;
 use Trefoil\Helpers\TabularList;
+use Trefoil\Helpers\TrefoilMarkerProcessor;
 use Trefoil\Plugins\BasePlugin;
 
+/**
+ * Class TabularListsPlugin
+ * This plugin implements the Tabular Lists funcionality, which represents a list
+ * that can be alternatively shown as a table without loosing information (and vice versa).
+ * Its intended use is providing an adequate representation of tables in ebooks
+ * (where wide tables are not appropriate) while maintaining the table as-is for wider
+ * formats like PDF.
+ * The provided functions use a "trefoil marker" syntax ('{@..@}' blocks).
+ * Expected syntax:
+ *      {@ tabularlist_begin (..arguments..) @}
+ *          ...the tabularlist definition
+ *      {@ tabularlist_end () @}
+ *
+ * @see     TabularList
+ * @package Trefoil\Plugins\Optional
+ */
 class TabularListsPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    /**
+     * @var int Number of currently open tabularlist_ calls
+     */
+    protected $tabularlistCalls = 0;
+
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::POST_PARSE => array('onItemPostParse', -1100), // after ParserPlugin
-        );
+        return [
+            EasybookEvents::PRE_PARSE  => ['onItemPreParse', -100], // after TwigExtensionPlugin
+            EasybookEvents::POST_PARSE => ['onItemPostParse', -1100], // after ParserPlugin
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     * @throws PluginException
+     * @throws \ReflectionException
+     */
+    public function onItemPreParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        $content = $event->getItemProperty('original');
+
+        $content = $this->processTrefoilMarkers($content);
+
+        $event->setItemProperty('original', $content);
+
+        $msg = (new \ReflectionClass($this))->getShortName().': '.$this->item['config']['content'].': ';
+        if ($this->tabularlistCalls > 0) {
+            throw new PluginException($msg.'tabularlist_begin() call without ending previous.');
+        }
+
+        if ($this->tabularlistCalls < 0) {
+            throw new PluginException($msg.'tabularlist_end() call without tabularlist_begin().');
+        }
+    }
+
+    /**
+     * @param $content
+     * @return string|null
+     */
+    protected function processTrefoilMarkers($content): ?string
+    {
+        $processor = new TrefoilMarkerProcessor();
+
+        $processor->registerMarker(
+            'tabularlist_begin',
+            function ($options = []) {
+                $this->tabularlistCalls++;
+
+                $renderColumns = null;
+                foreach ($options as $editionOrFormat => $columns) {
+                    $editionOrFormat = strtolower($editionOrFormat);
+                    if ($editionOrFormat === 'all' || $editionOrFormat === strtolower(
+                            $this->format) || $editionOrFormat === strtolower($this->edition)) {
+
+                        $renderColumns = $columns;
+                        break;
+                    }
+                }
+
+                if ($renderColumns === null) {
+                    return '<div class="tabularlist tabularlist-table" markdown="1">';
+                }
+
+                return sprintf(
+                    '<div class="tabularlist tabularlist-table-%s" markdown="1">',
+                    $renderColumns);
+            });
+
+        $processor->registerMarker(
+            'tabularlist_end',
+            function () {
+                $this->tabularlistCalls--;
+
+                return '</div>';
+            });
+
+        return $processor->parse($content);
+    }
+
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
@@ -38,7 +139,7 @@ class TabularListsPlugin extends BasePlugin implements EventSubscriberInterface
         // capture tabular lists elements
         $regExp = '/';
         $regExp .= '(?<div>';
-        $regExp .= '<div +(?<pre>.*)';
+        $regExp .= '<div +(?<pre>[^>]*)';
         $regExp .= 'class="(?<class>tabularlist.*)"';
         $regExp .= '.*';
         $regExp .= '(?<post>.*)<\/div>)';
@@ -47,13 +148,17 @@ class TabularListsPlugin extends BasePlugin implements EventSubscriberInterface
         $content = preg_replace_callback(
             $regExp,
             function ($matches) {
-//                print_r($matches);
-
                 $tabularList = new TabularList();
 
                 $classMatches = [];
                 if (preg_match('/tabularlist-table(-(?<num>\d+))?/', $matches['class'], $classMatches)) {
-                    $numCategories = isset($classMatches['num']) ? $classMatches['num'] : null;
+                    $numCategories = isset($classMatches['num']) ? (int)$classMatches['num'] : null;
+
+                    // zero columns means "do not render as table", so return the list
+                    if ($numCategories === 0) {
+                        return $matches[0];
+                    }
+
                     $tabularList->fromHtml($matches['div'], $numCategories);
 
                     return $tabularList->toHtmlTable();
@@ -61,8 +166,7 @@ class TabularListsPlugin extends BasePlugin implements EventSubscriberInterface
 
                 return $matches[0];
             },
-            $this->item['content']
-        );
+            $this->item['content']);
 
         $this->item['content'] = $content;
     }

@@ -1,0 +1,12 @@
+# Index
+
+{% if app.edition('format') not in ['pdf'] %}
+
+This is the book index. Each term has one or more links to its usages in the contents.
+
+N> ###### Note
+N> The automatic index functionality is intended for printed media (`pdf`format).
+N> While it still works in `epub`, `mobi` and `html` editions, the results may not
+N> be optimal because it can produce a lot of backlinks to the indexed terms.
+
+{% endif %}

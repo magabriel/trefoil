@@ -11,24 +11,25 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
-    ....
     editions:
         <edition-name>
             plugins:
-                enabled: [ HTMLTweaks ]
-~~~ 
+                enabled: [ HtmlTweaks ]            
+~~~
 
 The actual tweaks definitions are read from a separate `yaml` file:
 
 ~~~.yaml
 # <book-dir>/Contents/html-tweaks.yml
 #  or
-# <current-theme>/Config/html-tweaks.yml
+# <current-theme>/<format>/Config/html-tweaks.yml
+#  or
+# <current-theme>/Common/Config/html-tweaks.yml
 tweaks:
     # replacements to be made at onPreParse time
-    onPreParse:        
+    onPreParse:
         tweak-name-free:                 # just a name
             tag: 'tag name'              # tag name to find
             class: 'class-name'          # OPTIONAL class name of tag
@@ -51,8 +52,8 @@ tweaks:
         another-tweak-name:
             tag: 'tag name'
             # same options than onPreParse
-            ----
-~~~ 
+            # ...
+~~~
 
 ### Description
 
@@ -78,7 +79,8 @@ N> book contents directory.
 The tweaks' definitions are read from file `html-tweaks.yml`, that can be located:
 
 - In the book `/Contents` directory
-- In the theme `/Config/<format>` directory
+- In the theme `/<format>/Config` directory
+- In the theme `/Common/Config` directory
  
 The first one found will be used. This allows distributing the tweaks as part of the
 theme, or customizing them for an specific book.
@@ -92,9 +94,10 @@ tweaks will work on the HTML produced by the Markdown processor.
 ~~~.yaml
 # <book-dir>/Contents/html-tweaks.yml
 #  or
-# <current-theme>/Config/html-tweaks.yml
+# <current-theme>/<format>/Config/html-tweaks.yml
+#  or
+# <current-theme>/Common/Config/html-tweaks.yml
 tweaks:
-
     onPreParse:
         # enclose contents of all divs of class "one" with box1
         tweak-div-one:                                 
@@ -103,7 +106,7 @@ tweaks:
             insert:
                 open:  '<div class="box1" markdown="1">'
                 close: '</div>'
-
+                
         # surround all divs of class "two" with box2
         tweak-div-two:                                 
             tag: 'div'
@@ -117,7 +120,7 @@ tweaks:
             tag: 'span'
             replace: 
                 tag:  'div'                  
-                    
+                
     onPostParse:
         # enclose contents of 'pre' tags between lines
         tweak-pre:                                 
@@ -125,7 +128,7 @@ tweaks:
             insert:
                 open:  '======\n'
                 close: '\n------'
-        
+                
         # surround tables with box1
         tweak-table:
             tag: 'table'

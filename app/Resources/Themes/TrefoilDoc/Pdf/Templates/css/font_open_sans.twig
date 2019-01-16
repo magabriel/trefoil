@@ -1,0 +1,45 @@
+/* Open Sans : http://www.google.com/webfonts/specimen/Open+Sans
+-------------------------------------------------------------------------- */
+{% set fontsdir=app.get('trefoil.publishing.dir.themes') ~ '/' ~ edition.theme ~ '/Common/Resources/Fonts' %}
+
+@font-face {
+    font-family: open-sans;
+    font-style: normal;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-Regular.ttf");
+}
+
+@font-face {
+    font-family: open-sans;
+    font-style: normal;
+    font-weight: 600;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-Semibold.ttf");
+}
+
+@font-face {
+    font-family: open-sans;
+    font-style: normal;
+    font-weight: 700;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-Bold.ttf");
+}
+
+@font-face {
+    font-family: open-sans;
+    font-style: italic;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-Italic.ttf");
+}
+
+@font-face {
+    font-family: open-sans;
+    font-style: italic;
+    font-weight: 600;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-SemiboldItalic.ttf");
+}
+
+@font-face {
+    font-family: open-sans;
+    font-style: italic;
+    font-weight: 700;
+    src: url("{{ fontsdir }}/Open_Sans/OpenSans-BoldItalic.ttf");
+}

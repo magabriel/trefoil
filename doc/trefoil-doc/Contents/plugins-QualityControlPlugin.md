@@ -9,14 +9,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
-    ....
     editions:
         <edition-name>
             plugins:
                 enabled: [ QualityControl ]
-~~~ 
+~~~
 
 ### Description
 

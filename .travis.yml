@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 5.5
+  - 7.2
 
 script: phpunit --coverage-clover=coverage.clover
 

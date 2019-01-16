@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
@@ -54,7 +55,7 @@ class TabularList
      *
      * @var int|null
      */
-    protected $numCategories = null;
+    protected $numCategories;
 
     /**
      * Deep of the list (max number of levels).
@@ -63,17 +64,24 @@ class TabularList
      */
     protected $deep = 0;
 
+    /**
+     * If a zero categories table needs headings.
+     *
+     * @var bool
+     */
+    protected $needsHeadingsForZeroCategories = false;
+
     public function __construct()
     {
         $this->table = new Table();
     }
 
     /**
-     * @param string $htmlList string with HTML <ul> tag
+     * @param string   $htmlList      string with HTML <ul> tag
      * @param int|null $numCategories number of list levels to be represented as categories (columns)
      *                                in the table (null=default)
      */
-    public function fromHtml($htmlList, $numCategories = null)
+    public function fromHtml($htmlList, $numCategories = null): void
     {
         $this->numCategories = $numCategories;
 
@@ -83,22 +91,20 @@ class TabularList
     /**
      * @return string List rendered to HTML table
      */
-    public function toHtmlTable()
+    public function toHtmlTable(): string
     {
-        $output = $this->table->toHtml();
-
-        return $output;
+        return $this->table->toHtml();
     }
 
     /**
-     * @param      $htmlList      string list as html (<ul>...</ul>)
+     * @param      string $htmlList list as html (<ul>...</ul>)
      */
-    protected function parseHtmlList($htmlList)
+    protected function parseHtmlList($htmlList): void
     {
         $htmlList = $this->prepareHtmlList($htmlList);
 
         $crawler = new Crawler();
-        $crawler->addHtmlContent($htmlList, 'UTF-8');
+        $crawler->addHtmlContent($htmlList);
         $crawler = $crawler->filter('ul');
 
         // not an <ul> list in the input 
@@ -116,11 +122,13 @@ class TabularList
         // find max deep of tree and set default numcategories
         $this->findDeep($listAsArray);
         if ($this->numCategories === null) {
-            $this->numCategories = $this->deep;
+            $this->numCategories = $this->deep + 1;
         }
 
-        // ensure numcategories is never greater than deep
-        $this->numCategories = min($this->numCategories, $this->deep);
+        if ($this->numCategories === 1) {
+            $this->numCategories = 0;
+            $this->needsHeadingsForZeroCategories = true;
+        }
 
         $this->prepareTableDefinition($listAsArray);
     }
@@ -132,11 +140,11 @@ class TabularList
      *
      * @return string
      */
-    protected function prepareHtmlList($htmlList)
+    protected function prepareHtmlList($htmlList): string
     {
-        $htmlList = preg_replace('/<li>(?!<p>)([^(<\/li>)]*)\n/U', '<li><p>$1</p>' . "\n", $htmlList);
-        $htmlList = preg_replace('/<li>(?!<p>)(.*)(?!<\/li>])\n/U', '<li><p>$1</p>' . "\n", $htmlList);
-        $htmlList = preg_replace('/<li>(?!<p>)(.*)<\/li>/U', '<li><p>$1</p></li>', $htmlList);
+        $htmlList = preg_replace('/<li>(?!<p>)/U', '<li><p>', $htmlList);
+        $htmlList = preg_replace('/(?<!<\/p>)<\/li>/U', '</p></li>', $htmlList);
+
         $htmlList = preg_replace('/<b>/U', '<strong>', $htmlList);
         $htmlList = preg_replace('/<\/b>/U', '</strong>', $htmlList);
 
@@ -146,7 +154,7 @@ class TabularList
     /**
      * @param Crawler $ulNode
      */
-    protected function extractNumCategories(Crawler $ulNode)
+    protected function extractNumCategories(Crawler $ulNode): void
     {
         $ulClasses = $ulNode->attr('class') ?: '';
         $matches = [];
@@ -165,7 +173,7 @@ class TabularList
      *
      * @return array parsed <ul> list
      */
-    protected function parseUl(Crawler $ulNode)
+    protected function parseUl(Crawler $ulNode): array
     {
         $output = [];
 
@@ -176,7 +184,7 @@ class TabularList
                 $cellText = '';
 
                 $liNode->children()->each(
-                    function (Crawler $liChildrenNode, $liChildrenIndex) use (&$cell, &$cellText) {
+                    function (Crawler $liChildrenNode) use (&$cell, &$cellText) {
 
                         switch ($liChildrenNode->nodeName()) {
                             case 'p':
@@ -222,18 +230,19 @@ class TabularList
     /**
      * @param array $listAsArray the list definition as an array
      */
-    protected function prepareTableDefinition(array $listAsArray)
+    protected function prepareTableDefinition(array $listAsArray): void
     {
         // make the table body from the list
-        $this->processList($listAsArray, 0);
+        $this->processListToTable($listAsArray);
 
         // ensure we have headings
+        /** @var array[] $row */
         foreach ($this->table['tbody'] as $row) {
             $colIndex = 0;
+            /** @var array $row */
             foreach ($row as $cell) {
-
                 // detected heading for cell is in the extra
-                $heading = isset($cell['extra']) ? $cell['extra'] : '';
+                $heading = $cell['extra'] ?? '';
                 $existingHeading = $this->table->getHeadingCell($colIndex);
                 if ($heading && !$existingHeading) {
                     $this->table->addHeadingCell($heading, $colIndex);
@@ -244,8 +253,9 @@ class TabularList
         }
     }
 
-    protected function processList($list, $level)
+    protected function processListToTable($list, $level = 0): void
     {
+        /** @var array $list */
         foreach ($list as $listNodeIndex => $listNode) {
 
             // if this is a 0-level node, add a new row
@@ -268,8 +278,8 @@ class TabularList
 
             // process the node sublist, if present 
             if (isset($listNode['list'])) {
-                if ($level < $this->numCategories) {
-                    $this->processList($listNode['list'], $level + 1);
+                if ($level + 1 < $this->numCategories) {
+                    $this->processListToTable($listNode['list'], $level + 1);
                 } else {
                     $cellContents .= $this->listToText($listNode['list']);
                     $this->table->addBodyCell($cellContents, (int)$where['row'], (int)$where['column']);
@@ -285,12 +295,17 @@ class TabularList
      *
      * @return array of 'text' and 'heading' components
      */
-    protected function extractNodeText($text)
+    protected function extractNodeText($text): array
     {
         $node = [
             'text' => $text,
-            'heading' => ''
+            'heading' => '',
         ];
+
+        // if we don't use categories then we don't need headings
+        if ($this->numCategories === 0 && !$this->needsHeadingsForZeroCategories) {
+            return $node;
+        }
 
         // extract heading
         $matches = [];
@@ -302,6 +317,8 @@ class TabularList
         )) {
             $node['heading'] = $matches['heading'];
             $node['text'] = trim(substr($node['text'], strlen($matches['all'])));
+            // remove final paragraph closing tag
+            $node['text'] = str_replace('</p>', '', $node['text']);
         }
 
         return $node;
@@ -314,10 +331,11 @@ class TabularList
      *
      * @return string
      */
-    protected function listToText($list)
+    protected function listToText($list): string
     {
         $text = '';
 
+        /** @var array $list */
         foreach ($list as $listNode) {
 
             if (isset($listNode['text'])) {
@@ -334,7 +352,7 @@ class TabularList
         return $text;
     }
 
-    protected function findDeep(array $list, $countLevels = 1)
+    protected function findDeep(array $list, $countLevels = 1): void
     {
         $this->deep = max($this->deep, $countLevels);
 
@@ -351,10 +369,20 @@ class TabularList
      * @param $level
      * @param $listNodeIndex
      */
-    protected function createNewRowIfNeeded($level, $listNodeIndex)
+    protected function createNewRowIfNeeded($level, $listNodeIndex): void
     {
-        $needsRowspan = ($level > 0 && $listNodeIndex > 0) && $this->numCategories <= $this->deep;
-        $needsNewRow = $needsRowspan || $level === 0 && $listNodeIndex === 0;
+        $needsRowspan = ($level > 0 && $listNodeIndex > 0);
+        $needsNewRow = $needsRowspan || ($level === 0 && $listNodeIndex === 0);
+
+        // if we need more categories than the list's deep it means that
+        // the last level is a list and we are going to represent it as additional categories.
+        if ($this->numCategories > $this->deep) {
+            // if we are at the latest level (the deepest list), we don't want rowspan or a new row
+            if ($level === $this->deep - 1) {
+                $needsRowspan = false;
+                $needsNewRow = false;
+            }
+        }
 
         if ($needsNewRow) {
             $this->table->addBodyRow();
@@ -374,7 +402,7 @@ class TabularList
      *
      * @return array
      */
-    protected function createCell($cellContents, $node)
+    protected function createCell($cellContents, $node): array
     {
         $where = $this->table->addBodyCell($cellContents);
 

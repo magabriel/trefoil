@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -11,9 +12,21 @@ namespace Trefoil\Tests\Functional;
 
 use Trefoil\Tests\BookPublishingAllTestCase;
 
+/**
+ * Class FunctionalTest
+ *
+ * @package Trefoil\Tests\Functional
+ */
 class FunctionalTest extends BookPublishingAllTestCase
 {
-    public function __construct($name = null, array $data = array(), $dataName = '')
+    /**
+     * FunctionalTest constructor.
+     *
+     * @param null   $name
+     * @param array  $data
+     * @param string $dataName
+     */
+    public function __construct($name = null, array $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 

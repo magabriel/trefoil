@@ -1,0 +1,17 @@
+/* Alte Haas Grotesk : http://www.dafont.com/alte-haas-grotesk.font
+-------------------------------------------------------------------------- */
+{% set fontsdir=app.get('trefoil.publishing.dir.themes') ~ '/' ~ edition.theme ~ '/Common/Resources/Fonts' %}
+
+@font-face {
+    font-family: alte-haas-grotesk;
+    font-style: normal;
+    font-weight: 400;
+    src: url("{{ fontsdir }}/Alte_Haas_Grotesk/AlteHaasGroteskRegular.ttf");
+}
+
+@font-face {
+    font-family: alte-haas-grotesk;
+    font-style: normal;
+    font-weight: 700;
+    src: url("{{ fontsdir }}/Alte_Haas_Grotesk/AlteHaasGroteskBold.ttf");
+}

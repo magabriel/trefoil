@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\BaseEvent;
@@ -14,37 +16,40 @@ use Easybook\Events\EasybookEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Process\Process;
 use Trefoil\Plugins\BasePlugin;
+
 /**
  * Plugin to check the generated epub ebook using the EpubCheck utility.
  *
  * @see https://github.com/IDPF/epubcheck
- *
  * For formats: Epub
- *
  * Options can be set in the book's config.yml:
- *
  *    easybook:
  *        parameters:
  *            epubcheck.path: '/path/to/epubcheck.jar'
  *            epubcheck.command_options: ''
- *
  */
 class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
 {
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
+        return [
             // runs later but before renaming
-            EasybookEvents::POST_PUBLISH => array('onPostPublish', -900)
-        );
+            EasybookEvents::POST_PUBLISH => ['onPostPublish', -900],
+        ];
     }
 
+    /**
+     * @param BaseEvent $event
+     */
     public function onPostPublish(BaseEvent $event)
     {
         $this->init($event);
 
-        if ($this->format != 'Epub') {
+        if ($this->format !== 'Epub') {
             // not for this format
             return;
         }
@@ -59,41 +64,36 @@ class EpubCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         if (!$epubcheck || !file_exists($epubcheck)) {
             $this->writeLn(
-                 'The EpubCheck library needed to check EPUB books cannot be found. ' .
-                 'Check that you have set your custom Epubcheck path in the book\'s config.yml file.',
-                 'error'
-            );
+                'The EpubCheck library needed to check EPUB books cannot be found. '.'Check that you have set your custom Epubcheck path in the book\'s config.yml file.',
+                'error');
 
             return;
         }
 
-        $epubFilePath = $this->app['publishing.dir.output'] . '/book.epub';
+        $epubFilePath = $this->app['publishing.dir.output'].'/book.epub';
 
         $command = sprintf(
             "java -jar '%s' '%s' %s",
             $epubcheck,
             $epubFilePath,
-            $epubcheckOptions
-        );
+            $epubcheckOptions);
 
         $this->writeLn('Running EpubCheck...');
 
         $process = new Process($command);
         $process->run();
 
-        $outputText = $process->getOutput() . $process->getErrorOutput();
+        $outputText = $process->getOutput().$process->getErrorOutput();
 
         if ($process->isSuccessful()) {
             $this->writeLn('No errors');
+        } elseif (preg_match('/^ERROR:/Um', $outputText)) {
+            $this->writeLn('Some errors detected.</error>', 'error');
         } else {
-            if (preg_match('/^ERROR:/Um', $outputText)) {
-                $this->writeLn('Some errors detected.</error>', 'error');
-            } else {
-                $this->writeLn('Some warnings detected.', "warning");
-            }
+            $this->writeLn('Some warnings detected.', 'warning');
         }
 
-        $reportFile = $this->app['publishing.dir.output'] . '/report-EpubCheckPlugin.txt';
+        $reportFile = $this->app['publishing.dir.output'].'/report-EpubCheckPlugin.txt';
         file_put_contents($reportFile, $outputText);
     }
 }

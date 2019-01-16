@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -19,21 +20,25 @@ use Trefoil\Helpers\QuizActivityParser;
 use Trefoil\Helpers\QuizItem;
 use Trefoil\Helpers\QuizQuestionnaire;
 use Trefoil\Helpers\QuizQuestionnaireParser;
-use Trefoil\Util\SimpleReport;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\SimpleReport;
 
+/**
+ * Class EbookQuizPlugin
+ *
+ * @package Trefoil\Plugins\Optional
+ */
 class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
 {
     /**
      * The name of the book element that will receive the rendered solutions
      */
-    const QUIZ_SOLUTIONS_ELEMENT = 'ebook-quiz-solutions';
+    public const QUIZ_SOLUTIONS_ELEMENT = 'ebook-quiz-solutions';
 
     /**
-     *
-     * @var Array|QuizItem
+     * @var QuizItem[][]
      */
-    protected $quizItems = array();
+    protected $quizItems = [];
 
     /**
      * Whether or not the solutions item has been generated
@@ -42,29 +47,51 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected $generated = false;
 
-    public static function getSubscribedEvents()
+    /**
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            EasybookEvents::PRE_PARSE    => array('onItemPreParse', +100),
-            EasybookEvents::POST_PARSE   => array('onItemPostParse', -1100), // after ParserPlugin
-            EasybookEvents::POST_PUBLISH => 'onPostPublish');
+        return [
+            EasybookEvents::PRE_PARSE    => ['onItemPreParse', +100],
+            EasybookEvents::POST_PARSE   => ['onItemPostParse', -1100], // after ParserPlugin
+            EasybookEvents::POST_PUBLISH => 'onPostPublish',
+        ];
     }
 
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPreParse(ParseEvent $event)
     {
         $this->init($event);
 
-        if (self::QUIZ_SOLUTIONS_ELEMENT == $this->item['config']['element']) {
+        if (self::QUIZ_SOLUTIONS_ELEMENT === $this->item['config']['element']) {
             // prepare to render the solutions into this element
             $this->prepareSolutions();
         }
     }
 
+    /**
+     * Save the information for the "solutions" book element to be rendered.
+     * The rendering will be done by the publisher at decoration time (or when
+     * the book is assembled, depending on the implementation).
+     */
+    protected function prepareSolutions()
+    {
+        $this->app['publishing.quiz.items'] = $this->quizItems;
+
+        $this->generated = true;
+    }
+
+    /**
+     * @param ParseEvent $event
+     */
     public function onItemPostParse(ParseEvent $event)
     {
         $this->init($event);
 
-        if (self::QUIZ_SOLUTIONS_ELEMENT != $this->item['config']['element']) {
+        if (self::QUIZ_SOLUTIONS_ELEMENT !== $this->item['config']['element']) {
             // a normal item that can contain quiz elements
             $this->processItem();
         }
@@ -73,38 +100,18 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
-    public function onPostPublish(BaseEvent $event)
-    {
-        $this->init($event);
-
-        $this->checkCompatibility();
-
-        // create the processing report
-        $this->createReport();
-    }
-
-    protected function checkCompatibility()
-    {
-        $plugins = $this->getEditionOption('plugins.enabled');
-
-        if (in_array('KindleTweaks', $plugins)) {
-            $this->writeLn('"KindleTweaks" plugin is enabled. Please disable it to avoid incompatibilities.', "error");
-        }
-    }
-
     /**
      * Parse the quiz elements in the current item and render them.
-     *
      * The quiz elements are stored for later rendering of solutions.
      */
     protected function processItem()
     {
-        $quizElements = array(
+        $quizElements = [
             'activity', // backwards compatibility
             'questions', // backwards compatibility
             'quiz-activity',
-            'quiz-questionnaire'
-        );
+            'quiz-questionnaire',
+        ];
 
         // capture quiz elements
         $regExp = '/';
@@ -121,28 +128,24 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $regExp .= '<\/div>)';
         $regExp .= '/Ums'; // Ungreedy, multiline, dotall
 
-        // PHP 5.3 compat
-        $me = $this;
-
         $content = preg_replace_callback(
             $regExp,
-            function ($matches) use ($me) {
+            function ($matches) {
                 $html = '';
                 switch ($matches['type']) {
                     case 'activity':
                     case 'quiz-activity':
-                        $html = $me->internalProcessActivityType($matches['div']);
+                        $html = $this->internalProcessActivityType($matches['div']);
                         break;
                     case 'questions':
                     case 'quiz-questionnaire':
-                        $html = $me->internalProcessQuestionnaireType($matches['div']);
+                        $html = $this->internalProcessQuestionnaireType($matches['div']);
                         break;
                 }
 
                 return $html;
             },
-            $this->item['content']
-        );
+            $this->item['content']);
 
         $this->item['content'] = $content;
     }
@@ -151,12 +154,10 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
      * Parse the quiz element of type QuizActivity and return a rendered version.
      *
      * @param $sourceHtml
-     *
      * @return string
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
+     * @throws \Exception
      */
-    public function internalProcessActivityType($sourceHtml)
+    protected function internalProcessActivityType($sourceHtml): string
     {
         $validYes = $this->getEditionOption('plugins.options.EbookQuiz.ynb.yes');
         $validNo = $this->getEditionOption('plugins.options.EbookQuiz.ynb.no');
@@ -179,35 +180,9 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         $this->saveQuizItem($activity);
 
         // render it
-        $variables = array('activity' => $activity);
-        $html = $this->app['twig']->render('ebook-quiz-activity.twig', $variables);
+        $variables = ['activity' => $activity];
 
-         return $html;
-    }
-
-    /**
-     * Parse the quiz element of type QuizQuestionnaire and return a rendered version.
-     *
-     * @param $sourceHtml
-     *
-     * @return string
-     *
-     * @internal Should be protected but made public for PHP 5.3 compat
-     */
-    public function internalProcessQuestionnaireType($sourceHtml)
-    {
-        $parser = new QuizQuestionnaireParser($sourceHtml);
-
-        $questionnaire = $parser->parse();
-
-        // save it for rendering the solutions later
-        $this->saveQuizItem($questionnaire);
-
-        // render it
-        $variables = array('questionnaire' => $questionnaire);
-        $html = $this->app['twig']->render('ebook-quiz-questionnaire.twig', $variables);
-
-        return $html;
+        return $this->app['twig']->render('ebook-quiz-activity.twig', $variables);
     }
 
     /**
@@ -223,27 +198,58 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
         // assign a name for grouping items
         $name = $this->item['title'];
         if ($this->item['label']) {
-            $name = $this->item['label'] . ' - ' . $name;
+            $name = $this->item['label'].' - '.$name;
         }
 
         if (!isset($this->quizItems[$name])) {
-            $this->quizItems[$name] = array();
+            $this->quizItems[$name] = [];
         }
 
         $this->quizItems[$name][] = $quizItem;
     }
 
     /**
-     * Save the information for the "solutions" book element to be rendered.
+     * Parse the quiz element of type QuizQuestionnaire and return a rendered version.
      *
-     * The rendering will be done by the publisher at decoration time (or when
-     * the book is assembled, depending on the implementation).
+     * @param $sourceHtml
+     * @return string
+     * @throws \Exception
      */
-    protected function prepareSolutions()
+    protected function internalProcessQuestionnaireType($sourceHtml): string
     {
-        $this->app['publishing.quiz.items'] = $this->quizItems;
+        $parser = new QuizQuestionnaireParser($sourceHtml);
 
-        $this->generated = true;
+        $questionnaire = $parser->parse();
+
+        // save it for rendering the solutions later
+        $this->saveQuizItem($questionnaire);
+
+        // render it
+        $variables = ['questionnaire' => $questionnaire];
+
+        return $this->app['twig']->render('ebook-quiz-questionnaire.twig', $variables);
+    }
+
+    /**
+     * @param BaseEvent $event
+     */
+    public function onPostPublish(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $this->checkCompatibility();
+
+        // create the processing report
+        $this->createReport();
+    }
+
+    protected function checkCompatibility()
+    {
+        $plugins = $this->getEditionOption('plugins.enabled');
+
+        if (in_array('KindleTweaks', $plugins, true)) {
+            $this->writeLn('"KindleTweaks" plugin is enabled. Please disable it to avoid incompatibilities.', 'error');
+        }
     }
 
     /**
@@ -253,21 +259,23 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
     {
         if (!$this->generated) {
             $this->writeLn(
-                 sprintf("No Quiz has been generated, check for missing '%s' contents element.", self::QUIZ_SOLUTIONS_ELEMENT),
-                 "error"
-            );
+                sprintf(
+                    "No Quiz has been generated, check for missing '%s' contents element.",
+                    self::QUIZ_SOLUTIONS_ELEMENT),
+                'error');
         }
 
         $report = new SimpleReport();
         $report->setTitle('EbookQuizPlugin');
         $report->setSubtitle('Quiz Items');
 
-        $report->setHeaders(array('Item title', 'X-Ref', 'Id', 'Type', 'Heading', 'Questions'));
+        $report->setHeaders(['Item title', 'X-Ref', 'Id', 'Type', 'Heading', 'Questions']);
 
-        $report->setColumnsWidth(array(40, 20, 15, 15, 40, 9));
-        $report->setColumnsAlignment(array('', '', '', '', '', 'right'));
+        $report->setColumnsWidth([40, 20, 15, 15, 40, 9]);
+        $report->setColumnsAlignment(['', '', '', '', '', 'right']);
 
         foreach ($this->quizItems as $item => $quizItems) {
+            /** @var QuizItem[] $quizItems */
             $auxItem = $item;
             $auxXref = isset($quizItems[0]) ? $quizItems[0]->getXref() : '';
 
@@ -290,21 +298,22 @@ class EbookQuizPlugin extends BasePlugin implements EventSubscriberInterface
                         $count = null;
                 }
 
-                $report->addline(
-                       array(substr($auxItem, 0, 40),
-                             $auxXref,
-                             $quizItem->getId(),
-                             $quizItem->getType(),
-                             substr($quizItem->getHeading(), 0, 40),
-                             $count)
-                );
+                $report->addLine(
+                    [
+                        substr($auxItem, 0, 40),
+                        $auxXref,
+                        $quizItem->getId(),
+                        $quizItem->getType(),
+                        substr($quizItem->getHeading(), 0, 40),
+                        $count,
+                    ]);
                 $auxItem = '';
                 $auxXref = '';
             }
         }
 
         $outputDir = $this->app['publishing.dir.output'];
-        $reportFile = $outputDir . '/report-EbookQuizPlugin.txt';
+        $reportFile = $outputDir.'/report-EbookQuizPlugin.txt';
 
         file_put_contents($reportFile, $report->getText());
 

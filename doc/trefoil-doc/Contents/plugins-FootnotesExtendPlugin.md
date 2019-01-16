@@ -11,7 +11,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -32,11 +31,38 @@ where the options are:
 
 ### Description
 
-The Markdown parser converts footnotes into hyperlinks, where the link target 
-is the note text at the bottom of the document.
+A **footnote** is a short clarification text wich is associated to a certain position in
+the main text but without interrupting the normal reading flow. 
 
-While this behavior[^note1a] could be adequate in certain situations, several
-problems arise specific to the edition format being produced:
+The footnote text will be shown in another part of the text (normally the page _footer_,
+hence its name) but it could also be shown at the end of the chapter or even the end 
+of the book.
+
+#### Footnotes in Markdown
+
+A footnote can be created in Markdown by inserting `[^note1]` at the desired 
+text position, where _note1_ is just a key[^note1] which will not be shown to 
+the user and that it is only used to associate the footnote to its text.
+
+The footnote's text can be defined[^note2] with a paragraph containing:
+
+~~~.markdown
+[^note1]: This the footnote's text.
+~~~
+
+which can be placed anywhere in the same document.
+
+The Markdown parser converts footnotes into hyperlinks, where the link target 
+is the note text at the bottom of the document (for `easybook` and `trefoil` 
+books that means the end of the _edition item_). The user can "click" in the 
+footnote and the footnote will be show. The user needs to "click" in another
+link to return to the footnote's position and continue reading.
+
+#### The problem to solve
+
+While the default Markdown parser's footnotes implementation could be adequate 
+in certain situations, several problems arise specific to the edition format 
+being produced:
 
 - For ebooks (`epub` and `mobi` formats), the "footnotes at the end of the chapter" 
   approach does not work well because, in electronic reading devices or applications,
@@ -47,16 +73,18 @@ problems arise specific to the edition format being produced:
   appears at the bottom of the page where it is referred. This type of rendering
   is called "inline footnotes" and is supported by *PrinceXML* rendering tool.
   
+#### The solution
+
 This plugin provides a comprehensive solution to these problems by defining
-4 types of footnotes:
+four types of footnotes:
 
 - `end`: This is the normal Markdown-rendered footnotes. 
-  They will be rendered at the end of each book item, separated by an `<hr/>` tag.
-  This is the default.
+   They will be rendered at the end of each book item, separated by an `<hr/>` tag.
+   This is the default.
 
 - `inject`: This is a variant of type `end`, where each item's footnotes will be 
-   injected to a certain injection point inside the item itself.
-   Just write `<div class="footnotes"></div>` in the point where where the 
+   injected at a certain injection point inside the item itself.
+   Just write `<div class="footnotes"></div>` at the point where where the 
    footnotes should be injected.
 
 - `item`: All the footnotes in the book will be collected and rendered in a separated 
@@ -66,27 +94,24 @@ This plugin provides a comprehensive solution to these problems by defining
    be inlined into the text, instead of just a reference. *PrinceXML* will manage the 
    numbering.   
 
-#### About inline footnotes
+#### About PrinceXML inline footnotes
  
-*PrinceXML* manages footnotes as:
+*PrinceXML* natively manages footnotes as:
  
 ~~~.htmml
 some text<span class="fn">Text of the footnote</span> more text 
 ~~~
- 
-One limitation is that the footnote text cannot contain block elements (as paragraphs, 
-tables, lists). The plugin overcomes this partially by replacing paragraph tags with 
-`<br/>` tags.
+
+This plugin will take care of the rendering, but one limitation is that the footnote 
+text cannot contain block elements (as paragraphs, tables, lists). The plugin overcomes 
+this partially by replacing paragraph tags with `<br/>` tags.
+
+#### Examples
 
 N> ##### Tip
 N> You can see an example of footnotes in this section (look at the source text).
 
-{% if app.edition('format') not in ['epub', 'mobi'] %}
-N> ##### TODO
-N> Create an adequate implementation for editions different from `epub` and `mobi` (like this one).
-{% endif %}
+[^note1]: This is a footnote just for showing an example.
 
-[^note1a]: This is a footnote just for showing an example.
-
-[^note2a]: Another footnote, also with dummy text just to have something to work with .
+[^note2]: Another footnote, also with dummy text just to have something to work with.
 

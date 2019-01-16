@@ -1,7 +1,7 @@
 # Plugin system enhancements
 
 Plugins are the core of **easybook** 
-[extensibilty](http://easybook-project.org/documentation/chapter-9.html). 
+[extensibilty](https://github.com/javiereguiluz/easybook/blob/master/doc/easybook-doc-en/Contents/09-plugins.md). 
 But considerably more flexibility was needed in order to allow implementation 
 of all the needed functionality, so the first task was to extend the plugins 
 system.  

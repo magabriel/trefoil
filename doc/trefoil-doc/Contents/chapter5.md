@@ -8,5 +8,7 @@ appealing for textbooks or technical publications.
 
 {{ file('plugins-AutoGlossaryPlugin.md') }}
 
+{{ file('plugins-AutoIndexPlugin.md') }}
+
 {{ file('plugins-EbookQuizPlugin.md') }}
  

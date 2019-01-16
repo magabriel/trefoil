@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -9,9 +10,15 @@
  */
 namespace Trefoil\Tests\Helpers;
 
+use PHPUnit\Framework\TestCase;
 use Trefoil\Helpers\DropCaps;
 
-class DropCapsTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class DropCapsTest
+ *
+ * @package Trefoil\Tests\Helpers
+ */
+class DropCapsTest extends TestCase
 {
     public function setUp()
     {
@@ -21,233 +28,233 @@ class DropCapsTest extends \PHPUnit_Framework_TestCase
     {
     }
 
-    public function testHeadings()
+    public function testHeadings(): void
     {
-        $input = array(
+        $input = [
             '<h1>H1 heading</h1>',
             '<p>First paragraph under H1</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
             '<h3>H3 heading</h3>',
             '<p>Another First paragraph under H3</p>'
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<h1>H1 heading</h1>',
             '<p class="has-dropcaps"><span class="dropcaps">F</span>irst paragraph under H1</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
             '<h3>H3 heading</h3>',
             '<p class="has-dropcaps"><span class="dropcaps">A</span>nother First paragraph under H3</p>'
-        );
+        ];
 
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_LETTER, 1);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_LETTER, 1);
 
         // must not change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $input),
+        static::assertEquals(
+             implode('', $input),
              $dropCaps->getOutput(),
              'Do not change first paragraph in text if preceding '
         );
 
         // must change
-        $dropCaps->createForHeadings(array(1, 3));
-        $this->assertEquals(
-             implode("", $expected),
+        $dropCaps->createForHeadings([1, 3]);
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput(),
              'Change only selected levels'
         );
     }
 
-    public function testNoHeading()
+    public function testNoHeading(): void
     {
-        $input = array(
+        $input = [
             '<p>First paragraph</p>',
             '<p>Second paragraph</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
             '<h3>H3 heading</h3>',
             '<p>Another First paragraph under H3</p>'
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p class="has-dropcaps"><span class="dropcaps">F</span>irst paragraph</p>',
             '<p>Second paragraph</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
             '<h3>H3 heading</h3>',
             '<p>Another First paragraph under H3</p>'
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_LETTER, 1);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_LETTER, 1);
 
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput(),
              'Change only first paragraph without heading'
         );
     }
 
-    public function testAlreadyHasMarkup()
+    public function testAlreadyHasMarkup(): void
     {
-        $input = array(
+        $input = [
             '<p class="has-dropcaps"><span class="dropcaps">- F</span>irst paragraph</p>',
             '<h2>H2 heading</h2>',
             '<p class="has-dropcaps"><span class="dropcaps">* O</span>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_LETTER, 1);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_LETTER, 1);
 
         // must not change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $input),
+        static::assertEquals(
+             implode('', $input),
              $dropCaps->getOutput(),
              'Do not change first paragraph in text if already has dropcaps markup'
         );
 
         // must not change
-        $dropCaps->createForHeadings(array(1, 2));
-        $this->assertEquals(
-             implode("", $input),
+        $dropCaps->createForHeadings();
+        static::assertEquals(
+             implode('', $input),
              $dropCaps->getOutput(),
              'Do not change first paragraph under headings if already has dropcaps markup'
         );
     }
 
-    public function testStartsWithHTMLEntity()
+    public function testStartsWithHTMLEntity(): void
     {
-        $input = array(
+        $input = [
             '&nbsp;First paragraph </p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_LETTER, 1);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_LETTER, 1);
 
         // must not change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $input),
+        static::assertEquals(
+             implode('', $input),
              $dropCaps->getOutput()
         );
     }
 
-    public function testStartsWithHTMLTag()
+    public function testStartsWithHTMLTag(): void
     {
-        $input = array(
+        $input = [
             '<p><em>First</em> paragraph </p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p class="has-dropcaps"><em><span class="dropcaps">F</span>irst</em> paragraph </p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_LETTER, 1);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_LETTER, 1);
 
         // must change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput()
         );
     }
 
-    public function testWordMode()
+    public function testWordMode(): void
     {
-        $input = array(
+        $input = [
             '<p>First (paragraph) in, the whole text.</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p class="has-dropcaps"><span class="dropcaps">First (paragraph) in,</span> the whole text.</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_WORD, 3);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_WORD, 3);
 
         // must change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput()
         );
     }
 
-    public function testWordModeStartWithEntity()
+    public function testWordModeStartWithEntity(): void
     {
-        $input = array(
+        $input = [
             '<p>&raquo;First (paragraph) in, the whole text.</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p class="has-dropcaps"><span class="dropcaps">&raquo;First (paragraph)</span> in, the whole text.</p>',
             '<h2>H2 heading</h2>',
             '<p>Other first paragraph under H2</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input), DropCaps::MODE_WORD, 3);
+        $dropCaps = new DropCaps(implode('', $input), DropCaps::MODE_WORD, 3);
 
         // must change
         $dropCaps->createForFirstParagraph();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput()
         );
     }
 
-    public function testProcessManualMarkup()
+    public function testProcessManualMarkup(): void
     {
-        $input = array(
+        $input = [
             '<p><span class="dropcaps">This</span> has dropcaps.</p>',
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p class="has-dropcaps"><span class="dropcaps">This</span> has dropcaps.</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input));
+        $dropCaps = new DropCaps(implode('', $input));
 
         // must change
         $dropCaps->processManualMarkup();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput()
         );
     }
 
-    public function testMarkdownStyle()
+    public function testMarkdownStyle(): void
     {
-        $input = array(
+        $input = [
             '<p>Normal paragraph.</p>',
             '<p>[[D]]rop caps paragraph.</p>',
             '<p>[[Another]] drop caps paragraph.</p>',
-        );
+        ];
 
-        $expected = array(
+        $expected = [
             '<p>Normal paragraph.</p>',
             '<p class="has-dropcaps"><span class="dropcaps">D</span>rop caps paragraph.</p>',
             '<p class="has-dropcaps"><span class="dropcaps">Another</span> drop caps paragraph.</p>',
-        );
+        ];
 
-        $dropCaps = new DropCaps(implode("", $input));
+        $dropCaps = new DropCaps(implode('', $input));
 
         // must change
         $dropCaps->createForMarkdownStyleMarkup();
-        $this->assertEquals(
-             implode("", $expected),
+        static::assertEquals(
+             implode('', $expected),
              $dropCaps->getOutput()
         );
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -40,7 +41,7 @@ class TableExtra
     /**
      * @param ParserInterface $markdownParser
      */
-    public function setMarkdownParser($markdownParser)
+    public function setMarkdownParser($markdownParser): void
     {
         $this->markdownParser = $markdownParser;
     }
@@ -52,7 +53,7 @@ class TableExtra
      *
      * @return string
      */
-    public function processAllTables($htmlString)
+    public function processAllTables($htmlString): string
     {
         $regExp = '/';
         $regExp .= '(?<table><table.*<\/table>)';
@@ -70,14 +71,11 @@ class TableExtra
             }
 
             $table = $me->internalProcessExtraTable($table);
-            $html = $table->toHtml();
 
-            return $html;
+            return $table->toHtml();
         };
 
-        $output = preg_replace_callback($regExp, $callback, $htmlString);
-
-        return $output;
+        return preg_replace_callback($regExp, $callback, $htmlString);
     }
 
     /**
@@ -86,12 +84,14 @@ class TableExtra
      * @return Table
      * @internal Should be protected but made public for PHP 5.3 compat
      */
-    public function internalProcessExtraTable(Table $table)
+    public function internalProcessExtraTable(Table $table): Table
     {
         // process and adjusts table definition
 
         $headless = true;
+        /** @var string[][] $table */
         foreach ($table['thead'] as $row) {
+            /** @var array $row */
             foreach ($row as $cell) {
                 if (empty($cell['contents'])) {
                     $headless = true;
@@ -127,18 +127,19 @@ class TableExtra
      *
      * @return array Processed table rows
      */
-    protected function processMultilineCells(array $rows)
+    protected function processMultilineCells(array $rows): array
     {
         $newRows = $rows;
         foreach ($newRows as $rowIndex => $row) {
 
+            /** @var array $row */
             foreach ($row as $colIndex => $col) {
                 $cell = $newRows[$rowIndex][$colIndex];
                 $cellText = rtrim($cell['contents']);
 
                 if (substr($cellText, -1, 1) === '+') {
                     // continued cell
-                    $newCell = array();
+                    $newCell = [];
                     $newCell[] = substr($cellText, 0, -1);
 
                     // find all the continuation cells (same col)
@@ -167,10 +168,10 @@ class TableExtra
                     }
 
                     if ($this->markdownParser) {
-                        $parsedCell = $this->markdownParser->transform(join("\n\n", $newCell));
+                        $parsedCell = $this->markdownParser->transform(implode("\n\n", $newCell));
                     } else {
                         // safe default
-                        $parsedCell = join("<br/>", $newCell);
+                        $parsedCell = implode('<br/>', $newCell);
                     }
 
                     $newRows[$rowIndex][$colIndex]['contents'] = $parsedCell;
@@ -179,7 +180,7 @@ class TableExtra
         }
 
         // remove empty rows left by the process
-        $newRows2 = array();
+        $newRows2 = [];
         foreach ($newRows as $rowIndex => $row) {
 
             $emptyRow = true;
@@ -205,7 +206,7 @@ class TableExtra
      *
      * @return array Processed rows
      */
-    protected function processFirstColumnCells(array $rows)
+    protected function processFirstColumnCells(array $rows): array
     {
         $newRows = $rows;
         foreach ($newRows as $rowIndex => $row) {

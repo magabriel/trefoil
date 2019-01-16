@@ -4,6 +4,35 @@
     {{ parent() }}
 
     a {
-    background-image: url('../images/ico_external_link.png');
+        background-image: url('../images/ico_external_link.png');
     }
+
+    a.auto-index-term {
+        background: none;
+        padding-right: 0;
+    }
+
+    a.auto-index-term::after {
+        content: "<--index term";
+        background: lightpink;
+    }
+
+    .auto-index a {
+        background: none;
+        padding: 0;
+    }
+
+    .auto-index .entry {
+        padding-left: 2em;
+    }
+
+    .auto-index .group {
+        font-weight: bold;
+    }
+
+    .auto-index .group.with-entries::after {
+        content: "\A";
+        white-space: pre;
+    }
+
 {% endblock %}

@@ -8,15 +8,11 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         syntaxCheck="false"
          bootstrap="./src/Trefoil/Tests/bootstrap.php"
 >
 
     <!-- files considered for the code coverage -->
     <filter>
-        <blacklist>
-            <directory>vendor</directory>
-        </blacklist>
         <whitelist>
             <directory>src</directory>
             <exclude>

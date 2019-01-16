@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Console\Command;
 
 use Easybook\Console\Command\BaseCommand;
@@ -17,6 +19,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Class TrefoilTestUpdateExpectedResultsCommand
+ *
+ * @package Trefoil\Console\Command
+ */
 class TrefoilTestUpdateExpectedResultsCommand extends BaseCommand
 {
     protected $userConfirmed = false;
@@ -27,9 +34,9 @@ class TrefoilTestUpdateExpectedResultsCommand extends BaseCommand
     /** @var DialogHelper $dialog */
     protected $dialog;
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this->setDefinition(array())
+        $this->setDefinition([])
              ->setName('test:update-expected-results')
              ->setDescription('Update expected results from debug output');
 
@@ -55,7 +62,11 @@ HELP;
         );
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     */
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         $this->dialog = $this->getHelperSet()->get('dialog');
 
@@ -67,7 +78,11 @@ HELP;
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->output = $output;
 
@@ -81,19 +96,22 @@ HELP;
         $this->processTestGroup('Functional');
     }
 
-    protected function processTestGroup($group)
+    /**
+     * @param string $group
+     */
+    protected function processTestGroup(string $group): void
     {
-        $cacheDir = $this->tmpDirBase = $this->app['app.dir.cache'] . '/' . 'phpunit_debug/';
-        $groupTest = $group . 'Test';
-        $groupTestDir = $cacheDir . $groupTest;
-        $fixturesDir = $this->app['trefoil.app.dir.base'] . '/src/Trefoil/Tests/' . $group . '/fixtures';
+        $cacheDir = $this->app['app.dir.cache'].'/'.'phpunit_debug/';
+        $groupTest = $group.'Test';
+        $groupTestDir = $cacheDir.$groupTest;
+        $fixturesDir = $this->app['trefoil.app.dir.base'].'/src/Trefoil/Tests/'.$group.'/fixtures';
 
         $this->output->writeln('');
-        
+
         $this->output->writeln(
             sprintf('Processing Test Group <bg=green;fg=black>%s</>.', $group)
         );
-        
+
         $this->output->writeln('');
 
         if (!is_dir($fixturesDir)) {
@@ -130,7 +148,7 @@ HELP;
 
         /** @var SplFileInfo $test */
         foreach ($tests as $test) {
-            $this->output->writeln('- ' . $test->getBasename());
+            $this->output->writeln('- '.$test->getBasename());
         }
 
         if (!$this->dialog->askConfirmation(
@@ -146,10 +164,10 @@ HELP;
 
         /** @var SplFileInfo $test */
         foreach ($tests as $test) {
-            $this->output->writeln('- ' . $test->getBasename());
+            $this->output->writeln('- '.$test->getBasename());
 
-            $actualResultsDir = $test->getRealPath() . '/Output';
-            $expectedResultsDir = $fixturesDir . '/' . $test->getBasename() . '/expected';
+            $actualResultsDir = $test->getRealPath().'/Output';
+            $expectedResultsDir = $fixturesDir.'/'.$test->getBasename().'/expected';
 
             $filesystem->mirror($actualResultsDir, $expectedResultsDir);
         }

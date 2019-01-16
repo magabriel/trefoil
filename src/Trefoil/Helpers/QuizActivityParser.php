@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -56,7 +57,12 @@ class QuizActivityParser extends QuizItemParser
      */
     protected $quizActivity;
 
-    public function __construct($text)
+    /**
+     * QuizActivityParser constructor.
+     *
+     * @param string $text
+     */
+    public function __construct(string $text)
     {
         $this->quizActivity = new QuizActivity();
 
@@ -66,50 +72,68 @@ class QuizActivityParser extends QuizItemParser
     /**
      * List of responses to be interpreted as "Yes"
      *
-     * @var Array|string
+     * @var array|string
      */
-    protected $responsesValidAsYes = array('Yes', 'True');
+    protected $responsesValidAsYes = ['Yes', 'True'];
 
     /**
      * List of responses to be interpreted as "No"
      *
-     * @var Array|string
+     * @var array|string
      */
-    protected $responsesValidAsNo = array('No', 'False');
+    protected $responsesValidAsNo = ['No', 'False'];
 
     /**
      * List of responses to be interpreted as "Both"
      *
-     * @var Array|string
+     * @var array|string
      */
-    protected $responsesValidAsBoth = array('Both');
+    protected $responsesValidAsBoth = ['Both'];
 
-    public function getResponsesValidAsYes()
+    /**
+     * @return array
+     */
+    public function getResponsesValidAsYes(): array
     {
         return $this->responsesValidAsYes;
     }
 
-    public function setResponsesValidAsYes($responsesValidAsYes)
+    /**
+     * @param $responsesValidAsYes
+     */
+    public function setResponsesValidAsYes($responsesValidAsYes): void
     {
         $this->responsesValidAsYes = $responsesValidAsYes;
     }
 
-    public function getResponsesValidAsNo()
+    /**
+     * @return array
+     */
+    public function getResponsesValidAsNo(): array
     {
         return $this->responsesValidAsNo;
     }
 
-    public function setResponsesValidAsNo($responsesValidAsNo)
+    /**
+     * @param $responsesValidAsNo
+     */
+    public function setResponsesValidAsNo($responsesValidAsNo): void
     {
         $this->responsesValidAsNo = $responsesValidAsNo;
     }
 
-    public function getResponsesValidAsBoth()
+    /**
+     * @return array
+     */
+    public function getResponsesValidAsBoth(): array
     {
         return $this->responsesValidAsBoth;
     }
 
-    public function setResponsesValidAsBoth($responsesValidAsBoth)
+    /**
+     * @param $responsesValidAsBoth
+     */
+    public function setResponsesValidAsBoth($responsesValidAsBoth): void
     {
         $this->responsesValidAsBoth = $responsesValidAsBoth;
     }
@@ -138,14 +162,13 @@ class QuizActivityParser extends QuizItemParser
      * @param Crawler $crawler
      *
      * @throws \RuntimeException
-     * @return array             with activity values
      */
-    protected function parseBody(Crawler $crawler)
+    protected function parseBody(Crawler $crawler): void
     {
         // 'ol' node contains all the questions
         $olNode = $crawler->filter('div>ol');
 
-        if (0 == $olNode->count()) {
+        if (0 === $olNode->count()) {
             throw new \RuntimeException(
                 sprintf(
                     'No questions found for activity id "%s" of type "%s"' . "\n"
@@ -155,7 +178,7 @@ class QuizActivityParser extends QuizItemParser
         }
 
         // collect questions
-        $questionsList = array();
+        $questionsList = [];
 
         $qnodes = $olNode->children();
 
@@ -170,10 +193,10 @@ class QuizActivityParser extends QuizItemParser
 
             // the 2nd level "li" nodes are responses to that question
             $responses = $qnode->filter('ol');
-            if (0 == $responses->count()) {
+            if (0 === $responses->count()) {
                 throw new \RuntimeException(
                     sprintf(
-                        'No responses found for activity id "%s", question #%s of type "abc"',
+                        'No responses found for activity id "%s", question #%s of type "%s"',
                         $this->quizActivity->getId(),
                         $qIndex,
                         $this->quizActivity->getType()
@@ -181,8 +204,8 @@ class QuizActivityParser extends QuizItemParser
             }
 
             // collect responses and explanations
-            $responsesList = array();
-            $explanationsList = array();
+            $responsesList = [];
+            $explanationsList = [];
 
             $rnodes = $responses->children();
 
@@ -192,7 +215,7 @@ class QuizActivityParser extends QuizItemParser
                 // allowed tags inside a response
                 $ps = $rnode->filter('p, ul, ol');
 
-                $explanation = array();
+                $explanation = [];
 
                 if ($ps->count() <= 1) {
                     // Response only
@@ -206,7 +229,7 @@ class QuizActivityParser extends QuizItemParser
                     $count = $ps->count();
                     for ($i = 1; $i < $count; $i++) {
                         $nodeName = CrawlerTools::getNodeName($ps->eq($i));
-                        if ('p' == $nodeName) {
+                        if ('p' === $nodeName) {
                             // can contain HTML
                             $explanation[] = CrawlerTools::getNodeHtml($ps->eq($i));
                         } else {
@@ -255,33 +278,30 @@ class QuizActivityParser extends QuizItemParser
      * - All responses for each question must be "True", "False" and (opt.) "Both"
      *   or equivalent values.
      */
-    protected function transformAbcToYnb()
+    protected function transformAbcToYnb(): void
     {
-        if ($this->quizActivity->getType() != QuizActivity::QUIZ_ACTIVITY_TYPE_ABC) {
+        if ($this->quizActivity->getType() !== QuizActivity::QUIZ_ACTIVITY_TYPE_ABC) {
             return;
         }
 
         // Look for each group of responses
-        $responses = array();
+        $responses = [];
 
         foreach ($this->quizActivity->getQuestions() as $question) {
-            /** @var $question QuizActivityQuestion */
-            $responsesClean = array();
+            /** @var QuizActivityQuestion $question */
+            $responsesClean = [];
             foreach ($question->getResponses() as $response) {
                 // Remove ending dot if any
                 $response = trim($response);
-                $responsesClean[] = ('.' == substr($response, -1)) ? substr($response, 0, -1) : $response;
+                $responsesClean[] = ('.' === substr($response, -1)) ? substr($response, 0, -1) : $response;
             }
 
             if (!$responses) {
                 // the first set of responses is used as model
                 $responses = $responsesClean;
-            } else {
-                // look if current set of responses is equal to the saved model
-                if (array_merge(array_diff($responses, $responsesClean), array_diff($responsesClean, $responses))) {
-                    // Different, cannot continue
-                    return;
-                }
+            } elseif (array_merge(array_diff($responses, $responsesClean), array_diff($responsesClean, $responses))) {
+                // Different, cannot continue
+                return;
             }
 
             // Look for Yes/No/Both type
@@ -301,7 +321,7 @@ class QuizActivityParser extends QuizItemParser
      *
      * @return boolean
      */
-    protected function checkYNBTypeResponses(array $responses)
+    protected function checkYNBTypeResponses(array $responses): bool
     {
         if (count($responses) > 3) {
             return false;
@@ -311,9 +331,9 @@ class QuizActivityParser extends QuizItemParser
         foreach ($responses as $response) {
             $resp = strtolower($response);
             // note the case insensitive search in the arrays
-            if (!in_array($resp, array_map('strtolower', $this->responsesValidAsYes)) &&
-                !in_array($resp, array_map('strtolower', $this->responsesValidAsNo)) &&
-                !in_array($resp, array_map('strtolower', $this->responsesValidAsBoth))
+            if (!in_array($resp, array_map('strtolower', $this->responsesValidAsYes), true) &&
+                !in_array($resp, array_map('strtolower', $this->responsesValidAsNo), true) &&
+                !in_array($resp, array_map('strtolower', $this->responsesValidAsBoth), true)
             ) {
                 return false;
             }

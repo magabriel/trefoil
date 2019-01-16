@@ -11,7 +11,6 @@ This plugin is available for all editions.
 ~~~.yaml
 # <book-dir>/config.yml 
 book:
-    ....
     editions:
         <edition-name>
             plugins:
@@ -36,9 +35,9 @@ where the options are:
 
 There are several ways to add drop caps to the book:
 
-1. Automatic dropcaps.
-2. Manual dropcaps HTML markup.
-3. Markdown-like manual dropcaps. 
+1. Automatic drop caps.
+2. Manual drop caps HTML markup.
+3. Markdown-like manual drop caps. 
 
 
 #### Automatic drop caps
@@ -82,7 +81,6 @@ will produce the following HTML:
 
 ~~~.html
 <p class="has-dropcaps"><span class="dropcaps">T</span>his text has first-letter drop caps.</p>
-
 <p class="has-dropcaps"><span class="dropcaps">But</span> this text has first-word drop caps.</p>
 ~~~
 

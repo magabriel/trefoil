@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -21,5 +22,5 @@ final class TrefoilEvents
      * after performing all its initialization tasks (basically, plugin itself into the
      * Easybook system).
      */
-    const PRE_PUBLISH_AND_READY = 'trefoil.publish.start';
+    public const PRE_PUBLISH_AND_READY = 'trefoil.publish.start';
 }

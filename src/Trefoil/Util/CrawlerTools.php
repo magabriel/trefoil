@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -25,7 +26,7 @@ class CrawlerTools
      *
      * @return string
      */
-    public static function getNodeName(Crawler $node)
+    public static function getNodeName(Crawler $node): string
     {
         return $node->getNode(0)->nodeName;
     }
@@ -37,10 +38,10 @@ class CrawlerTools
      *
      * @return string
      */
-    public static function getNodeText(Crawler $node)
+    public static function getNodeText(Crawler $node): string
     {
         foreach ($node->getNode(0)->childNodes as $cNode) {
-            if ("#text" == $cNode->nodeName) {
+            if ('#text' === $cNode->nodeName) {
                 return $cNode->nodeValue;
             }
         }
@@ -55,7 +56,7 @@ class CrawlerTools
      *
      * @return string
      */
-    public static function getNodeHtml(Crawler $node)
+    public static function getNodeHtml(Crawler $node): string
     {
         $domNode = $node->getNode(0);
 
@@ -63,10 +64,10 @@ class CrawlerTools
             return '';
         }
 
-        $html = $domNode->ownerDocument->saveHtml($domNode);
+        $html = $domNode->ownerDocument->saveHTML($domNode);
 
         // remove line breaks
-        $html = str_replace(array("\n", "\r"), '', $html);
+        $html = str_replace(["\n", "\r"], '', $html);
 
         // remove surrounding tag
         $regExp = '/';

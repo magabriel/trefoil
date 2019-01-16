@@ -1,15 +1,13 @@
-About this project
-==================
+# About this project
 
 This project aims to provide a great tool for creating ebooks.
 It does that by extending the already superb **easybook**
-(<http://easybook-project.org>) to provide additional features
+(<https://easycorp.io/EasyBook>) to provide additional features
 specifically targeted towards generation of ebooks.
 
 {{ itemtoc() }}
 
-Installing
-----------
+## Installing
 
 1.- Clone the trefoil repository:
 
@@ -25,12 +23,11 @@ cd trefoil/
 php composer.phar install
 ~~~
 
-Usage
------
+## Usage
 
 N> ##### TIP
 N> You should _really_ be familiar with the **easybook** documentation 
-N> <http://easybook-project.org> to understand what's going on here ;)
+N> <https://easycorp.io/EasyBook> to understand what's going on here ;)
 
 The basic usage is the same as **easybook**: 
 
@@ -51,8 +48,7 @@ Example:
 book publish the-origin-of-species ebook --themes_dir=~/themes/trefoil
 ~~~
 
-Extending Easybook
-------------------
+## Extending Easybook
 
 If you are reading this, it is assumed that you are familiar with **easybook**
 documentation. If you are not, please go to <http://easybook-project.org> and 

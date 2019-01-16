@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -7,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Util;
 
 /**
@@ -16,24 +18,36 @@ class SimpleReport
 {
     protected $title;
     protected $subtitle;
-    protected $intro = array();
-    protected $headers = array();
-    protected $columnsWidth = array();
-    protected $columnsAlignment = array();
-    protected $lines = array();
-    protected $summary = array();
+    protected $intro = [];
+    protected $headers = [];
+    protected $columnsWidth = [];
+    protected $columnsAlignment = [];
+    /**
+     * @var string[][]
+     */
+    protected $lines = [];
+    protected $summary = [];
 
-    public function setTitle($title)
+    /**
+     * @param $title
+     */
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
 
-    public function setSubtitle($subtitle)
+    /**
+     * @param $subtitle
+     */
+    public function setSubtitle($subtitle): void
     {
         $this->subtitle = $subtitle;
     }
 
-    public function setHeaders(array $headers)
+    /**
+     * @param array $headers
+     */
+    public function setHeaders(array $headers): void
     {
         $this->headers = $headers;
 
@@ -43,37 +57,55 @@ class SimpleReport
         }
     }
 
-    public function setColumnsWidth(array $columnsWidth)
+    /**
+     * @param array $columnsWidth
+     */
+    public function setColumnsWidth(array $columnsWidth): void
     {
         $this->columnsWidth = $columnsWidth;
     }
 
-    public function setColumnsAlignment(array $columnsAlignment)
+    /**
+     * @param array $columnsAlignment
+     */
+    public function setColumnsAlignment(array $columnsAlignment): void
     {
         $this->columnsAlignment = $columnsAlignment;
     }
 
-    public function addLine($fields = array())
+    /**
+     * @param array $fields
+     */
+    public function addLine($fields = []): void
     {
         if (!is_array($fields)) {
-            $fields = array($fields);
+            $fields = [$fields];
         }
         $this->lines[] = $fields;
     }
 
-    public function addIntroLine($text)
+    /**
+     * @param $text
+     */
+    public function addIntroLine($text): void
     {
         $this->intro[] = $text;
     }
 
-    public function addSummaryLine($text)
+    /**
+     * @param $text
+     */
+    public function addSummaryLine($text): void
     {
         $this->summary[] = $text;
     }
 
-    public function getText()
+    /**
+     * @return string
+     */
+    public function getText(): string
     {
-        $text = array();
+        $text = [];
 
         $text = array_merge($text, $this->formatTitle());
         $text = array_merge($text, $this->formatIntro());
@@ -82,12 +114,15 @@ class SimpleReport
         $text = array_merge($text, $this->formatSummary());
         $text[] = '';
 
-        return join("\n", $text);
+        return implode("\n", $text);
     }
 
-    protected function formatTitle()
+    /**
+     * @return array
+     */
+    protected function formatTitle(): array
     {
-        $text = array();
+        $text = [];
 
         $text[] = str_repeat('=', 80);
 
@@ -104,59 +139,102 @@ class SimpleReport
         return $text;
     }
 
-    protected function formatHeaders()
+    /**
+     * @return array
+     */
+    protected function formatIntro(): array
     {
-        $text = array();
+        if (!$this->intro) {
+            return [];
+        }
+
+        $text = [];
+
+        foreach ($this->intro as $line) {
+            $text[] = ' '.$line;
+        }
+
+        $text[] = '';
+
+        return $text;
+    }
+
+    /**
+     * @return array
+     */
+    protected function formatHeaders(): array
+    {
+        $text = [];
 
         $line = '';
         foreach ($this->headers as $index => $header) {
-            $line .= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]) . ' ';
+            $line .= $this->pad($header, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
         }
         $text[] = $line;
 
         $line = '';
         foreach ($this->columnsWidth as $headerWidth) {
-            $line .= str_repeat('-', $headerWidth ? : 10) . ' ';
+            $line .= str_repeat('-', $headerWidth ?: 10).' ';
         }
         $text[] = $line;
 
         return $text;
     }
 
-    protected function pad($str, $width = 10, $alignment = 'left')
+    /**
+     * @param        $str
+     * @param int    $width
+     * @param string $alignment
+     * @return string
+     */
+    protected function pad(string $str,
+                           int $width = 10,
+                           string $alignment = 'left'): string
     {
         $padType = STR_PAD_RIGHT;
 
-        if ('right' == $alignment) {
+        if ('right' === $alignment) {
             $padType = STR_PAD_LEFT;
-        } elseif ('center' == $alignment) {
+        } elseif ('center' === $alignment) {
             $padType = STR_PAD_BOTH;
         }
 
-        return $this->mbStrPad($str, $width, ' ', $padType);
+        return $this->mbStrPad($str, $width, $padType, ' ');
     }
 
     /**
      * @see http://www.php.net/manual/en/ref.mbstring.php#90611
+     * @param        $input
+     * @param        $pad_length
+     * @param        $pad_style
+     * @param string $pad_string
+     * @param string $encoding
+     * @return string
      */
-    protected function mbStrPad($input, $pad_length, $pad_string = '', $pad_style, $encoding = "UTF-8")
+    protected function mbStrPad(string $input,
+                                int $pad_length,
+                                int $pad_style,
+                                string $pad_string = '',
+                                string $encoding = 'UTF-8'): string
     {
         return str_pad(
             $input,
             strlen($input) - mb_strlen($input, $encoding) + $pad_length,
             $pad_string,
-            $pad_style
-        );
+            $pad_style);
     }
 
-    protected function formatLines()
+    /**
+     * @return array
+     */
+    protected function formatLines(): array
     {
-        $text = array();
+        $text = [];
 
         foreach ($this->lines as $lineFields) {
             $lineText = '';
             foreach ($lineFields as $index => $field) {
-                $lineText .= $this->pad($field, $this->columnsWidth[$index], $this->columnsAlignment[$index]) . ' ';
+                $lineText .= $this->pad((string) $field, $this->columnsWidth[$index], $this->columnsAlignment[$index]).' ';
             }
             $text[] = $lineText;
         }
@@ -164,38 +242,24 @@ class SimpleReport
         return $text;
     }
 
-    protected function formatIntro()
-    {
-        if (!$this->intro) {
-            return array();
-        }
-
-        $text = array();
-
-        foreach ($this->intro as $line) {
-            $text[] = ' ' . $line;
-        }
-
-        $text[] = '';
-
-        return $text;
-    }
-
-    protected function formatSummary()
+    /**
+     * @return array
+     */
+    protected function formatSummary(): array
     {
         if (!$this->summary) {
-            return array();
+            return [];
         }
 
-        $text = array();
+        $text = [];
         $text[] = '';
-        $text[] = '    ' . str_repeat('=', 50);
+        $text[] = '    '.str_repeat('=', 50);
 
         foreach ($this->summary as $line) {
-            $text[] = '    ' . $line;
+            $text[] = '    '.$line;
         }
 
-        $text[] = '    ' . str_repeat('=', 50);
+        $text[] = '    '.str_repeat('=', 50);
 
         return $text;
     }

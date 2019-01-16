@@ -1,0 +1,174 @@
+/*
+ * Illustration
+ */
+
+.illustration {
+    margin: 1.5em 0 2em;
+    padding: 0 1em;
+    display: block;
+    clear: both;
+    font-size: .8em;
+    page-break-inside: avoid;
+}
+.illustration  blockquote  {
+    margin: 0 1em;
+    page-break-before: avoid;
+}
+
+.illustration .caption {
+    color: #222222 !important;
+    font-weight: bold;
+    font-size: 1em;
+    margin: 0;
+    padding: 0;
+    font-style: italic;
+    page-break-before: avoid;
+    page-break-inside: avoid;
+    page-break-after: avoid;
+}
+
+.illustration .caption p {
+    margin-bottom: .4em;
+}
+
+.illustration .caption hr {
+    display: none;
+}
+
+.illustration .content {
+    border: 1px solid #999;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    page-break-before: avoid;
+
+    /*
+     * make content follow border radius
+     */
+    overflow: hidden;
+    position: relative; /* needed by Kindle */
+    /* END make content follow border radius */
+}
+
+.illustration .content>* {
+    margin-left: .7em;
+    margin-right: .9em;
+}
+
+.illustration p.heading {
+    margin: 0;
+    padding: 0;
+    line-height: 1.1;
+    font-size: 1em;
+    border-top: 1px solid #CCCCCC !important;
+    border-bottom: 1px solid #CCCCCC !important;
+}
+
+.illustration .heading>strong {
+    font-style: normal !important;
+    background: #E5EECC !important;
+    color: #222222 !important;
+    display: block;
+    padding: .3em .9em .3em .7em;
+}
+
+.illustration .heading>em {
+    font-style: normal !important;
+    background: #F7F7E7 !important;
+    color: #222222 !important;
+    display: block;
+    padding: .3em .9em .3em .7em;
+}
+
+.illustration .table {
+    margin: 0;
+}
+
+.illustration .table table {
+    margin: 0;
+}
+
+.illustration .image {
+    margin: 0;
+}
+
+.illustration .image img {
+    width: 100% !important;
+    height: auto !important;
+}
+
+.illustration .image img.medium {
+    width: 80% !important;
+    height: auto !important;
+}
+
+.illustration .image img.small {
+    width: 60% !important;
+    height: auto !important;
+}
+
+.illustration .image img.smaller {
+    width: 40% !important;
+    height: auto !important;
+}
+
+.illustration .image img.tiny {
+    width: 20% !important;
+    height: auto !important;
+}
+
+.illustration dd {
+    font-size: .9em;
+}
+
+.illustration dt {
+    margin-bottom: .5em;
+}
+
+.illustration .content ol,
+.illustration .content ul {
+    margin-left: .3em;
+    margin-right: .7em;
+}
+
+.illustration .content ol,
+.illustration .content ul {
+    margin-left: 0;
+}
+
+.illustration td li {
+    margin-left: -.5em;
+    margin-right: 0;
+}
+
+.illustration li {
+    line-height: 1.2;
+
+    /* Undo the fix for flow bullets */
+    left: 0;
+    position: initial;
+}
+
+.illustration.medium {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.illustration.small {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.illustration.wide {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+}
+
+.illustration.wide blockquote {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+}

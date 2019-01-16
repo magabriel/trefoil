@@ -1,0 +1,21 @@
+{% extends '@theme/item.twig' %}
+
+{% block content %}
+    {{ item.content }}
+
+    {% for term, data in app['publishing.glossary.definitions'] %}
+        {% for aIndex, anchorLink in data.anchorLinks %}
+
+        <div class="definition" id="auto-glossary-{{ data.slug }}-{{ aIndex }}">
+            <dl>
+                <dt class="definition">{{ data.variants.0 }}</dt>
+                <dd class="description">{{ data.description }}<br/>
+                    <a class="backlink" href="#auto-glossary-term-{{ anchorLink }}">[&rightarrow;]</a>.
+                </dd>
+            </dl>
+        </div>
+
+        {% endfor %}
+    {% endfor %}
+
+{% endblock %}

@@ -9,14 +9,13 @@ This plugin is available for all editions.
 ### Usage
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
-    ....
     editions:
         <edition-name>
             plugins:
                 enabled: [ ImageExtra ]
-~~~ 
+~~~
 
 ### Description
 
@@ -33,7 +32,7 @@ provide live preview for images (like the fabulous [MdCharm](http://www.mdcharm.
 for this to work the image path must point to the relative location of the image:
 
 ~~~.markdown
-# This is the easybook way, 
+# This is the easybook way,
 # but the preview won't work:
 ![This is image 1](image1.jpeg)
 
@@ -88,7 +87,7 @@ N>
 
 ##### Narrower right
 
-![Lorem ipsum ](php.jpg?class="narrower")
+![Lorem ipsum 1 ](php.jpg?class="narrower")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero 
 congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. 
@@ -101,16 +100,16 @@ Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
 ##### Narrower 4 in a row
 
-![Lorem ipsum](php.jpg?class="narrower")
-![Lorem ipsum](php.jpg?class="narrower")
-![Lorem ipsum](php.jpg?class="narrower")
-![Lorem ipsum](php.jpg?class="narrower")
+![Lorem ipsum 2](php.jpg?class="narrower")
+![Lorem ipsum 3](php.jpg?class="narrower")
+![Lorem ipsum 4](php.jpg?class="narrower")
+![Lorem ipsum 5](php.jpg?class="narrower")
 
 <div class="clearfix"></div> 
 
 ##### Narrower centered
 
-![ Lorem ipsum ](php.jpg?class="narrower")
+![ Lorem ipsum 6 ](php.jpg?class="narrower")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
@@ -118,7 +117,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ##### Narrow right
 
-![Lorem ipsum ](php.jpg?class="narrow")
+![Lorem ipsum 7 ](php.jpg?class="narrow")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
@@ -126,15 +125,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ##### Narrow 3 in a row
 
-![Lorem ipsum](php.jpg?class="narrow") 
-![Lorem ipsum](php.jpg?class="narrow")
-![Lorem ipsum](php.jpg?class="narrow")
+![Lorem ipsum 8](php.jpg?class="narrow") 
+![Lorem ipsum 9](php.jpg?class="narrow")
+![Lorem ipsum 10](php.jpg?class="narrow")
 
 <div class="clearfix"></div> 
 
 ##### Narrow centered
 
-![ Lorem ipsum ](php.jpg?class="narrow") 
+![ Lorem ipsum 11 ](php.jpg?class="narrow") 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
@@ -142,7 +141,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ##### Half left
 
-![ Lorem ipsum](php.jpg?class="half")
+![ Lorem ipsum 12](php.jpg?class="half")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
@@ -150,14 +149,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ##### Half 2 in a row
 
-![Lorem ipsum](php.jpg?class="half")
-![Lorem ipsum](php.jpg?class="half")
+![Lorem ipsum 13](php.jpg?class="half")
+![Lorem ipsum 14](php.jpg?class="half")
 
 <div class="clearfix"></div> 
 
 ##### Half centered
 
-![ Lorem ipsum ](php.jpg?class="half")
+![ Lorem ipsum 15 ](php.jpg?class="half")
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit a libero congue molestie. Integer ipsum massa, posuere nec massa eu, dapibus volutpat justo. Nullam enim dolor, scelerisque non dui et, ornare ultricies enim. Mauris sed felis sem. Praesent aliquam quam nec diam mollis ultrices. Nunc mattis pretium tellus, et luctus augue commodo sed. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut orci tortor, malesuada ac mauris sit amet, ornare sollicitudin massa.
 
@@ -165,12 +164,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet velit 
 
 ##### Wide
 
-![Lorem ipsum](php.jpg?class="wide")
+![Lorem ipsum 16](php.jpg?class="wide")
 
 <div class="clearfix"></div> 
 
 ##### Class and style
 
-![Lorem ipsum](php.jpg?class="half my-class"&style="background: #cde; padding-right: 2em;")
+![Lorem ipsum 17](php.jpg?class="half my-class"&style="background: #cde; padding-right: 2em;")
 
 <div class="clearfix"></div> 

@@ -25,12 +25,10 @@ To use them, as always, just put the name of the theme in the
 book's `config.yml`:
 
 ~~~.yaml
-# <book-dir>/config.yml 
+# <book-dir>/config.yml
 book:
-    ....
     editions:
         <edition-name>
-            ...
             theme: TrefoilTwo
 ~~~
 
@@ -125,9 +123,9 @@ packed into the final book for a given edition with the following configuration:
 ~~~.yaml
 book:
     editions:
-        <edition-name>:
-            include_fonts:  true
-            fonts: 
+        edition-name:
+            include_fonts: true
+            fonts:
                 - Inconsolata-Regular
                 - Inconsolata-Bold
 ~~~

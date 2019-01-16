@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
  *
@@ -12,20 +13,34 @@ namespace Trefoil\Console\Command;
 use Easybook\Console\Command\AboutCommand as EasybookAboutCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Trefoil\DependencyInjection\Application;
 
+/**
+ * Class TrefoilAboutCommand
+ *
+ * @package Trefoil\Console\Command
+ */
 class TrefoilAboutCommand extends EasybookAboutCommand
 {
     private $appVersion;
 
-    public function __construct($trefoilVersion, $easybookVersion)
+    /**
+     * TrefoilAboutCommand constructor.
+     *
+     * @param string $trefoilVersion
+     * @param string $easybookVersion
+     */
+    public function __construct(string $trefoilVersion, string $easybookVersion)
     {
         $this->appVersion = $trefoilVersion;
         
         parent::__construct($easybookVersion);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $commandHelp = <<<COMMAND_HELP
 

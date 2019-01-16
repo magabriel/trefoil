@@ -6,22 +6,28 @@ or to ease applying advanced formatting.
  
 {{ itemtoc() }}
 
-{{ file('plugins-DropCapsPlugin.md') }}
+{{ fragment('plugins-DropCapsPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-FootnotesExtraPlugin.md') }}
+{{ fragment('plugins-FootnotesExtraPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-FootnotesExtendPlugin.md') }}
+{{ fragment('plugins-FootnotesExtendPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-HtmlTweaksPlugin.md') }}
+{{ fragment('plugins-HtmlTweaksPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-ImageExtraPlugin.md') }}
+{{ fragment('plugins-IllustrationsPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-KindleTweaksPlugin.md') }}
+{{ fragment('plugins-ImageExtraPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-ManualTitleLabelsPlugin.md') }}
+{{ fragment('plugins-KindleTweaksPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-TableExtraPlugin.md') }}
+{{ fragment('plugins-LiteralListsPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-TypographyPlugin.md') }}
+{{ fragment('plugins-ManualTitleLabelsPlugin.md', {}, {"pagebreak": true}) }}
 
-{{ file('plugins-TwigExtensionPlugin.md') }}
+{{ fragment('plugins-TableExtraPlugin.md', {}, {"pagebreak": true}) }}
+
+{{ fragment('plugins-TabularListsPlugin.md', {}, {"pagebreak": true}) }}
+
+{{ fragment('plugins-TypographyPlugin.md', {}, {"pagebreak": true}) }}
+
+{{ fragment('plugins-TwigExtensionPlugin.md', {}, {"pagebreak": true}) }}

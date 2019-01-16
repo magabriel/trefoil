@@ -1,0 +1,6 @@
+<div class="illustration{{ item.classes ? ' '~item.classes : '' }}" id="{{ item.slug }}">
+<blockquote>
+  <div class="caption" markdown="1">{{ item.label ? item.label~'. ' : '' }}{{ item.caption|trim('.') }}<hr/></div>
+  <div class="content" markdown="1">{{ item.content }}</div>
+</blockquote>
+</div>
