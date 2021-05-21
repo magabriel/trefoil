@@ -141,6 +141,12 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                 break;
         }
 
+        if ($this->getEditionOption('use_kdp_style_footnotes')) {
+            if ($this->format == 'Epub' || $this->format == 'Mobi') {
+                $this->addEpubFootnotesAttributes();
+            }
+        }
+
         // look if we need to remove the footnotes book item
         $this->removeUnneededFootnotesItem();
     }
@@ -294,6 +300,45 @@ class FootnotesExtendPlugin extends BasePlugin implements EventSubscriberInterfa
                     $matches['prev'],
                     $matches['href'],
                     $matches['post'],
+                    $newNumber);
+
+                return $html;
+            },
+            $content);
+
+        $this->item['content'] = $content;
+    }
+
+    /**
+     * Add the EPUB footnotes attribute to the footnotes references.
+     */
+    protected function addEpubFootnotesAttributes()
+    {
+        $content = $this->item['content'];
+
+        $regExp = '/';
+        $regExp .= '<sup id="(?<supid>fnref.?-.*)">';
+        $regExp .= '<a(?<prev>.*)href="#(?<href>fn-.*)"(?<post>.*)>(?<number>.*)<\/a>';
+        $regExp .= '/Ums'; // Ungreedy, multiline, dotall
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                $newNumber = $this->app['publishing.footnotes.items'][$matches['href']]['new_number'];
+
+                // add the attribute only if not already present
+                if (strpos('epub:type', $matches['prev']) === false ||
+                    strpos('epub:type', $matches['post']) === false ) {
+                    $epubAtrribute = ' epub:type="noteref"';
+                }
+
+                $html = sprintf(
+                    '<sup id="%s"><a%shref="#%s"%s%s>%s</a>',
+                    $matches['supid'],
+                    $matches['prev'],
+                    $matches['href'],
+                    $matches['post'],
+                    $epubAtrribute,
                     $newNumber);
 
                 return $html;
