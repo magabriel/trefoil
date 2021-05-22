@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Helpers\LinkChecker;
 use Trefoil\Plugins\BasePlugin;
 use Trefoil\Util\SimpleReport;
+use Trefoil\Util\Toolkit;
 
 /**
  * Plugin to check internal and external links in book.
@@ -71,7 +72,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
         $this->links = array_merge_recursive($this->links, $links);
 
         // retrieve all the internal link targets for this item
-        $linkTargets = $this->findLinkTargets($this->item['content']);
+        $linkTargets = $this->findLinkTargets($this->item);
         $this->linkTargets = array_merge_recursive($this->linkTargets, $linkTargets);
     }
 
@@ -107,7 +108,8 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
             ],
         ];
 
-        preg_match_all('/<a .*href="(?<uri>.*)".*>(?<text>.*)<\/a>/Ums', $content, $matches, PREG_SET_ORDER);
+        // Retrieve all links that are not garbled
+        preg_match_all('/<a .*href="(?<uri>[^(&\#)].*)".*>(?<text>.*)<\/a>/Ums', $content, $matches, PREG_SET_ORDER);
 
         /** @var string[] $matches */
         if ($matches) {
@@ -118,7 +120,7 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                     'uri'  => $match['uri'],
                 ];
 
-                if ('#' === substr($match['uri'], 0, 1)) {
+                if ('http' !== substr($match['uri'], 0, 4)) {
                     $links['internal'][$xref][] = $link;
                 } else {
                     $links['external'][$xref][] = $link;
@@ -132,18 +134,19 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
     /**
      * Extract all possible link targets in content
      *
-     * @param string $content
+     * @param item array
      * @return array
      */
-    protected function findLinkTargets($content): array
+    protected function findLinkTargets($item): array
     {
         $linkTargets = [];
 
         /** @var string[][] $matches */
-        preg_match_all('/<.*id="(?<id>.*)".*>/Ums', $content, $matches);
+        preg_match_all('/<.*id="(?<id>.*)".*>/Ums', $item['content'], $matches);
 
         foreach ($matches['id'] as $match) {
             $linkTargets[] = $match;
+            $linkTargets[] = $item['page_name'].'.html#'.$match;
         }
 
         return $linkTargets;
@@ -158,7 +161,11 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         foreach ($this->links['internal'] as $xref => $links) {
             foreach ($links as $index => $link) {
-                if (!in_array(substr($link['uri'], 1), $this->linkTargets, true)) {
+                $theLink = $link['uri'];
+                if (Toolkit::stringStartsWith($theLink, '#')) {
+                    $theLink = substr($theLink, 1);
+                }
+                if (!in_array($theLink, $this->linkTargets, true)) {
                     $this->links['internal'][$xref][$index]['status'] = 'Not found';
                     $errors = true;
                 } else {
