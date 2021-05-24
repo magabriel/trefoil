@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.3",
         "easybook/easybook": "dev-upgrade-versions",
         "symfony/dom-crawler": "^2.3",
         "symfony/css-selector": "^2.3",
