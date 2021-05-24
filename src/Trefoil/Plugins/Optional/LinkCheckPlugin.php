@@ -149,7 +149,9 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
 
         foreach ($matches['id'] as $match) {
             $linkTargets[] = $match;
-            $linkTargets[] = $item['page_name'].'.html#'.$match;
+            if (isset($item['page_name'])) {
+                $linkTargets[] = $item['page_name'].'.html#'.$match;
+            }
         }
 
         return $linkTargets;

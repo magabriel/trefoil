@@ -32,7 +32,7 @@ class TrefoilVersionCommandTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
 
         // create the console application and add the tested command
@@ -45,7 +45,7 @@ class TrefoilVersionCommandTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
 
     }
@@ -69,8 +69,8 @@ class TrefoilVersionCommandTest extends TestCase
          */
         $app = $command->getApp();
 
-        static::assertContains('easybook installed version: ' . $app->getVersion(), $tester->getDisplay());
-        static::assertContains('trefoil  installed version: ' . $app->getMyVersion(), $tester->getDisplay());
+        static::assertStringContainsString('easybook installed version: ' . $app->getVersion(), $tester->getDisplay());
+        static::assertStringContainsString('trefoil  installed version: ' . $app->getMyVersion(), $tester->getDisplay());
     }
 
 }
