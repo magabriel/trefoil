@@ -108,8 +108,8 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
             ],
         ];
 
-        // Retrieve all links that are not garbled
-        preg_match_all('/<a .*href="(?<uri>[^(&\#)].*)".*>(?<text>.*)<\/a>/Ums', $content, $matches, PREG_SET_ORDER);
+        // Retrieve all links
+        preg_match_all('/<a .*href="(?<uri>.*)".*>(?<text>.*)<\/a>/Ums', $content, $matches, PREG_SET_ORDER);
 
         /** @var string[] $matches */
         if ($matches) {
@@ -120,10 +120,13 @@ class LinkCheckPlugin extends BasePlugin implements EventSubscriberInterface
                     'uri'  => $match['uri'],
                 ];
 
-                if ('http' !== substr($match['uri'], 0, 4)) {
-                    $links['internal'][$xref][] = $link;
-                } else {
+                if (Toolkit::stringStartsWith($match['uri'], 'http')) {
                     $links['external'][$xref][] = $link;
+                } else {
+                    // Ignore garbled links
+                    if (!Toolkit::stringStartsWith($match['uri'], '&#')) {
+                        $links['internal'][$xref][] = $link;
+                    }
                 }
             }
         }
