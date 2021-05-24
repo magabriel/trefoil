@@ -20,11 +20,11 @@ use Trefoil\Helpers\DropCaps;
  */
 class DropCapsTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 

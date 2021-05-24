@@ -72,7 +72,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $delete = true;
 

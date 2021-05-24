@@ -14,11 +14,11 @@ use PHPUnit\Framework\TestCase;
 class TableTest extends TestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 

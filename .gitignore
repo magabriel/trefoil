@@ -4,4 +4,6 @@ app/Cache
 vendor
 
 *debuglog.txt
+.phpunit.result.cache
+
 

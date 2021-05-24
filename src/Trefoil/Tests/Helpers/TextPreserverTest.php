@@ -27,7 +27,7 @@ class TextPreserverTest extends TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->object = new TextPreserver;
     }
@@ -36,7 +36,7 @@ class TextPreserverTest extends TestCase
      * Tears down the fixture, for example, closes a network connection.
      * This method is called after a test is executed.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
 
     }
@@ -81,8 +81,8 @@ TEXT;
         $this->object->setText($markdown);
         $this->object->preserveMarkdowmCodeBlocks();
 
-        static::assertNotContains('~~~', $this->object->getText());
-        static::assertNotContains('`', $this->object->getText());
+        static::assertStringNotContainsString('~~~', $this->object->getText());
+        static::assertStringNotContainsString('`', $this->object->getText());
 
         $this->object->restore();
         static::assertEquals($markdown, $this->object->getText());
@@ -97,8 +97,8 @@ TEXT;
         $this->object->setText($html);
         $this->object->preserveHtmlTags(['a']);
 
-        static::assertNotContains('Lorem', $this->object->getText());
-        static::assertNotContains('ipsum', $this->object->getText());
+        static::assertStringNotContainsString('Lorem', $this->object->getText());
+        static::assertStringNotContainsString('ipsum', $this->object->getText());
 
         $this->object->restore();
         static::assertEquals($html, $this->object->getText());
@@ -113,10 +113,10 @@ TEXT;
         $this->object->setText($html);
         $this->object->preserveHtmlTags(['a']);
 
-        static::assertNotContains('Lorem', $this->object->getText());
-        static::assertNotContains('ipsum', $this->object->getText());
-        static::assertNotContains('dolor', $this->object->getText());
-        static::assertNotContains('span', $this->object->getText());
+        static::assertStringNotContainsString('Lorem', $this->object->getText());
+        static::assertStringNotContainsString('ipsum', $this->object->getText());
+        static::assertStringNotContainsString('dolor', $this->object->getText());
+        static::assertStringNotContainsString('span', $this->object->getText());
 
         $this->object->restore();
         static::assertEquals($html, $this->object->getText());
