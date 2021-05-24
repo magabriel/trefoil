@@ -4,14 +4,14 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73c5623dbc8f18692311e50d1ae1c61c",
+    "content-hash": "3e1b07619511e8c867b9db56e76948d4",
     "packages": [
         {
             "name": "easybook/easybook",
             "version": "dev-upgrade-versions",
             "source": {
                 "type": "git",
-                "url": "https://github.com/magabriel/easybook.git",
+                "url": "git@github.com:magabriel/easybook.git",
                 "reference": "c0a9dcb5ee7250ffb8dcba43855c5cf8c68c63c4"
             },
             "dist": {
@@ -69,9 +69,6 @@
                 "pdf",
                 "publish"
             ],
-            "support": {
-                "source": "https://github.com/magabriel/easybook/tree/upgrade-versions"
-            },
             "time": "2019-01-15T17:23:35+00:00"
         },
         {
@@ -3030,7 +3027,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2"
+        "php": ">=7.3"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
