@@ -28,10 +28,13 @@
 
     </metadata>
 
+{% set hasHtmlToc = false %}
+
     <manifest>
         <item id="titlepage" href="titlepage.html" media-type="application/xhtml+xml"/>
 {% for item in app['publishing.items'] %}
         <item id="{{ item.page_name }}" href="{{ item.page_name }}.html" media-type="application/xhtml+xml" />
+{% set hasHtmlToc = hasHtmlToc or (item.page_name == 'toc')  %}
 {% endfor %}
 {% if edition.include_styles %}
         <item id="stylesheet" href="css/easybook.css" media-type="text/css" />
@@ -64,6 +67,9 @@
     <guide>
         <reference href="titlepage.html" type="cover" title="Cover"/>
         <reference href="{{ startReading }}" type="text" title="StartReading"></reference>
+{% if hasHtmlToc %}
+        <reference href="toc.html" type="toc" title="Table of contents"/>
+{% endif%}
     </guide>
 
 </package>

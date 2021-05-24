@@ -27,12 +27,18 @@ use Trefoil\Util\Toolkit;
  */
 class Epub2Publisher extends HtmlPublisher
 {
-    // 'toc' content type usually makes no sense in epub books (see below)
     // 'cover' is a very special content for epub books
-    protected $excludedElements = ['cover', 'toc'];
+    protected $excludedElements = ['cover'];
 
     public function loadContents(): void
     {
+        /* 'toc' content type usually makes no sense in epub books (see below)
+         * so exclude it if not explicitly requested
+         */
+        if (!$this->app->edition('include_html_toc')) {
+            $this->excludedElements[] = 'toc';
+        }
+
         // strip excluded elements before loading book contents
         $contents = [];
         /** @var array[] $content */

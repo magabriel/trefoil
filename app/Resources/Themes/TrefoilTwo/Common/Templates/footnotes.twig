@@ -5,10 +5,22 @@
 
     <hr />
     <ol>
-    {% for footnote in app['publishing.footnotes.items'] %}
-    <li id="{{ footnote.id }}">
-        <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote" class="footnote-backref">[&#8617;]</a></p>
-    </li>
-    {% endfor %}
+        {% for footnote in app['publishing.footnotes.items'] %}
+            {% if edition.use_kdp_style_footnotes %}
+                <li>
+                    <aside id="{{ footnote.id }}" epub:type="footnote">
+                        <p>{{ footnote.text }}
+                            {% if "<a " in footnote.text %}<br/>
+                                <span>{{ app.labels.label.kdp_footnote_has_link | default('-- Click on "go to footnotes" to follow the note link --') }}</span>
+                            {% endif %}</p>
+                        <a href="#{{ footnote.backref }}" rev="footnote" class="footnote-backref">[&#8617;]</a>
+                    </aside>
+                </li>
+            {% else %}
+                <li id="{{ footnote.id }}">
+                    <p>{{ footnote.text }}&#160;<a href="#{{ footnote.backref }}" rev="footnote" class="footnote-backref">[&#8617;]</a></p>
+                </li>
+            {% endif %}
+        {% endfor %}
     </ol>
 </div>

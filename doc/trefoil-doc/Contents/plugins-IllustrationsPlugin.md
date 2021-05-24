@@ -24,9 +24,6 @@ book:
         <edition-name>
             plugins:
                 enabled: [ Illustrations ]
-                options:
-                    FootnotesExtend:
-                        type: end  # (end, inject, item, inline)  
 ~~~
 
 ### Description

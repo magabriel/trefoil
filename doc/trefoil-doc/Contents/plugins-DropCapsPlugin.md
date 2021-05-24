@@ -20,7 +20,7 @@ book:
                         levels:     [1]           
                         mode:       letter        
                         length:     1             
-                        coverage:   ['chapter']   
+                        elements:   ['chapter']   
 ~~~ 
 
 where the options are:
@@ -28,7 +28,7 @@ where the options are:
 - `levels`: The heading levels to add drop caps after. Values 1 to 6 (default: 1).
 - `mode`: Values `letter` or `word` (default: `letter`).
 - `length`: Number of letters or words to turn into drop caps (default: 1).
-- `coverage`: Array of book elements to process (default: ['chapter']).   
+- `elements`: Array of book elements to process (default: ['chapter']).   
     
     
 ### Description

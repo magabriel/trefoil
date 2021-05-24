@@ -2,6 +2,26 @@
 
 {{ itemtoc() }}
 
+Content exclusion
+-----------------
+
+Some kinds of contents do not make sense for certain edition formats. 
+They will be automatically excluded:
+
+- `epub` ebooks usually do not include a visible table of contents (HTML TOC), 
+  as reader apps and devices heavily rely on the navigational TOC. But it could 
+  make sense to include it on certain situations, so a `config.yml` parameter
+  could be added to explicitly request it:
+
+~~~.yaml
+# config.yml
+book:
+    editions:
+        ebook:
+            format: epub
+            include_html_toc: true # An HTML TOC will be included
+~~~  
+
 Content filtering
 -----------------
  

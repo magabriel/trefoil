@@ -112,6 +112,7 @@ class EbookRenamePlugin extends BasePlugin implements EventSubscriberInterface
                 'book' => [
                     'slug' => $this->app['publishing.book.slug'],
                 ],
+                'edition' => $this->app['publishing.edition'],
             ],
         ];
 

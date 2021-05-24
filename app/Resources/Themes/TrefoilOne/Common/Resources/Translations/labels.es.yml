@@ -63,3 +63,5 @@ label:
     series:                 'Colección'
     publisher:              'Editorial'
     publishing_label:       'Sello editorial'
+    kdp_footnote_has_link:  '[Esta nota al pie contiene un enlace. Pulse en "ir a las notas al pie" para seguirlo]'
+
