@@ -98,8 +98,8 @@ abstract class BookPublishingAllTestCase extends TestCase
     /**
      * Fixtures provider.
      *
-     * @throws \Exception
      * @return array
+     * @throws \Exception
      */
     public function bookProvider(): array
     {
@@ -203,7 +203,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         // look for config.yml modification
         $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';
         if (file_exists($expectedBookConfigFile)) {
-            static::assertFileEquals(
+            static::assertFileEquivalent(
                 $expectedBookConfigFile,
                 $bookConfigFile,
                 'Book config.yml not modified correctly');
@@ -238,7 +238,7 @@ abstract class BookPublishingAllTestCase extends TestCase
                 // so do nothing
 
             } else {
-                static::assertFileEquals(
+                static::assertFileEquivalent(
                     $thisBookDir.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
                     $file->getPathname(),
                     sprintf("'%s' file not properly generated", $file->getPathname()));
@@ -257,6 +257,38 @@ abstract class BookPublishingAllTestCase extends TestCase
         }
     }
 
+    static function assertFileEquivalent(string $expected,
+                                         string $actual,
+                                         string $message = '',
+                                         bool $canonicalize = false,
+                                         bool $ignoreCase = false): void
+    {
+        if (pathinfo($expected, PATHINFO_EXTENSION) === 'html') {
+            static::assertFileExists($expected, $message);
+            static::assertFileExists($actual, $message);
+
+            $options = [
+                'drop-empty-elements' => false,
+                'drop-empty-paras'    => false,
+                'escape-scripts'      => false,
+                'fix-backslash'       => false,
+                'fix-style-tags'      => false,
+                'fix-uri'             => false,
+                'lower-literals'      => false,
+                'skip-nested'         => false,
+            ];
+
+            $expectedContents = tidy_repair_string(file_get_contents($expected));
+            $actualContents = tidy_repair_string(file_get_contents($actual));
+
+            static::assertEquals($expectedContents, $actualContents);
+
+            return;
+        }
+
+        self::assertFileEquals($expected, $actual, $message, $canonicalize, $ignoreCase);
+    }
+
     /**
      * Assert that all generated files have the expected contents.
      *
@@ -265,14 +297,15 @@ abstract class BookPublishingAllTestCase extends TestCase
      * @param string $zipName
      * @apram string $zipName
      */
-    protected function checkGeneratedFiles($dirExpected,
-                                           $dirGenerated,
-                                           $zipName): void
+    protected
+    function checkGeneratedFiles($dirExpected,
+                                 $dirGenerated,
+                                 $zipName): void
     {
         $genFiles = Finder::create()->files()->notName('.gitignore')->in($dirGenerated);
 
         foreach ($genFiles as $genFile) {
-            static::assertFileEquals(
+            static::assertFileEquivalent(
                 $dirExpected.'/'.$genFile->getRelativePathname(),
                 $genFile->getPathname(),
                 sprintf(
@@ -288,8 +321,9 @@ abstract class BookPublishingAllTestCase extends TestCase
      * @param string $dirExpected
      * @param string $dirGenerated
      */
-    protected function checkForMissingFiles($dirExpected,
-                                            $dirGenerated): void
+    protected
+    function checkForMissingFiles($dirExpected,
+                                  $dirGenerated): void
     {
         $expectedFiles = Finder::create()->files()->notName('.gitignore')->in($dirExpected);
 
