@@ -16,10 +16,10 @@ book:
         - { element: edition }
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2-ebook.md,     editions: [ebook] }
-        - { element: chapter, number: 3, content: chapter3-not-ebook.md, editions: [!ebook] }
+        - { element: chapter, number: 3, content: chapter3-not-ebook.md, editions: [not-ebook] }
         - { element: chapter, number: 4, content: chapter4-epub.md,      formats: [epub] }
-        - { element: chapter, number: 5, content: chapter5-not-epub.md,  formats: [!epub] }
-        - { element: chapter, number: 6, content: chapter6-not-ebook-not-mobi.md,  editions: [!ebook], formats: [!mobi] }
+        - { element: chapter, number: 5, content: chapter5-not-epub.md,  formats: [not-epub] }
+        - { element: chapter, number: 6, content: chapter6-not-ebook-not-mobi.md,  editions: [not-ebook], formats: [not-mobi] }
      
     editions:
         ebook:

@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
@@ -134,13 +135,13 @@ abstract class BookPublishingAllTestCase extends TestCase
 
             // look for and publish all the book editions
             $bookConfigFile = $this->fixturesDir.'/'.$slug.'/input/config.yml';
+            $bookConfig = Yaml::parse(file_get_contents($bookConfigFile));
 
-            $bookConfig = Yaml::parse($bookConfigFile);
             /** @var string[] $editions */
             $editions = $bookConfig['book']['editions'];
 
             foreach ($editions as $editionName => $editionConfig) {
-                $books[] = [
+                $books[$slug.' '. $editionName] = [
                     $slug,
                     $editionName,
                 ];
@@ -198,7 +199,9 @@ abstract class BookPublishingAllTestCase extends TestCase
             $output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, true);
         }
 
-        $this->console->find('publish')->run($input, $output);
+//        $this->console->find('publish')->run($input, $output);
+        $command = $this->console->find('publish');
+        $command->run($input, $output);
 
         // look for config.yml modification
         $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';

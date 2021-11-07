@@ -90,7 +90,7 @@ class IndexLoader
         $this->loaded = false;
 
         if (file_exists($fileName)) {
-            $indexDefinition = Yaml::parse($fileName) ?: [];
+            $indexDefinition = Yaml::parse(file_get_contents($fileName)) ?: [];
             $this->loaded = true;
         } else {
             $indexDefinition = [];

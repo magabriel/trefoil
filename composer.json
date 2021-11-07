@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": ">=7.3",
-        "easybook/easybook": "dev-upgrade-versions",
+        "easybook/easybook": "dev-master",
         "symfony/dom-crawler": "^2.3",
         "symfony/css-selector": "^2.3",
         "michelf/php-smartypants": "^1.8"

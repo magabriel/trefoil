@@ -107,7 +107,7 @@ abstract class BasePlugin
      */
     protected function progressStart(int $limit): void
     {
-        $this->app['console.progress']->start($this->output, $limit);
+        $this->app['console.progress']->start($limit);
     }
 
     protected function progressAdvance(): void

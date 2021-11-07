@@ -6,7 +6,7 @@
 
 ![This is image 2 (jpg)](image2.jpg)
 
-![This is image 3 (jpeg)](image3.jpeg)
+![This is image 3 MISSING (jpeg)](image3.jpeg)
 
 ## Emphasis marks not processed
 

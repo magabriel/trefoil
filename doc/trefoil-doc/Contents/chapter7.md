@@ -60,14 +60,18 @@ For a content item, the following options can be added:
 - `formats`: an array of the allowed formats for that item. Only editions with these formats will
    contain the item.
    
-Prefixing the edition or format value witn `!` will negate it. 
+Prefixing the edition or format value with `not-` will negate it. 
+
+N> ##### Note
+N> In previous versions the negation prefix was '!'. This was changed because of a conflict
+N> with the new "custom tags" feature of the Yaml parser.
 
 Example:
 
 - `editions: [ebook, kindle]` ==> only `ebook` and `kindle` editions.
-- `editions: [!print]` ==> all editions except `print`.
+- `editions: [not-print]` ==> all editions except `print`.
 - `formats: [epub, mobi]` ==> only editions with `epub` or `mobi` format.
-- `formats: [!pdf]` ==> all editions except those with `pdf` format.
+- `formats: [not-pdf]` ==> all editions except those with `pdf` format.
 
 If both `editions` and `formats` are used in the same item, it will only be included
 in editions that fulfill both sets of conditions.
