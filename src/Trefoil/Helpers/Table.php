@@ -52,18 +52,11 @@ class Table extends \ArrayObject
     }
 
     /**
-     * @return string Table rendered to HTML
-     */
-    public function toHtml(): string
-    {
-        return $this->renderTableToHtml();
-    }
-
-    /**
      * @param     $htmlTable
      * @param int $flags
      */
-    protected function parseHtmlTable($htmlTable, $flags = self::CREATE_TBODY): void
+    protected function parseHtmlTable($htmlTable,
+                                      $flags = self::CREATE_TBODY): void
     {
         // init the ArrayObject
         $this->exchangeArray([]);
@@ -83,181 +76,13 @@ class Table extends \ArrayObject
     }
 
     /**
-     * @param string $contents
-     * @param int    $column
-     */
-    public function addHeadingCell($contents, $column = null): void
-    {
-        if ($column === null) {
-            $column = count($this['thead'][0]);
-        }
-
-        $this['thead'][0][$column] = [
-            'tag'      => 'th',
-            'contents' => $contents
-        ];
-    }
-
-    /**
-     * @param int $column
-     *
-     * @return null|array cell
-     */
-    public function getHeadingCell($column): ?array
-    {
-        return $this['thead'][0][$column] ?? null;
-    }
-
-    /**
-     * @param array $cell
-     * @param int   $column
-     */
-    public function setHeadingCell(array $cell, $column): void
-    {
-        $this['thead'][0][$column] = $cell;
-    }
-
-    public function addBodyRow(): void
-    {
-        if (!isset($this['tbody'])) {
-            $this['tbody'] = [];
-        }
-
-        $this['tbody'][] = [];
-    }
-
-    /**
-     * @return int
-     */
-    public function getBodyRowsCount()
-    {
-        if (isset($this['tbody'])) {
-            return count($this['tbody']);
-        }
-
-        return 0;
-    }
-
-    /**
-     * @param $row
-     * @return int
-     */
-    public function getBodyCellsCount($row)
-    {
-        if (isset($this['tbody'][$row])) {
-            return count($this['tbody'][$row]);
-        }
-
-        return 0;
-    }
-
-    /**
-     * @param      $contents
-     * @param null $row
-     * @param null $column
-     *
-     * @return array
-     */
-    public function addBodyCell($contents, $row = null, $column = null): array
-    {
-        if (!isset($this['tbody'])) {
-            $this['tbody'][] = [];
-        }
-
-        if ($row === null) {
-            $row = count($this['tbody']) - 1;
-        }
-
-        if ($column === null) {
-            $column = count($this['tbody'][$row]);
-        }
-
-        // modify if existing, new otherwise
-        if (isset($this['tbody'][$row][$column])) {
-            $this['tbody'][$row][$column]['contents'] = $contents;
-        } else {
-            $this['tbody'][$row][$column] = [
-                'tag'      => 'td',
-                'contents' => $contents
-            ];
-        }
-
-        return ['row' => $row, 'column' => $column];
-    }
-
-    /**
-     * @param $extra
-     * @param $row
-     * @param $column
-     */
-    public function setBodyCellExtra($extra, $row, $column): void
-    {
-        $this['tbody'][$row][$column]['extra'] = $extra;
-    }
-
-    /**
-     * @param $row
-     * @param $column
-     * @return |null
-     */
-    public function getBodyCellExtra($row, $column)
-    {
-        if (!isset($this['tbody'][$row][$column]['extra'])) {
-            return null;
-        }
-
-        return $this['tbody'][$row][$column]['extra'];
-    }
-
-    /**
-     * @param $colspan
-     * @param $row
-     * @param $column
-     */
-    public function setColspan($colspan, $row, $column): void
-    {
-        $this['tbody'][$row][$column]['colspan'] = $colspan;
-    }
-
-    /**
-     * @param $rowsspan
-     * @param $row
-     * @param $column
-     */
-    public function setRowsspan($rowsspan, $row, $column): void
-    {
-        $this['tbody'][$row][$column]['rowspan'] = $rowsspan;
-    }
-
-
-    /**
-     * @param $row
-     * @param $column
-     *
-     * @return null|array cell
-     */
-    public function getBodyCell($row, $column): ?array
-    {
-        return $this['tbody'][$row][$column] ?? null;
-    }
-
-    /**
-     * @param array $cell
-     * @param $row
-     * @param $column
-     */
-    public function setBodyCell(array $cell, $row, $column): void
-    {
-        $this['tbody'][$row][$column] = $cell;
-    }
-
-    /**
      * @param        $htmlTable
      * @param string $tag
      *
      * @return array of rows
      */
-    protected function extractHtmlRows($htmlTable, $tag = 'tbody'): array
+    protected function extractHtmlRows($htmlTable,
+                                       $tag = 'tbody'): array
     {
         // extract section
         $regExp = sprintf('/<%s>(?<contents>.*)<\/%s>/Ums', $tag, $tag);
@@ -292,7 +117,7 @@ class Table extends \ArrayObject
                     $cols[] = [
                         'tag'        => $matchCol['tag'],
                         'attributes' => $this->extractAttributes($matchCol['attr']),
-                        'contents'   => $matchCol['contents']
+                        'contents'   => $matchCol['contents'],
                     ];
                 }
             }
@@ -304,23 +129,32 @@ class Table extends \ArrayObject
     }
 
     /**
-     * @return bool True if the table does not have any rows
+     * @param string $string
+     *
+     * @return array of attributes
      */
-    public function isEmpty(): bool
+    protected function extractAttributes($string): array
     {
-        if (isset($this['thead']) && $this['thead']) {
-            return false;
+        $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
+        preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
+
+        $attributes = [];
+        /** @var array $attrMatches */
+        if ($attrMatches) {
+            foreach ($attrMatches as $attrMatch) {
+                $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
+            }
         }
 
-        if (isset($this['tbody']) && $this['tbody']) {
-            return false;
-        }
+        return $attributes;
+    }
 
-        if (isset($this['table']) && $this['table']) {
-            return false;
-        }
-
-        return true;
+    /**
+     * @return string Table rendered to HTML
+     */
+    public function toHtml(): string
+    {
+        return $this->renderTableToHtml();
     }
 
     /**
@@ -351,7 +185,7 @@ class Table extends \ArrayObject
             return '';
         }
 
-        return '<table>' . $html . '</table>';
+        return '<table>'.$html.'</table>';
     }
 
     /**
@@ -371,13 +205,13 @@ class Table extends \ArrayObject
             /** @var array $row */
             foreach ($row as $col) {
                 if (!isset($col['ignore'])) {
-                    $rowspan = isset($col['rowspan']) ? sprintf('rowspan="%s"', $col['rowspan']) : '';
-                    $colspan = isset($col['colspan']) ? sprintf('colspan="%s"', $col['colspan']) : '';
+                    $rowspan = isset($col['rowspan']) ? sprintf(' rowspan="%s"', $col['rowspan']) : '';
+                    $colspan = isset($col['colspan']) ? sprintf(' colspan="%s"', $col['colspan']) : '';
 
-                    $attributes = isset($col['attributes']) ? $this->renderAttributes($col['attributes']) : '';
+                    $attributes = isset($col['attributes']) && $col['attributes']? ' '.$this->renderAttributes($col['attributes']) : '';
 
                     $html .= sprintf(
-                        '<%s %s %s %s>%s</%s>',
+                        '<%s%s%s%s>%s</%s>',
                         $col['tag'],
                         $rowspan,
                         $colspan,
@@ -389,43 +223,6 @@ class Table extends \ArrayObject
             }
 
             $html .= '</tr>';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return array of attributes
-     */
-    protected function extractAttributes($string): array
-    {
-        $regExp = '/(?<attr>.*)="(?<value>.*)"/Us';
-        preg_match_all($regExp, $string, $attrMatches, PREG_SET_ORDER);
-
-        $attributes = [];
-        /** @var array $attrMatches */
-        if ($attrMatches) {
-            foreach ($attrMatches as $attrMatch) {
-                $attributes[trim($attrMatch['attr'])] = $attrMatch['value'];
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * @param array $attributes
-     *
-     * @return string rendered attributes
-     */
-    protected function renderAttributes(array $attributes): string
-    {
-        $html = '';
-
-        foreach ($attributes as $name => $value) {
-            $html .= sprintf('%s="%s" ', $name, $value);
         }
 
         return $html;
@@ -448,7 +245,7 @@ class Table extends \ArrayObject
             '&ldquo;',
             '&#8220;',
             '&rdquo;',
-            '&#8221;'
+            '&#8221;',
         ];
 
         // several kinds of single quote character
@@ -517,7 +314,7 @@ class Table extends \ArrayObject
                             $newRows[$rowspanRow][$colIndex]['rowspan'] = 1;
 
                             // set vertical alignment to 'middle' for double quote or
-                            // 'top' for single quote 
+                            // 'top' for single quote
                             if (!isset($newRows[$rowspanRow][$colIndex]['attributes']['style'])) {
                                 $newRows[$rowspanRow][$colIndex]['attributes']['style'] = '';
                             } else {
@@ -538,6 +335,230 @@ class Table extends \ArrayObject
         }
 
         return $newRows;
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return string rendered attributes
+     */
+    protected function renderAttributes(array $attributes): string
+    {
+        $html = '';
+
+        foreach ($attributes as $name => $value) {
+            $html .= sprintf('%s="%s" ', $name, $value);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @param string   $contents
+     * @param int|null $column
+     * @param array    $attributes
+     */
+    public function addHeadingCell(string $contents,
+                                   int    $column = null,
+                                   array  $attributes = []): void
+    {
+        if ($column === null) {
+            $column = count($this['thead'][0]);
+        }
+
+        $this['thead'][0][$column] = [
+            'tag'      => 'th',
+            'contents' => $contents,
+            'attributes' => $attributes
+        ];
+    }
+
+    /**
+     * @param int $column
+     *
+     * @return null|array cell
+     */
+    public function getHeadingCell($column): ?array
+    {
+        return $this['thead'][0][$column] ?? null;
+    }
+
+    /**
+     * @param array $cell
+     * @param int   $column
+     */
+    public function setHeadingCell(array $cell,
+                                         $column): void
+    {
+        $this['thead'][0][$column] = $cell;
+    }
+
+    public function addBodyRow(): void
+    {
+        if (!isset($this['tbody'])) {
+            $this['tbody'] = [];
+        }
+
+        $this['tbody'][] = [];
+    }
+
+    /**
+     * @return int
+     */
+    public function getBodyRowsCount()
+    {
+        if (isset($this['tbody'])) {
+            return count($this['tbody']);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param $row
+     * @return int
+     */
+    public function getBodyCellsCount($row)
+    {
+        if (isset($this['tbody'][$row])) {
+            return count($this['tbody'][$row]);
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param string   $contents
+     * @param int|null $row
+     * @param int|null $column
+     * @param array    $attributes
+     * @return array
+     */
+    public function addBodyCell(string $contents,
+                                int    $row = null,
+                                int    $column = null,
+                                array  $attributes = []): array
+    {
+        if (!isset($this['tbody'])) {
+            $this['tbody'][] = [];
+        }
+
+        if ($row === null) {
+            $row = count($this['tbody']) - 1;
+        }
+
+        if ($column === null) {
+            $column = count($this['tbody'][$row]);
+        }
+
+        // modify if existing, new otherwise
+        if (isset($this['tbody'][$row][$column])) {
+            $this['tbody'][$row][$column]['contents'] = $contents;
+            $this['tbody'][$row][$column]['attributes'] = $attributes;
+        } else {
+            $this['tbody'][$row][$column] = [
+                'tag'        => 'td',
+                'contents'   => $contents,
+                'attributes' => $attributes,
+            ];
+        }
+
+        return ['row' => $row, 'column' => $column];
+    }
+
+    /**
+     * @param $extra
+     * @param $row
+     * @param $column
+     */
+    public function setBodyCellExtra($extra,
+                                     $row,
+                                     $column): void
+    {
+        $this['tbody'][$row][$column]['extra'] = $extra;
+    }
+
+    /**
+     * @param $row
+     * @param $column
+     * @return |null
+     */
+    public function getBodyCellExtra($row,
+                                     $column)
+    {
+        if (!isset($this['tbody'][$row][$column]['extra'])) {
+            return null;
+        }
+
+        return $this['tbody'][$row][$column]['extra'];
+    }
+
+    /**
+     * @param $colspan
+     * @param $row
+     * @param $column
+     */
+    public function setColspan($colspan,
+                               $row,
+                               $column): void
+    {
+        $this['tbody'][$row][$column]['colspan'] = $colspan;
+    }
+
+    /**
+     * @param $rowsspan
+     * @param $row
+     * @param $column
+     */
+    public function setRowsspan($rowsspan,
+                                $row,
+                                $column): void
+    {
+        $this['tbody'][$row][$column]['rowspan'] = $rowsspan;
+    }
+
+    /**
+     * @param $row
+     * @param $column
+     *
+     * @return null|array cell
+     */
+    public function getBodyCell($row,
+                                $column): ?array
+    {
+        return $this['tbody'][$row][$column] ?? null;
+    }
+
+    /**
+     * @param array $cell
+     * @param       $row
+     * @param       $column
+     */
+    public function setBodyCell(array $cell,
+                                      $row,
+                                      $column): void
+    {
+        $this['tbody'][$row][$column] = $cell;
+    }
+
+    /**
+     * @return bool True if the table does not have any rows
+     */
+    public function isEmpty(): bool
+    {
+        if (isset($this['thead']) && $this['thead']) {
+            return false;
+        }
+
+        if (isset($this['tbody']) && $this['tbody']) {
+            return false;
+        }
+
+        if (isset($this['table']) && $this['table']) {
+            return false;
+        }
+
+        return true;
     }
 }
 

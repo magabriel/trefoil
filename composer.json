@@ -31,7 +31,8 @@
         "michelf/php-smartypants": "^1.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^8",
+        "ext-tidy": "*"
     },
     "autoload": {
         "psr-0": {

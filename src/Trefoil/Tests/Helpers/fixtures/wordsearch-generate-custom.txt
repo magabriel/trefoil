@@ -1,0 +1,568 @@
+==== EXPECTED PUZZLE TEXT
+RPSW@WJLSU%GD@H
+EEHHCOOCUA%GCAZ
+LHTPQIERTYBLKF@
+ZOWZUOKNDSRMNV@
+ZIXRJNXDASIGKMB
+UZMBFRIVBRERDRZ
+PB@MUUYTYNVAAVJ
+HJNVRIWCETMHR@C
+DOHAVUDRGAXTVCT
+WUIGBXAIUEEM@%H
+JHY%KTQ@VSKIEYS
+XJYROPSZTVT%MYE
+NPGRFIMIMXO@TLZ
+PMBDMBNPGSUZWX@
+OONNWGRMN%HHUCG
+==== EXPECTED WORD LIST TEXT
+WORDSEARCH
+PUZZLE
+TESTING
+PHPUNIT
+GENERATOR
+==== EXPECTED SOLUTION TEXT
+.P...W.........
+E.H...O........
+L..P...R.......
+Z...U...D......
+Z....N...S.G...
+U.....I...E....
+P......T.N.A...
+........E...R..
+.......R...T.C.
+......A...E...H
+.....T...S.....
+....O...T......
+...R...I.......
+......N........
+.....G.........
+==== EXPECTED PUZZLE HTML
+<table>
+<tbody>
+<tr>
+<td>R</td>
+<td>P</td>
+<td>S</td>
+<td>W</td>
+<td>@</td>
+<td>W</td>
+<td>J</td>
+<td>L</td>
+<td>S</td>
+<td>U</td>
+<td>%</td>
+<td>G</td>
+<td>D</td>
+<td>@</td>
+<td>H</td>
+</tr>
+<tr>
+<td>E</td>
+<td>E</td>
+<td>H</td>
+<td>H</td>
+<td>C</td>
+<td>O</td>
+<td>O</td>
+<td>C</td>
+<td>U</td>
+<td>A</td>
+<td>%</td>
+<td>G</td>
+<td>C</td>
+<td>A</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>L</td>
+<td>H</td>
+<td>T</td>
+<td>P</td>
+<td>Q</td>
+<td>I</td>
+<td>E</td>
+<td>R</td>
+<td>T</td>
+<td>Y</td>
+<td>B</td>
+<td>L</td>
+<td>K</td>
+<td>F</td>
+<td>@</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>O</td>
+<td>W</td>
+<td>Z</td>
+<td>U</td>
+<td>O</td>
+<td>K</td>
+<td>N</td>
+<td>D</td>
+<td>S</td>
+<td>R</td>
+<td>M</td>
+<td>N</td>
+<td>V</td>
+<td>@</td>
+</tr>
+<tr>
+<td>Z</td>
+<td>I</td>
+<td>X</td>
+<td>R</td>
+<td>J</td>
+<td>N</td>
+<td>X</td>
+<td>D</td>
+<td>A</td>
+<td>S</td>
+<td>I</td>
+<td>G</td>
+<td>K</td>
+<td>M</td>
+<td>B</td>
+</tr>
+<tr>
+<td>U</td>
+<td>Z</td>
+<td>M</td>
+<td>B</td>
+<td>F</td>
+<td>R</td>
+<td>I</td>
+<td>V</td>
+<td>B</td>
+<td>R</td>
+<td>E</td>
+<td>R</td>
+<td>D</td>
+<td>R</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>P</td>
+<td>B</td>
+<td>@</td>
+<td>M</td>
+<td>U</td>
+<td>U</td>
+<td>Y</td>
+<td>T</td>
+<td>Y</td>
+<td>N</td>
+<td>V</td>
+<td>A</td>
+<td>A</td>
+<td>V</td>
+<td>J</td>
+</tr>
+<tr>
+<td>H</td>
+<td>J</td>
+<td>N</td>
+<td>V</td>
+<td>R</td>
+<td>I</td>
+<td>W</td>
+<td>C</td>
+<td>E</td>
+<td>T</td>
+<td>M</td>
+<td>H</td>
+<td>R</td>
+<td>@</td>
+<td>C</td>
+</tr>
+<tr>
+<td>D</td>
+<td>O</td>
+<td>H</td>
+<td>A</td>
+<td>V</td>
+<td>U</td>
+<td>D</td>
+<td>R</td>
+<td>G</td>
+<td>A</td>
+<td>X</td>
+<td>T</td>
+<td>V</td>
+<td>C</td>
+<td>T</td>
+</tr>
+<tr>
+<td>W</td>
+<td>U</td>
+<td>I</td>
+<td>G</td>
+<td>B</td>
+<td>X</td>
+<td>A</td>
+<td>I</td>
+<td>U</td>
+<td>E</td>
+<td>E</td>
+<td>M</td>
+<td>@</td>
+<td>%</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J</td>
+<td>H</td>
+<td>Y</td>
+<td>%</td>
+<td>K</td>
+<td>T</td>
+<td>Q</td>
+<td>@</td>
+<td>V</td>
+<td>S</td>
+<td>K</td>
+<td>I</td>
+<td>E</td>
+<td>Y</td>
+<td>S</td>
+</tr>
+<tr>
+<td>X</td>
+<td>J</td>
+<td>Y</td>
+<td>R</td>
+<td>O</td>
+<td>P</td>
+<td>S</td>
+<td>Z</td>
+<td>T</td>
+<td>V</td>
+<td>T</td>
+<td>%</td>
+<td>M</td>
+<td>Y</td>
+<td>E</td>
+</tr>
+<tr>
+<td>N</td>
+<td>P</td>
+<td>G</td>
+<td>R</td>
+<td>F</td>
+<td>I</td>
+<td>M</td>
+<td>I</td>
+<td>M</td>
+<td>X</td>
+<td>O</td>
+<td>@</td>
+<td>T</td>
+<td>L</td>
+<td>Z</td>
+</tr>
+<tr>
+<td>P</td>
+<td>M</td>
+<td>B</td>
+<td>D</td>
+<td>M</td>
+<td>B</td>
+<td>N</td>
+<td>P</td>
+<td>G</td>
+<td>S</td>
+<td>U</td>
+<td>Z</td>
+<td>W</td>
+<td>X</td>
+<td>@</td>
+</tr>
+<tr>
+<td>O</td>
+<td>O</td>
+<td>N</td>
+<td>N</td>
+<td>W</td>
+<td>G</td>
+<td>R</td>
+<td>M</td>
+<td>N</td>
+<td>%</td>
+<td>H</td>
+<td>H</td>
+<td>U</td>
+<td>C</td>
+<td>G</td>
+</tr>
+</tbody>
+</table>
+==== EXPECTED WORD LIST HTML
+<ul>
+<li>WORDSEARCH</li>
+<li>PUZZLE</li>
+<li>TESTING</li>
+<li>PHPUNIT</li>
+<li>GENERATOR</li>
+</ul>
+</body
+==== EXPECTED SOLUTION HTML
+<table>
+<tbody>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_begin .cell_diagonal_down">P</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_begin .cell_diagonal_down">W</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_end .cell_vertical">E</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">H</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">O</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_letter .cell_vertical">L</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">P</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">R</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_letter .cell_vertical">Z</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">U</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">D</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_letter .cell_vertical">Z</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">N</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">S</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_begin .cell_diagonal_up">G</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_letter .cell_vertical">U</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">I</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down .cell_diagonal_up">
+E</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_begin .cell_vertical">P</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_end .cell_diagonal_down">T</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">N</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">A</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">E</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">R</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">R</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_begin .cell_diagonal_up">T</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_down">C</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">A</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">E</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_end .cell_diagonal_down">H</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">T</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">S</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">O</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">T</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_end .cell_diagonal_up">R</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">I</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_letter .cell_diagonal_up">N</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+<tr>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_end .cell_diagonal_up">G</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+<td class=".cell_filler">&nbsp;</td>
+</tr>
+</tbody>
+</table>
