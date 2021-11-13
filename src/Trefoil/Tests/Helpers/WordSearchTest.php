@@ -16,6 +16,8 @@ class WordSearchTest extends TestCase
         $sut->setRandomSeed(5);
 
         $success = $sut->generate();
+        echo "\nErrors:\n".implode("\n", $sut->getErrors())."\n";
+
         self::assertTrue($success);
 
         $this->testFixture('wordsearch-generate-with-defaults.txt', $sut);
@@ -79,6 +81,8 @@ class WordSearchTest extends TestCase
 
         $words = ['wordsearch', 'puzzle', 'testing', 'phpunit', 'generator'];
         $success = $sut->generate(5, 5, $words);
+        echo "\nErrors:\n".implode("\n", $sut->getErrors())."\n";
+
         self::assertFalse($success);
 
     }
@@ -91,8 +95,25 @@ class WordSearchTest extends TestCase
         $words = ['wordsearch', 'puzzle', 'testing', 'phpunit', 'generator'];
 
         $success = $sut->generate(15, 15, $words, WordSearch::FILLER_LETTERS_ENGLISH.'@%');
+        echo "\nErrors:\n".implode("\n", $sut->getErrors())."\n";
+
         self::assertTrue($success);
 
         $this->testFixture('wordsearch-generate-custom.txt', $sut);
+    }
+
+    public function testGeneratCustomWithNumberOfWords()
+    {
+        $sut = new WordSearch();
+        $sut->setRandomSeed(17);
+
+        $words = ['wordsearch', 'puzzle', 'testing', 'phpunit', 'generator'];
+
+        $success = $sut->generate(15, 15, $words, WordSearch::FILLER_LETTERS_ENGLISH.'@%', 3);
+        echo "\nErrors:\n".implode("\n", $sut->getErrors())."\n";
+
+        self::assertTrue($success);
+
+        $this->testFixture('wordsearch-generate-custom-with-number-of-words.txt', $sut);
     }
 }

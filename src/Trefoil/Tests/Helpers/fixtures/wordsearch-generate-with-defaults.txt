@@ -167,126 +167,824 @@ Y.A.M....W
 <table>
 <tbody>
 <tr>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_end .cell_diagonal_down">Y</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_begin .cell_diagonal_down">T</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
+<td>
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-begin">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">C
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">X
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_begin .cell_vertical">T</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">A</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">U</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
+<td class="cell-letter cell-vertical-begin">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">O
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">H</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">D</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">E</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_begin .cell_diagonal_up">S</td>
-<td class=".cell_filler">&nbsp;</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">H
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">W
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">V
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up-end">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">U</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">S</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">S</td>
-<td class=".cell_letter .cell_diagonal_up">A</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_end .cell_diagonal_up">Y</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">L
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">R</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">E</td>
-<td class=".cell_letter .cell_diagonal_up">T</td>
-<td class=".cell_letter .cell_diagonal_down">D</td>
-<td class=".cell_letter .cell_diagonal_up">A</td>
-<td class=".cell_filler">&nbsp;</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">J
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">S</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_begin .cell_horizontal">S</td>
-<td class=".cell_letter .cell_diagonal_up .cell_horizontal">U</td>
-<td class=".cell_letter .cell_diagonal_down .cell_horizontal">
-N</td>
-<td class=".cell_letter .cell_diagonal_up .cell_horizontal">D</td>
-<td class=".cell_letter .cell_diagonal_down .cell_horizontal">
-A</td>
-<td class=".cell_end .cell_horizontal">Y</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">P
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal-begin">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up cell-horizontal">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down cell-horizontal">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up cell-horizontal">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down cell-horizontal">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">D</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_up">R</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_up">N</td>
-<td class=".cell_letter .cell_diagonal_down">D</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_end .cell_diagonal_down">Y</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_letter .cell_vertical">A</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_up">D</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_up">O</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_down">E</td>
-<td class=".cell_filler">&nbsp;</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">O
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_end .cell_vertical">Y</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_letter .cell_diagonal_up">A</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_begin .cell_diagonal_up">M</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_begin .cell_diagonal_down">W</td>
+<td class="cell-letter cell-vertical-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">L
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up-begin">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">K
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-end">
+<div class="cell-inner">W
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 <tr>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_end .cell_diagonal_up">Y</td>
-<td class=".cell_end .cell_horizontal">Y</td>
-<td class=".cell_letter .cell_horizontal">A</td>
-<td class=".cell_letter .cell_horizontal">D</td>
-<td class=".cell_letter .cell_horizontal">I</td>
-<td class=".cell_letter .cell_horizontal">R</td>
-<td class=".cell_begin .cell_horizontal">F</td>
-<td class=".cell_filler">&nbsp;</td>
-<td class=".cell_filler">&nbsp;</td>
+<td>
+<div class="cell-inner">C
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal-end">
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">Q
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td>
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>

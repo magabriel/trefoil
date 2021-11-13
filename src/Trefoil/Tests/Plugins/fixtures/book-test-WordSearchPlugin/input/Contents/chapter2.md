@@ -1,11 +1,14 @@
-# WordSearch solutions
+# WordSearch test words from file
 
-## 2
+## Puzzle 21
 
-{@ wordsearch_solution({id:2}) @}
-{@ wordsearch_wordlist({id:2}) @}
+{@ wordsearch({
+    id:21, 
+    seed: 9,
+    rows:30, 
+    cols: 30, 
+    word_file: 'words_a' ,
+    number_of_words: 30}) @}
 
-## 1 
+{@ wordsearch_wordlist({ id: 21 }) @}
 
-{@ wordsearch_solution({id:1}) @}
-{@ wordsearch_wordlist({id:1}) @}

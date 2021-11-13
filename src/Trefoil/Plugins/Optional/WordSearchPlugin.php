@@ -33,7 +33,7 @@ use Trefoil\Plugins\BasePlugin;
  */
 class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 {
-    protected static WordSearch $wordSearch;
+    protected static array $wordFiles = [];
 
     /**
      * @return array
@@ -59,6 +59,8 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $this->processTrefoilMarkers($content);
 
+        $this->savePluginOptions();
+
         $event->setItemProperty('original', $content);
 
     }
@@ -76,30 +78,51 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor = new TrefoilMarkerProcessor();
 
-        self::$wordSearch = new WordSearch();
+        $wordSearch = new WordSearch();
 
         $processor->registerMarker(
             'wordsearch',
-            function ($options = []) {
+            function ($options = []) use
+            (
+                $wordSearch
+            ) {
 
                 $id = $options['id'] ?? strval(microtime());
                 $rows = $options['rows'] ?? 15;
                 $cols = $options['cols'] ?? 15;
                 $filler = $options['filler'] ?? WordSearch::FILLER_LETTERS_ENGLISH;
+                $wordFile = $options['word_file'] ?? '';
+                $numberOfWords = $options['number_of_words'] ?? 0;
+                $seed = $options['seed'] ?? $id;
 
                 $words = WordSearch::DEFAULT_WORDS;
+                if ($wordFile) {
+                    $words = $this->readWordsFromFile($wordFile);
+                }
 
-                self::$wordSearch->setRandomSeed(56);
-                self::$wordSearch->generate($rows, $cols, $words, $filler);
+                $wordSearch->setRandomSeed($seed);
+                $success = $wordSearch->generate($rows, $cols, $words, $filler, $numberOfWords);
+
+                if (!$success) {
+                    $this->writeln(sprintf('ERROR: Puzzle %s generated with error.', $id), 'error');
+                }
+                if ($wordSearch->getErrors()) {
+                    foreach ($wordSearch->getErrors() as $error) {
+                        $this->writeln(sprintf('ERROR: Puzzle %s: %s', $id, $error), 'error');
+                    }
+                }
 
                 $items = $this->app['publishing.wordsearch.items'];
                 $items[$id] = [
-                    'solution' => self::$wordSearch->solutionAsHtml(),
-                    'wordlist' => self::$wordSearch->wordListAsHtml(),
+                    'solution' => $wordSearch->solutionAsHtml(),
+                    'wordlist' => [
+                        'sorted' => $wordSearch->wordListAsHtml(true),
+                        'plain'  => $wordSearch->wordListAsHtml(false),
+                    ],
                 ];
                 $this->app['publishing.wordsearch.items'] = $items;
 
-                return '<div class="wordsearch">'.self::$wordSearch->puzzleAsHtml().'</div>';
+                return '<div class="wordsearch">'.$wordSearch->puzzleAsHtml().'</div>';
             });
 
         $processor->registerMarker(
@@ -107,6 +130,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
             function ($options = []) {
 
                 $id = $options['id'] ?? null;
+                $sorted = $options['sorted'] ?? false;
 
                 $items = $this->app['publishing.wordsearch.items'];
                 if ($id) {
@@ -117,7 +141,9 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                         '==== ERROR: wordsearch_wordlist(): No puzzle found.';
                 }
 
-                return '<div class="wordsearch-wordlist">'.$wordlist.'</div>';
+                $theWordlist = $sorted ? $wordlist['sorted'] : $wordlist['plain'];
+
+                return '<div class="wordsearch-wordlist">'.$theWordlist.'</div>';
             });
 
         $processor->registerMarker(
@@ -139,6 +165,53 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
             });
 
         return $processor->parse($content);
+    }
+
+    protected function savePluginOptions()
+    {
+        $this->app['publishing.plugins.options.WordSearch.grid_size'] =
+            $this->getEditionOption('plugins.options.WordSearch.grid_size', 20);
+    }
+
+    protected function readWordsFromFile($wordFile): array
+    {
+        $files = $this->getEditionOption('plugins.options.WordSearch.word_files', []);
+        $contentsDir = $this->app['publishing.dir.book'].'/Contents';
+
+        foreach ($files as $file) {
+            if (!isset($file['label'])) {
+                $this->writeLn(sprintf('Word file without a label.', 'error'));
+
+                return [];
+            }
+            if ($file['label'] === $wordFile) {
+
+                if (isset(static::$wordFiles[$wordFile])) {
+                    return static::$wordFiles[$wordFile];
+                }
+
+                $filePath = $this->app->getFirstExistingFile($file['name'], [$contentsDir]);
+                if (!$filePath) {
+                    $this->writeLn(
+                        sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir),
+                        'error');
+
+                    return [];
+                }
+                $allWords = file($filePath, FILE_IGNORE_NEW_LINES + FILE_SKIP_EMPTY_LINES);
+                if (!$allWords) {
+                    $this->writeLn(sprintf('Word file with name "%s" is empty.', $file['name']), 'error');
+                }
+
+                static::$wordFiles[$wordFile] = $allWords;
+
+                return $allWords;
+            }
+        }
+
+        $this->writeLn(sprintf('Word file with label "%s" not defined.', $wordFile), 'error');
+
+        return [];
     }
 
     /**

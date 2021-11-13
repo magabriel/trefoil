@@ -10,6 +10,7 @@ book:
     contents:
         - { element: chapter, number: 1, content: chapter1.md }
         - { element: chapter, number: 2, content: chapter2.md }
+        - { element: chapter, number: 3, content: solutions.md }
 
     editions:
         ebook:
@@ -25,5 +26,11 @@ book:
             plugins:        
                 enabled: 
                     - WordSearch
-                            
-    
+
+                options:
+                    WordSearch:
+                        grid_size: 40
+                        solution_grid_size: 10
+                        word_files:
+                            - { label: words_a, name: word_file_1.txt }
+                            - { label: words_b, name: word_file_2.txt }
