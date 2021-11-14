@@ -28,22 +28,17 @@ class WordSearch
     private const CELL_TYPE_FILLER = 'filler';
 
     private const DIRECTION_HORIZONTAL = 'horizontal';
-    private const DIRECTION_HORIZONTAL_BEGIN = 'horizontal-begin';
-    private const DIRECTION_HORIZONTAL_END = 'horizontal-end';
     private const DIRECTION_VERTICAL = 'vertical';
-    private const DIRECTION_VERTICAL_BEGIN = 'vertical-begin';
-    private const DIRECTION_VERTICAL_END = 'vertical-end';
     private const DIRECTION_DIAGONAL_DOWN = 'diagonal-down';
-    private const DIRECTION_DIAGONAL_DOWN_BEGIN = 'diagonal-down-begin';
-    private const DIRECTION_DIAGONAL_DOWN_END = 'diagonal-down-end';
     private const DIRECTION_DIAGONAL_UP = 'diagonal-up';
-    private const DIRECTION_DIAGONAL_UP_BEGIN = 'diagonal-up-begin';
-    private const DIRECTION_DIAGONAL_UP_END = 'diagonal-up-end';
 
     private const WORD_FAIL = 'fail';
     private const MIN_WORD_LENGTH = 3;
     private const DEFAULT_NUMBER_OF_WORDS = 10;
     private const MAX_NUMBER_OF_WORDS = 30;
+
+    public const DIFFICULTY_EASY = 'easy';
+    public const DIFFICULTY_HARD = 'hard';
 
     protected array $puzzle = [];
     protected int $randomSeed = 0;
@@ -63,9 +58,10 @@ class WordSearch
                              int    $columns = 10,
                              array  $words = self::DEFAULT_WORDS,
                              string $fillerLetters = self::FILLER_LETTERS_ENGLISH,
-                             int    $numberOfWords = 0): bool
+                             int    $numberOfWords = 0,
+                             string $difficulty = self::DIFFICULTY_HARD): bool
     {
-        $this->words = array_map('strtoupper', $words);
+        $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
         $this->columns = $columns;
 
@@ -84,7 +80,7 @@ class WordSearch
 
         $this->initializePuzzle();
 
-        if (!$this->placeWords()) {
+        if (!$this->placeWords($difficulty)) {
             return false;
         }
 
@@ -152,9 +148,9 @@ class WordSearch
 
     }
 
-    protected function placeWords(): bool
+    protected function placeWords(string $difficulty): bool
     {
-        $words = $this->words;
+        $words = $this->normalizeWords($this->words);
 
         // Sort words by length descending
         usort(
@@ -176,7 +172,7 @@ class WordSearch
             $directions = [];
 
             foreach ($words as $word) {
-                $direction = $this->placeWord($this->clearWord($word));
+                $direction = $this->placeWord($this->clearWord($word), $difficulty);
 
                 if ($direction === self::WORD_FAIL) {
                     $puzzleTries++;
@@ -246,11 +242,26 @@ class WordSearch
         return $this->randomSeed % ($max - $min + 1) + $min;
     }
 
+    protected function normalizeWords(array $words): array
+    {
+        $newWords = [];
+
+        foreach ($this->words as $word) {
+            // "Ññ", "Çç", and "Üü" are preserved (Spanish and Catalan languages)
+            $a = preg_split('//u', 'àáâãäèéêëìíîïòóôõöùúûýÿÀÁÂÃÄÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÝ');
+            $b = preg_split('//u', 'aaaaaeeeeiiiiooooouuuyyAAAAAEEEEIIIIOOOOOUUUY');
+
+            $newWords[] = str_replace($a, $b, $word);
+        }
+
+        return $newWords;
+    }
+
     /**
      * @param string $word
      * @return string Direction or self::WORD_FAIL
      */
-    protected function placeWord(string $word): string
+    protected function placeWord(string $word, string $difficulty): string
     {
         $wordTries = 0;
         $maxWordTries = 100;
@@ -280,54 +291,59 @@ class WordSearch
             switch ($direction) {
                 case self::DIRECTION_HORIZONTAL:
                     $initialRow = $this->getRandomInt(0, $rows - 1);
-                    $initialCol = $this->getRandomInt(0, $columns - strlen($word));
+                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
 
                     $maxRow = $initialRow;
                     $incCol = 1;
-                    $maxCol = $initialCol + strlen($word) - 1;
+                    $maxCol = $initialCol + mb_strlen($word) - 1;
                     break;
                 case self::DIRECTION_VERTICAL:
-                    $initialRow = $this->getRandomInt(0, $rows - strlen($word));
+                    $initialRow = $this->getRandomInt(0, $rows - mb_strlen($word));
                     $initialCol = $this->getRandomInt(0, $columns - 1);
 
                     $incRow = 1;
-                    $maxRow = $initialRow + strlen($word) - 1;
+                    $maxRow = $initialRow + mb_strlen($word) - 1;
                     $maxCol = $initialCol;
                     break;
                 case self::DIRECTION_DIAGONAL_DOWN:
-                    $initialRow = $this->getRandomInt(0, $rows - strlen($word));
-                    $initialCol = $this->getRandomInt(0, $columns - strlen($word));
+                    $initialRow = $this->getRandomInt(0, $rows - mb_strlen($word));
+                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
 
                     $incRow = 1;
-                    $maxRow = $initialRow + strlen($word) - 1;
+                    $maxRow = $initialRow + mb_strlen($word) - 1;
                     $incCol = 1;
-                    $maxCol = $initialCol + strlen($word) - 1;
+                    $maxCol = $initialCol + mb_strlen($word) - 1;
                     break;
                 case self::DIRECTION_DIAGONAL_UP:
-                    $initialRow = $this->getRandomInt($rows - strlen($word) + 1, $rows - 1);
-                    $initialCol = $this->getRandomInt(0, $columns - strlen($word));
+                    $initialRow = $this->getRandomInt($rows - mb_strlen($word) + 1, $rows - 1);
+                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
 
                     $incRow = -1;
-                    $maxRow = $initialRow + strlen($word) - 1;;
+                    $maxRow = $initialRow + mb_strlen($word) - 1;;
                     $incCol = 1;
-                    $maxCol = $initialCol + strlen($word) - 1;
+                    $maxCol = $initialCol + mb_strlen($word) - 1;
                     break;
             }
 
-            $reverse = $this->getRandomInt(0, 1) == 1;
-            $theWord = strtoupper($reverse ? strrev($word) : $word);
+            if ($difficulty === self::DIFFICULTY_EASY) {
+                $reverse = false;
+            } else {
+                $reverse = $this->getRandomInt(0, 1) == 1;
+            }
+
+            $theWord = mb_strtoupper($reverse ? strrev($word) : $word);
 
             $theRow = $initialRow;
             $theCol = $initialCol;
 
             $wordDone = true;
 
-            for ($i = 0; $i < strlen($theWord); $i++) {
+            for ($i = 0; $i < mb_strlen($theWord); $i++) {
 
                 if ($theRow < 0 || $theRow > $rows - 1 || $theRow > $maxRow ||
                     $theCol < 0 || $theCol > $columns - 1 || $theCol > $maxCol ||
                     $this->puzzle[$theRow][$theCol]['letter'] !== self::EMPTY_CELL &&
-                    $this->puzzle[$theRow][$theCol]['letter'] !== $theWord[$i]) {
+                    $this->puzzle[$theRow][$theCol]['letter'] !== mb_substr($theWord, $i, 1)) {
 
                     $wordTries++;
                     $this->puzzle = $backupPuzzleBeforeWord;
@@ -337,13 +353,13 @@ class WordSearch
                     break;
                 }
 
-                $this->puzzle[$theRow][$theCol]['letter'] = $theWord[$i];
+                $this->puzzle[$theRow][$theCol]['letter'] = mb_substr($theWord, $i, 1);
                 $this->puzzle[$theRow][$theCol]['types'][] = self::CELL_TYPE_LETTER;
 
                 $theDirection = $direction;
                 if ($i == 0) {
                     $theDirection .= '-begin';
-                } elseif ($i == strlen($theWord) - 1) {
+                } elseif ($i == mb_strlen($theWord) - 1) {
                     $theDirection .= '-end';
                 }
 
@@ -355,6 +371,11 @@ class WordSearch
         } while ($wordTries <= $maxWordTries && !$wordDone);
 
         return $wordDone ? $direction : self::WORD_FAIL;
+    }
+
+    protected function clearWord($word)
+    {
+        return preg_replace('/[^[:alnum:]]/ui', '', $word);
     }
 
     public function setRandomSeed(int $seed)
@@ -461,23 +482,27 @@ class WordSearch
         return implode("\n", $words);
     }
 
-    public function wordListAsHtml(bool $sorted = true): string
+    public function wordListAsHtml(bool $sorted = true,
+                                   int  $chunks = 1): string
     {
         $words = $this->words;
         if ($sorted) {
             sort($words);
         }
 
-        return '<ul><li>'.implode("</li><li>", $words).'</li></ul>';
+        $output = '';
+        $itemChunks = array_chunk($words, intval(ceil(count($words) / $chunks)));
+        foreach ($itemChunks as $index => $itemChunk) {
+            $output .= sprintf('<ul class="chunk-%s-%s"><li>', $index + 1, $chunks)
+                .implode("</li><li>", $itemChunk)
+                .'</li></ul>';
+        }
+
+        return $output;
     }
 
     public function getErrors(): array
     {
         return $this->errors;
-    }
-
-    protected function clearWord($word)
-    {
-        return preg_replace('/[^[:alnum:]]/ui', '', $word);
     }
 }

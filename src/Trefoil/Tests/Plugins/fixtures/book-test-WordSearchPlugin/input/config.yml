@@ -34,3 +34,6 @@ book:
                         word_files:
                             - { label: words_a, name: word_file_1.txt }
                             - { label: words_b, name: word_file_2.txt }
+                        difficulty:
+                            text_easy: 'Dificultad: Fácil'
+                            text_hard: 'Dificultad: Difícil'

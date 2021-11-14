@@ -13,6 +13,7 @@ namespace Trefoil\Plugins\Optional;
 
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Exception\PluginException;
 use Trefoil\Helpers\TrefoilMarkerProcessor;
@@ -34,6 +35,7 @@ use Trefoil\Plugins\BasePlugin;
 class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 {
     protected static array $wordFiles = [];
+    protected int $wordsearchCalls = 0;
 
     /**
      * @return array
@@ -63,6 +65,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
         $event->setItemProperty('original', $content);
 
+        $this->checkBalancedCalls();
     }
 
     /**
@@ -71,97 +74,84 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function processTrefoilMarkers($content): ?string
     {
-        // Lazy initialize
-        if (!isset($this->app['publishing.wordsearch.items'])) {
-            $this->app['publishing.wordsearch.items'] = [];
-        }
-
         $processor = new TrefoilMarkerProcessor();
-
-        $wordSearch = new WordSearch();
 
         $processor->registerMarker(
             'wordsearch',
-            function ($options = []) use
-            (
-                $wordSearch
-            ) {
-
-                $id = $options['id'] ?? strval(microtime());
-                $rows = $options['rows'] ?? 15;
-                $cols = $options['cols'] ?? 15;
-                $filler = $options['filler'] ?? WordSearch::FILLER_LETTERS_ENGLISH;
-                $wordFile = $options['word_file'] ?? '';
-                $numberOfWords = $options['number_of_words'] ?? 0;
-                $seed = $options['seed'] ?? $id;
-
-                $words = WordSearch::DEFAULT_WORDS;
-                if ($wordFile) {
-                    $words = $this->readWordsFromFile($wordFile);
+            function ($options = []) {
+                $id = $options['id'] ?? null;
+                if (!$id) {
+                    $this->writeLn('wordsearch(): ID argument missing', 'error');
+                    return '';
                 }
 
-                $wordSearch->setRandomSeed($seed);
-                $success = $wordSearch->generate($rows, $cols, $words, $filler, $numberOfWords);
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
+                $itemsArguments[$id]['puzzle']['options'] = $options;
+                $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
-                if (!$success) {
-                    $this->writeln(sprintf('ERROR: Puzzle %s generated with error.', $id), 'error');
+                return sprintf(
+                    '<div class="wordsearch wordsearch-puzzle-simple" data-id="%s" markdown="1"></div>',
+                    $id);
+            });
+
+        $processor->registerMarker(
+            'wordsearch_begin',
+            function ($options = []) {
+                $id = $options['id'] ?? null;
+                if (!$id) {
+                    $this->writeLn('wordsearch_begin(): ID argument missing', 'error');
+                    return '';
                 }
-                if ($wordSearch->getErrors()) {
-                    foreach ($wordSearch->getErrors() as $error) {
-                        $this->writeln(sprintf('ERROR: Puzzle %s: %s', $id, $error), 'error');
-                    }
-                }
 
-                $items = $this->app['publishing.wordsearch.items'];
-                $items[$id] = [
-                    'solution' => $wordSearch->solutionAsHtml(),
-                    'wordlist' => [
-                        'sorted' => $wordSearch->wordListAsHtml(true),
-                        'plain'  => $wordSearch->wordListAsHtml(false),
-                    ],
-                ];
-                $this->app['publishing.wordsearch.items'] = $items;
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
+                $itemsArguments[$id]['puzzle']['options'] = $options;
+                $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
-                return '<div class="wordsearch">'.$wordSearch->puzzleAsHtml().'</div>';
+                return sprintf(
+                    '<div class="wordsearch wordsearch-puzzle" data-id="%s" markdown="1">',
+                    $id);
+            });
+
+        $processor->registerMarker(
+            'wordsearch_end',
+            function () {
+                return '</div>';
             });
 
         $processor->registerMarker(
             'wordsearch_wordlist',
             function ($options = []) {
-
                 $id = $options['id'] ?? null;
-                $sorted = $options['sorted'] ?? false;
-
-                $items = $this->app['publishing.wordsearch.items'];
-                if ($id) {
-                    $wordlist = $items[$id]['wordlist'] ??
-                        sprintf("==== ERROR: wordsearch_wordlist(): Puzzle ID (%s) not found.", $id);
-                } else {
-                    $wordlist = end($items)['wordlist'] ??
-                        '==== ERROR: wordsearch_wordlist(): No puzzle found.';
+                if (!$id) {
+                    $this->writeLn('wordsearch_wordlist(): ID argument missing', 'error');
+                    return '';
                 }
 
-                $theWordlist = $sorted ? $wordlist['sorted'] : $wordlist['plain'];
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
+                $itemsArguments[$id] ['wordlist'] ['options'] = $options;
+                $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
-                return '<div class="wordsearch-wordlist">'.$theWordlist.'</div>';
+                return sprintf(
+                    '<div class="wordsearch wordsearch-wordlist" data-id="%s" markdown="1"></div>',
+                    $id);
             });
 
         $processor->registerMarker(
             'wordsearch_solution',
             function ($options = []) {
-
                 $id = $options['id'] ?? null;
-
-                $items = $this->app['publishing.wordsearch.items'];
-                if ($id) {
-                    $solution = $items[$id]['solution'] ??
-                        sprintf("==== ERROR: wordsearch_solution(): Puzzle ID (%s) not found.", $id);
-                } else {
-                    $solution = end($items)['solution'] ??
-                        '==== ERROR: wordsearch_solution(): No puzzle found.';
+                if (!$id) {
+                    $this->writeLn('wordsearch_solution(): ID argument missing', 'error');
+                    return '';
                 }
 
-                return '<div class="wordsearch-solution">'.$solution.'</div>';
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
+                $itemsArguments[$id] ['solution'] ['options'] = $options;
+                $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
+
+                return sprintf(
+                    '<div class="wordsearch wordsearch-solution" data-id="%s" markdown="1"></div>',
+                    $id);
             });
 
         return $processor->parse($content);
@@ -171,6 +161,258 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
     {
         $this->app['publishing.plugins.options.WordSearch.grid_size'] =
             $this->getEditionOption('plugins.options.WordSearch.grid_size', 20);
+    }
+
+    protected function checkBalancedCalls()
+    {
+        $msg = (new \ReflectionClass($this))->getShortName().': '.$this->item['config']['content'].': ';
+        if ($this->wordsearchCalls > 0) {
+            throw new PluginException($msg.'wordsearch_begin() call without ending previous.');
+        }
+
+        if ($this->wordsearchCalls < 0) {
+            throw new PluginException($msg.'wordsearch_end() call without wordsearch_begin().');
+        }
+    }
+
+    /**
+     * @param ParseEvent $event
+     */
+    public function onItemPostParse(ParseEvent $event)
+    {
+        $this->init($event);
+
+        $this->processWordSearches();
+
+        $event->setItem($this->item);
+    }
+
+    protected function processWordSearches()
+    {
+        $this->processPuzzle();
+        $this->processWordList();
+        $this->processSolution();
+    }
+
+    protected function processPuzzle()
+    {
+        $regExp = '/'
+            .'(?<div>'
+            .'<div +(?<pre>[^>]*)'
+            .'class="(?<class>wordsearch wordsearch-puzzle(?<simple>-simple)?)"'
+            .' +'
+            .'data-id="(?<id>\d+)"'
+            .'(?<post>[^>]*)>'
+            .')' // div group
+            .'(?<content>.*)'
+            .'<\/div>'
+            .'/Ums'; // Ungreedy, multiline, dotall
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                $id = $matches['id'];
+                $isSimple = (bool)$matches['simple'];
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $options = $itemsArguments[$id]['puzzle']['options'];
+                $rows = $options['rows'] ?? 15;
+                $cols = $options['cols'] ?? 15;
+                $filler = $options['filler'] ?? WordSearch::FILLER_LETTERS_ENGLISH;
+                $title = $options['title'] ?? '';
+                $text = $options['text'] ?? '';
+                $difficulty = $options['difficulty'] ?? WordSearch::DIFFICULTY_HARD;
+
+                if ($isSimple) {
+                    $wordFile = $options['word_file'] ?? '';
+                    $numberOfWords = $options['number_of_words'] ?? 0;
+                    $words = WordSearch::DEFAULT_WORDS;
+                    if ($wordFile) {
+                        $words = $this->readWordsFromFile($wordFile);
+                    }
+                } else {
+                    $words = $this->parsePuzzleWords($matches['content']);
+                    if (!$words) {
+                        $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
+                    }
+                    $numberOfWords = 0;
+                }
+
+                $seed = $options['seed'] ?? intval(1000 + $id);
+
+                $wordSearch = new WordSearch();
+                $wordSearch->setRandomSeed($seed);
+
+                $success = $wordSearch->generate($rows, $cols, $words, $filler, $numberOfWords, $difficulty);
+                if (!$success) {
+                    $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
+                }
+                if ($wordSearch->getErrors()) {
+                    foreach ($wordSearch->getErrors() as $error) {
+                        $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
+                    }
+                }
+
+                $items = $this->app['publishing.wordsearch.items'] ?? [];
+
+                $items[$id] = [
+                    'solution' => $wordSearch->solutionAsHtml(),
+                    'wordlist' => [
+                        'sorted-1-chunk'   => $wordSearch->wordListAsHtml(true),
+                        'unsorted-1-chunk' => $wordSearch->wordListAsHtml(false),
+                        'sorted-2-chunk'   => $wordSearch->wordListAsHtml(true, 2),
+                        'unsorted-2-chunk' => $wordSearch->wordListAsHtml(false, 2),
+                        'sorted-3-chunk'   => $wordSearch->wordListAsHtml(true, 3),
+                        'unsorted-3-chunk' => $wordSearch->wordListAsHtml(false, 3),
+                        'sorted-4-chunk'   => $wordSearch->wordListAsHtml(true, 4),
+                        'unsorted-4-chunk' => $wordSearch->wordListAsHtml(false, 4),
+                    ],
+                ];
+                $this->app['publishing.wordsearch.items'] = $items;
+
+                $difficultyTextEasy = $this->getEditionOption('plugins.options.WordSearch.difficulty.text_easy', 'Difficulty: Easy');
+                $difficultyTextHard = $this->getEditionOption('plugins.options.WordSearch.difficulty.text_hard', 'Difficulty: Hard');
+
+                return sprintf(
+                    '<div class="wordsearch">'.
+                    '<div class="wordsearch-title">%s</div>'.
+                    '<div class="wordsearch-text">%s</div>'.
+                    '<div class="wordsearch-difficulty">%s</div>'.
+                    '<div class="wordsearch-puzzle" data-id="%s">%s</div>'.
+                    '</div>',
+                    $title,
+                    $text,
+                    $difficulty === WordSearch::DIFFICULTY_EASY ? $difficultyTextEasy : $difficultyTextHard,
+                    $options['id'],
+                    $wordSearch->puzzleAsHtml());
+            },
+            $this->item['content']);
+
+        $this->item['content'] = $content;
+    }
+
+    protected function processWordList()
+    {
+        $regExp = '/'
+            .'(?<div>'
+            .'<div +(?<pre>[^>]*)'
+            .'class="(?<class>wordsearch wordsearch-wordlist)"'
+            .' +'
+            .'data-id="(?<id>\d+)"'
+            .'(?<post>[^>]*)>'
+            .')' // div group
+            .'.*'
+            .'<\/div>'
+            .'/Ums'; // Ungreedy, multiline, dotall
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+
+                $id = $matches['id'];
+
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $options = $itemsArguments[$id]['wordlist']['options'];
+                $sorted = $options['sorted'] ?? false;
+                $chunks = $options['chunks'] ?? 1;
+
+                if ($chunks > 4) {
+                    $this->writeLn(
+                        sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks),
+                        'error');
+                    $chunks = 1;
+                }
+
+                if (!isset($this->app['publishing.wordsearch.items'])) {
+                    return '';
+                }
+                $items = $this->app['publishing.wordsearch.items'] ?? [];
+                if (!isset($items[$id])) {
+                    return '';
+                }
+
+                $wordlist = $items[$id]['wordlist'];
+
+                $wordlistKey = sprintf(
+                    "%s-%d-chunk",
+                    $sorted ? 'sorted' : 'unsorted',
+                    $chunks);
+
+                return sprintf(
+                    '<div class="wordsearch wordsearch-wordlist" data-id="%s">%s</div>',
+                    $options['id'],
+                    $wordlist[$wordlistKey]);
+            },
+            $this->item['content']);
+
+        $this->item['content'] = $content;
+
+    }
+
+    protected function processSolution()
+    {
+        $regExp = '/'
+            .'(?<div>'
+            .'<div +(?<pre>[^>]*)'
+            .'class="(?<class>wordsearch wordsearch-solution)"'
+            .' +'
+            .'data-id="(?<id>\d+)"'
+            .'(?<post>[^>]*)>'
+            .')' // div group
+            .'.*'
+            .'<\/div>'
+            .'/Ums'; // Ungreedy, multiline, dotall
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+
+                $id = $matches['id'];
+
+                $itemsArguments = $this->app['publishing.wordsearch.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $options = $itemsArguments[$id]['solution']['options'];
+
+                $title = $options['title'] ?? '';
+                $text = $options['text'] ?? '';
+
+                if (!isset($this->app['publishing.wordsearch.items'])) {
+                    return '';
+                }
+                $items = $this->app['publishing.wordsearch.items'] ?? [];
+                if (!isset($items[$id])) {
+                    return '';
+                }
+
+                return sprintf(
+                    '<div class="wordsearch">'.
+                    '<div class="wordsearch-title">%s</div>'.
+                    '<div class="wordsearch-text">%s</div>'.
+                    '<div class="wordsearch-solution" data-id="%s">%s</div>'.
+                    '</div>',
+                    $title,
+                    $text,
+                    $options['id'],
+                    $items[$id]['solution']);
+
+            },
+            $this->item['content']);
+
+        $this->item['content'] = $content;
+
     }
 
     protected function readWordsFromFile($wordFile): array
@@ -214,14 +456,63 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
         return [];
     }
 
-    /**
-     * @param ParseEvent $event
-     */
-    public function onItemPostParse(ParseEvent $event)
+    protected function parsePuzzleWords($content): array
     {
-        $this->init($event);
+        $crawler = new Crawler();
+        $crawler->addHtmlContent($content);
+        $crawler = $crawler->filter('ul');
 
-        $event->setItem($this->item);
+        // not an <ul> list in the input
+        if ($crawler->count() === 0) {
+            return [];
+        }
+
+        return $this->parseUl($crawler);
+    }
+
+    protected function parseUl(Crawler $crawler): array
+    {
+        $output = [];
+
+        $crawler->children()->each(
+            function (Crawler $liNode) use
+            (
+                &
+                $output
+            ) {
+                if ($liNode->children()->count() == 0) {
+                    $output [] = $liNode->html();
+
+                    return;
+                }
+
+                $cellText = '';
+
+                $liNode->children()->each(
+                    function (Crawler $liChildrenNode) use
+                    (
+                        &
+                        $cellText
+                    ) {
+                        switch ($liChildrenNode->nodeName()) {
+                            case 'p':
+                                $cellText = $liChildrenNode->html();
+                                break;
+                            default:
+                                // other tags are ignored
+                                break;
+                        }
+                    }
+                );
+
+                // uncollected text
+                if (!empty($cellText)) {
+                    $output[] = $cellText;
+                }
+            }
+        );
+
+        return $output;
     }
 
 }
