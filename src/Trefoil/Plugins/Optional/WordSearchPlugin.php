@@ -252,6 +252,8 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                 $seed = $arguments['seed'] ?? intval(1000 + $id);
 
+                $this->writeLn(sprintf('Generating puzzle id "%s".', $id), 'info');
+
                 $wordSearch = new WordSearch();
                 $wordSearch->setRandomSeed($seed);
 
@@ -295,14 +297,13 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     '<div class="wordsearch-text">%s</div>'.
                     '<div class="wordsearch-text2">%s</div>'.
                     '<div class="wordsearch-difficulty">%s</div>'.
-                    '<div class="wordsearch-puzzle" data-id="%s">%s</div>'.
+                    '<div class="wordsearch-puzzle">%s</div>'.
                     '</div>',
                     $arguments['id'],
                     sprintf($title, $id),
                     $text,
                     $text2,
                     $difficulty === WordSearch::DIFFICULTY_EASY ? $difficultyTextEasy : $difficultyTextHard,
-                    $arguments['id'],
                     $wordSearch->puzzleAsHtml());
             },
             $this->item['content']);
@@ -417,12 +418,11 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     '<div class="wordsearch wordsearch-solution-container" data-id="%s">'.
                     '<div class="wordsearch-title">%s</div>'.
                     '<div class="wordsearch-text">%s</div>'.
-                    '<div class="wordsearch-solution" data-id="%s">%s</div>'.
+                    '<div class="wordsearch-solution">%s</div>'.
                     '</div>',
                     $arguments['id'],
                     sprintf($title, $id),
                     $text,
-                    $arguments['id'],
                     $items[$id]['solution']);
 
             },
@@ -457,6 +457,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                     return [];
                 }
+
                 $allWords = file($filePath, FILE_IGNORE_NEW_LINES + FILE_SKIP_EMPTY_LINES);
                 if (!$allWords) {
                     $this->writeLn(sprintf('Word file with name "%s" is empty.', $file['name']), 'error');

@@ -44,6 +44,10 @@
     border-collapse: collapse;
 }
 
+.wordsearch.wordsearch-puzzle-container {
+    clear: both;
+}
+
 .wordsearch-puzzle table td {
     text-align: center;
     vertical-align: middle;
@@ -261,13 +265,22 @@
 
 .wordsearch-wordlist {
     float:  left;
-    margin-left:  2em;
+    font-size:  14px;
 }
 
 .wordsearch-wordlist ul {
+    display: inline-block;
     float: left;
-    margin-left:  2em;
+    margin-left:  1em;
 
     list-style: none;
     padding: 0;
+}
+
+.wordsearch-wordlist ul+ul {
+    margin-left:  2em;
+}
+
+.wordsearch-wordlist ul li {
+    margin: 0.3px 0;
 }
