@@ -218,7 +218,7 @@ class WordSearch
             for ($column = 0; $column < $this->columns; $column++) {
                 if ($this->puzzle[$row][$column]['letter'] === self::EMPTY_CELL) {
                     $this->puzzle[$row][$column] = [
-                        'letter'     => $letters[$this->getRandomInt(0, strlen($letters) - 1)],
+                        'letter'     => mb_substr($letters, $this->getRandomInt(0, mb_strlen($letters) - 1), 1),
                         'types'      => [self::CELL_TYPE_FILLER],
                         'directions' => [],
                     ];

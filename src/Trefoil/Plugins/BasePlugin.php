@@ -8,6 +8,7 @@ declare(strict_types=1);
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Trefoil\Plugins;
 
 use Easybook\Events\BaseEvent;
@@ -55,12 +56,23 @@ abstract class BasePlugin
     }
 
     /**
+     * Writes a deprecation notice.
+     *
+     * @param string $message
+     */
+    public function deprecationNotice($message = 'This plugin is deprecated. Please use an alternative.'): void
+    {
+        $this->writeLn($message, 'warning');
+    }
+
+    /**
      * Write an output message line
      *
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info')
      */
-    public function writeLn($message, $type = 'info'): void
+    public function writeLn($message,
+                            $type = 'info'): void
     {
         $this->write($message, $type);
         $this->output->writeln('');
@@ -72,10 +84,13 @@ abstract class BasePlugin
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info')
      */
-    public function write($message, $type = 'info'): void
+    public function write($message,
+                          $type = 'info'): void
     {
+//        $class = (new \ReflectionClass($this))->getShortName();
         $class = implode('', array_slice(explode('\\', static::class), -1));
-        $prefix = sprintf('%s: ', $class);
+        $part = ': '.$this->item['config']['content'] ?? '';
+        $prefix = sprintf('%s%s: ', $class, $part);
 
         $msgType = '';
 
@@ -89,17 +104,7 @@ abstract class BasePlugin
                 break;
         }
 
-        $this->output->write(' > ' . $prefix . $msgType . $message);
-    }
-
-    /**
-     * Writes a deprecation notice.
-     * 
-     * @param string $message
-     */
-    public function deprecationNotice($message = 'This plugin is deprecated. Please use an alternative.'): void
-    {
-        $this->writeLn($message, 'warning');
+        $this->output->write(' > '.$prefix.$msgType.$message);
     }
 
     /**
@@ -128,7 +133,8 @@ abstract class BasePlugin
      *
      * @return mixed
      */
-    protected function getEditionOption($optionName, $default = null)
+    protected function getEditionOption($optionName,
+                                        $default = null)
     {
         $editions = $this->app->book('editions');
         $editionOptions = $editions[$this->edition];
@@ -156,7 +162,8 @@ abstract class BasePlugin
      *
      * @return mixed
      */
-    protected function getConfigOption($optionName, $default = null)
+    protected function getConfigOption($optionName,
+                                       $default = null)
     {
         $configOptions = $this->app['publishing.book.config'];
 

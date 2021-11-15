@@ -74,19 +74,18 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function processTrefoilMarkers($content): ?string
     {
+        $this->wordsearchCalls = 0;
+
         $processor = new TrefoilMarkerProcessor();
 
         $processor->registerMarker(
             'wordsearch',
-            function ($options = []) {
-                $id = $options['id'] ?? null;
-                if (!$id) {
-                    $this->writeLn('wordsearch(): ID argument missing', 'error');
-                    return '';
-                }
+            function (int   $id,
+                      array $arguments = []) {
+                $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
-                $itemsArguments[$id]['puzzle']['options'] = $options;
+                $itemsArguments[$id]['puzzle'] = $arguments;
                 $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
                 return sprintf(
@@ -96,15 +95,14 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordsearch_begin',
-            function ($options = []) {
-                $id = $options['id'] ?? null;
-                if (!$id) {
-                    $this->writeLn('wordsearch_begin(): ID argument missing', 'error');
-                    return '';
-                }
+            function (int   $id,
+                      array $arguments = []) {
+                $arguments['id'] = $id;
+
+                $this->wordsearchCalls++;
 
                 $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
-                $itemsArguments[$id]['puzzle']['options'] = $options;
+                $itemsArguments[$id]['puzzle'] = $arguments;
                 $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
                 return sprintf(
@@ -115,20 +113,19 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
         $processor->registerMarker(
             'wordsearch_end',
             function () {
+                $this->wordsearchCalls--;
+
                 return '</div>';
             });
 
         $processor->registerMarker(
             'wordsearch_wordlist',
-            function ($options = []) {
-                $id = $options['id'] ?? null;
-                if (!$id) {
-                    $this->writeLn('wordsearch_wordlist(): ID argument missing', 'error');
-                    return '';
-                }
+            function (int   $id,
+                      array $arguments = []) {
+                $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
-                $itemsArguments[$id] ['wordlist'] ['options'] = $options;
+                $itemsArguments[$id] ['wordlist'] = $arguments;
                 $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
                 return sprintf(
@@ -138,15 +135,12 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordsearch_solution',
-            function ($options = []) {
-                $id = $options['id'] ?? null;
-                if (!$id) {
-                    $this->writeLn('wordsearch_solution(): ID argument missing', 'error');
-                    return '';
-                }
+            function (int   $id,
+                      array $arguments = []) {
+                $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordsearch.arguments'] ?? [];
-                $itemsArguments[$id] ['solution'] ['options'] = $options;
+                $itemsArguments[$id] ['solution'] = $arguments;
                 $this->app['publishing.wordsearch.arguments'] = $itemsArguments;
 
                 return sprintf(
@@ -159,19 +153,25 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
     protected function savePluginOptions()
     {
-        $this->app['publishing.plugins.options.WordSearch.grid_size'] =
-            $this->getEditionOption('plugins.options.WordSearch.grid_size', 20);
+        $gridSize = $this->getEditionOption('plugins.options.WordSearch.grid_size');
+        if ($gridSize) {
+            $this->app['publishing.plugins.options.WordSearch.grid_size'] = $gridSize;
+        }
+
+        $solutionGridSize = $this->getEditionOption('plugins.options.WordSearch.solution_grid_size');
+        if ($solutionGridSize) {
+            $this->app['publishing.plugins.options.WordSearch.solution_grid_size'] = $solutionGridSize;
+        }
     }
 
     protected function checkBalancedCalls()
     {
-        $msg = (new \ReflectionClass($this))->getShortName().': '.$this->item['config']['content'].': ';
         if ($this->wordsearchCalls > 0) {
-            throw new PluginException($msg.'wordsearch_begin() call without ending previous.');
+            $this->writeLn('wordsearch_begin() call without ending previous.', 'error');
         }
 
         if ($this->wordsearchCalls < 0) {
-            throw new PluginException($msg.'wordsearch_end() call without wordsearch_begin().');
+            $this->writeLn('wordsearch_end() call without wordsearch_begin().', 'error');
         }
     }
 
@@ -219,17 +219,25 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                     return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                 }
-                $options = $itemsArguments[$id]['puzzle']['options'];
-                $rows = $options['rows'] ?? 15;
-                $cols = $options['cols'] ?? 15;
-                $filler = $options['filler'] ?? WordSearch::FILLER_LETTERS_ENGLISH;
-                $title = $options['title'] ?? '';
-                $text = $options['text'] ?? '';
-                $difficulty = $options['difficulty'] ?? WordSearch::DIFFICULTY_HARD;
+                $arguments = $itemsArguments[$id]['puzzle'];
+                $rows = $arguments['rows'] ?? 15;
+                $cols = $arguments['cols'] ?? 15;
+                $filler = $arguments['filler']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.default.filler')
+                    ?? WordSearch::FILLER_LETTERS_ENGLISH;
+                $title = $arguments['title']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.strings.title') ?? '';
+                $text = $arguments['text']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.strings.text') ?? '';
+                $text2 = $arguments['text2']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.strings.text2') ?? '';
+                $difficulty = $arguments['difficulty']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.default.difficulty')
+                    ?? WordSearch::DIFFICULTY_HARD;
 
                 if ($isSimple) {
-                    $wordFile = $options['word_file'] ?? '';
-                    $numberOfWords = $options['number_of_words'] ?? 0;
+                    $wordFile = $arguments['word_file'] ?? '';
+                    $numberOfWords = $arguments['number_of_words'] ?? 0;
                     $words = WordSearch::DEFAULT_WORDS;
                     if ($wordFile) {
                         $words = $this->readWordsFromFile($wordFile);
@@ -242,7 +250,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     $numberOfWords = 0;
                 }
 
-                $seed = $options['seed'] ?? intval(1000 + $id);
+                $seed = $arguments['seed'] ?? intval(1000 + $id);
 
                 $wordSearch = new WordSearch();
                 $wordSearch->setRandomSeed($seed);
@@ -274,20 +282,27 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                 ];
                 $this->app['publishing.wordsearch.items'] = $items;
 
-                $difficultyTextEasy = $this->getEditionOption('plugins.options.WordSearch.difficulty.text_easy', 'Difficulty: Easy');
-                $difficultyTextHard = $this->getEditionOption('plugins.options.WordSearch.difficulty.text_hard', 'Difficulty: Hard');
+                $difficultyTextEasy = $this->getEditionOption(
+                    'plugins.options.WordSearch.strings.difficulty.easy',
+                    'Difficulty: Easy');
+                $difficultyTextHard = $this->getEditionOption(
+                    'plugins.options.WordSearch.strings.difficulty.hard',
+                    'Difficulty: Hard');
 
                 return sprintf(
-                    '<div class="wordsearch">'.
+                    '<div class="wordsearch wordsearch-puzzle-container" data-id="%s">'.
                     '<div class="wordsearch-title">%s</div>'.
                     '<div class="wordsearch-text">%s</div>'.
+                    '<div class="wordsearch-text2">%s</div>'.
                     '<div class="wordsearch-difficulty">%s</div>'.
                     '<div class="wordsearch-puzzle" data-id="%s">%s</div>'.
                     '</div>',
-                    $title,
+                    $arguments['id'],
+                    sprintf($title, $id),
                     $text,
+                    $text2,
                     $difficulty === WordSearch::DIFFICULTY_EASY ? $difficultyTextEasy : $difficultyTextHard,
-                    $options['id'],
+                    $arguments['id'],
                     $wordSearch->puzzleAsHtml());
             },
             $this->item['content']);
@@ -321,9 +336,9 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                     return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                 }
-                $options = $itemsArguments[$id]['wordlist']['options'];
-                $sorted = $options['sorted'] ?? false;
-                $chunks = $options['chunks'] ?? 1;
+                $arguments = $itemsArguments[$id]['wordlist'];
+                $sorted = $arguments['sorted'] ?? false;
+                $chunks = $arguments['chunks'] ?? 1;
 
                 if ($chunks > 4) {
                     $this->writeLn(
@@ -349,7 +364,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                 return sprintf(
                     '<div class="wordsearch wordsearch-wordlist" data-id="%s">%s</div>',
-                    $options['id'],
+                    $arguments['id'],
                     $wordlist[$wordlistKey]);
             },
             $this->item['content']);
@@ -384,10 +399,11 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
 
                     return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                 }
-                $options = $itemsArguments[$id]['solution']['options'];
+                $arguments = $itemsArguments[$id]['solution'];
 
-                $title = $options['title'] ?? '';
-                $text = $options['text'] ?? '';
+                $title = $arguments['title'] ?? $this->getEditionOption(
+                        'plugins.options.WordSearch.strings.title') ?? '';
+                $text = $arguments['text'] ?? '';
 
                 if (!isset($this->app['publishing.wordsearch.items'])) {
                     return '';
@@ -398,14 +414,15 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                 }
 
                 return sprintf(
-                    '<div class="wordsearch">'.
+                    '<div class="wordsearch wordsearch-solution-container" data-id="%s">'.
                     '<div class="wordsearch-title">%s</div>'.
                     '<div class="wordsearch-text">%s</div>'.
                     '<div class="wordsearch-solution" data-id="%s">%s</div>'.
                     '</div>',
-                    $title,
+                    $arguments['id'],
+                    sprintf($title, $id),
                     $text,
-                    $options['id'],
+                    $arguments['id'],
                     $items[$id]['solution']);
 
             },

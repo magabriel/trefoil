@@ -29,11 +29,18 @@ book:
 
                 options:
                     WordSearch:
-                        grid_size: 40
-                        solution_grid_size: 10
+                        grid_size: 30
+                        solution_grid_size: 15
                         word_files:
                             - { label: words_a, name: word_file_1.txt }
                             - { label: words_b, name: word_file_2.txt }
-                        difficulty:
-                            text_easy: 'Dificultad: Fácil'
-                            text_hard: 'Dificultad: Difícil'
+                        default:
+                            filler: "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+                            #difficulty: "easy"
+                        strings:
+                            title: "Puzzle %s"
+                            text: "Find the hidden words."
+                            text2: "This is a very interesting puzzle."
+                            difficulty:
+                                easy: 'This puzzle is EASY'
+                                hard: 'This puzzle is HARD'
