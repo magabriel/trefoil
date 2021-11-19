@@ -2,6 +2,8 @@
 
 namespace Trefoil\Helpers;
 
+use Trefoil\Util\Toolkit;
+
 /**
  *
  */
@@ -26,6 +28,7 @@ class WordSearch
     private const CELL_TYPE_END = 'end';
     private const CELL_TYPE_LETTER = 'letter';
     private const CELL_TYPE_FILLER = 'filler';
+    private const CELL_TYPE_START_WORD = 'start-word';
 
     private const DIRECTION_HORIZONTAL = 'horizontal';
     private const DIRECTION_VERTICAL = 'vertical';
@@ -38,10 +41,39 @@ class WordSearch
     private const MAX_NUMBER_OF_WORDS = 30;
 
     public const DIFFICULTY_EASY = 'easy';
+    public const DIFFICULTY_MEDIUM = 'medium';
     public const DIFFICULTY_HARD = 'hard';
+    public const DIFFICULTY_VERY_HARD = 'very-hard';
 
     protected array $puzzle = [];
     protected int $randomSeed = 0;
+
+    protected array $difficulties = [
+        self::DIFFICULTY_EASY      => [
+            'min-length'     => 3,
+            'max-length'     => 10,
+            'use-reverse'    => false,
+            'forced-reverse' => false,
+        ],
+        self::DIFFICULTY_MEDIUM    => [
+            'min-length'     => 3,
+            'max-length'     => 10,
+            'use-reverse'    => true,
+            'forced-reverse' => false,
+        ],
+        self::DIFFICULTY_HARD      => [
+            'min-length'     => 6,
+            'max-length'     => 99,
+            'use-reverse'    => true,
+            'forced-reverse' => false,
+        ],
+        self::DIFFICULTY_VERY_HARD => [
+            'min-length'     => 6,
+            'max-length'     => 99,
+            'use-reverse'    => true,
+            'forced-reverse' => true,
+        ],
+    ];
 
     /**
      * @var array|string[]
@@ -59,7 +91,7 @@ class WordSearch
                              array  $words = self::DEFAULT_WORDS,
                              string $fillerLetters = self::FILLER_LETTERS_ENGLISH,
                              int    $numberOfWords = 0,
-                             string $difficulty = self::DIFFICULTY_HARD): bool
+                             string $difficulty = self::DIFFICULTY_MEDIUM): bool
     {
         $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
@@ -68,10 +100,10 @@ class WordSearch
         if ($numberOfWords <= 0) {
             if (count($words) > self::DEFAULT_NUMBER_OF_WORDS) {
                 $numberOfWords = self::DEFAULT_NUMBER_OF_WORDS;
-                $this->selectRandomWords($numberOfWords);
+                $this->selectRandomWords($numberOfWords, $difficulty, max($rows, $columns));
             }
         } elseif ($numberOfWords < count($words)) {
-            $this->selectRandomWords($numberOfWords);
+            $this->selectRandomWords($numberOfWords, $difficulty, max($rows, $columns));
         }
 
         if (!$this->checkWords()) {
@@ -89,7 +121,9 @@ class WordSearch
         return true;
     }
 
-    protected function selectRandomWords(int $numberOfWords)
+    protected function selectRandomWords(int    $numberOfWords,
+                                         string $difficulty,
+                                         int $maxLength)
     {
         $newWords = [];
 
@@ -98,7 +132,10 @@ class WordSearch
             do {
                 $word = $this->words[$this->getRandomInt(0, count($this->words) - 1)];
                 $tries--;
-                $isValid = !in_array($word, $newWords) && strlen($word) >= self::MIN_WORD_LENGTH;
+                $isValid = !in_array($word, $newWords)
+                    && mb_strlen($word) >= $this->difficulties[$difficulty]['min-length']
+                    && mb_strlen($word) <= $this->difficulties[$difficulty]['max-length']
+                    && mb_strlen($word) <= $maxLength;
             } while (!$isValid && $tries > 0);
 
             if ($tries >= 0) {
@@ -119,7 +156,7 @@ class WordSearch
     protected function checkWords(): bool
     {
         foreach ($this->words as $word) {
-            if (strlen($word) > $this->rows && strlen($word) > $this->columns) {
+            if (mb_strlen($word) > $this->rows && mb_strlen($word) > $this->columns) {
                 $this->errors[] = sprintf(
                     'Word "%s" would not fit in %s rows by %s columns.',
                     $word,
@@ -156,7 +193,7 @@ class WordSearch
         usort(
             $words,
             fn($a,
-               $b) => strlen($b) <=> strlen($a));
+               $b) => mb_strlen($b) <=> mb_strlen($a));
 
         $maxPuzzleTries = 100;
 
@@ -261,7 +298,8 @@ class WordSearch
      * @param string $word
      * @return string Direction or self::WORD_FAIL
      */
-    protected function placeWord(string $word, string $difficulty): string
+    protected function placeWord(string $word,
+                                 string $difficulty): string
     {
         $wordTries = 0;
         $maxWordTries = 100;
@@ -325,13 +363,15 @@ class WordSearch
                     break;
             }
 
-            if ($difficulty === self::DIFFICULTY_EASY) {
+            if (!$this->difficulties[$difficulty]['use-reverse']) {
                 $reverse = false;
+            } elseif ($this->difficulties[$difficulty]['forced-reverse']) {
+                $reverse = true;
             } else {
                 $reverse = $this->getRandomInt(0, 1) == 1;
             }
 
-            $theWord = mb_strtoupper($reverse ? strrev($word) : $word);
+            $theWord = mb_strtoupper($reverse ? Toolkit::mb_strrev($word) : $word);
 
             $theRow = $initialRow;
             $theCol = $initialCol;
@@ -359,8 +399,14 @@ class WordSearch
                 $theDirection = $direction;
                 if ($i == 0) {
                     $theDirection .= '-begin';
+                    if (!$reverse) {
+                        $this->puzzle[$theRow][$theCol]['types'][] = self::CELL_TYPE_START_WORD;
+                    }
                 } elseif ($i == mb_strlen($theWord) - 1) {
                     $theDirection .= '-end';
+                    if ($reverse) {
+                        $this->puzzle[$theRow][$theCol]['types'][] = self::CELL_TYPE_START_WORD;
+                    }
                 }
 
                 $this->puzzle[$theRow][$theCol]['directions'][] = $theDirection;
@@ -451,19 +497,14 @@ class WordSearch
                 $cellTypes = array_unique($cell['types']);
                 $cellDirections = array_unique($cell['directions']);
 
-                $attributes = [];
-
-                if (in_array(self::CELL_TYPE_FILLER, $cellTypes)) {
-                    $classes[] = 'cell-filler';
-                } else {
-                    $classes[] = 'cell-letter';
-
-                    foreach ($cellDirections as $cellDirection) {
-                        $classes[] = 'cell-'.$cellDirection;
-                    }
-
-                    $attributes = $classes ? ['class' => implode(' ', $classes)] : [];
+                foreach ($cellTypes as $cellType) {
+                    $classes[] = 'cell-'.$cellType;
                 }
+                foreach ($cellDirections as $cellDirection) {
+                    $classes[] = 'cell-'.$cellDirection;
+                }
+
+                $attributes = $classes ? ['class' => implode(' ', $classes)] : [];
 
                 $table->addBodyCell($contents, $row, $column, $attributes);
             }

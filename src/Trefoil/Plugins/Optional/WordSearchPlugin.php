@@ -162,6 +162,11 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
         if ($solutionGridSize) {
             $this->app['publishing.plugins.options.WordSearch.solution_grid_size'] = $solutionGridSize;
         }
+
+        $highlightType = $this->getEditionOption('plugins.options.WordSearch.highlight_type');
+        if ($highlightType) {
+            $this->app['publishing.plugins.options.WordSearch.highlight_type'] = $highlightType;
+        }
     }
 
     protected function checkBalancedCalls()
@@ -233,7 +238,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     ?? $this->getEditionOption('plugins.options.WordSearch.strings.text2') ?? '';
                 $difficulty = $arguments['difficulty']
                     ?? $this->getEditionOption('plugins.options.WordSearch.default.difficulty')
-                    ?? WordSearch::DIFFICULTY_HARD;
+                    ?? WordSearch::DIFFICULTY_MEDIUM;
 
                 if ($isSimple) {
                     $wordFile = $arguments['word_file'] ?? '';
@@ -287,9 +292,30 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                 $difficultyTextEasy = $this->getEditionOption(
                     'plugins.options.WordSearch.strings.difficulty.easy',
                     'Difficulty: Easy');
+                $difficultyTextMedium = $this->getEditionOption(
+                    'plugins.options.WordSearch.strings.difficulty.medium',
+                    'Difficulty: Medium');
                 $difficultyTextHard = $this->getEditionOption(
                     'plugins.options.WordSearch.strings.difficulty.hard',
                     'Difficulty: Hard');
+                $difficultyTextVeryHard = $this->getEditionOption(
+                    'plugins.options.WordSearch.strings.difficulty.very-hard',
+                    'Difficulty: Very Hard');
+
+                switch ($difficulty) {
+                    case WordSearch::DIFFICULTY_EASY:
+                        $difficultyText = $difficultyTextEasy;
+                        break;
+                    case WordSearch::DIFFICULTY_MEDIUM:
+                        $difficultyText = $difficultyTextMedium;
+                        break;
+                    case WordSearch::DIFFICULTY_HARD:
+                        $difficultyText = $difficultyTextHard;
+                        break;
+                    case WordSearch::DIFFICULTY_VERY_HARD:
+                        $difficultyText = $difficultyTextVeryHard;
+                        break;
+                }
 
                 return sprintf(
                     '<div class="wordsearch wordsearch-puzzle-container" data-id="%s">'.
@@ -300,10 +326,10 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     '<div class="wordsearch-puzzle">%s</div>'.
                     '</div>',
                     $arguments['id'],
-                    sprintf($title, $id),
+                    sprintf($title, $id, $id),
                     $text,
                     $text2,
-                    $difficulty === WordSearch::DIFFICULTY_EASY ? $difficultyTextEasy : $difficultyTextHard,
+                    $difficultyText,
                     $wordSearch->puzzleAsHtml());
             },
             $this->item['content']);
@@ -402,8 +428,9 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                 }
                 $arguments = $itemsArguments[$id]['solution'];
 
-                $title = $arguments['title'] ?? $this->getEditionOption(
-                        'plugins.options.WordSearch.strings.title') ?? '';
+                $title = $arguments['solution_title']
+                    ?? $this->getEditionOption('plugins.options.WordSearch.strings.solution_title') ?? '';
+
                 $text = $arguments['text'] ?? '';
 
                 if (!isset($this->app['publishing.wordsearch.items'])) {
@@ -421,7 +448,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     '<div class="wordsearch-solution">%s</div>'.
                     '</div>',
                     $arguments['id'],
-                    sprintf($title, $id),
+                    sprintf($title, $id, $id),
                     $text,
                     $items[$id]['solution']);
 
@@ -435,7 +462,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
     protected function readWordsFromFile($wordFile): array
     {
         $files = $this->getEditionOption('plugins.options.WordSearch.word_files', []);
-        $contentsDir = $this->app['publishing.dir.book'].'/Contents';
+        $contentsDir = realpath($this->app['publishing.dir.book'].'/Contents');
 
         foreach ($files as $file) {
             if (!isset($file['label'])) {
@@ -449,7 +476,25 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                     return static::$wordFiles[$wordFile];
                 }
 
-                $filePath = $this->app->getFirstExistingFile($file['name'], [$contentsDir]);
+                // Name can contain a path or just a file name (from the Contents directory)
+                $dirs = [$contentsDir];
+                $fileName = pathinfo($file['name'], PATHINFO_BASENAME);
+
+                $separatorPos = strpos($file['name'], DIRECTORY_SEPARATOR);
+                if ($separatorPos !== false) {
+                    if ($separatorPos === 0) {
+                        // Absolute path
+                        $dirs[] = realpath(pathinfo($file['name'], PATHINFO_DIRNAME));
+                    } else {
+                        // relative path
+                        $dirs[] = realpath(
+                            pathinfo(
+                                $contentsDir.DIRECTORY_SEPARATOR.$file['name'],
+                                PATHINFO_DIRNAME));
+                    }
+                }
+
+                $filePath = $this->app->getFirstExistingFile($fileName, $dirs);
                 if (!$filePath) {
                     $this->writeLn(
                         sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir),

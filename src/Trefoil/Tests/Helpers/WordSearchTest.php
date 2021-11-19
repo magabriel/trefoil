@@ -84,7 +84,6 @@ class WordSearchTest extends TestCase
         echo "\nErrors:\n".implode("\n", $sut->getErrors())."\n";
 
         self::assertFalse($success);
-
     }
 
     public function testGenerateCustom()

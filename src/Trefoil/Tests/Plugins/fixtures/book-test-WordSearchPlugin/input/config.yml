@@ -29,10 +29,12 @@ book:
                 options:
                     WordSearch:
                         grid_size: 30
-                        solution_grid_size: 15
+                        solution_grid_size: 10.5
+                        highlight_type: line # line, shadow
                         word_files:
                             - { label: words_a, name: word_file_1.txt }
                             - { label: words_b, name: word_file_2.txt }
+                            - { label: words_c, name: lista-palabras.txt }
                         default:
                             filler: "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
                             #difficulty: "easy"

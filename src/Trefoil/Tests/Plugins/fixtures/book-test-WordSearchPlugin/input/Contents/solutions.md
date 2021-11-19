@@ -4,8 +4,10 @@
 
 {@ wordsearch_solution(1) @}
 
-{@ wordsearch_solution(21) @}
+{@ wordsearch_solution(3) @}
 
-{@ wordsearch_solution(22, { 
-        Text: 'This is the solution 22'
+{@ wordsearch_solution(4, {
+Text: 'This is the solution 4'
 }) @}
+
+{@ wordsearch_solution(5) @}
