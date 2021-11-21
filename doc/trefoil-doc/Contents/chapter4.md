@@ -7,14 +7,14 @@ publication workflow.
  
 {{ itemtoc() }}
 
-{{ file('plugins-EbookRenamePlugin.md') }}
+{{ fragment('plugins-EbookRenamePlugin.md') }}
 
-{{ file('plugins-EpubCheckPlugin.md') }}
+{{ fragment('plugins-EpubCheckPlugin.md') }}
  
-{{ file('plugins-EpubUncompressPlugin.md') }}
+{{ fragment('plugins-EpubUncompressPlugin.md') }}
 
-{{ file('plugins-LinkCheckPlugin.md') }}
+{{ fragment('plugins-LinkCheckPlugin.md') }}
 
-{{ file('plugins-QualityControlPlugin.md') }}
+{{ fragment('plugins-QualityControlPlugin.md') }}
 
-{{ file('plugins-VersionUpdaterPlugin.md') }}
+{{ fragment('plugins-VersionUpdaterPlugin.md') }}

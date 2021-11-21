@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.880'
+    version:          '1.915'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -29,12 +29,13 @@ book:
         - { element: chapter,     number:   3,  content: chapter3.md }
         - { element: chapter,     number:   4,  content: chapter4.md }
         - { element: chapter,     number:   5,  content: chapter5.md }
-
-        - { element: part,        number: 3,    content: part-3.md }
         - { element: chapter,     number:   6,  content: chapter6.md }
 
-        - { element: part,        number: 4,    content: part-4.md }
+        - { element: part,        number: 3,    content: part-3.md }
         - { element: chapter,     number:   7,  content: chapter7.md }
+
+        - { element: part,        number: 4,    content: part-4.md }
+        - { element: chapter,     number:   8,  content: chapter8.md }
         
         - { element: footnotes }
         - { element: auto-index }
@@ -90,6 +91,7 @@ book:
                     - Illustrations
                     - LiteralLists
                     - TabularLists
+                    - WordSearch
 
                 options:
                     DropCaps:
@@ -115,6 +117,13 @@ book:
 
                     FootnotesExtend:
                         type: item  # (end, inject, item, inline)
+
+                    WordSearch:
+                        grid_size: 20
+                        solution_grid_size: 20
+                        highlight_type: line
+                        word_files:
+                            - { label: word_file_1, name: word_file_1.txt }
 
         ebook:
             extends:         base-edition

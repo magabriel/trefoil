@@ -1,125 +1,161 @@
-# Other funcionality
+Themes system enhancements
+==========================
+
+Themes functionality has been greatly enhanced in **trefoil**, 
+making them more flexible and easy to customize. Also, **trefoil** 
+themes can provide not only CCS styles and HTML templates but 
+also images and fonts.
 
 {{ itemtoc() }}
 
-Content exclusion
------------------
+## Trefoil themes
 
-Some kinds of contents do not make sense for certain edition formats. 
-They will be automatically excluded:
+**trefoil** comes with some standard themes:
 
-- `epub` ebooks usually do not include a visible table of contents (HTML TOC), 
-  as reader apps and devices heavily rely on the navigational TOC. But it could 
-  make sense to include it on certain situations, so a `config.yml` parameter
-  could be added to explicitly request it:
+- `TrefoilOne` is a classic-looking theme, suitable for novels, 
+  essays and other literary works.
+
+- `TrefoilTwo` is a modern theme. 
+
+- `TrefoilDoc` is used for generating this documentation. It is 
+  based on `TrefoilTwo` but adds an HTML edition `doc-website` that
+  uses `Twitter Bootstrap 3`.
+
+To use them, as always, just put the name of the theme in the 
+book's `config.yml`:
 
 ~~~.yaml
-# config.yml
+# <book-dir>/config.yml
 book:
     editions:
-        ebook:
-            format: epub
-            include_html_toc: true # An HTML TOC will be included
-~~~  
-
-Content filtering
------------------
- 
-For books with several editions may be convenient to have a way to include
-some content in just one of them and not in the others, or to include
-an item based on the format of the edition.
- 
-Example:
-
-- Item `ebook-usage-instructions.md` must only be included in `ebook` and 
-  `kindle` edition.
-
-- Item `pdf-print-instruccions.md` must be excluded from all editions whose
-  output format is not `pdf`, regarding of the edition name.
-  
-To achieve that we can use *content filtering*. Consider the following book
-definition:
-
-~~~.yaml
-# config.yml
-book:
-    contents:
-        - { element: edition }
-        - { element: toc }
-        - { element: usage-instructions, content: usage-instructions.md, editions: [ebook, kindle] }
-        - { element: print-instructions, content: print-instructions.md, formats: [pdf] }
-        - { element: chapter, number: 1, content: chapter1.md }
+        <edition-name>
+            theme: TrefoilTwo
 ~~~
 
-#### Syntax
-
-For a content item, the following options can be added:
-
-- `editions`: an array of the edition names which will contain that item.
-
-- `formats`: an array of the allowed formats for that item. Only editions with these formats will
-   contain the item.
-   
-Prefixing the edition or format value with `not-` will negate it. 
+The theme definitions will be looked up into `<trefoil-dir>/app/Resources/Themes`. 
+If the theme is not found there, **trefoil** will try to use an 
+standard **easybook** theme of the same name. If that is also missing, 
+the standard `Base` theme will be used, which is likely to cause 
+problems if you activated some plugin that requires a non-standard template.
 
 N> ##### Note
-N> In previous versions the negation prefix was '!'. This was changed because of a conflict
-N> with the new "custom tags" feature of the Yaml parser.
+N> **trefoil** themes are backwards-compatible with **easybook** themes, 
+N> meaning that any book that can be published by **easybook** can also be
+N> published by **trefoil**. Of course, you will need to use an **trefoil**
+N> theme to make use of its new features.
+
+## Custom themes
+
+**trefoil** allows creating custom themes. Their structure is the same than 
+the standard **trefoil** themes but can be created anywhere in the file system, 
+allowing the creation of a personal theme library without the need to modify 
+the **trefoil** `app/Resources` directory.
+
+To use a custom theme you just need to invoke the `book publish` command with 
+the new optional argument `--themes_dir`:
+
+~~~.bash
+book publish my-book-slug my-edition --themes_dir=../my/themes/directory
+~~~
 
 Example:
 
-- `editions: [ebook, kindle]` ==> only `ebook` and `kindle` editions.
-- `editions: [not-print]` ==> all editions except `print`.
-- `formats: [epub, mobi]` ==> only editions with `epub` or `mobi` format.
-- `formats: [not-pdf]` ==> all editions except those with `pdf` format.
+~~~.bash
+book publish the-origin-of-species ebook --themes_dir=~/themes/trefoil
+~~~
 
-If both `editions` and `formats` are used in the same item, it will only be included
-in editions that fulfill both sets of conditions.
+## Structure of a theme
 
+A theme, whether standard or custom, must follow this structure:
 
-Config import
--------------
-
-In some cases may be convenient to being able to somehow "import" some book config 
-definitions into our book config, to avoid repeating common values.
+~~~
+<themes-dir>
+└─ <theme-name>
+   ├─ Common      <== Common definitions
+   │  ├─ Contents    
+   │  ├─ Resources
+   │  │  ├─ Fonts
+   │  │  └─ images
+   │  └─ Templates
+   ├─ <edition-type1>  <== For edition type 1
+   │  ├─ Contents
+   │  ├─ Resources
+   │  │  ├─ images
+   │  │  └─ Translations
+   │  └─ Templates
+   │  ...
+   └─ <edition-typeN>  <== For edition type N
+      ├─ Contents
+      ├─ Resources
+      │  ├─ images
+      │  └─ Translations
+      └─ Templates
+~~~
  
-Example:
+N> ##### Note
+N> Standard **trefoil** themes do not support all the edition types, 
+N> but `epub` and `mobi` are available in each theme (please
+N> look at each theme directory to find out which ones are available).
+N> But you are free to implement support for other edition types in your 
+N> custom themes.
 
-- Assume we are producing a series of ten books (i.e. lessons of a course) and all of them 
-  will have the same editions: 'ebook', 'kindle' and 'print'.
+## Components of a theme
 
-- We want to avoid defining again and again the same editions' definitions in all of
-  ten books' `config.yml`. 
+### Contents
 
-This functionality allows just that:
+- `Common\Contents` directory contains default content for book items that 
+  are common to all editions.
 
+- `<edition-type>\Contents` directory contain content that is specific to 
+  that edition.
+
+If a content file is not found into one of these directories it will be 
+looked up into the standard **easybook** content directories (most likely, 
+the `Base` theme).
+
+### Fonts
+
+- `Common\Resources\Fonts` directory contains additional font files for the book.
+
+There is no per-edition font directory, but you can select which fonts are
+packed into the final book for a given edition with the following configuration:
+ 
 ~~~.yaml
-# my_series/config.yml
-easybook:
-    # all of easybook parameters
 book:
     editions:
-        ebook:
-            # definition of ebook edition
-        kindle:
-            # definition of kindle edition
-        print:
-            # definition of print edition   
+        edition-name:
+            include_fonts: true
+            fonts:
+                - Inconsolata-Regular
+                - Inconsolata-Bold
 ~~~
 
-And then:
+Only the listed font files will be included into the final ebook (i.e. `book.epub`). 
+This is a useful technique for limiting the final size of an edition output by only 
+including the needed fonts. 
 
-~~~.yaml
-# my_series/book1/config.yml
-import:
-    - ".."
-      
-book:
-    title: '...'
-    
-    # no 'editions' definitions!
-~~~
+### Templates 
 
-The `import` value is an array of all the directories where a suitable `config.yml` file will 
-be looked up for inclusion. The first one will be used, and used as the base definition
-in which the "local" definitions will be merged in. 
+- `Common\Templates` directory contains templates that are common to all editions. 
+- `<edition-type>\Templates` directory contain templates specific to that edition.
+
+### Images
+
+- `Common\Resources\images` directory contains images that are common to all editions. 
+- `<edition-type>\Resources\images` directory contain images specific to that edition.
+
+You can organize the image files into whatever subdirectories structure inside the 
+`images` directories. Upon book publishing, all of them will be copied to a flat 
+`images` files into the book contents (so beware of duplicated names). Images 
+per-edition type overwrite common images of the same name.
+
+### Translations
+
+- `Common\Resources\Translations` directory contains label files that are common 
+  to all editions.
+ 
+- `<edition-type>\Resources\Translations` directory contain label files specific to 
+  that edition.
+
+As usual, per-edition translations overwrite common translations.
+

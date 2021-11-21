@@ -6,9 +6,9 @@ appealing for textbooks or technical publications.
  
 {{ itemtoc() }}
 
-{{ file('plugins-AutoGlossaryPlugin.md') }}
+{{ fragment('plugins-AutoGlossaryPlugin.md') }}
 
-{{ file('plugins-AutoIndexPlugin.md') }}
+{{ fragment('plugins-AutoIndexPlugin.md') }}
 
-{{ file('plugins-EbookQuizPlugin.md') }}
+{{ fragment('plugins-EbookQuizPlugin.md') }}
  
