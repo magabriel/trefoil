@@ -428,7 +428,7 @@ class WordSearchPlugin extends BasePlugin implements EventSubscriberInterface
                 }
                 $arguments = $itemsArguments[$id]['solution'];
 
-                $title = $arguments['solution_title']
+                $title = $arguments['title']
                     ?? $this->getEditionOption('plugins.options.WordSearch.strings.solution_title') ?? '';
 
                 $text = $arguments['text'] ?? '';
