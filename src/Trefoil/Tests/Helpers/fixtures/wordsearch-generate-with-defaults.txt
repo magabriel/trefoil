@@ -1,0 +1,991 @@
+==== EXPECTED PUZZLE TEXT
+YYYADRUTAS
+TUAFYQPDBU
+HRVDRAEFYN
+UMHVSIDAGD
+RQNXTEDNJA
+SZPMPSNAOY
+DXMEEZQDYM
+AGNULWDOEU
+YCTHEIGMVW
+ROBVQDBZKW
+==== EXPECTED WORD LIST TEXT
+FRIDAY
+MONDAY
+SATURDAY
+SUNDAY
+THURSDAY
+TUESDAY
+WEDNESDAY
+==== EXPECTED SOLUTION TEXT
+.YYADRUTAS
+T.AFY....U
+H..DRA..YN
+U...SIDA.D
+R....EDN.A
+S....SNAOY
+D...E..DYM
+A..U....E.
+Y.T......W
+..........
+==== EXPECTED PUZZLE HTML
+<table>
+<tbody>
+<tr>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>A</td>
+<td>D</td>
+<td>R</td>
+<td>U</td>
+<td>T</td>
+<td>A</td>
+<td>S</td>
+</tr>
+<tr>
+<td>T</td>
+<td>U</td>
+<td>A</td>
+<td>F</td>
+<td>Y</td>
+<td>Q</td>
+<td>P</td>
+<td>D</td>
+<td>B</td>
+<td>U</td>
+</tr>
+<tr>
+<td>H</td>
+<td>R</td>
+<td>V</td>
+<td>D</td>
+<td>R</td>
+<td>A</td>
+<td>E</td>
+<td>F</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>U</td>
+<td>M</td>
+<td>H</td>
+<td>V</td>
+<td>S</td>
+<td>I</td>
+<td>D</td>
+<td>A</td>
+<td>G</td>
+<td>D</td>
+</tr>
+<tr>
+<td>R</td>
+<td>Q</td>
+<td>N</td>
+<td>X</td>
+<td>T</td>
+<td>E</td>
+<td>D</td>
+<td>N</td>
+<td>J</td>
+<td>A</td>
+</tr>
+<tr>
+<td>S</td>
+<td>Z</td>
+<td>P</td>
+<td>M</td>
+<td>P</td>
+<td>S</td>
+<td>N</td>
+<td>A</td>
+<td>O</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>D</td>
+<td>X</td>
+<td>M</td>
+<td>E</td>
+<td>E</td>
+<td>Z</td>
+<td>Q</td>
+<td>D</td>
+<td>Y</td>
+<td>M</td>
+</tr>
+<tr>
+<td>A</td>
+<td>G</td>
+<td>N</td>
+<td>U</td>
+<td>L</td>
+<td>W</td>
+<td>D</td>
+<td>O</td>
+<td>E</td>
+<td>U</td>
+</tr>
+<tr>
+<td>Y</td>
+<td>C</td>
+<td>T</td>
+<td>H</td>
+<td>E</td>
+<td>I</td>
+<td>G</td>
+<td>M</td>
+<td>V</td>
+<td>W</td>
+</tr>
+<tr>
+<td>R</td>
+<td>O</td>
+<td>B</td>
+<td>V</td>
+<td>Q</td>
+<td>D</td>
+<td>B</td>
+<td>Z</td>
+<td>K</td>
+<td>W</td>
+</tr>
+</tbody>
+</table>
+==== EXPECTED WORD LIST HTML
+<ul class="chunk-1-1">
+<li>FRIDAY</li>
+<li>MONDAY</li>
+<li>SATURDAY</li>
+<li>SUNDAY</li>
+<li>THURSDAY</li>
+<li>TUESDAY</li>
+<li>WEDNESDAY</li>
+</ul>
+==== EXPECTED SOLUTION HTML
+<table>
+<tbody>
+<tr>
+<td class="cell-filler">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-horizontal">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class=
+"cell-letter cell-start-word cell-horizontal-end cell-vertical-begin">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-start-word cell-vertical-begin">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-start-word cell-diagonal-down-begin">
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-begin">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Q
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">P
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">H
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">V
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">F
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">H
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">V
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Q
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">X
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">J
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">P
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">P
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">S
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">O
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-vertical-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">X
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Q
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-start-word cell-diagonal-down-end">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical">
+<div class="cell-inner">A
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">N
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-up">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">L
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">W
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">O
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-diagonal-down">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">U
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-letter cell-vertical-end">
+<div class="cell-inner">Y
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">C
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-start-word cell-diagonal-up-begin">
+<div class="cell-inner">T
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">H
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">E
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">I
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">G
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">M
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">V
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-letter cell-start-word cell-diagonal-down-end">
+<div class="cell-inner">W
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+<tr>
+<td class="cell-filler">
+<div class="cell-inner">R
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">O
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">V
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Q
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">D
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">B
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">Z
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">K
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+<td class="cell-filler">
+<div class="cell-inner">W
+<div class="cell-border-diagonal-down"></div>
+<div class="cell-border-diagonal-up"></div>
+<div class="cell-border-vertical"></div>
+<div class="cell-border-horizontal"></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>

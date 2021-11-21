@@ -2,4 +2,4 @@
 
 MYDIR=$(dirname $(readlink -f $0))
 
-$MYDIR'/../vendor/bin/phpunit'
+$MYDIR'/../vendor/bin/phpunit' "$@"

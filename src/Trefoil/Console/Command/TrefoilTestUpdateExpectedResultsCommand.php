@@ -13,8 +13,10 @@ namespace Trefoil\Console\Command;
 
 use Easybook\Console\Command\BaseCommand;
 use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\HelperInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -28,10 +30,13 @@ class TrefoilTestUpdateExpectedResultsCommand extends BaseCommand
 {
     protected $userConfirmed = false;
 
+    /** @var  InputInterface */
+    protected $input;
+
     /** @var  OutputInterface */
     protected $output;
 
-    /** @var DialogHelper $dialog */
+    /** @var HelperInterface $dialog */
     protected $dialog;
 
     protected function configure(): void
@@ -66,24 +71,23 @@ HELP;
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      */
-    protected function interact(InputInterface $input, OutputInterface $output): void
+    protected function interact(InputInterface  $input,
+                                OutputInterface $output): void
     {
-        $this->dialog = $this->getHelperSet()->get('dialog');
+        $this->dialog = $this->getHelperSet()->get('question');
 
-        $this->userConfirmed =
-            $this->dialog->askConfirmation(
-                $output,
-                '<question>Are you sure you want to continue?</question> [yN] ',
-                false
-            );
+        $question = new ConfirmationQuestion("<question>Are you sure you want to continue?</question> [yN] ", false);
+        $this->userConfirmed = $this->dialog->ask($input, $output, $question);
     }
 
     /**
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface  $input,
+                               OutputInterface $output): void
     {
+        $this->input = $input;
         $this->output = $output;
 
         if (!$this->userConfirmed) {
@@ -151,12 +155,8 @@ HELP;
             $this->output->writeln('- '.$test->getBasename());
         }
 
-        if (!$this->dialog->askConfirmation(
-            $this->output,
-            sprintf('<question>Update these %s Tests?</question> [yN] ', $group),
-            false
-        )
-        ) {
+        $question = new ConfirmationQuestion("<question>Update these %s Tests?</question> [yN] ", false);
+        if (!$this->dialog->ask($this->input, $this->output, $question)) {
             $this->output->writeln(sprintf('<comment> OK </comment> %s Tests not updated', $group));
 
             return;

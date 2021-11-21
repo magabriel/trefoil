@@ -50,7 +50,8 @@ class Toolkit extends EasybookToolkit
      * @param null                $format
      * @return null|string
      */
-    public static function getCurrentResourcesDir(EasybookApplication $app, $format = null): ?string
+    public static function getCurrentResourcesDir(EasybookApplication $app,
+                                                                      $format = null): ?string
     {
         $paths = self::getCurrentResourceDirs($app, $format);
 
@@ -63,28 +64,14 @@ class Toolkit extends EasybookToolkit
     }
 
     /**
-     * Return first existing resource by name.
-     *
-     * @param EasybookApplication $app
-     * @param                     $resourceName
-     * @param null                $format
-     * @return null|string
-     */
-    public static function getCurrentResource(EasybookApplication $app, $resourceName, $format = null): ?string
-    {
-        $paths = self::getCurrentResourceDirs($app, $format);
-
-        return $app->getFirstExistingFile($resourceName, $paths);
-    }
-
-    /**
      * Return the list of current resource directories, ordered by precedence.
      *
      * @param EasybookApplication $app
      * @param null                $format
      * @return array
      */
-    public static function getCurrentResourceDirs(EasybookApplication $app, $format = null): array
+    public static function getCurrentResourceDirs(EasybookApplication $app,
+                                                                      $format = null): array
     {
         $theme = ucfirst($app->edition('theme'));
 
@@ -92,7 +79,7 @@ class Toolkit extends EasybookToolkit
             $format = self::getCurrentFormat($app);
         }
 
-        // the custom theme set for this book and format 
+        // the custom theme set for this book and format
         $localResourcesDir = realpath($app['trefoil.publishing.dir.themes']).'/'.$theme.'/'.$format;
 
         // the custom theme set for this book and the Common format
@@ -121,6 +108,23 @@ class Toolkit extends EasybookToolkit
     public static function getCurrentFormat(EasybookApplication $app): string
     {
         return self::camelize($app->edition('format'), true);
+    }
+
+    /**
+     * Return first existing resource by name.
+     *
+     * @param EasybookApplication $app
+     * @param                     $resourceName
+     * @param null                $format
+     * @return null|string
+     */
+    public static function getCurrentResource(EasybookApplication $app,
+                                                                  $resourceName,
+                                                                  $format = null): ?string
+    {
+        $paths = self::getCurrentResourceDirs($app, $format);
+
+        return $app->getFirstExistingFile($resourceName, $paths);
     }
 
     /**
@@ -160,6 +164,28 @@ class Toolkit extends EasybookToolkit
     }
 
     /**
+     * Render the HTML tag
+     *
+     * @param string $tag
+     * @param string $contents
+     * @param array  $attributes
+     * @return string
+     */
+    public static function renderHTMLTag($tag,
+        $contents = '',
+                                         array $attributes = []): string
+    {
+        $strAttributes = static::renderHTMLAttributes($attributes);
+        $strAttributes = $strAttributes ? ' '.$strAttributes : '';
+
+        if ($contents) {
+            return sprintf('<%s%s>%s</%s>', $tag, $strAttributes, $contents, $tag);
+        }
+
+        return sprintf('<%s%s />', $tag, $strAttributes);
+    }
+
+    /**
      * Render the attributes of an HTML tag
      *
      * @param array $attributes
@@ -177,35 +203,32 @@ class Toolkit extends EasybookToolkit
     }
 
     /**
-     * Render the HTML tag
-     *
-     * @param string $tag
-     * @param string $contents
-     * @param array  $attributes
-     * @return string
-     */
-    public static function renderHTMLTag($tag, $contents = '', array $attributes = []): string
-    {
-        $strAttributes = static::renderHTMLAttributes($attributes);
-        $strAttributes = $strAttributes ? ' '.$strAttributes : '';
-
-        if ($contents) {
-            return sprintf('<%s%s>%s</%s>', $tag, $strAttributes, $contents, $tag);
-        }
-
-        return sprintf('<%s%s />', $tag, $strAttributes);
-    }
-
-    /**
      * Return true if the $haystack starts with the $needle,
      *
      * @param $haystack
      * @param $needle
      * @return bool
      */
-    public static function stringStartsWith($haystack, $needle): bool
+    public static function stringStartsWith($haystack,
+                                            $needle): bool
     {
         return substr($haystack, 0, strlen($needle)) === $needle;
+    }
+
+    /**
+     * Multi-byte sttrev.
+     *
+     * @param string $str
+     * @return string
+     */
+    public static function mb_strrev(string $str): string
+    {
+        $r = '';
+        for ($i = mb_strlen($str); $i >= 0; $i--) {
+            $r .= mb_substr($str, $i, 1);
+        }
+
+        return $r;
     }
 
 }

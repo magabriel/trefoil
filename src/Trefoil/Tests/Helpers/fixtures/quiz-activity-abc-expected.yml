@@ -6,9 +6,9 @@ activity:
     heading: "Exercise 1"
     subheading: "Please select the correct response."
     introduction: >
-        <p>This is the introduction text of the exercise 1.</p>
-        <ul><li>One.</li><li>Two.</li><li>Tree.</li></ul>
-        <p>Lorem ipsum dolor sit amen.</p>
+      <p>This is the introduction text of the exercise 1.</p>
+      <ul><li>One.</li><li>Two.</li><li>Tree.</li></ul>
+      <p>Lorem ipsum dolor sit amen.</p>
     questions:
         1:
             text: "<p>First question:</p>"

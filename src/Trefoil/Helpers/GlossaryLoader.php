@@ -89,7 +89,7 @@ class GlossaryLoader
         $this->loaded = false;
 
         if (file_exists($this->fileName)) {
-            $glossaryDefinition = Yaml::parse($this->fileName);
+            $glossaryDefinition = Yaml::parse(file_get_contents($this->fileName));
             $this->loaded = true;
         } else {
             $glossaryDefinition = [];

@@ -98,10 +98,9 @@ abstract class BasePublisher extends EasybookBasePublisher
 
         if (isset($itemConfig['editions'])) {
 
-            /** @var array[] $ed */
             foreach ($itemConfig['editions'] as $ed) {
-                if (substr($ed, 0, 1) === '!') {
-                    $contentFilters['not-editions'][] = substr($ed, 1);
+                if (str_starts_with($ed, 'not-')) {
+                    $contentFilters['not-editions'][] = substr($ed, strlen('not-'));
                 } else {
                     $contentFilters['editions'][] = $ed;
                 }
@@ -111,8 +110,8 @@ abstract class BasePublisher extends EasybookBasePublisher
         if (isset($itemConfig['formats'])) {
 
             foreach ($itemConfig['formats'] as $fm) {
-                if (substr($fm, 0, 1) === '!') {
-                    $contentFilters['not-formats'][] = substr($fm, 1);
+                if (str_starts_with($fm, 'not-')) {
+                    $contentFilters['not-formats'][] = substr($fm, strlen('not-'));
                 } else {
                     $contentFilters['formats'][] = $fm;
                 }

@@ -149,7 +149,7 @@ class HtmlTweaksPlugin extends BasePlugin implements EventSubscriberInterface
             return;
         }
 
-        $this->tweaks = Yaml::parse($file);
+        $this->tweaks = Yaml::parse(file_get_contents($file));
     }
 
     /**

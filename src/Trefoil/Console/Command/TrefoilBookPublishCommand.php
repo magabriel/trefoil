@@ -13,6 +13,7 @@ namespace Trefoil\Console\Command;
 
 use Easybook\Console\Command\BookPublishCommand as EasybookBookPublishCommand;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +60,8 @@ class TrefoilBookPublishCommand extends EasybookBookPublishCommand
 
         // register our resources
         $this->app['dispatcher']->addSubscriber(new RegisterResources());
-        $this->app['console.progress'] = $this->getHelperSet()->get('progress');
+//        $this->app['console.progress'] = $this->getHelperSet()->get('progress_bar');
+        $this->app['console.progress'] = new ProgressBar($output);
 
         // and go!
         parent::execute($input, $output);

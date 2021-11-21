@@ -153,7 +153,7 @@ SIGNATURE;
             $this['publishing.book.config'] = array_merge_recursive($this['publishing.book.config'], $config);
         }
 
-        $this['validator']->validatePublishingEdition($this['publishing.edition']);
+        $this['publishing.edition'] = $this['validator']->validatePublishingEdition($this['publishing.edition']);
 
         $config = $this['configurator']->loadEditionConfiguration();
         $this['publishing.book.config'] = $config;

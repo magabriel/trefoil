@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use Trefoil\Console\ConsoleApplication;
 use Trefoil\DependencyInjection\Application;
@@ -35,9 +36,9 @@ use Trefoil\DependencyInjection\Application;
  * - [arguments] are optional:
  *      - "--debug" will show verbose messages and leave the test output
  *        files for inspection after execution (such as current results).
- *      - ":fixture-name" will execute only one fixture instead of all.
+ *      - "--filter" to allow execution of one fixture instead of all.
  * Example:
- *  "phpunit --debug src/Trefoil/Tests/Plugins/PluginsTest.php :book-test-LinkCheckPlugin"
+ *  "phpunit --debug src/Trefoil/Tests/Plugins/PluginsTest.php --filter 'testBookPublish@book-test-WordSearchPlugin ebook'
  */
 abstract class BookPublishingAllTestCase extends TestCase
 {
@@ -116,31 +117,18 @@ abstract class BookPublishingAllTestCase extends TestCase
 
         $books = [];
 
-        // look if only one fixture should be tested
-        global $argv;
-        $fixtureName = end($argv);
-        $fixtureName = substr($fixtureName, 0, 1) === ':' ? substr($fixtureName, 1) : '';
-
-        if ($fixtureName) {
-            echo sprintf('> Testing only fixture "%s"', $fixtureName)."\n";
-        }
-
         foreach ($fixtures as $fixture) {
             $slug = $fixture->getFileName();
 
-            if ($fixtureName && $slug !== $fixtureName) {
-                continue;
-            }
-
             // look for and publish all the book editions
             $bookConfigFile = $this->fixturesDir.'/'.$slug.'/input/config.yml';
+            $bookConfig = Yaml::parse(file_get_contents($bookConfigFile));
 
-            $bookConfig = Yaml::parse($bookConfigFile);
             /** @var string[] $editions */
             $editions = $bookConfig['book']['editions'];
 
             foreach ($editions as $editionName => $editionConfig) {
-                $books[] = [
+                $books[$slug.' '. $editionName] = [
                     $slug,
                     $editionName,
                 ];
@@ -198,7 +186,8 @@ abstract class BookPublishingAllTestCase extends TestCase
             $output = new ConsoleOutput(OutputInterface::VERBOSITY_NORMAL, true);
         }
 
-        $this->console->find('publish')->run($input, $output);
+        $command = $this->console->find('publish');
+        $command->run($input, $output);
 
         // look for config.yml modification
         $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';
