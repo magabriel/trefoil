@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Trefoil\Helpers;
 
@@ -46,7 +48,8 @@ class WordSearch
     public const DIFFICULTY_VERY_HARD = 'very-hard';
 
     protected array $puzzle = [];
-    protected int $randomSeed = 0;
+
+    protected PseudoRandom $random;
 
     protected array $difficulties = [
         self::DIFFICULTY_EASY      => [
@@ -86,13 +89,19 @@ class WordSearch
      */
     protected array $errors = [];
 
-    public function generate(int    $rows = 10,
-                             int    $columns = 10,
-                             array  $words = self::DEFAULT_WORDS,
-                             string $fillerLetters = self::FILLER_LETTERS_ENGLISH,
-                             int    $numberOfWords = 0,
-                             string $difficulty = self::DIFFICULTY_MEDIUM): bool
+    public function __construct()
     {
+        $this->random = new PseudoRandom();
+    }
+
+    public function generate(
+        int    $rows = 10,
+        int    $columns = 10,
+        array  $words = self::DEFAULT_WORDS,
+        string $fillerLetters = self::FILLER_LETTERS_ENGLISH,
+        int    $numberOfWords = 0,
+        string $difficulty = self::DIFFICULTY_MEDIUM
+    ): bool {
         $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
         $this->columns = $columns;
@@ -121,16 +130,17 @@ class WordSearch
         return true;
     }
 
-    protected function selectRandomWords(int    $numberOfWords,
-                                         string $difficulty,
-                                         int $maxLength)
-    {
+    protected function selectRandomWords(
+        int    $numberOfWords,
+        string $difficulty,
+        int $maxLength
+    ) {
         $newWords = [];
 
         for ($i = 0; $i < $numberOfWords; $i++) {
             $tries = 100;
             do {
-                $word = $this->words[$this->getRandomInt(0, count($this->words) - 1)];
+                $word = $this->words[$this->random->getRandomInt(0, count($this->words) - 1)];
                 $tries--;
                 $isValid = !in_array($word, $newWords)
                     && mb_strlen($word) >= $this->difficulties[$difficulty]['min-length']
@@ -147,7 +157,8 @@ class WordSearch
             $this->errors[] = sprintf(
                 'Could not select %s random words. Just %s selected.',
                 count($newWords),
-                $numberOfWords);
+                $numberOfWords
+            );
         }
 
         $this->words = $newWords;
@@ -161,7 +172,8 @@ class WordSearch
                     'Word "%s" would not fit in %s rows by %s columns.',
                     $word,
                     $this->rows,
-                    $this->columns);
+                    $this->columns
+                );
 
                 return false;
             }
@@ -182,7 +194,6 @@ class WordSearch
                 ];
             }
         }
-
     }
 
     protected function placeWords(string $difficulty): bool
@@ -192,8 +203,11 @@ class WordSearch
         // Sort words by length descending
         usort(
             $words,
-            fn($a,
-               $b) => mb_strlen($b) <=> mb_strlen($a));
+            fn (
+                $a,
+                $b
+            ) => mb_strlen($b) <=> mb_strlen($a)
+        );
 
         $maxPuzzleTries = 100;
 
@@ -204,7 +218,7 @@ class WordSearch
             $puzzleDone = true;
             $unplacedWords = array_flip($words);
 
-//            echo "==== PUZZLE start try: $puzzleTries\n";
+            //            echo "==== PUZZLE start try: $puzzleTries\n";
 
             $directions = [];
 
@@ -216,7 +230,7 @@ class WordSearch
                     $this->puzzle = $backupPuzzleBeforePuzzle;
                     $puzzleDone = false;
 
-//                    echo "==== PUZZLE failed \n";
+                    //                    echo "==== PUZZLE failed \n";
 
                     break;
                 }
@@ -232,12 +246,11 @@ class WordSearch
                 $this->puzzle = $backupPuzzleBeforePuzzle;
                 $puzzleDone = false;
 
-//                echo "==== PUZZLE failed 2 \n";
+                //                echo "==== PUZZLE failed 2 \n";
             }
-
         } while ($puzzleTries <= $maxPuzzleTries && !$puzzleDone);
 
-//        print_r($directions);
+        //        print_r($directions);
 
         if (!$puzzleDone) {
             $this->errors[] = 'Some words could not be placed.';
@@ -255,7 +268,7 @@ class WordSearch
             for ($column = 0; $column < $this->columns; $column++) {
                 if ($this->puzzle[$row][$column]['letter'] === self::EMPTY_CELL) {
                     $this->puzzle[$row][$column] = [
-                        'letter'     => mb_substr($letters, $this->getRandomInt(0, mb_strlen($letters) - 1), 1),
+                        'letter'     => mb_substr($letters, $this->random->getRandomInt(0, mb_strlen($letters) - 1), 1),
                         'types'      => [self::CELL_TYPE_FILLER],
                         'directions' => [],
                     ];
@@ -264,20 +277,6 @@ class WordSearch
         }
     }
 
-    protected function getRandomInt(int $min = 0,
-                                    int $max = 9999999): int
-    {
-        if ($this->randomSeed == 0) {
-            $this->setRandomSeed(mt_rand());
-        }
-        $this->randomSeed = ($this->randomSeed * 125) % 2796203;
-
-        if ($min > $max) {
-            $min = $max;
-        }
-
-        return $this->randomSeed % ($max - $min + 1) + $min;
-    }
 
     protected function normalizeWords(array $words): array
     {
@@ -298,23 +297,24 @@ class WordSearch
      * @param string $word
      * @return string Direction or self::WORD_FAIL
      */
-    protected function placeWord(string $word,
-                                 string $difficulty): string
-    {
+    protected function placeWord(
+        string $word,
+        string $difficulty
+    ): string {
         $wordTries = 0;
         $maxWordTries = 100;
 
         do {
-//            echo "====== WORD start try: $word $wordTries\n";
+            //            echo "====== WORD start try: $word $wordTries\n";
 
             $backupPuzzleBeforeWord = $this->puzzle;
 
             $direction = [
-                             self::DIRECTION_HORIZONTAL,
-                             self::DIRECTION_VERTICAL,
-                             self::DIRECTION_DIAGONAL_DOWN,
-                             self::DIRECTION_DIAGONAL_UP,
-                         ][$this->getRandomInt(0, 3)];
+                self::DIRECTION_HORIZONTAL,
+                self::DIRECTION_VERTICAL,
+                self::DIRECTION_DIAGONAL_DOWN,
+                self::DIRECTION_DIAGONAL_UP,
+            ][$this->random->getRandomInt(0, 3)];
 
             $rows = $this->rows;
             $columns = $this->columns;
@@ -328,24 +328,24 @@ class WordSearch
 
             switch ($direction) {
                 case self::DIRECTION_HORIZONTAL:
-                    $initialRow = $this->getRandomInt(0, $rows - 1);
-                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
+                    $initialRow = $this->random->getRandomInt(0, $rows - 1);
+                    $initialCol = $this->random->getRandomInt(0, $columns - mb_strlen($word));
 
                     $maxRow = $initialRow;
                     $incCol = 1;
                     $maxCol = $initialCol + mb_strlen($word) - 1;
                     break;
                 case self::DIRECTION_VERTICAL:
-                    $initialRow = $this->getRandomInt(0, $rows - mb_strlen($word));
-                    $initialCol = $this->getRandomInt(0, $columns - 1);
+                    $initialRow = $this->random->getRandomInt(0, $rows - mb_strlen($word));
+                    $initialCol = $this->random->getRandomInt(0, $columns - 1);
 
                     $incRow = 1;
                     $maxRow = $initialRow + mb_strlen($word) - 1;
                     $maxCol = $initialCol;
                     break;
                 case self::DIRECTION_DIAGONAL_DOWN:
-                    $initialRow = $this->getRandomInt(0, $rows - mb_strlen($word));
-                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
+                    $initialRow = $this->random->getRandomInt(0, $rows - mb_strlen($word));
+                    $initialCol = $this->random->getRandomInt(0, $columns - mb_strlen($word));
 
                     $incRow = 1;
                     $maxRow = $initialRow + mb_strlen($word) - 1;
@@ -353,8 +353,8 @@ class WordSearch
                     $maxCol = $initialCol + mb_strlen($word) - 1;
                     break;
                 case self::DIRECTION_DIAGONAL_UP:
-                    $initialRow = $this->getRandomInt($rows - mb_strlen($word) + 1, $rows - 1);
-                    $initialCol = $this->getRandomInt(0, $columns - mb_strlen($word));
+                    $initialRow = $this->random->getRandomInt($rows - mb_strlen($word) + 1, $rows - 1);
+                    $initialCol = $this->random->getRandomInt(0, $columns - mb_strlen($word));
 
                     $incRow = -1;
                     $maxRow = $initialRow + mb_strlen($word) - 1;;
@@ -368,7 +368,7 @@ class WordSearch
             } elseif ($this->difficulties[$difficulty]['forced-reverse']) {
                 $reverse = true;
             } else {
-                $reverse = $this->getRandomInt(0, 1) == 1;
+                $reverse = $this->random->getRandomInt(0, 1) == 1;
             }
 
             $theWord = mb_strtoupper($reverse ? Toolkit::mb_strrev($word) : $word);
@@ -380,16 +380,18 @@ class WordSearch
 
             for ($i = 0; $i < mb_strlen($theWord); $i++) {
 
-                if ($theRow < 0 || $theRow > $rows - 1 || $theRow > $maxRow ||
+                if (
+                    $theRow < 0 || $theRow > $rows - 1 || $theRow > $maxRow ||
                     $theCol < 0 || $theCol > $columns - 1 || $theCol > $maxCol ||
                     $this->puzzle[$theRow][$theCol]['letter'] !== self::EMPTY_CELL &&
-                    $this->puzzle[$theRow][$theCol]['letter'] !== mb_substr($theWord, $i, 1)) {
+                    $this->puzzle[$theRow][$theCol]['letter'] !== mb_substr($theWord, $i, 1)
+                ) {
 
                     $wordTries++;
                     $this->puzzle = $backupPuzzleBeforeWord;
                     $wordDone = false;
 
-//                    echo "====== WORD failed: $word\n";
+                    //                    echo "====== WORD failed: $word\n";
                     break;
                 }
 
@@ -426,8 +428,7 @@ class WordSearch
 
     public function setRandomSeed(int $seed)
     {
-        $this->randomSeed = abs($seed) % 9999999 + 1;;
-        $this->getRandomInt();
+        $this->random->setRandomSeed($seed);
     }
 
     public function puzzleAsText(): string
@@ -498,10 +499,10 @@ class WordSearch
                 $cellDirections = array_unique($cell['directions']);
 
                 foreach ($cellTypes as $cellType) {
-                    $classes[] = 'cell-'.$cellType;
+                    $classes[] = 'cell-' . $cellType;
                 }
                 foreach ($cellDirections as $cellDirection) {
-                    $classes[] = 'cell-'.$cellDirection;
+                    $classes[] = 'cell-' . $cellDirection;
                 }
 
                 $attributes = $classes ? ['class' => implode(' ', $classes)] : [];
@@ -523,9 +524,10 @@ class WordSearch
         return implode("\n", $words);
     }
 
-    public function wordListAsHtml(bool $sorted = true,
-                                   int  $chunks = 1): string
-    {
+    public function wordListAsHtml(
+        bool $sorted = true,
+        int  $chunks = 1
+    ): string {
         $words = $this->words;
         if ($sorted) {
             sort($words);
@@ -535,8 +537,8 @@ class WordSearch
         $itemChunks = array_chunk($words, intval(ceil(count($words) / $chunks)));
         foreach ($itemChunks as $index => $itemChunk) {
             $output .= sprintf('<ul class="chunk-%s-%s"><li>', $index + 1, $chunks)
-                .implode("</li><li>", $itemChunk)
-                .'</li></ul>';
+                . implode("</li><li>", $itemChunk)
+                . '</li></ul>';
         }
 
         return $output;

@@ -1,0 +1,258 @@
+/*
+* CrossWords
+* ==========
+*/
+
+{% set gridSize         = app['publishing.plugins.options.CrossWords.grid_size'] | default(20) %}
+{% set solutionGridSize = app['publishing.plugins.options.CrossWords.solution_grid_size'] | default(10) %}
+{% set highlightType    = app['publishing.plugins.options.CrossWords.highlight_type'] | default('line') %}
+{% set gridLineWidth    = solutionGridSize * 0.1 %}
+{% set gridLineWidth    = min(max(gridLineWidth, 2), gridLineWidth)  %}
+
+/****
+ * General
+ */
+ 
+.crosswords-title {
+    font-size: 2em;
+    font-weight: bold;
+    width: 100%;
+    border-bottom: 3px solid black;
+    line-height: 1em;
+}
+
+.crosswords-puzzle,
+.crosswords-solution {
+    font-family: "Courier New", monospace;
+    border: 2px solid black;
+    width: max-content;
+    display: inline-block;
+}
+
+.crosswords-puzzle {
+    float: left;
+    margin-bottom: 0.5em;
+    padding: {{ gridSize * 0.25 }}px;
+}
+
+.crosswords-solution {
+    padding: {{ solutionGridSize * 0.25 }}px;
+}
+
+.crosswords-puzzle table,
+.crosswords-solution table {
+    margin: 0;
+    width: auto;
+    height: auto;
+    border: none;
+    border-collapse: collapse;
+}
+
+.crosswords.crosswords-puzzle-container {
+    clear: both;
+    margin-bottom: 0;
+}
+
+.crosswords.crosswords-solution-container {
+    float: left;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+.crosswords-puzzle table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ gridSize }}px;
+    width: {{ gridSize }}px;
+    font-size: {{ gridSize * 0.9 }}px;
+    border: none;
+}
+
+.crosswords-solution table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ solutionGridSize }}px;
+    width: {{ solutionGridSize }}px;
+    font-size: {{ solutionGridSize * 0.9 }}px;
+    border: none;
+}
+
+.crosswords-solution table td.cell-letter {
+    color: black;
+}
+
+.crosswords-solution table td.cell-filler {
+    color: #aaaaaa;
+}
+
+.crosswords-puzzle .cell-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    line-height: {{ gridSize }}px;
+}
+
+.crosswords-solution .cell-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    line-height: {{ solutionGridSize}}px;
+}
+
+/****
+* Puzzle start of word markers
+*/
+
+.crosswords-puzzle .cell-horizontal-begin.cell-no-reverse-horizontal.cell-start-word .cell-arrow-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-top: {{ gridSize * 0.5 }}px solid transparent;
+    border-left: {{ gridSize * 0.15 }}px solid #888;
+    border-bottom: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-puzzle .cell-horizontal-end.cell-reverse-horizontal.cell-start-word .cell-arrow-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    border-top: {{ gridSize * 0.5 }}px solid transparent;
+    border-right: {{ gridSize * 0.15 }}px solid #888;
+    border-bottom: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-puzzle .cell-vertical-begin.cell-no-reverse-vertical.cell-start-word .cell-arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0;
+    border-left: {{ gridSize * 0.5 }}px solid transparent;
+    border-top: {{ gridSize * 0.15 }}px solid #888;
+    border-right: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-puzzle .cell-vertical-end.cell-reverse-vertical.cell-start-word .cell-arrow-up {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-left: {{ gridSize * 0.5 }}px solid transparent;
+    border-bottom: {{ gridSize * 0.15 }}px solid #888;
+    border-right: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+/****
+* Solution start of word markers
+*/
+
+.crosswords-solution .cell-horizontal-begin.cell-no-reverse-horizontal.cell-start-word .cell-arrow-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-top: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-left: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-bottom: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-solution .cell-horizontal-end.cell-reverse-horizontal.cell-start-word .cell-arrow-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    border-top: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-right: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-bottom: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-solution .cell-vertical-begin.cell-no-reverse-vertical.cell-start-word .cell-arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0;
+    border-left: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-top: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-right: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.crosswords-solution .cell-vertical-end.cell-reverse-vertical.cell-start-word .cell-arrow-up {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-left: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-bottom: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-right: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+{% if highlightType == 'line' %}
+
+.crosswords-solution td.cell-letter, 
+.crosswords-solution td.cell-clue {
+    border-top: {{ gridLineWidth }}px solid #888;
+    border-bottom: {{ gridLineWidth }}px solid #888;
+    border-left: {{ gridLineWidth }}px solid #888;
+    border-right: {{ gridLineWidth }}px solid #888;
+}
+
+.crosswords-solution table td.cell-hint{
+    color: black;
+    font-weight: bold;
+}
+
+{% endif %}{# if highlightType == 'line' #}
+
+{% if highlightType == 'shadow' %}
+
+.crosswords-solution table td.cell-letter {
+    background: #CCCCCC;
+    color: black;
+}
+
+.crosswords-solution table td.cell-hint {
+    background: #666666;
+    color: white;
+}
+
+{% endif %}{# if highlightType == 'shadow' #}
+
+.crosswords-puzzle td.cell-letter{
+    border-top: {{ gridLineWidth }}px solid #888;
+    border-bottom: {{ gridLineWidth }}px solid #888;
+    border-left: {{ gridLineWidth }}px solid #888;
+    border-right: {{ gridLineWidth }}px solid #888;
+}
+
+
+/****
+ * Word list
+ */
+
+.crosswords-wordlist {
+    float: left;
+    font-size: 14px;;
+}
+
+.crosswords-wordlist ul {
+    display: inline-block;
+    margin-left: 1em;
+    margin-top: 0;
+    vertical-align: top;
+
+    list-style: none;
+    padding: 0;
+}
+
+.crosswords-wordlist ul + ul {
+    margin-left: 2em;
+}
+
+.crosswords-wordlist ul li {
+    margin: 0.3px 0;
+}

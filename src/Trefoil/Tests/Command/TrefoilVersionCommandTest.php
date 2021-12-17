@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
@@ -47,20 +48,17 @@ class TrefoilVersionCommandTest extends TestCase
      */
     protected function tearDown(): void
     {
-
     }
 
     public function testDisplayVersion(): void
     {
-        /**
-         * @var $command TrefoilVersionCommand
-         */
+        /** @var TrefoilVersionCommand */
         $command = $this->console->find('version');
 
         $tester = new CommandTester($command);
         $tester->execute(
             [
-                   'command' => $command->getName()
+                'command' => $command->getName()
             ]
         );
 
@@ -72,5 +70,4 @@ class TrefoilVersionCommandTest extends TestCase
         static::assertStringContainsString('easybook installed version: ' . $app->getVersion(), $tester->getDisplay());
         static::assertStringContainsString('trefoil  installed version: ' . $app->getMyVersion(), $tester->getDisplay());
     }
-
 }

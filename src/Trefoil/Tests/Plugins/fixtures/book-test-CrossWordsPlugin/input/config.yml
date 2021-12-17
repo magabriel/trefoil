@@ -1,0 +1,48 @@
+book:
+    title:            'Test book - CrossWordsPlugin'
+    author:           'trefoil'
+    edition:          '0'
+    language:         en
+    publication_date: '01-02-2013'
+
+    generator:        { name: trefoil, version: DEV }
+   
+    contents:
+        - { element: chapter, number: 1, content: chapter1.md }
+        - { element: chapter, number: 2, content: chapter2.md }
+        - { element: chapter, number: 3, content: solutions.md }
+
+    editions:
+        ebook:
+            format:         epub
+            highlight_code: false
+            include_styles: true
+            labels:         ['appendix', 'chapter', 'figure']  # labels also available for: "figure", "table"
+            theme:          theme1
+            toc:
+                deep:       1
+                elements:   ["appendix", "chapter", "part", "introduction", "usage-instructions"]
+            isbn:           1234567890X
+            plugins:        
+                enabled: 
+                    - CrossWords
+
+                options:
+                    CrossWords:
+                        grid_size: 20
+                        solution_grid_size: 10.5
+                        word_files:
+                            - { label: words_a, name: word_file_1.txt }
+                            - { label: words_b, name: word_file_2.txt }
+                            - { label: words_c, name: lista-palabras.txt }
+                        default:
+                            filler: "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+                            #difficulty: "easy"
+                        strings:
+                            title: "Puzzle %s"
+                            text: "Place the words in the grid."
+                            text2: "This is a very interesting puzzle."
+                            difficulty:
+                                easy: 'This puzzle is EASY'
+                                hard: 'This puzzle is HARD'
+                            solution_title: "Solution %s"
