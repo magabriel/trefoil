@@ -69,9 +69,9 @@ abstract class BasePlugin
      * Write an output message line
      *
      * @param string $message
-     * @param string $type of message ('error', 'warning', 'info')
+     * @param string $type of message ('error', 'warning', 'info', 'plain')
      */
-    public function writeLn($message,
+    public function writeLn($message = '',
                             $type = 'info'): void
     {
         $this->write($message, $type);
@@ -82,7 +82,7 @@ abstract class BasePlugin
      * Write an output message (w/o a line break)
      *
      * @param string $message
-     * @param string $type of message ('error', 'warning', 'info')
+     * @param string $type of message ('error', 'warning', 'info', 'plain')
      */
     public function write($message,
                           $type = 'info'): void
@@ -90,7 +90,7 @@ abstract class BasePlugin
 //        $class = (new \ReflectionClass($this))->getShortName();
         $class = implode('', array_slice(explode('\\', static::class), -1));
         $part = ': '.$this->item['config']['content'] ?? '';
-        $prefix = sprintf('%s%s: ', $class, $part);
+        $prefix = sprintf(' > %s%s: ', $class, $part);
 
         $msgType = '';
 
@@ -102,9 +102,15 @@ abstract class BasePlugin
             case 'error':
                 $msgType = '<bg=red;fg=white> ERROR </> ';
                 break;
+            
+            case 'plain':
+                $msgType = '';
+                $prefix = '';
+                break;
         }
+        
 
-        $this->output->write(' > '.$prefix.$msgType.$message);
+        $this->output->write($prefix.$msgType.$message);
     }
 
     /**

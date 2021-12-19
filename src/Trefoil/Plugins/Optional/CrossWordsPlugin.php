@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /*
  * This file is part of the trefoil application.
@@ -32,18 +33,17 @@ use Trefoil\Plugins\BasePlugin;
  * @see     CrossWords
  * @package Trefoil\Plugins\Optional
  */
-class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
-{
+class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
+
     protected static array $wordFiles = [];
     protected int $crosswordsCalls = 0;
 
     /**
      * @return array
      */
-    public static function getSubscribedEvents(): array
-    {
+    public static function getSubscribedEvents(): array {
         return [
-            EasybookEvents::PRE_PARSE  => ['onItemPreParse', -100], // after TwigExtensionPlugin
+            EasybookEvents::PRE_PARSE => ['onItemPreParse', -100], // after TwigExtensionPlugin
             EasybookEvents::POST_PARSE => ['onItemPostParse', -1100], // after ParserPlugin
         ];
     }
@@ -53,8 +53,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
      * @throws PluginException
      * @throws \ReflectionException
      */
-    public function onItemPreParse(ParseEvent $event)
-    {
+    public function onItemPreParse(ParseEvent $event) {
         $this->init($event);
 
         $content = $event->getItemProperty('original');
@@ -72,87 +71,77 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
      * @param $content
      * @return string|null
      */
-    protected function processTrefoilMarkers($content): ?string
-    {
+    protected function processTrefoilMarkers($content): ?string {
         $this->crosswordsCalls = 0;
 
         $processor = new TrefoilMarkerProcessor();
 
         $processor->registerMarker(
-            'crosswords',
-            function (int   $id,
-                      array $arguments = []) {
-                $arguments['id'] = $id;
+                'crosswords',
+                function (int $id, array $arguments = []) {
+                    $arguments['id'] = $id;
 
-                $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
-                $itemsArguments[$id]['puzzle'] = $arguments;
-                $this->app['publishing.crosswords.arguments'] = $itemsArguments;
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
+                    $itemsArguments[$id]['puzzle'] = $arguments;
+                    $this->app['publishing.crosswords.arguments'] = $itemsArguments;
 
-                return sprintf(
-                    '<div class="crosswords crosswords-puzzle-simple" data-id="%s" markdown="1"></div>',
-                    $id);
-            });
+                    return sprintf(
+                    '<div class="crosswords crosswords-puzzle-simple" data-id="%s" markdown="1"></div>', $id);
+                });
 
         $processor->registerMarker(
-            'crosswords_begin',
-            function (int   $id,
-                      array $arguments = []) {
-                $arguments['id'] = $id;
+                'crosswords_begin',
+                function (int $id, array $arguments = []) {
+                    $arguments['id'] = $id;
 
-                $this->crosswordsCalls++;
+                    $this->crosswordsCalls++;
 
-                $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
-                $itemsArguments[$id]['puzzle'] = $arguments;
-                $this->app['publishing.crosswords.arguments'] = $itemsArguments;
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
+                    $itemsArguments[$id]['puzzle'] = $arguments;
+                    $this->app['publishing.crosswords.arguments'] = $itemsArguments;
 
-                return sprintf(
-                    '<div class="crosswords crosswords-puzzle" data-id="%s" markdown="1">',
-                    $id);
-            });
+                    return sprintf(
+                    '<div class="crosswords crosswords-puzzle" data-id="%s" markdown="1">', $id);
+                });
 
         $processor->registerMarker(
-            'crosswords_end',
-            function () {
-                $this->crosswordsCalls--;
+                'crosswords_end',
+                function () {
+                    $this->crosswordsCalls--;
 
-                return '</div>';
-            });
-
-        $processor->registerMarker(
-            'crosswords_wordlist',
-            function (int   $id,
-                      array $arguments = []) {
-                $arguments['id'] = $id;
-
-                $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
-                $itemsArguments[$id] ['wordlist'] = $arguments;
-                $this->app['publishing.crosswords.arguments'] = $itemsArguments;
-
-                return sprintf(
-                    '<div class="crosswords crosswords-wordlist" data-id="%s" markdown="1"></div>',
-                    $id);
-            });
+                    return '</div>';
+                });
 
         $processor->registerMarker(
-            'crosswords_solution',
-            function (int   $id,
-                      array $arguments = []) {
-                $arguments['id'] = $id;
+                'crosswords_wordlist',
+                function (int $id, array $arguments = []) {
+                    $arguments['id'] = $id;
 
-                $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
-                $itemsArguments[$id] ['solution'] = $arguments;
-                $this->app['publishing.crosswords.arguments'] = $itemsArguments;
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
+                    $itemsArguments[$id] ['wordlist'] = $arguments;
+                    $this->app['publishing.crosswords.arguments'] = $itemsArguments;
 
-                return sprintf(
-                    '<div class="crosswords crosswords-solution" data-id="%s" markdown="1"></div>',
-                    $id);
-            });
+                    return sprintf(
+                    '<div class="crosswords crosswords-wordlist" data-id="%s" markdown="1"></div>', $id);
+                });
+
+        $processor->registerMarker(
+                'crosswords_solution',
+                function (int $id, array $arguments = []) {
+                    $arguments['id'] = $id;
+
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
+                    $itemsArguments[$id] ['solution'] = $arguments;
+                    $this->app['publishing.crosswords.arguments'] = $itemsArguments;
+
+                    return sprintf(
+                    '<div class="crosswords crosswords-solution" data-id="%s" markdown="1"></div>', $id);
+                });
 
         return $processor->parse($content);
     }
 
-    protected function savePluginOptions()
-    {
+    protected function savePluginOptions() {
         $gridSize = $this->getEditionOption('plugins.options.CrossWords.grid_size');
         if ($gridSize) {
             $this->app['publishing.plugins.options.CrossWords.grid_size'] = $gridSize;
@@ -169,8 +158,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
         }
     }
 
-    protected function checkBalancedCalls()
-    {
+    protected function checkBalancedCalls() {
         if ($this->crosswordsCalls > 0) {
             $this->writeLn('crosswords_begin() call without ending previous.', 'error');
         }
@@ -183,8 +171,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
     /**
      * @param ParseEvent $event
      */
-    public function onItemPostParse(ParseEvent $event)
-    {
+    public function onItemPostParse(ParseEvent $event) {
         $this->init($event);
 
         $this->processCrossWordses();
@@ -192,277 +179,250 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
         $event->setItem($this->item);
     }
 
-    protected function processCrossWordses()
-    {
+    protected function processCrossWordses() {
         $this->processPuzzle();
         $this->processWordList();
         $this->processSolution();
     }
 
-    protected function processPuzzle()
-    {
+    protected function processPuzzle() {
         $regExp = '/'
-            .'(?<div>'
-            .'<div +(?<pre>[^>]*)'
-            .'class="(?<class>crosswords crosswords-puzzle(?<simple>-simple)?)"'
-            .' +'
-            .'data-id="(?<id>\d+)"'
-            .'(?<post>[^>]*)>'
-            .')' // div group
-            .'(?<content>.*)'
-            .'<\/div>'
-            .'/Ums'; // Ungreedy, multiline, dotall
+                . '(?<div>'
+                . '<div +(?<pre>[^>]*)'
+                . 'class="(?<class>crosswords crosswords-puzzle(?<simple>-simple)?)"'
+                . ' +'
+                . 'data-id="(?<id>\d+)"'
+                . '(?<post>[^>]*)>'
+                . ')' // div group
+                . '(?<content>.*)'
+                . '<\/div>'
+                . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-            $regExp,
-            function ($matches) {
-                $id = $matches['id'];
-                $isSimple = (bool)$matches['simple'];
-                $itemsArguments = $this->app['publishing.crosswords.arguments'];
-                if (!isset($itemsArguments[$id])) {
-                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                $regExp,
+                function ($matches) {
+                    $id = $matches['id'];
+                    $isSimple = (bool) $matches['simple'];
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'];
+                    if (!isset($itemsArguments[$id])) {
+                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
-                }
-                $arguments = $itemsArguments[$id]['puzzle'];
-                $rows = $arguments['rows'] ?? 15;
-                $cols = $arguments['cols'] ?? 15;
-                $filler = $arguments['filler']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.default.filler')
-                    ?? CrossWords::FILLER_LETTERS_ENGLISH;
-                $title = $arguments['title']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.strings.title') ?? '';
-                $text = $arguments['text']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.strings.text') ?? '';
-                $text2 = $arguments['text2']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.strings.text2') ?? '';
-                $difficulty = $arguments['difficulty']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.default.difficulty')
-                    ?? CrossWords::DIFFICULTY_EASY;
-
-                if ($isSimple) {
-                    $wordFile = $arguments['word_file'] ?? '';
-                    $numberOfWords = $arguments['number_of_words'] ?? 0;
-                    $words = CrossWords::DEFAULT_WORDS;
-                    if ($wordFile) {
-                        $words = $this->readWordsFromFile($wordFile);
+                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                     }
-                } else {
-                    $words = $this->parsePuzzleWords($matches['content']);
-                    if (!$words) {
-                        $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
+                    $arguments = $itemsArguments[$id]['puzzle'];
+                    $rows = $arguments['rows'] ?? 15;
+                    $cols = $arguments['cols'] ?? 15;
+                    $filler = $arguments['filler'] ?? $this->getEditionOption('plugins.options.CrossWords.default.filler') ?? CrossWords::FILLER_LETTERS_ENGLISH;
+                    $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.title') ?? '';
+                    $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.text') ?? '';
+                    $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.text2') ?? '';
+                    $difficulty = $arguments['difficulty'] ?? $this->getEditionOption('plugins.options.CrossWords.default.difficulty')
+                                ?? CrossWords::DIFFICULTY_EASY;
+
+                    if ($isSimple) {
+                        $wordFile = $arguments['word_file'] ?? '';
+                        $numberOfWords = $arguments['number_of_words'] ?? 0;
+                        $words = CrossWords::DEFAULT_WORDS;
+                        if ($wordFile) {
+                            $words = $this->readWordsFromFile($wordFile);
+                        }
+                    } else {
+                        $words = $this->parsePuzzleWords($matches['content']);
+                        if (!$words) {
+                            $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
+                        }
+                        $numberOfWords = 0;
                     }
-                    $numberOfWords = 0;
-                }
 
-                $seed = $arguments['seed'] ?? intval(1000 + $id);
+                    $seed = $arguments['seed'] ?? intval(1000 + $id);
 
-                $this->writeLn(sprintf('Generating puzzle id "%s".', $id), 'info');
+                    $timeStart = microtime(true);
+                    $this->write(sprintf('Generating puzzle id "%s".', $id), 'info');
 
-                $wordSearch = new CrossWords();
-                $wordSearch->setRandomSeed($seed);
+                    $crossWords = new CrossWords();
+                    $crossWords->setRandomSeed($seed);
+                    $success = $crossWords->generate($rows, $cols, $words, $numberOfWords, $difficulty);
 
-                $success = $wordSearch->generate($rows, $cols, $words, $numberOfWords, $difficulty);
-                if (!$success) {
-                    $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
-                }
-                if ($wordSearch->getErrors()) {
-                    foreach ($wordSearch->getErrors() as $error) {
-                        $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
+                    $timeEnd = microtime(true);
+                    $this->writeLn(sprintf(' %.2f sec.', $timeEnd - $timeStart), 'plain');
+
+                    if (!$success) {
+//                        $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
+                        if ($crossWords->getErrors()) {
+                            foreach ($crossWords->getErrors() as $error) {
+                                $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
+                            }
+                        }
                     }
-                }
+                    if ($crossWords->getWarnings()) {
+                        foreach ($crossWords->getWarnings() as $warning) {
+                            $this->writeLn(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
+                        }
+                    }
 
-                $items = $this->app['publishing.crosswords.items'] ?? [];
+                    $items = $this->app['publishing.crosswords.items'] ?? [];
 
-                $items[$id] = [
-                    'solution' => $wordSearch->solutionAsHtml(),
-                    'wordlist' => [
-                        'sorted-1-chunk'   => $wordSearch->wordListAsHtml(true),
-                        'unsorted-1-chunk' => $wordSearch->wordListAsHtml(false),
-                        'sorted-2-chunk'   => $wordSearch->wordListAsHtml(true, 2),
-                        'unsorted-2-chunk' => $wordSearch->wordListAsHtml(false, 2),
-                        'sorted-3-chunk'   => $wordSearch->wordListAsHtml(true, 3),
-                        'unsorted-3-chunk' => $wordSearch->wordListAsHtml(false, 3),
-                        'sorted-4-chunk'   => $wordSearch->wordListAsHtml(true, 4),
-                        'unsorted-4-chunk' => $wordSearch->wordListAsHtml(false, 4),
-                    ],
-                ];
-                $this->app['publishing.crosswords.items'] = $items;
+                    $items[$id] = [
+                        'solution' => $crossWords->solutionAsHtml(),
+                        'wordlist' => [
+                            'sorted-1-chunk' => $crossWords->wordListAsHtml(true),
+                            'unsorted-1-chunk' => $crossWords->wordListAsHtml(false),
+                            'sorted-2-chunk' => $crossWords->wordListAsHtml(true, 2),
+                            'unsorted-2-chunk' => $crossWords->wordListAsHtml(false, 2),
+                            'sorted-3-chunk' => $crossWords->wordListAsHtml(true, 3),
+                            'unsorted-3-chunk' => $crossWords->wordListAsHtml(false, 3),
+                            'sorted-4-chunk' => $crossWords->wordListAsHtml(true, 4),
+                            'unsorted-4-chunk' => $crossWords->wordListAsHtml(false, 4),
+                        ],
+                    ];
+                    $this->app['publishing.crosswords.items'] = $items;
 
-                $difficultyTextEasy = $this->getEditionOption(
-                    'plugins.options.CrossWords.strings.difficulty.easy',
-                    'Difficulty: Easy');
-                $difficultyTextMedium = $this->getEditionOption(
-                    'plugins.options.CrossWords.strings.difficulty.medium',
-                    'Difficulty: Medium');
-                $difficultyTextHard = $this->getEditionOption(
-                    'plugins.options.CrossWords.strings.difficulty.hard',
-                    'Difficulty: Hard');
-                $difficultyTextVeryHard = $this->getEditionOption(
-                    'plugins.options.CrossWords.strings.difficulty.very-hard',
-                    'Difficulty: Very Hard');
+                    $difficultyTextEasy = $this->getEditionOption(
+                            'plugins.options.CrossWords.strings.difficulty.easy', 'Difficulty: Easy');
+                    $difficultyTextMedium = $this->getEditionOption(
+                            'plugins.options.CrossWords.strings.difficulty.medium', 'Difficulty: Medium');
+                    $difficultyTextHard = $this->getEditionOption(
+                            'plugins.options.CrossWords.strings.difficulty.hard', 'Difficulty: Hard');
+                    $difficultyTextVeryHard = $this->getEditionOption(
+                            'plugins.options.CrossWords.strings.difficulty.very-hard', 'Difficulty: Very Hard');
 
-                switch ($difficulty) {
-                    case CrossWords::DIFFICULTY_EASY:
-                        $difficultyText = $difficultyTextEasy;
-                        break;
-                    case CrossWords::DIFFICULTY_MEDIUM:
-                        $difficultyText = $difficultyTextMedium;
-                        break;
-                    case CrossWords::DIFFICULTY_HARD:
-                        $difficultyText = $difficultyTextHard;
-                        break;
-                    case CrossWords::DIFFICULTY_VERY_HARD:
-                        $difficultyText = $difficultyTextVeryHard;
-                        break;
-                }
+                    switch ($difficulty) {
+                        case CrossWords::DIFFICULTY_EASY:
+                            $difficultyText = $difficultyTextEasy;
+                            break;
+                        case CrossWords::DIFFICULTY_MEDIUM:
+                            $difficultyText = $difficultyTextMedium;
+                            break;
+                        case CrossWords::DIFFICULTY_HARD:
+                            $difficultyText = $difficultyTextHard;
+                            break;
+                        case CrossWords::DIFFICULTY_VERY_HARD:
+                            $difficultyText = $difficultyTextVeryHard;
+                            break;
+                    }
 
-                return sprintf(
-                    '<div class="crosswords crosswords-puzzle-container" data-id="%s">'.
-                    '<div class="crosswords-title">%s</div>'.
-                    '<div class="crosswords-text">%s</div>'.
-                    '<div class="crosswords-text2">%s</div>'.
-                    '<div class="crosswords-difficulty">%s</div>'.
-                    '<div class="crosswords-puzzle">%s</div>'.
-                    '</div>',
-                    $arguments['id'],
-                    sprintf($title, $id, $id),
-                    $text,
-                    $text2,
-                    $difficultyText,
-                    $wordSearch->puzzleAsHtml());
-            },
-            $this->item['content']);
+                    return sprintf(
+                    '<div class="crosswords crosswords-puzzle-container" data-id="%s">' .
+                    '<div class="crosswords-title">%s</div>' .
+                    '<div class="crosswords-text">%s</div>' .
+                    '<div class="crosswords-text2">%s</div>' .
+                    '<div class="crosswords-difficulty">%s</div>' .
+                    '<div class="crosswords-puzzle">%s</div>' .
+                    '</div>', $arguments['id'], sprintf($title, $id, $id), $text, $text2, $difficultyText,
+                    $crossWords->puzzleAsHtml());
+                }, $this->item['content']);
 
         $this->item['content'] = $content;
     }
 
-    protected function processWordList()
-    {
+    protected function processWordList() {
         $regExp = '/'
-            .'(?<div>'
-            .'<div +(?<pre>[^>]*)'
-            .'class="(?<class>crosswords crosswords-wordlist)"'
-            .' +'
-            .'data-id="(?<id>\d+)"'
-            .'(?<post>[^>]*)>'
-            .')' // div group
-            .'.*'
-            .'<\/div>'
-            .'/Ums'; // Ungreedy, multiline, dotall
+                . '(?<div>'
+                . '<div +(?<pre>[^>]*)'
+                . 'class="(?<class>crosswords crosswords-wordlist)"'
+                . ' +'
+                . 'data-id="(?<id>\d+)"'
+                . '(?<post>[^>]*)>'
+                . ')' // div group
+                . '.*'
+                . '<\/div>'
+                . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-            $regExp,
-            function ($matches) {
+                $regExp,
+                function ($matches) {
 
-                $id = $matches['id'];
+                    $id = $matches['id'];
 
-                $itemsArguments = $this->app['publishing.crosswords.arguments'];
-                if (!isset($itemsArguments[$id])) {
-                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'];
+                    if (!isset($itemsArguments[$id])) {
+                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
-                }
-                $arguments = $itemsArguments[$id]['wordlist'];
-                $sorted = $arguments['sorted'] ?? false;
-                $chunks = $arguments['chunks'] ?? 1;
+                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                    }
+                    $arguments = $itemsArguments[$id]['wordlist'];
+                    $sorted = $arguments['sorted'] ?? false;
+                    $chunks = $arguments['chunks'] ?? 1;
 
-                if ($chunks > 4) {
-                    $this->writeLn(
-                        sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks),
-                        'error');
-                    $chunks = 1;
-                }
+                    if ($chunks > 4) {
+                        $this->writeLn(
+                                sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks), 'error');
+                        $chunks = 1;
+                    }
 
-                if (!isset($this->app['publishing.crosswords.items'])) {
-                    return '';
-                }
-                $items = $this->app['publishing.crosswords.items'] ?? [];
-                if (!isset($items[$id])) {
-                    return '';
-                }
+                    if (!isset($this->app['publishing.crosswords.items'])) {
+                        return '';
+                    }
+                    $items = $this->app['publishing.crosswords.items'] ?? [];
+                    if (!isset($items[$id])) {
+                        return '';
+                    }
 
-                $wordlist = $items[$id]['wordlist'];
+                    $wordlist = $items[$id]['wordlist'];
 
-                $wordlistKey = sprintf(
-                    "%s-%d-chunk",
-                    $sorted ? 'sorted' : 'unsorted',
-                    $chunks);
+                    $wordlistKey = sprintf(
+                            "%s-%d-chunk", $sorted ? 'sorted' : 'unsorted', $chunks);
 
-                return sprintf(
-                    '<div class="crosswords crosswords-wordlist" data-id="%s">%s</div>',
-                    $arguments['id'],
-                    $wordlist[$wordlistKey]);
-            },
-            $this->item['content']);
+                    return sprintf(
+                    '<div class="crosswords crosswords-wordlist" data-id="%s">%s</div>', $arguments['id'], $wordlist[$wordlistKey]);
+                }, $this->item['content']);
 
         $this->item['content'] = $content;
-
     }
 
-    protected function processSolution()
-    {
+    protected function processSolution() {
         $regExp = '/'
-            .'(?<div>'
-            .'<div +(?<pre>[^>]*)'
-            .'class="(?<class>crosswords crosswords-solution)"'
-            .' +'
-            .'data-id="(?<id>\d+)"'
-            .'(?<post>[^>]*)>'
-            .')' // div group
-            .'.*'
-            .'<\/div>'
-            .'/Ums'; // Ungreedy, multiline, dotall
+                . '(?<div>'
+                . '<div +(?<pre>[^>]*)'
+                . 'class="(?<class>crosswords crosswords-solution)"'
+                . ' +'
+                . 'data-id="(?<id>\d+)"'
+                . '(?<post>[^>]*)>'
+                . ')' // div group
+                . '.*'
+                . '<\/div>'
+                . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-            $regExp,
-            function ($matches) {
+                $regExp,
+                function ($matches) {
 
-                $id = $matches['id'];
+                    $id = $matches['id'];
 
-                $itemsArguments = $this->app['publishing.crosswords.arguments'];
-                if (!isset($itemsArguments[$id])) {
-                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                    $itemsArguments = $this->app['publishing.crosswords.arguments'];
+                    if (!isset($itemsArguments[$id])) {
+                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
-                }
-                $arguments = $itemsArguments[$id]['solution'];
+                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                    }
+                    $arguments = $itemsArguments[$id]['solution'];
 
-                $title = $arguments['title']
-                    ?? $this->getEditionOption('plugins.options.CrossWords.strings.solution_title') ?? '';
+                    $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.solution_title') ?? '';
 
-                $text = $arguments['text'] ?? '';
+                    $text = $arguments['text'] ?? '';
 
-                if (!isset($this->app['publishing.crosswords.items'])) {
-                    return '';
-                }
-                $items = $this->app['publishing.crosswords.items'] ?? [];
-                if (!isset($items[$id])) {
-                    return '';
-                }
+                    if (!isset($this->app['publishing.crosswords.items'])) {
+                        return '';
+                    }
+                    $items = $this->app['publishing.crosswords.items'] ?? [];
+                    if (!isset($items[$id])) {
+                        return '';
+                    }
 
-                return sprintf(
-                    '<div class="crosswords crosswords-solution-container" data-id="%s">'.
-                    '<div class="crosswords-title">%s</div>'.
-                    '<div class="crosswords-text">%s</div>'.
-                    '<div class="crosswords-solution">%s</div>'.
-                    '</div>',
-                    $arguments['id'],
-                    sprintf($title, $id, $id),
-                    $text,
-                    $items[$id]['solution']);
-
-            },
-            $this->item['content']);
+                    return sprintf(
+                    '<div class="crosswords crosswords-solution-container" data-id="%s">' .
+                    '<div class="crosswords-title">%s</div>' .
+                    '<div class="crosswords-text">%s</div>' .
+                    '<div class="crosswords-solution">%s</div>' .
+                    '</div>', $arguments['id'], sprintf($title, $id, $id), $text, $items[$id]['solution']);
+                }, $this->item['content']);
 
         $this->item['content'] = $content;
-
     }
 
-    protected function readWordsFromFile($wordFile): array
-    {
+    protected function readWordsFromFile($wordFile): array {
         $files = $this->getEditionOption('plugins.options.CrossWords.word_files', []);
-        $contentsDir = realpath($this->app['publishing.dir.book'].'/Contents');
+        $contentsDir = realpath($this->app['publishing.dir.book'] . '/Contents');
 
         foreach ($files as $file) {
             if (!isset($file['label'])) {
@@ -488,17 +448,15 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
                     } else {
                         // relative path
                         $dirs[] = realpath(
-                            pathinfo(
-                                $contentsDir.DIRECTORY_SEPARATOR.$file['name'],
-                                PATHINFO_DIRNAME));
+                                pathinfo(
+                                        $contentsDir . DIRECTORY_SEPARATOR . $file['name'], PATHINFO_DIRNAME));
                     }
                 }
 
                 $filePath = $this->app->getFirstExistingFile($fileName, $dirs);
                 if (!$filePath) {
                     $this->writeLn(
-                        sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir),
-                        'error');
+                            sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir), 'error');
 
                     return [];
                 }
@@ -519,8 +477,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
         return [];
     }
 
-    protected function parsePuzzleWords($content): array
-    {
+    protected function parsePuzzleWords($content): array {
         $crawler = new Crawler();
         $crawler->addHtmlContent($content);
         $crawler = $crawler->filter('ul');
@@ -533,46 +490,45 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface
         return $this->parseUl($crawler);
     }
 
-    protected function parseUl(Crawler $crawler): array
-    {
+    protected function parseUl(Crawler $crawler): array {
         $output = [];
 
         $crawler->children()->each(
-            function (Crawler $liNode) use
-            (
-                &
-                $output
-            ) {
-                if ($liNode->children()->count() == 0) {
-                    $output [] = $liNode->html();
-
-                    return;
-                }
-
-                $cellText = '';
-
-                $liNode->children()->each(
-                    function (Crawler $liChildrenNode) use
-                    (
+                function (Crawler $liNode) use
+                (
                         &
-                        $cellText
-                    ) {
-                        switch ($liChildrenNode->nodeName()) {
-                            case 'p':
-                                $cellText = $liChildrenNode->html();
-                                break;
-                            default:
-                                // other tags are ignored
-                                break;
-                        }
-                    }
-                );
+                        $output
+                ) {
+                    if ($liNode->children()->count() == 0) {
+                        $output [] = $liNode->html();
 
-                // uncollected text
-                if (!empty($cellText)) {
-                    $output[] = $cellText;
+                        return;
+                    }
+
+                    $cellText = '';
+
+                    $liNode->children()->each(
+                            function (Crawler $liChildrenNode) use
+                            (
+                                    &
+                                    $cellText
+                            ) {
+                                switch ($liChildrenNode->nodeName()) {
+                                    case 'p':
+                                        $cellText = $liChildrenNode->html();
+                                        break;
+                                    default:
+                                        // other tags are ignored
+                                        break;
+                                }
+                            }
+                    );
+
+                    // uncollected text
+                    if (!empty($cellText)) {
+                        $output[] = $cellText;
+                    }
                 }
-            }
         );
 
         return $output;

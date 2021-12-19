@@ -69,14 +69,14 @@ class CrossWords {
             'max-length' => 99,
             'use-reverse' => true,
             'forced-reverse' => false,
-            'hints' => '30%'
+            'hints' => '20%'
         ],
         self::DIFFICULTY_VERY_HARD => [
             'min-length' => 6,
             'max-length' => 99,
             'use-reverse' => true,
             'forced-reverse' => true,
-            'hints' => '30%'
+            'hints' => '10%'
         ],
     ];
 
@@ -91,6 +91,11 @@ class CrossWords {
      * @var array|string[]
      */
     protected array $errors = [];
+
+    /**
+     * @var array|string[]
+     */
+    protected array $warnings = [];
 
     public function __construct() {
         $this->random = new PseudoRandom();
@@ -107,6 +112,7 @@ class CrossWords {
         $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
         $this->columns = $columns;
+        $this->errors = [];
 
         if ($numberOfWords <= 0) {
             if (count($words) > self::DEFAULT_NUMBER_OF_WORDS) {
@@ -179,16 +185,21 @@ class CrossWords {
     protected function initializePuzzle() {
         $this->puzzle = [];
         $this->crosses = [];
+        $emptyCell = $this->emptyCell();
         for ($row = 0; $row < $this->rows; $row++) {
             for ($column = 0; $column < $this->columns; $column++) {
-                $this->puzzle[$row][$column] = [
-                    'letter' => self::EMPTY_CELL,
-                    'types' => [],
-                    'directions' => [],
-                    'words' => []
-                ];
+                $this->puzzle[$row][$column] = $emptyCell;
             }
         }
+    }
+
+    protected function emptyCell(): array {
+        return [
+            'letter' => self::EMPTY_CELL,
+            'types' => [],
+            'directions' => [],
+            'words' => []
+        ];
     }
 
     protected function centerPuzzle() {
@@ -257,7 +268,7 @@ class CrossWords {
             }
         }
 
-        // Remove empty empty surrounding rows and columns
+        // Remove empty surrounding rows and columns
         $newPuzzle = [];
         $newRow = 0;
         for ($row = $firstNonEmptyRow; $row <= $lastNonEmptyRow; $row++) {
@@ -278,10 +289,7 @@ class CrossWords {
         $columnsToAdd = $this->columns - $newColumns;
         $columnsToAddLeft = intval(floor($columnsToAdd / 2));
 
-        $emptyCell = ['letter' => self::EMPTY_CELL,
-            'types' => [],
-            'directions' => [],
-            'words' => []];
+        $emptyCell = $this->emptyCell();
 
         // Create an empty row
         $newRowToAdd = array_pad([], $newColumns, $emptyCell);
@@ -301,13 +309,9 @@ class CrossWords {
 
     public function placeHints(string $difficulty) {
 
-        print_r($this->crosses);
-
         $crosses = array_values($this->crosses);
         $percentHints = str_replace('%', '', $this->difficulties[$difficulty]['hints']);
         $numHints = intval(floor(count($crosses) * $percentHints / 100));
-
-//        $wordsWithHints = [];
 
         for ($i = 0; $i < $numHints; $i++) {
             /* Ensure the same word doesn't get more than one hint.
@@ -334,6 +338,12 @@ class CrossWords {
         }
     }
 
+    /**
+     * Place all the words on the board.
+     * If the words cannot be placed, try removing one word each time.
+     * 
+     * @return bool Success
+     */
     protected function placeWords(string $difficulty): bool {
 
         $words = $this->normalizeWords($this->words);
@@ -341,13 +351,64 @@ class CrossWords {
         // Sort words by length descending
         usort($words, fn($a, $b) => mb_strlen($b) <=> mb_strlen($a));
 
-        $maxPuzzleTries = 100;
+        do {
+            $puzzleDone = $this->tryPlaceAllWords($words, $difficulty);
+            if (!$puzzleDone) {
+                // Remove the large word
+                $word = array_shift($words);
+                $this->warnings[] = sprintf('Removed word "%s" for the puzzle to fit.', $word);
+            }
+        } while (!$puzzleDone && count($words) > 0);
 
+        $this->words = $words;
+
+        return $puzzleDone;
+    }
+
+    /**
+     * Try placing all the words in the board.
+     * If the words cannot be placed, try moving the first word to the lastest position.
+     * 
+     * @return bool Success
+     */
+    protected function tryPlaceAllWords(array $words, string $difficulty): bool {
+        $backupPuzzle = $this->puzzle;
+        $backupCrosses = $this->crosses;
+
+        $puzzleDone = false;
+
+        for ($i = 0; $i < count($words); $i++) {
+            $puzzleDone = $this->tryPlaceWords($words, $difficulty);
+            if ($puzzleDone) {
+                break;
+            }
+
+            $this->puzzle = $backupPuzzle;
+            $this->crosses = $backupCrosses;
+
+            // Move the first word to the last position to retry
+            $word = array_shift($words);
+            $words[] = $word;
+        }
+
+        return $puzzleDone;
+    }
+
+    /**
+     * Try to place words on the board. 
+     * This could fail if one of the words cannot be placed.
+     * 
+     * @return bool Success
+     */
+    protected function tryPlaceWords(array $words, string $difficulty): bool {
+        $maxPuzzleTries = 100;
         $puzzleTries = 0;
 
+        $this->errors = [];
+
         do {
-            $backupPuzzleBeforePuzzle = $this->puzzle;
-            $backupCrossesBeforePuzzle = $this->crosses;
+            $backupPuzzle = $this->puzzle;
+            $backupCrosses = $this->crosses;
             $puzzleDone = true;
             $unplacedWords = array_flip($words);
 
@@ -363,8 +424,8 @@ class CrossWords {
                     //print_r($this->puzzleAsText());
 
                     $puzzleTries++;
-                    $this->puzzle = $backupPuzzleBeforePuzzle;
-                    $this->crosses = $backupCrossesBeforePuzzle;
+                    $this->puzzle = $backupPuzzle;
+                    $this->crosses = $backupCrosses;
                     $puzzleDone = false;
 
                     break;
@@ -375,11 +436,11 @@ class CrossWords {
                 unset($unplacedWords[$word]);
             }
 
-            // Valilikelydate that we have all the 2 different directions in the puzzle
+            // Validate that we have all the 2 different directions in the puzzle
             if ($puzzleDone && count($words) >= 2 && count($directions) < 2) {
                 $puzzleTries++;
-                $this->puzzle = $backupPuzzleBeforePuzzle;
-                $this->crosses = $backupCrossesBeforePuzzle;
+                $this->puzzle = $backupPuzzle;
+                $this->crosses = $backupCrosses;
                 $puzzleDone = false;
 
 //                echo "==== PUZZLE failed 2 \n";
@@ -723,21 +784,21 @@ class CrossWords {
         return $table->toHtml();
     }
 
-    public function wordListAsText(bool $sorted = true): string {
+    public function wordListAsText(bool $sorted = true, string $sortLocale = "utf8"): string {
         $words = $this->words;
         if ($sorted) {
-            sort($words);
+            $collator = collator_create($sortLocale);
+            $collator->sort($words);
         }
 
         return implode("\n", $words);
     }
 
-    public function wordListAsHtml(
-            bool $sorted = true, int $chunks = 1
-    ): string {
+    public function wordListAsHtml(bool $sorted = true, int $chunks = 1, string $sortLocale = "utf8"): string {
         $words = $this->words;
         if ($sorted) {
-            sort($words);
+            $collator = collator_create($sortLocale);
+            $collator->sort($words);
         }
 
         $output = '';
@@ -753,6 +814,10 @@ class CrossWords {
 
     public function getErrors(): array {
         return $this->errors;
+    }
+
+    public function getWarnings(): array {
+        return $this->warnings;
     }
 
 }
