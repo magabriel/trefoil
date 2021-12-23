@@ -12,14 +12,17 @@ declare(strict_types=1);
 
 namespace Trefoil\Plugins\Optional;
 
+use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use ReflectionException;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Exception\PluginException;
-use Trefoil\Helpers\TrefoilMarkerProcessor;
 use Trefoil\Helpers\CrossWords;
+use Trefoil\Helpers\TrefoilMarkerProcessor;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\SimpleReport;
 
 /**
  * Class CrossWordsPlugin
@@ -37,23 +40,27 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
 
     protected static array $wordFiles = [];
     protected int $crosswordsCalls = 0;
+    protected array $problems = [];
 
     /**
      * @return array
      */
-    public static function getSubscribedEvents(): array {
+    public static function getSubscribedEvents(): array
+    {
         return [
             EasybookEvents::PRE_PARSE => ['onItemPreParse', -100], // after TwigExtensionPlugin
             EasybookEvents::POST_PARSE => ['onItemPostParse', -1100], // after ParserPlugin
+            EasybookEvents::POST_PUBLISH => 'onPostPublish',
         ];
     }
 
     /**
      * @param ParseEvent $event
      * @throws PluginException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    public function onItemPreParse(ParseEvent $event) {
+    public function onItemPreParse(ParseEvent $event)
+    {
         $this->init($event);
 
         $content = $event->getItemProperty('original');
@@ -71,14 +78,18 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
      * @param $content
      * @return string|null
      */
-    protected function processTrefoilMarkers($content): ?string {
+    protected function processTrefoilMarkers($content): ?string
+    {
         $this->crosswordsCalls = 0;
 
         $processor = new TrefoilMarkerProcessor();
 
         $processor->registerMarker(
                 'crosswords',
-                function (int $id, array $arguments = []) {
+                function (
+                        int $id,
+                        array $arguments = []
+                ) {
                     $arguments['id'] = $id;
 
                     $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
@@ -91,7 +102,10 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
 
         $processor->registerMarker(
                 'crosswords_begin',
-                function (int $id, array $arguments = []) {
+                function (
+                        int $id,
+                        array $arguments = []
+                ) {
                     $arguments['id'] = $id;
 
                     $this->crosswordsCalls++;
@@ -114,7 +128,10 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
 
         $processor->registerMarker(
                 'crosswords_wordlist',
-                function (int $id, array $arguments = []) {
+                function (
+                        int $id,
+                        array $arguments = []
+                ) {
                     $arguments['id'] = $id;
 
                     $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
@@ -127,7 +144,10 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
 
         $processor->registerMarker(
                 'crosswords_solution',
-                function (int $id, array $arguments = []) {
+                function (
+                        int $id,
+                        array $arguments = []
+                ) {
                     $arguments['id'] = $id;
 
                     $itemsArguments = $this->app['publishing.crosswords.arguments'] ?? [];
@@ -141,7 +161,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         return $processor->parse($content);
     }
 
-    protected function savePluginOptions() {
+    protected function savePluginOptions()
+    {
         $gridSize = $this->getEditionOption('plugins.options.CrossWords.grid_size');
         if ($gridSize) {
             $this->app['publishing.plugins.options.CrossWords.grid_size'] = $gridSize;
@@ -158,7 +179,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         }
     }
 
-    protected function checkBalancedCalls() {
+    protected function checkBalancedCalls()
+    {
         if ($this->crosswordsCalls > 0) {
             $this->writeLn('crosswords_begin() call without ending previous.', 'error');
         }
@@ -171,7 +193,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
     /**
      * @param ParseEvent $event
      */
-    public function onItemPostParse(ParseEvent $event) {
+    public function onItemPostParse(ParseEvent $event)
+    {
         $this->init($event);
 
         $this->processCrossWordses();
@@ -179,13 +202,15 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         $event->setItem($this->item);
     }
 
-    protected function processCrossWordses() {
+    protected function processCrossWordses()
+    {
         $this->processPuzzle();
         $this->processWordList();
         $this->processSolution();
     }
 
-    protected function processPuzzle() {
+    protected function processPuzzle()
+    {
         $regExp = '/'
                 . '(?<div>'
                 . '<div +(?<pre>[^>]*)'
@@ -206,13 +231,13 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
                     $itemsArguments = $this->app['publishing.crosswords.arguments'];
                     if (!isset($itemsArguments[$id])) {
                         $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                        $this->saveProblem(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
                         return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                     }
                     $arguments = $itemsArguments[$id]['puzzle'];
                     $rows = $arguments['rows'] ?? 15;
                     $cols = $arguments['cols'] ?? 15;
-                    $filler = $arguments['filler'] ?? $this->getEditionOption('plugins.options.CrossWords.default.filler') ?? CrossWords::FILLER_LETTERS_ENGLISH;
                     $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.title') ?? '';
                     $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.text') ?? '';
                     $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.CrossWords.strings.text2') ?? '';
@@ -230,6 +255,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
                         $words = $this->parsePuzzleWords($matches['content']);
                         if (!$words) {
                             $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
+                            $this->saveProblem(sprintf('No words found for puzzle id "%s".', $id), 'error');
                         }
                         $numberOfWords = 0;
                     }
@@ -244,19 +270,22 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
                     $success = $crossWords->generate($rows, $cols, $words, $numberOfWords, $difficulty);
 
                     $timeEnd = microtime(true);
-                    $this->writeLn(sprintf(' %.2f sec.', $timeEnd - $timeStart), 'plain');
+                    $this->writeLn(sprintf(' %.2f sec. with %s tries.', $timeEnd - $timeStart,
+                                    number_format($crossWords->getTotalTries())), 'plain');
 
                     if (!$success) {
 //                        $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
                         if ($crossWords->getErrors()) {
                             foreach ($crossWords->getErrors() as $error) {
                                 $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
+                                $this->saveProblem(sprintf('Puzzle %s: %s', $id, $error), 'error');
                             }
                         }
                     }
                     if ($crossWords->getWarnings()) {
                         foreach ($crossWords->getWarnings() as $warning) {
                             $this->writeLn(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
+                            $this->saveProblem(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
                         }
                     }
 
@@ -315,7 +344,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         $this->item['content'] = $content;
     }
 
-    protected function processWordList() {
+    protected function processWordList()
+    {
         $regExp = '/'
                 . '(?<div>'
                 . '<div +(?<pre>[^>]*)'
@@ -370,7 +400,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         $this->item['content'] = $content;
     }
 
-    protected function processSolution() {
+    protected function processSolution()
+    {
         $regExp = '/'
                 . '(?<div>'
                 . '<div +(?<pre>[^>]*)'
@@ -420,7 +451,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         $this->item['content'] = $content;
     }
 
-    protected function readWordsFromFile($wordFile): array {
+    protected function readWordsFromFile($wordFile): array
+    {
         $files = $this->getEditionOption('plugins.options.CrossWords.word_files', []);
         $contentsDir = realpath($this->app['publishing.dir.book'] . '/Contents');
 
@@ -477,7 +509,8 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         return [];
     }
 
-    protected function parsePuzzleWords($content): array {
+    protected function parsePuzzleWords($content): array
+    {
         $crawler = new Crawler();
         $crawler->addHtmlContent($content);
         $crawler = $crawler->filter('ul');
@@ -490,14 +523,14 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         return $this->parseUl($crawler);
     }
 
-    protected function parseUl(Crawler $crawler): array {
+    protected function parseUl(Crawler $crawler): array
+    {
         $output = [];
 
         $crawler->children()->each(
                 function (Crawler $liNode) use
                 (
-                        &
-                        $output
+                        &$output
                 ) {
                     if ($liNode->children()->count() == 0) {
                         $output [] = $liNode->html();
@@ -510,8 +543,7 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
                     $liNode->children()->each(
                             function (Crawler $liChildrenNode) use
                             (
-                                    &
-                                    $cellText
+                                    &$cellText
                             ) {
                                 switch ($liChildrenNode->nodeName()) {
                                     case 'p':
@@ -532,6 +564,69 @@ class CrossWordsPlugin extends BasePlugin implements EventSubscriberInterface {
         );
 
         return $output;
+    }
+
+    public function onPostPublish(BaseEvent $event)
+    {
+        $this->init($event);
+
+        $this->createReport();
+    }
+
+    protected function saveProblem(
+            string $message,
+            string $severity)
+    {
+        $problem = [];
+
+        $problem['message'] = $message;
+        $problem['severity'] = $severity;
+
+        $element = $this->item['config']['content'];
+        $element = $element ?: $this->item['config']['element'];
+        if (!isset($this->problems[$element])) {
+            $this->problems[$element] = [];
+        }
+
+        $this->problems[$element][] = $problem;
+    }
+
+    protected function createReport()
+    {
+        // create the report
+        $outputDir = $this->app['publishing.dir.output'];
+        $reportFile = $outputDir . '/report-CrossWordsPlugin.txt';
+
+        $report = new SimpleReport();
+        $report->setTitle('CrossWordsPlugin');
+        $report->setSubtitle('Problems found');
+
+        $report->setHeaders(['Element', 'Severity', 'Message']);
+        $report->setColumnsWidth([20, 10, 100]);
+
+        $count = 0;
+        foreach ($this->problems as $element => $problems) {
+            $report->addLine();
+            $report->addLine($element);
+            foreach ($problems as $problem) {
+                $count++;
+                $report->addLine(
+                        [
+                            '',
+                            strtoupper($problem['severity']),
+                            $problem['message'],
+                ]);
+            }
+        }
+
+        if ($count === 0) {
+            $report->addSummaryLine('No problems found');
+        } else {
+            $report->addSummaryLine(sprintf('%s problems found', $count));
+            $this->problemsFound = true;
+        }
+
+        file_put_contents($reportFile, $report->getText());
     }
 
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Trefoil\Tests\Helpers;
 
 use PHPUnit\Framework\TestCase;
+use Trefoil\Helpers\PseudoRandom;
 
 class PseudoRandomTest extends TestCase
 {

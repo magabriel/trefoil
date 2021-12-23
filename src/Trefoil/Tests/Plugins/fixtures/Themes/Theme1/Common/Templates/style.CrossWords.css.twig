@@ -10,9 +10,9 @@
 {% set gridLineWidth    = min(max(gridLineWidth, 2), gridLineWidth)  %}
 
 /****
- * General
- */
- 
+* General
+*/
+
 .crosswords-title {
     font-size: 2em;
     font-weight: bold;
@@ -28,9 +28,16 @@
 .crosswords-puzzle,
 .crosswords-solution {
     font-family: "Courier New", monospace;
-    border: 2px solid black;
     width: max-content;
     display: inline-block;
+}
+
+.crosswords-puzzle {
+    border: 2px solid black;
+}
+
+.crosswords-solution {
+    border: 1px solid black;
 }
 
 .crosswords-puzzle {
@@ -63,6 +70,18 @@
     margin-top: 1em;
 }
 
+.crosswords-puzzle *, 
+.crosswords-solution * {
+    box-sizing: border-box;
+}
+
+.crosswords-puzzle *:before, 
+.crosswords-puzzle *:after, 
+.crosswords-solution *:before,
+.crosswords-solution *:after {
+    box-sizing: inherit;
+}
+
 .crosswords-puzzle table td {
     text-align: center;
     vertical-align: middle;
@@ -79,7 +98,7 @@
     padding: 0;
     height: {{ solutionGridSize }}px;
     width: {{ solutionGridSize }}px;
-    font-size: {{ solutionGridSize * 0.9 }}px;
+    font-size: {{ solutionGridSize * 1.0 }}px;
     border: none;
 }
 
@@ -102,7 +121,7 @@
     position: relative;
     width: 100%;
     height: 100%;
-    line-height: {{ solutionGridSize}}px;
+    line-height: {{ solutionGridSize }}px;
 }
 
 /****
@@ -197,32 +216,32 @@
 
 {% if highlightType == 'line' %}
 
-.crosswords-solution td.cell-letter, 
-.crosswords-solution td.cell-clue {
-    border-top: {{ gridLineWidth }}px solid #888;
-    border-bottom: {{ gridLineWidth }}px solid #888;
-    border-left: {{ gridLineWidth }}px solid #888;
-    border-right: {{ gridLineWidth }}px solid #888;
-}
+    .crosswords-solution td.cell-letter, 
+    .crosswords-solution td.cell-hint {
+        border-top: {{ gridLineWidth }}px solid #888;
+        border-bottom: {{ gridLineWidth }}px solid #888;
+        border-left: {{ gridLineWidth }}px solid #888;
+        border-right: {{ gridLineWidth }}px solid #888;
+    }
 
-.crosswords-solution table td.cell-hint{
-    color: black;
-    font-weight: bold;
-}
+    .crosswords-solution table td.cell-hint{
+        color: black;
+        font-weight: bold;
+    }
 
 {% endif %}{# if highlightType == 'line' #}
 
 {% if highlightType == 'shadow' %}
 
-.crosswords-solution table td.cell-letter {
-    background: #CCCCCC;
-    color: black;
-}
+    .crosswords-solution table td.cell-letter {
+        background: #CCCCCC;
+        color: black;
+    }
 
-.crosswords-solution table td.cell-hint {
-    background: #666666;
-    color: white;
-}
+    .crosswords-solution table td.cell-hint {
+        background: #666666;
+        color: white;
+    }
 
 {% endif %}{# if highlightType == 'shadow' #}
 
@@ -235,8 +254,8 @@
 
 
 /****
- * Word list
- */
+* Word list
+*/
 
 .crosswords-wordlist {
     float: left;

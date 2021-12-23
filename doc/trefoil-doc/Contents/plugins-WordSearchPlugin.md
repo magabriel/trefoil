@@ -66,7 +66,7 @@ sensible defaults that are shown in the previous YAML block.
     - `hard`: Text for hard puzzles.
     - `very-hard`: Text for very hard puzzles.
 
-This feature uses several *trefoil markers* to achieve it complex functionality.
+This feature uses several *trefoil markers* to achieve its complex functionality.
 
 {{ fragment('note-trefoil-markers.md') }}
 

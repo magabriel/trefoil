@@ -31,6 +31,7 @@ book:
                     CrossWords:
                         grid_size: 20
                         solution_grid_size: 10.5
+                        highlight_type: shadow
                         word_files:
                             - { label: words_a, name: word_file_1.txt }
                             - { label: words_b, name: word_file_2.txt }

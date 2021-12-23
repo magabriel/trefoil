@@ -42,5 +42,9 @@ class PseudoRandom {
 
         return $this->randomSeed % ($max - $min + 1) + $min;
     }
+    
+    public function getRandomBool(): bool {
+        return $this->getRandomInt() === 0;
+    }
 
 }

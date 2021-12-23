@@ -66,14 +66,14 @@ class CrossWords {
         ],
         self::DIFFICULTY_HARD => [
             'min-length' => 6,
-            'max-length' => 99,
+            'max-length' => 12,
             'use-reverse' => true,
             'forced-reverse' => false,
             'hints' => '20%'
         ],
         self::DIFFICULTY_VERY_HARD => [
             'min-length' => 6,
-            'max-length' => 99,
+            'max-length' => 15,
             'use-reverse' => true,
             'forced-reverse' => true,
             'hints' => '10%'
@@ -96,19 +96,27 @@ class CrossWords {
      * @var array|string[]
      */
     protected array $warnings = [];
+    protected $cellsList = [];
+    protected $totalTries = 0;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->random = new PseudoRandom();
     }
 
-    public function setRandomSeed(int $seed) {
+    public function setRandomSeed(int $seed)
+    {
         $this->random->setRandomSeed($seed);
     }
 
     public function generate(
-            int $rows = 20, int $columns = 20, array $words = self::DEFAULT_WORDS, int $numberOfWords = 0,
+            int $rows = 20,
+            int $columns = 20,
+            array $words = self::DEFAULT_WORDS,
+            int $numberOfWords = 0,
             string $difficulty = self::DIFFICULTY_EASY
-    ): bool {
+    ): bool
+    {
         $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
         $this->columns = $columns;
@@ -141,8 +149,11 @@ class CrossWords {
     }
 
     protected function selectRandomWords(
-            int $numberOfWords, string $difficulty, int $maxLength
-    ) {
+            int $numberOfWords,
+            string $difficulty,
+            int $maxLength
+    )
+    {
         $newWords = [];
 
         for ($i = 0; $i < $numberOfWords; $i++) {
@@ -168,7 +179,8 @@ class CrossWords {
         $this->words = $newWords;
     }
 
-    protected function checkWords(): bool {
+    protected function checkWords(): bool
+    {
         foreach ($this->words as $word) {
             if (mb_strlen($word) > $this->rows && mb_strlen($word) > $this->columns) {
                 $this->errors[] = sprintf(
@@ -182,7 +194,8 @@ class CrossWords {
         return true;
     }
 
-    protected function initializePuzzle() {
+    protected function initializePuzzle()
+    {
         $this->puzzle = [];
         $this->crosses = [];
         $emptyCell = $this->emptyCell();
@@ -193,7 +206,8 @@ class CrossWords {
         }
     }
 
-    protected function emptyCell(): array {
+    protected function emptyCell(): array
+    {
         return [
             'letter' => self::EMPTY_CELL,
             'types' => [],
@@ -202,7 +216,8 @@ class CrossWords {
         ];
     }
 
-    protected function centerPuzzle() {
+    protected function centerPuzzle()
+    {
         $firstNonEmptyRow = 0;
         $lastNonEmptyRow = $this->rows - 1;
         $firstNonEmptyColumn = 0;
@@ -307,7 +322,8 @@ class CrossWords {
         $this->puzzle = $newPuzzle;
     }
 
-    public function placeHints(string $difficulty) {
+    public function placeHints(string $difficulty)
+    {
 
         $crosses = array_values($this->crosses);
         $percentHints = str_replace('%', '', $this->difficulties[$difficulty]['hints']);
@@ -344,41 +360,55 @@ class CrossWords {
      * 
      * @return bool Success
      */
-    protected function placeWords(string $difficulty): bool {
+    protected function placeWords(string $difficulty): bool
+    {
+
+        $this->totalTries = 0;
 
         $words = $this->normalizeWords($this->words);
+
+        $wordsBeforeNormalization = array_combine($words, $this->words);
 
         // Sort words by length descending
         usort($words, fn($a, $b) => mb_strlen($b) <=> mb_strlen($a));
 
         do {
-            $puzzleDone = $this->tryPlaceAllWords($words, $difficulty);
+            $puzzleDone = $this->tryPlaceWords($words, $difficulty);
             if (!$puzzleDone) {
-                // Remove the large word
+                // Remove the largest word
                 $word = array_shift($words);
                 $this->warnings[] = sprintf('Removed word "%s" for the puzzle to fit.', $word);
+
+                // Remove it also from the original word list
+                $originalWord = $wordsBeforeNormalization[$word];
+                $pos = array_search($originalWord, $this->words);
+                array_splice($this->words, $pos, 1);
             }
         } while (!$puzzleDone && count($words) > 0);
 
-        $this->words = $words;
+//        $this->words = $words;
 
         return $puzzleDone;
     }
 
     /**
-     * Try placing all the words in the board.
+     * Try placing all the words on the board. 
      * If the words cannot be placed, try moving the first word to the lastest position.
      * 
      * @return bool Success
      */
-    protected function tryPlaceAllWords(array $words, string $difficulty): bool {
+    protected function tryPlaceWords(
+            array $words,
+            string $difficulty
+    ): bool
+    {
         $backupPuzzle = $this->puzzle;
         $backupCrosses = $this->crosses;
 
         $puzzleDone = false;
 
         for ($i = 0; $i < count($words); $i++) {
-            $puzzleDone = $this->tryPlaceWords($words, $difficulty);
+            $puzzleDone = $this->tryPlaceWordsInCertainOrder($words, $difficulty);
             if ($puzzleDone) {
                 break;
             }
@@ -395,12 +425,16 @@ class CrossWords {
     }
 
     /**
-     * Try to place words on the board. 
+     * Try placing words on the board. 
      * This could fail if one of the words cannot be placed.
      * 
      * @return bool Success
      */
-    protected function tryPlaceWords(array $words, string $difficulty): bool {
+    protected function tryPlaceWordsInCertainOrder(
+            array $words,
+            string $difficulty
+    ): bool
+    {
         $maxPuzzleTries = 100;
         $puzzleTries = 0;
 
@@ -412,17 +446,13 @@ class CrossWords {
             $puzzleDone = true;
             $unplacedWords = array_flip($words);
 
-            // echo "==== PUZZLE start try: $puzzleTries\n";
-
             $directions = [];
 
             foreach ($words as $index => $word) {
+
                 $direction = $this->placeWord($this->clearWord($word), $difficulty, $index == 0);
 
                 if ($direction === self::WORD_FAIL) {
-//                    echo "==== PUZZLE failed \n";
-                    //print_r($this->puzzleAsText());
-
                     $puzzleTries++;
                     $this->puzzle = $backupPuzzle;
                     $this->crosses = $backupCrosses;
@@ -442,12 +472,8 @@ class CrossWords {
                 $this->puzzle = $backupPuzzle;
                 $this->crosses = $backupCrosses;
                 $puzzleDone = false;
-
-//                echo "==== PUZZLE failed 2 \n";
             }
         } while ($puzzleTries <= $maxPuzzleTries && !$puzzleDone);
-
-        //print_r($directions);
 
         if (!$puzzleDone) {
             $this->errors[] = 'Some words could not be placed.';
@@ -459,7 +485,8 @@ class CrossWords {
         return $puzzleDone;
     }
 
-    protected function normalizeWords(array $words): array {
+    protected function normalizeWords(array $words): array
+    {
         $newWords = [];
 
         foreach ($this->words as $word) {
@@ -476,15 +503,20 @@ class CrossWords {
     /**
      * @return string Direction or self::WORD_FAIL
      */
-    protected function placeWord(string $word, string $difficulty, bool $isFirstWord): string {
+    protected function placeWord(
+            string $word,
+            string $difficulty,
+            bool $isFirstWord
+    ): string
+    {
         $wordTries = 0;
         $maxWordTries = 1000;
 
         do {
-            // echo "====== WORD start try: $word $wordTries\n";
-
             $backupPuzzleBeforeWord = $this->puzzle;
             $backupCrossesBeforeWord = $this->crosses;
+
+            $this->totalTries++;
 
             $direction = $this->tryPlaceTheWord($word, $difficulty, $isFirstWord);
 
@@ -501,7 +533,12 @@ class CrossWords {
     /**
      * @return string Direction or self::WORD_FAIL
      */
-    protected function tryPlaceTheWord(string $word, string $difficulty, bool $isFirstWord): string {
+    protected function tryPlaceTheWord(
+            string $word,
+            string $difficulty,
+            bool $isFirstWord
+    ): string
+    {
 
         $direction = [self::DIRECTION_HORIZONTAL, self::DIRECTION_VERTICAL][$this->random->getRandomInt(0, 1)];
 
@@ -517,25 +554,26 @@ class CrossWords {
         $wordCrosses = 0;
 
         for ($i = 0; $i < mb_strlen($theWord); $i++) {
-
             $theLetter = mb_substr($theWord, $i, 1);
             $isFirstLetter = ($i === 0);
             $isLastLetter = ($i === mb_strlen($theWord) - 1);
 
+            // Check if the letter can be placed
             if ($theRow < 0 || $theRow > $maxRow || $theCol < 0 || $theCol > $maxCol ||
                     ($this->puzzle[$theRow][$theCol]['letter'] !== self::EMPTY_CELL &&
                     $this->puzzle[$theRow][$theCol]['letter'] !== $theLetter)) {
 
-                // echo "====== WORD failed: $word\n";
                 return self::WORD_FAIL;
             }
 
+            // Check if it is a cross
             $isWordCross = false;
             if ($this->puzzle[$theRow][$theCol]['letter'] === $theLetter) {
                 $isWordCross = true;
                 $wordCrosses++;
             }
 
+            // Check that the horizontal word is not contigous to another one
             if ($direction === self::DIRECTION_HORIZONTAL) {
                 if (
                         ($theCol > 0 && $isFirstLetter && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
@@ -543,11 +581,11 @@ class CrossWords {
                         (!$isWordCross && $theRow > 0 && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
                         (!$isWordCross && $theRow < $this->rows - 1 && $this->puzzle[$theRow + 1][$theCol]['letter'] !== self::EMPTY_CELL)
                 ) {
-                    // echo "====== WORD failed (contiguous horiz.): $word\n";
                     return self::WORD_FAIL;
                 }
             }
 
+            // Check that the vertical word is not contigous to another one
             if ($direction === self::DIRECTION_VERTICAL) {
                 if (
                         ($theRow > 0 && $isFirstLetter && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
@@ -555,7 +593,6 @@ class CrossWords {
                         (!$isWordCross && $theCol > 0 && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
                         (!$isWordCross && $theCol < $this->columns - 1 && $this->puzzle[$theRow][$theCol + 1]['letter'] !== self::EMPTY_CELL)
                 ) {
-                    // echo "====== WORD failed (contiguous vert.): $word\n";
                     return self::WORD_FAIL;
                 }
             }
@@ -607,15 +644,19 @@ class CrossWords {
             $theCol += $incCol;
         }
 
+        // Check that the word is crossed at least once
         if (!$isFirstWord && ($wordCrosses === 0 || $wordCrosses > 1)) {
-            // echo "====== WORD failed (not crossed): $word\n";
             return self::WORD_FAIL;
         }
 
         return $direction;
     }
 
-    protected function calculateWordBounds(string $word, string $direction) {
+    protected function calculateWordBounds(
+            string $word,
+            string $direction
+    )
+    {
         $initialRow = 0;
         $initialCol = 0;
         $maxRow = $this->rows - 1;
@@ -645,7 +686,8 @@ class CrossWords {
         return [$initialRow, $initialCol, $maxRow, $maxCol, $incRow, $incCol];
     }
 
-    protected function calculateReverse(string $difficulty): bool {
+    protected function calculateReverse(string $difficulty): bool
+    {
         if (!$this->difficulties[$difficulty]['use-reverse']) {
             $reverse = false;
         } elseif ($this->difficulties[$difficulty]['forced-reverse']) {
@@ -657,11 +699,13 @@ class CrossWords {
         return $reverse;
     }
 
-    protected function clearWord($word) {
+    protected function clearWord($word)
+    {
         return preg_replace('/[^[:alnum:]]/ui', '', $word);
     }
 
-    public function puzzleAsText(): string {
+    public function puzzleAsText(): string
+    {
         $text = '';
 
         for ($row = 0; $row < $this->rows; $row++) {
@@ -681,7 +725,8 @@ class CrossWords {
         return substr($text, 0, -1);
     }
 
-    public function solutionAsText(): string {
+    public function solutionAsText(): string
+    {
         $text = '';
 
         for ($row = 0; $row < $this->rows; $row++) {
@@ -697,7 +742,8 @@ class CrossWords {
         return substr($text, 0, -1);
     }
 
-    public function puzzleAsHtml(): string {
+    public function puzzleAsHtml(): string
+    {
         $table = new Table();
 
         for ($row = 0; $row < $this->rows; $row++) {
@@ -710,8 +756,7 @@ class CrossWords {
                 }
 
                 $contents = <<<HTML
-                <div class="cell-inner">
-                    $letter 
+                <div class="cell-inner">$letter 
                     <div class="cell-arrow-down"></div>
                     <div class="cell-arrow-up"></div>
                     <div class="cell-arrow-right"></div>
@@ -740,7 +785,8 @@ class CrossWords {
         return $table->toHtml();
     }
 
-    public function solutionAsHtml(): string {
+    public function solutionAsHtml(): string
+    {
         $table = new Table();
 
         for ($row = 0; $row < $this->rows; $row++) {
@@ -754,8 +800,7 @@ class CrossWords {
                 }
 
                 $contents = <<<HTML
-                <div class="cell-inner">
-                    $letter 
+                <div class="cell-inner">$letter 
                     <div class="cell-arrow-down"></div>
                     <div class="cell-arrow-up"></div>
                     <div class="cell-arrow-right"></div>
@@ -784,7 +829,11 @@ class CrossWords {
         return $table->toHtml();
     }
 
-    public function wordListAsText(bool $sorted = true, string $sortLocale = "utf8"): string {
+    public function wordListAsText(
+            bool $sorted = true,
+            string $sortLocale = "utf8"
+    ): string
+    {
         $words = $this->words;
         if ($sorted) {
             $collator = collator_create($sortLocale);
@@ -794,7 +843,12 @@ class CrossWords {
         return implode("\n", $words);
     }
 
-    public function wordListAsHtml(bool $sorted = true, int $chunks = 1, string $sortLocale = "utf8"): string {
+    public function wordListAsHtml(
+            bool $sorted = true,
+            int $chunks = 1,
+            string $sortLocale = "utf8"
+    ): string
+    {
         $words = $this->words;
         if ($sorted) {
             $collator = collator_create($sortLocale);
@@ -812,12 +866,19 @@ class CrossWords {
         return $output;
     }
 
-    public function getErrors(): array {
+    public function getErrors(): array
+    {
         return $this->errors;
     }
 
-    public function getWarnings(): array {
+    public function getWarnings(): array
+    {
         return $this->warnings;
+    }
+
+    public function getTotalTries(): int
+    {
+        return $this->totalTries;
     }
 
 }
