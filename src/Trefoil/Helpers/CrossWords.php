@@ -322,7 +322,7 @@ class CrossWords {
         $this->puzzle = $newPuzzle;
     }
 
-    public function placeHints(string $difficulty)
+    protected function placeHints(string $difficulty)
     {
 
         $crosses = array_values($this->crosses);
