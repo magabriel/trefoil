@@ -6,7 +6,7 @@ namespace Trefoil\Helpers;
 
 use Trefoil\Util\Toolkit;
 
-class CrossWords {
+class WordFillIn {
 
     public const DEFAULT_WORDS = [
         'Monday',

@@ -38,7 +38,7 @@ use Trefoil\DependencyInjection\Application;
  *      - "--debug" will show verbose messages and leave the test output
  *        files for inspection after execution (such as current results).
  * Example:
- *  "phpunit --debug src/Trefoil/Tests/Helpers/CrossWordsText.php"
+ *  "phpunit --debug src/Trefoil/Tests/Helpers/WordFillInText.php"
  */
 abstract class HelpersTestCase extends TestCase {
 

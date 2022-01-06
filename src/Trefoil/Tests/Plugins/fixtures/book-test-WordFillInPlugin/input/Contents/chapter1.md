@@ -1,12 +1,12 @@
-# CrossWords test
+# WordFillIn test
 
-{@ crosswords(1, { rows:20, cols: 30 }) @}
-{@ crosswords_wordlist(1) @}
+{@ wordfillin(1, { rows:20, cols: 30 }) @}
+{@ wordfillin_wordlist(1) @}
 
-{@ crosswords(2, { rows:15, cols: 15 }) @}
-{@ crosswords_wordlist(2) @}
+{@ wordfillin(2, { rows:15, cols: 15 }) @}
+{@ wordfillin_wordlist(2) @}
 
-{@ crosswords(3, {
+{@ wordfillin(3, {
     seed: 9,
     rows: 30,
     cols: 30,
@@ -17,9 +17,9 @@
     text: 'Coloque las palabras en el tablero.'
 }) @}
 
-{@ crosswords_wordlist(3, { chunks: 4 }) @}
+{@ wordfillin_wordlist(3, { chunks: 4 }) @}
 
-{@ crosswords_begin(4, {
+{@ wordfillin_begin(4, {
     seed: 1,
     rows: 20,
     cols: 20,
@@ -34,11 +34,11 @@
 - Domingo
 - Añadido
 
-{@ crosswords_end() @}
+{@ wordfillin_end() @}
 
-{@ crosswords_wordlist(4) @}
+{@ wordfillin_wordlist(4) @}
 
-{@ crosswords(5, {
+{@ wordfillin(5, {
 seed: 3,
 rows: 30,
 cols: 30,
@@ -46,4 +46,4 @@ word_file: 'words_c' ,
 number_of_words: 25,
 difficulty: 'easy',
 }) @}
-{@ crosswords_wordlist(5) @}
+{@ wordfillin_wordlist(5) @}

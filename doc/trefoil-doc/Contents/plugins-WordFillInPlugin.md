@@ -1,12 +1,12 @@
-## CrossWordsPlugin
+## WordFillInPlugin
 
-This plugin allows generating _crosswords puzzles_ automatically, like the following one:
+This plugin allows generating _word fill-in puzzles_ automatically, like the following one:
 
 [comment]: <> (@formatter:off)
-{@ crosswords( 1, {rows:15, cols:15} ) @}
+{@ wordfillin( 1, {rows:15, cols:15} ) @}
 [comment]: <> (@formatter:on)
 
-{@ crosswords_wordlist( 1 ) @}
+{@ wordfillin_wordlist( 1 ) @}
 
 <div class="clearfix"></div>
 
@@ -22,9 +22,9 @@ book:
     editions:
         <edition-name>
             plugins:
-                enabled: [ CrossWords ]       
+                enabled: [ WordFillIn ]       
                 options:
-                    CrossWords:
+                    WordFillIn:
                         grid_size: 20
                         solution_grid_size: 10
                         highlight_type: shadow
@@ -68,21 +68,21 @@ This feature uses several *trefoil markers* to achieve its complex functionality
 
 {{ fragment('note-trefoil-markers.md') }}
 
-#### Case 1: Cross Words with explicit words
+#### Case 1: Word Fill-In with explicit words
 
 ~~~.html
-{@ crosswords_begin(id, {options} ) @}
+{@ wordfillin_begin(id, {options} ) @}
 
    ...list of words...
    
-{@ crosswords_end() @}
+{@ wordfillin_end() @}
 
-{@ crosswords_wordlist(id, {options} ) @}    
+{@ wordfillin_wordlist(id, {options} ) @}    
 
-{@ crosswords_solution(id, {options} ) @}
+{@ wordfillin_solution(id, {options} ) @}
 ~~~
 
-**Arguments for `crosswords_begin()`**
+**Arguments for `wordfillin_begin()`**
 
 - `id`: A numeric identifier for a particular puzzle. It is used to link all the other trefoil marker calls together.
 - `options`: A list of argument in the form {key:value, ... ,key:value}. They are:
@@ -114,7 +114,7 @@ N>
 N> - `very-hard`: Longer words, always reversed and very few hints.
 [comment]: <> (@formatter:on)
 
-**Arguments for `crosswords_wordlist()`**
+**Arguments for `wordfillin_wordlist()`**
 
 - `id`: The id of the puzzle to show the wordlist.
 - `options` A list of argument in the form {key:value, ... ,key:value}. They are:
@@ -122,7 +122,7 @@ N> - `very-hard`: Longer words, always reversed and very few hints.
     - `chunks`: The number of parts that the wordlist should be divided into. Useful for styling the list in columns.
       Default is 1.
 
-**Arguments for `crosswords_solution()`**
+**Arguments for `wordfillin_solution()`**
 
 - `id`: The id of the puzzle to show the wordlist.
 - `options` A list of argument in the form {key:value, ... ,key:value}. They are:
@@ -146,7 +146,7 @@ N> same seed will be identical.
 **Example**
 
 ~~~.html
-{@ crosswords_begin( 100, {
+{@ wordfillin_begin( 100, {
         seed: 1,
         rows: 15,
         cols: 15,
@@ -164,17 +164,17 @@ N> same seed will be identical.
 - Sábado
 - Domingo
 
-{@ crosswords_end() @}
+{@ wordfillin_end() @}
 
-{@ crosswords_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100 ) @}
 
-{@ crosswords_solution( 100, { title: 'This is the solution'} ) @}
+{@ wordfillin_solution( 100, { title: 'This is the solution'} ) @}
 ~~~
 
 This will render as follows:
 
 [comment]: <> (@formatter:off)
-{@ crosswords_begin( 100, { 
+{@ wordfillin_begin( 100, { 
     seed: 1, 
     rows: 15, 
     cols: 15, 
@@ -192,41 +192,41 @@ This will render as follows:
 - Sábado
 - Domingo
 
-{@ crosswords_end() @}
+{@ wordfillin_end() @}
 [comment]: <> (@formatter:on)
 
-{@ crosswords_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100 ) @}
 
 <div class="clearfix"></div>
 
-{@ crosswords_solution( 100, { title: 'This is the solution'} ) @}
+{@ wordfillin_solution( 100, { title: 'This is the solution'} ) @}
 
 <div class="clearfix"></div>
 
-#### Case 2: Cross Words with random words from file
+#### Case 2: Word Fill-In with random words from file
 
 ~~~.html
-{@ crosswords(id, {options} ) @}
+{@ wordfillin(id, {options} ) @}
 
-{@ crosswords_wordlist(id, {options} ) @}    
+{@ wordfillin_wordlist(id, {options} ) @}    
 
-{@ crosswords_solution(id, {options} ) @}
+{@ wordfillin_solution(id, {options} ) @}
 ~~~
 
-**Arguments for `crosswords()`**
+**Arguments for `wordfillin()`**
 
-This marker accepts the same arguments as `crosswords_begin()` but needs additional arguments:
+This marker accepts the same arguments as `wordfillin_begin()` but needs additional arguments:
 
 - `options`:
     - `word_file`: The label of a file with words to choose from, as specified in the plugin options. If no file is
       specified the marker will generate a puzzle with a default content (useful for quick testing);
     - `number_of_words` : The number of words to randomly select from the file.
 
-**Arguments for `crosswords_wordlist()`**
+**Arguments for `wordfillin_wordlist()`**
 
 Same usage as in the previous case.
 
-**Arguments for `crosswords_solution()`**
+**Arguments for `wordfillin_solution()`**
 
 Same usage as in the previous case.
 
@@ -241,7 +241,7 @@ book:
     plugins:
         ...
         options:
-            CrossWords:
+            WordFillIn:
                 ...
                 word_files:
                     - { label: word_file_1, name: word_file_1.txt }
@@ -251,7 +251,7 @@ book:
 And the following code:
 
 ~~~.html
-{@ crosswords( 101, {
+{@ wordfillin( 101, {
         seed: 1,
         rows: 15,
         cols: 15,
@@ -263,15 +263,15 @@ And the following code:
         number_of_words: 10
         }) @}
 
-{@ crosswords_wordlist( 101 ) @}
+{@ wordfillin_wordlist( 101 ) @}
 
-{@ crosswords_solution( 101, { title: 'Solution %s'} ) @}
+{@ wordfillin_solution( 101, { title: 'Solution %s'} ) @}
 ~~~
 
 This will render as follows:
 
 [comment]: <> (@formatter:off)
-{@ crosswords( 101, {
+{@ wordfillin( 101, {
     seed: 1,
     rows: 15,
     cols: 15,
@@ -284,10 +284,10 @@ This will render as follows:
 }) @}
 [comment]: <> (@formatter:on)
 
-{@ crosswords_wordlist( 101 ) @}
+{@ wordfillin_wordlist( 101 ) @}
 
 <div class="clearfix"></div>
 
-{@ crosswords_solution( 101, { title: 'Solution %s'} ) @}
+{@ wordfillin_solution( 101, { title: 'Solution %s'} ) @}
 
 <div class="clearfix"></div>

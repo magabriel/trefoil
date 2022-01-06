@@ -6,17 +6,17 @@ namespace Trefoil\Tests\Helpers;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Trefoil\DependencyInjection\Application;
-use Trefoil\Helpers\CrossWords;
+use Trefoil\Helpers\WordFillIn;
 use Trefoil\Tests\HelpersTestCase;
 
-class CrossWordsTest extends HelpersTestCase {
+class WordFillInTest extends HelpersTestCase {
 
     private function isDebug(): bool {
         return array_key_exists('debug', getopt('', ['debug']));
     }
 
     public function testGenerateWithDefaults() {
-        $sut = new CrossWords();
+        $sut = new WordFillIn();
 
         $sut->setRandomSeed(1);
 
@@ -27,10 +27,10 @@ class CrossWordsTest extends HelpersTestCase {
 
         self::assertTrue($success);
 
-        $this->testFixture('crosswords-generate-with-defaults.txt', $sut);
+        $this->testFixture('wordfillin-generate-with-defaults.txt', $sut);
     }
 
-    private function testFixture(string $fixtureName, CrossWords $sut) {
+    private function testFixture(string $fixtureName, WordFillIn $sut) {
         $actualPuzzle = $sut->puzzleAsText();
         $actualSolution = $sut->solutionAsText();
         $actualWordList = $sut->wordListAsText();
@@ -85,9 +85,9 @@ class CrossWordsTest extends HelpersTestCase {
     }
 
     public function testGenerateFailsOnImpossiblePuzzle() {
-        $sut = new CrossWords();
+        $sut = new WordFillIn();
 
-        $words = ['crosswords', 'puzzle', 'testing', 'phpunit', 'generator'];
+        $words = ['wordfillin', 'puzzle', 'testing', 'phpunit', 'generator'];
         $success = $sut->generate(5, 5, $words);
         if ($this->isDebug()) {
             echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
@@ -97,10 +97,10 @@ class CrossWordsTest extends HelpersTestCase {
     }
 
     public function testGenerateCustom() {
-        $sut = new CrossWords();
+        $sut = new WordFillIn();
         $sut->setRandomSeed(1);
 
-        $words = ['crosswords', 'puzzle', 'testing', 'phpunit', 'generator', 'another', 'word', 'important', 'filler'];
+        $words = ['wordfillin', 'puzzle', 'testing', 'phpunit', 'generator', 'another', 'word', 'important', 'filler'];
 
         $success = $sut->generate(20, 20, $words);
         if ($this->isDebug()) {
@@ -109,14 +109,14 @@ class CrossWordsTest extends HelpersTestCase {
 
         self::assertTrue($success);
 
-        $this->testFixture('crosswords-generate-custom.txt', $sut);
+        $this->testFixture('wordfillin-generate-custom.txt', $sut);
     }
 
     public function testGeneratCustomWithNumberOfWords() {
-        $sut = new CrossWords();
+        $sut = new WordFillIn();
         $sut->setRandomSeed(17);
 
-        $words = ['crosswords', 'puzzle', 'testing', 'phpunit', 'generator'];
+        $words = ['wordfillin', 'puzzle', 'testing', 'phpunit', 'generator'];
 
         $success = $sut->generate(15, 15, $words, 3);
         if ($this->isDebug()) {
@@ -125,7 +125,7 @@ class CrossWordsTest extends HelpersTestCase {
 
         self::assertTrue($success);
 
-        $this->testFixture('crosswords-generate-custom-with-number-of-words.txt', $sut);
+        $this->testFixture('wordfillin-generate-custom-with-number-of-words.txt', $sut);
     }
 
 }

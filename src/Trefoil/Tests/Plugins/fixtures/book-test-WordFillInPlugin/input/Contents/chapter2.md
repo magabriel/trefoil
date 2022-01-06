@@ -1,6 +1,6 @@
 # Different difficulties
 
-{@ crosswords(11, {
+{@ wordfillin(11, {
     seed: 1,
     rows: 30,
     cols: 30,
@@ -8,9 +8,9 @@
     number_of_words: 30,
     difficulty: 'easy',
 }) @}
-{@ crosswords_wordlist(11, { chunks: 4 }) @}
+{@ wordfillin_wordlist(11, { chunks: 4 }) @}
 
-{@ crosswords(12, {
+{@ wordfillin(12, {
     seed: 1,
     rows: 30,
     cols: 30,
@@ -18,9 +18,9 @@
     number_of_words: 30,
     difficulty: 'medium',
 }) @}
-{@ crosswords_wordlist(12, { chunks: 4 }) @}
+{@ wordfillin_wordlist(12, { chunks: 4 }) @}
 
-{@ crosswords(13, {
+{@ wordfillin(13, {
     seed: 1,
     rows: 30,
     cols: 30,
@@ -28,9 +28,9 @@
     number_of_words: 30,
     difficulty: 'hard',
 }) @}
-{@ crosswords_wordlist(13, { chunks: 4 }) @}
+{@ wordfillin_wordlist(13, { chunks: 4 }) @}
 
-{@ crosswords(14, {
+{@ wordfillin(14, {
     seed: 1,
     rows: 30,
     cols: 30,
@@ -38,4 +38,4 @@
     number_of_words: 30,
     difficulty: 'very-hard',
 }) @}
-{@ crosswords_wordlist(14, { chunks: 4 }) @}
+{@ wordfillin_wordlist(14, { chunks: 4 }) @}

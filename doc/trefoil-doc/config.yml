@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.919'
+    version:          '1.924'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -92,7 +92,7 @@ book:
                     - LiteralLists
                     - TabularLists
                     - WordSearch
-                    - CrossWords
+                    - WordFillIn
 
                 options:
                     DropCaps:
@@ -126,7 +126,7 @@ book:
                         word_files:
                             - { label: word_file_1, name: word_file_1.txt }
 
-                    CrossWords:
+                    WordFillIn:
                         grid_size: 20
                         solution_grid_size: 20
                         highlight_type: line

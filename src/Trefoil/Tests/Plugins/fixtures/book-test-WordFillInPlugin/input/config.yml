@@ -1,5 +1,5 @@
 book:
-    title:            'Test book - CrossWordsPlugin'
+    title:            'Test book - WordFillInPlugin'
     author:           'trefoil'
     edition:          '0'
     language:         en
@@ -25,10 +25,10 @@ book:
             isbn:           1234567890X
             plugins:        
                 enabled: 
-                    - CrossWords
+                    - WordFillIn
 
                 options:
-                    CrossWords:
+                    WordFillIn:
                         grid_size: 20
                         solution_grid_size: 10.5
                         highlight_type: shadow

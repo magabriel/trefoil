@@ -6,5 +6,5 @@ provide a way to automatically generate content for your book.
 {{ itemtoc() }}
 
 {{ fragment('plugins-WordSearchPlugin.md') }}
-{{ fragment('plugins-CrossWordsPlugin.md') }}
+{{ fragment('plugins-WordFillInPlugin.md') }}
  
