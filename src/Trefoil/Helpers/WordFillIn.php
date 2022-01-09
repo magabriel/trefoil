@@ -510,7 +510,11 @@ class WordFillIn {
     ): string
     {
         $wordTries = 0;
-        $maxWordTries = 1000;
+        
+        /* The optimum number of word tries has been determined experimentally
+         * for optimizing the elapsed time.
+         */
+        $maxWordTries = 5 * $this->rows * $this->columns;
 
         do {
             $backupPuzzleBeforeWord = $this->puzzle;
