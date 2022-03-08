@@ -1,0 +1,281 @@
+/*
+* WordFillIn
+* ==========
+*/
+
+{% set gridSize         = app['publishing.plugins.options.WordFillIn.grid_size'] | default(20) %}
+{% set solutionGridSize = app['publishing.plugins.options.WordFillIn.solution_grid_size'] | default(10) %}
+{% set highlightType    = app['publishing.plugins.options.WordFillIn.highlight_type'] | default('line') %}
+{% set gridLineWidth    = solutionGridSize * 0.1 %}
+{% set gridLineWidth    = min(max(gridLineWidth, 2), gridLineWidth)  %}
+
+/****
+* General
+*/
+
+.wordfillin-title {
+    font-size: 2em;
+    font-weight: bold;
+    width: 100%;
+    border-bottom: 3px solid black;
+    line-height: 1em;
+}
+
+.wordfillin-solution-container  .wordfillin-title {
+    border-bottom: 0;
+}
+
+.wordfillin-puzzle,
+.wordfillin-solution {
+    font-family: "Courier New", monospace;
+    width: max-content;
+    display: inline-block;
+}
+
+.wordfillin-puzzle {
+    border: 2px solid black;
+}
+
+.wordfillin-solution {
+    border: 1px solid black;
+}
+
+.wordfillin-puzzle {
+    float: left;
+    margin-bottom: 0.5em;
+    padding: {{ gridSize * 0.25 }}px;
+}
+
+.wordfillin-solution {
+    padding: {{ solutionGridSize * 0.25 }}px;
+}
+
+.wordfillin-puzzle table,
+.wordfillin-solution table {
+    margin: 0;
+    width: auto;
+    height: auto;
+    border: none;
+    border-collapse: collapse;
+}
+
+.wordfillin.wordfillin-puzzle-container {
+    clear: both;
+    margin-bottom: 0;
+}
+
+.wordfillin.wordfillin-solution-container {
+    float: left;
+    margin-right: 1em;
+    margin-top: 1em;
+}
+
+.wordfillin-puzzle *, 
+.wordfillin-solution * {
+    box-sizing: border-box;
+}
+
+.wordfillin-puzzle *:before, 
+.wordfillin-puzzle *:after, 
+.wordfillin-solution *:before,
+.wordfillin-solution *:after {
+    box-sizing: inherit;
+}
+
+.wordfillin-puzzle table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ gridSize }}px;
+    width: {{ gridSize }}px;
+    font-size: {{ gridSize * 0.9 }}px;
+    border: none;
+}
+
+.wordfillin-solution table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ solutionGridSize }}px;
+    width: {{ solutionGridSize }}px;
+    font-size: {{ solutionGridSize * 1.0 }}px;
+    border: none;
+}
+
+.wordfillin-solution table td.cell-letter {
+    color: black;
+}
+
+.wordfillin-solution table td.cell-filler {
+    color: #aaaaaa;
+}
+
+.wordfillin-puzzle .cell-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    line-height: {{ gridSize }}px;
+}
+
+.wordfillin-solution .cell-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    line-height: {{ solutionGridSize }}px;
+}
+
+/****
+* Puzzle start of word markers
+*/
+
+.wordfillin-puzzle .cell-horizontal-begin.cell-no-reverse-horizontal.cell-start-word .cell-arrow-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-top: {{ gridSize * 0.5 }}px solid transparent;
+    border-left: {{ gridSize * 0.15 }}px solid #888;
+    border-bottom: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-puzzle .cell-horizontal-end.cell-reverse-horizontal.cell-start-word .cell-arrow-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    border-top: {{ gridSize * 0.5 }}px solid transparent;
+    border-right: {{ gridSize * 0.15 }}px solid #888;
+    border-bottom: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-puzzle .cell-vertical-begin.cell-no-reverse-vertical.cell-start-word .cell-arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0;
+    border-left: {{ gridSize * 0.5 }}px solid transparent;
+    border-top: {{ gridSize * 0.15 }}px solid #888;
+    border-right: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-puzzle .cell-vertical-end.cell-reverse-vertical.cell-start-word .cell-arrow-up {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-left: {{ gridSize * 0.5 }}px solid transparent;
+    border-bottom: {{ gridSize * 0.15 }}px solid #888;
+    border-right: {{ gridSize * 0.5 }}px solid transparent;
+}
+
+/****
+* Solution start of word markers
+*/
+
+.wordfillin-solution .cell-horizontal-begin.cell-no-reverse-horizontal.cell-start-word .cell-arrow-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-top: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-left: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-bottom: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-solution .cell-horizontal-end.cell-reverse-horizontal.cell-start-word .cell-arrow-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    right: 0;
+    border-top: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-right: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-bottom: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-solution .cell-vertical-begin.cell-no-reverse-vertical.cell-start-word .cell-arrow-down {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 0;
+    border-left: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-top: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-right: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+.wordfillin-solution .cell-vertical-end.cell-reverse-vertical.cell-start-word .cell-arrow-up {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: 0;
+    border-left: {{ solutionGridSize * 0.5 }}px solid transparent;
+    border-bottom: {{ solutionGridSize * 0.15 }}px solid #888;
+    border-right: {{ solutionGridSize * 0.5 }}px solid transparent;
+}
+
+{% if highlightType == 'line' %}
+
+    .wordfillin-solution td.cell-letter, 
+    .wordfillin-solution td.cell-hint {
+        border-top: {{ gridLineWidth }}px solid #888;
+        border-bottom: {{ gridLineWidth }}px solid #888;
+        border-left: {{ gridLineWidth }}px solid #888;
+        border-right: {{ gridLineWidth }}px solid #888;
+    }
+
+    .wordfillin-solution table td.cell-hint{
+        color: black;
+        font-weight: bold;
+    }
+
+{% endif %}{# if highlightType == 'line' #}
+
+{% if highlightType == 'shadow' %}
+
+    .wordfillin-solution table td.cell-letter {
+        background: #CCCCCC;
+        color: black;
+    }
+
+    .wordfillin-solution table td.cell-hint {
+        background: #666666;
+        color: white;
+    }
+
+{% endif %}{# if highlightType == 'shadow' #}
+
+.wordfillin-puzzle td.cell-letter{
+    border-top: {{ gridLineWidth }}px solid #888;
+    border-bottom: {{ gridLineWidth }}px solid #888;
+    border-left: {{ gridLineWidth }}px solid #888;
+    border-right: {{ gridLineWidth }}px solid #888;
+}
+
+
+/****
+* Word list
+*/
+
+.wordfillin-wordlist {
+    float: left;
+    font-size: 14px;;
+}
+
+.wordfillin-wordlist ul {
+    display: inline-block;
+    margin-left: 1em;
+    margin-top: 0;
+    vertical-align: top;
+
+    list-style: none;
+    padding: 0;
+}
+
+.wordfillin-wordlist ul + ul {
+    margin-left: 2em;
+}
+
+.wordfillin-wordlist ul li {
+    margin: 0.3px 0;
+}

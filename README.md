@@ -1,6 +1,6 @@
 # trefoil #
 
-**trefoil** extends **easybook** (<http://easybook-project.org>) to provide 
+**trefoil** extends **easybook** (<https://easycorp.io/EasyBook>) to provide 
 additional features for publication of *ebooks*, both fiction and non-fiction.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6/mini.png)](https://insight.sensiolabs.com/projects/76f7597a-6ff8-449c-811f-d6a4f38025d6)

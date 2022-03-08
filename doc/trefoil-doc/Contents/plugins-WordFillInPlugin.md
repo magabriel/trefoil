@@ -1,12 +1,12 @@
-## WordSearchPlugin
+## WordFillInPlugin
 
-This plugin allows generating _wordsearch puzzles_ automatically, like the following one:
+This plugin allows generating _word fill-in puzzles_ automatically, like the following one:
 
 [comment]: <> (@formatter:off)
-{@ wordsearch( 1, {rows:10, cols:10} ) @}
+{@ wordfillin( 1, {rows:15, cols:15} ) @}
 [comment]: <> (@formatter:on)
 
-{@ wordsearch_wordlist( 1 ) @}
+{@ wordfillin_wordlist( 1 ) @}
 
 <div class="clearfix"></div>
 
@@ -22,9 +22,9 @@ book:
     editions:
         <edition-name>
             plugins:
-                enabled: [ WordSearch ]       
+                enabled: [ WordFillIn ]       
                 options:
-                    WordSearch:
+                    WordFillIn:
                         grid_size: 20
                         solution_grid_size: 10
                         highlight_type: shadow
@@ -32,7 +32,6 @@ book:
                           - { label: my_label_1, name: my/words/file/path/and/name_1.txt }
                           - { label: my_label_n, name: my/words/file/path/and/name_n.txt }
                         default:
-                          filler: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                           difficulty: "medium"
                         strings:
                           title: ""
@@ -58,7 +57,6 @@ sensible defaults that are shown in the previous YAML block.
 - `word_files`: Labels for the word files to use with the automatic word selection feature. The name can include a path
   and its relative to the book's `Content` directory.
 - `default`: Some default values to use.
-    - `filler`: A string with all the letters or signs to use as filler for empty puzzle places.
     - `difficulty`: The puzzle difficulty. Either `easy`, `medium`, `hard`, or `very-hard`.
 - `string`: Some string used on the puzzle and solution rendering.
     - `easy`: Text for easy puzzles.
@@ -70,27 +68,26 @@ This feature uses several *trefoil markers* to achieve its complex functionality
 
 {{ fragment('note-trefoil-markers.md') }}
 
-#### Case 1: Word search with explicit words
+#### Case 1: Word Fill-In with explicit words
 
 ~~~.html
-{@ wordsearch_begin(id, {options} ) @}
+{@ wordfillin_begin(id, {options} ) @}
 
    ...list of words...
    
-{@ wordsearch_end() @}
+{@ wordfillin_end() @}
 
-{@ wordsearch_wordlist(id, {options} ) @}    
+{@ wordfillin_wordlist(id, {options} ) @}    
 
-{@ wordsearch_solution(id, {options} ) @}
+{@ wordfillin_solution(id, {options} ) @}
 ~~~
 
-**Arguments for `wordsearch_begin()`**
+**Arguments for `wordfillin_begin()`**
 
 - `id`: A numeric identifier for a particular puzzle. It is used to link all the other trefoil marker calls together.
 - `options`: A list of argument in the form {key:value, ... ,key:value}. They are:
     - `rows`: The number of rows of the puzzle.
     - `cols`: The number of columns of the puzzle.
-    - `filler`: A string with all the letters or signs to use as filler for empty puzzle places.
     - `title`: The title of the puzzle. 
       - It can include HTML markup.
       - The puzzle id can be included one or two times using sprintf syntax.
@@ -108,16 +105,16 @@ This feature uses several *trefoil markers* to achieve its complex functionality
 N> ##### Puzzle difficulty
 N> The puzzle difficulty can be graduated as follows:
 N> 
-N> - `easy`: Not very long words, never reversed.
+N> - `easy`: Not very long words with a few hints.
 N> 
-N> - `medium`: Not very long words, with a few of them reversed.
+N> - `medium`: Not very long words with fewer hints.
 N> 
-N> - `hard`: Longer words, with a few of them reversed.
+N> - `hard`: Longer words, some of them reversed and with fewer hints.
 N> 
-N> - `very-hard`: Longer words, always reversed.
+N> - `very-hard`: Longer words, always reversed and very few hints.
 [comment]: <> (@formatter:on)
 
-**Arguments for `wordsearch_wordlist()`**
+**Arguments for `wordfillin_wordlist()`**
 
 - `id`: The id of the puzzle to show the wordlist.
 - `options` A list of argument in the form {key:value, ... ,key:value}. They are:
@@ -125,7 +122,7 @@ N> - `very-hard`: Longer words, always reversed.
     - `chunks`: The number of parts that the wordlist should be divided into. Useful for styling the list in columns.
       Default is 1.
 
-**Arguments for `wordsearch_solution()`**
+**Arguments for `wordfillin_solution()`**
 
 - `id`: The id of the puzzle to show the wordlist.
 - `options` A list of argument in the form {key:value, ... ,key:value}. They are:
@@ -149,13 +146,13 @@ N> same seed will be identical.
 **Example**
 
 ~~~.html
-{@ wordsearch_begin( 100, {
+{@ wordfillin_begin( 100, {
         seed: 1,
-        rows: 10,
-        cols: 10,
+        rows: 15,
+        cols: 15,
         title: 'This is the puzzle',
         text: 'Days of the week in Spanish.',
-        text2: 'Find the words hidden between the letters.',
+        text2: 'Place the words in the grid.',
         difficulty: 'hard'
 }) @}
 
@@ -167,23 +164,23 @@ N> same seed will be identical.
 - Sábado
 - Domingo
 
-{@ wordsearch_end() @}
+{@ wordfillin_end() @}
 
-{@ wordsearch_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100 ) @}
 
-{@ wordsearch_solution( 100, { title: 'This is the solution'} ) @}
+{@ wordfillin_solution( 100, { title: 'This is the solution'} ) @}
 ~~~
 
 This will render as follows:
 
 [comment]: <> (@formatter:off)
-{@ wordsearch_begin( 100, { 
+{@ wordfillin_begin( 100, { 
     seed: 1, 
-    rows: 10, 
-    cols: 10, 
+    rows: 15, 
+    cols: 15, 
     title: 'This is the puzzle',
     text: 'Days of the week in Spanish.',
-    text2: 'Find the words hidden between the letters.',
+    text2: 'Place the words in the grid.',
     difficulty: 'hard'
 }) @}
 
@@ -195,41 +192,41 @@ This will render as follows:
 - Sábado
 - Domingo
 
-{@ wordsearch_end() @}
+{@ wordfillin_end() @}
 [comment]: <> (@formatter:on)
 
-{@ wordsearch_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100 ) @}
 
 <div class="clearfix"></div>
 
-{@ wordsearch_solution( 100, { title: 'This is the solution'} ) @}
+{@ wordfillin_solution( 100, { title: 'This is the solution'} ) @}
 
 <div class="clearfix"></div>
 
-#### Case 2: Word search with random words from file
+#### Case 2: Word Fill-In with random words from file
 
 ~~~.html
-{@ wordsearch(id, {options} ) @}
+{@ wordfillin(id, {options} ) @}
 
-{@ wordsearch_wordlist(id, {options} ) @}    
+{@ wordfillin_wordlist(id, {options} ) @}    
 
-{@ wordsearch_solution(id, {options} ) @}
+{@ wordfillin_solution(id, {options} ) @}
 ~~~
 
-**Arguments for `wordsearch()`**
+**Arguments for `wordfillin()`**
 
-This marker accepts the same arguments as `wordsearch_begin()` but needs additional arguments:
+This marker accepts the same arguments as `wordfillin_begin()` but needs additional arguments:
 
 - `options`:
     - `word_file`: The label of a file with words to choose from, as specified in the plugin options. If no file is
       specified the marker will generate a puzzle with a default content (useful for quick testing);
     - `number_of_words` : The number of words to randomly select from the file.
 
-**Arguments for `wordsearch_wordlist()`**
+**Arguments for `wordfillin_wordlist()`**
 
 Same usage as in the previous case.
 
-**Arguments for `wordsearch_solution()`**
+**Arguments for `wordfillin_solution()`**
 
 Same usage as in the previous case.
 
@@ -244,7 +241,7 @@ book:
     plugins:
         ...
         options:
-            WordSearch:
+            WordFillIn:
                 ...
                 word_files:
                     - { label: word_file_1, name: word_file_1.txt }
@@ -254,43 +251,43 @@ book:
 And the following code:
 
 ~~~.html
-{@ wordsearch( 101, {
+{@ wordfillin( 101, {
         seed: 1,
-        rows: 10,
-        cols: 10,
+        rows: 15,
+        cols: 15,
         title: 'This is the puzzle number %s',
         text: 'Days of the week in Spanish.',
-        text2: 'Find the words hidden between the letters.',
+        text2: 'Place the words in the grid.',
         difficulty: 'hard',
         word_file: 'word_file_1',
         number_of_words: 10
         }) @}
 
-{@ wordsearch_wordlist( 101 ) @}
+{@ wordfillin_wordlist( 101 ) @}
 
-{@ wordsearch_solution( 101, { title: 'Solution %s'} ) @}
+{@ wordfillin_solution( 101, { title: 'Solution %s'} ) @}
 ~~~
 
 This will render as follows:
 
 [comment]: <> (@formatter:off)
-{@ wordsearch( 101, {
+{@ wordfillin( 101, {
     seed: 1,
-    rows: 10,
-    cols: 10,
+    rows: 15,
+    cols: 15,
     title: 'This is the puzzle number %s',
     text: 'Days of the week in Spanish.',
-    text2: 'Find the words hidden between the letters.',
+    text2: 'Place the words in the grid.',
     difficulty: 'hard',
     word_file: 'word_file_1',
     number_of_words: 10
 }) @}
 [comment]: <> (@formatter:on)
 
-{@ wordsearch_wordlist( 101 ) @}
+{@ wordfillin_wordlist( 101 ) @}
 
 <div class="clearfix"></div>
 
-{@ wordsearch_solution( 101, { title: 'Solution %s'} ) @}
+{@ wordfillin_solution( 101, { title: 'Solution %s'} ) @}
 
 <div class="clearfix"></div>
