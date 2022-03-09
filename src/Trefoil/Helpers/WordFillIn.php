@@ -1,12 +1,21 @@
 <?php
 
 declare(strict_types=1);
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Helpers;
 
 use Trefoil\Util\Toolkit;
 
-class WordFillIn {
+class WordFillIn
+{
 
     public const DEFAULT_WORDS = [
         'Monday',
@@ -110,13 +119,12 @@ class WordFillIn {
     }
 
     public function generate(
-            int $rows = 20,
-            int $columns = 20,
-            array $words = self::DEFAULT_WORDS,
-            int $numberOfWords = 0,
-            string $difficulty = self::DIFFICULTY_EASY
-    ): bool
-    {
+        int $rows = 20,
+        int $columns = 20,
+        array $words = self::DEFAULT_WORDS,
+        int $numberOfWords = 0,
+        string $difficulty = self::DIFFICULTY_EASY
+    ): bool {
         $this->words = array_map('mb_strtoupper', $words);
         $this->rows = $rows;
         $this->columns = $columns;
@@ -149,11 +157,10 @@ class WordFillIn {
     }
 
     protected function selectRandomWords(
-            int $numberOfWords,
-            string $difficulty,
-            int $maxLength
-    )
-    {
+        int $numberOfWords,
+        string $difficulty,
+        int $maxLength
+    ) {
         $newWords = [];
 
         for ($i = 0; $i < $numberOfWords; $i++) {
@@ -162,7 +169,7 @@ class WordFillIn {
                 $word = $this->words[$this->random->getRandomInt(0, count($this->words) - 1)];
                 $tries--;
                 $isValid = !in_array($word, $newWords) && mb_strlen($word) >= $this->difficulties[$difficulty]['min-length'] && mb_strlen($word)
-                        <= $this->difficulties[$difficulty]['max-length'] && mb_strlen($word) <= $maxLength;
+                    <= $this->difficulties[$difficulty]['max-length'] && mb_strlen($word) <= $maxLength;
             } while (!$isValid && $tries > 0);
 
             if ($tries >= 0) {
@@ -172,7 +179,9 @@ class WordFillIn {
 
         if (count($newWords) < $numberOfWords) {
             $this->errors[] = sprintf(
-                    'Could not select %s random words. Just %s selected.', count($newWords), $numberOfWords
+                'Could not select %s random words. Just %s selected.',
+                count($newWords),
+                $numberOfWords
             );
         }
 
@@ -184,7 +193,10 @@ class WordFillIn {
         foreach ($this->words as $word) {
             if (mb_strlen($word) > $this->rows && mb_strlen($word) > $this->columns) {
                 $this->errors[] = sprintf(
-                        'Word "%s" would not fit in %s rows by %s columns.', $word, $this->rows, $this->columns
+                    'Word "%s" would not fit in %s rows by %s columns.',
+                    $word,
+                    $this->rows,
+                    $this->columns
                 );
 
                 return false;
@@ -310,12 +322,12 @@ class WordFillIn {
         $newRowToAdd = array_pad([], $newColumns, $emptyCell);
 
         // Add as many rows as needed at the top and bottom
-        $newPuzzle = array_pad($newPuzzle, -($newRows + $rowsToAddTop), $newRowToAdd);
+        $newPuzzle = array_pad($newPuzzle, - ($newRows + $rowsToAddTop), $newRowToAdd);
         $newPuzzle = array_pad($newPuzzle, $newRows + $rowsToAdd, $newRowToAdd);
 
         // Add as many columns as needed at the left and right
         for ($row = 0; $row < count($newPuzzle); $row++) {
-            $newPuzzle[$row] = array_pad($newPuzzle[$row], -($newColumns + $columnsToAddLeft), $emptyCell);
+            $newPuzzle[$row] = array_pad($newPuzzle[$row], - ($newColumns + $columnsToAddLeft), $emptyCell);
             $newPuzzle[$row] = array_pad($newPuzzle[$row], $newColumns + $columnsToAdd, $emptyCell);
         }
 
@@ -370,7 +382,7 @@ class WordFillIn {
         $wordsBeforeNormalization = array_combine($words, $this->words);
 
         // Sort words by length descending
-        usort($words, fn($a, $b) => mb_strlen($b) <=> mb_strlen($a));
+        usort($words, fn ($a, $b) => mb_strlen($b) <=> mb_strlen($a));
 
         do {
             $puzzleDone = $this->tryPlaceWords($words, $difficulty);
@@ -386,7 +398,7 @@ class WordFillIn {
             }
         } while (!$puzzleDone && count($words) > 0);
 
-//        $this->words = $words;
+        //        $this->words = $words;
 
         return $puzzleDone;
     }
@@ -398,10 +410,9 @@ class WordFillIn {
      * @return bool Success
      */
     protected function tryPlaceWords(
-            array $words,
-            string $difficulty
-    ): bool
-    {
+        array $words,
+        string $difficulty
+    ): bool {
         $backupPuzzle = $this->puzzle;
         $backupCrosses = $this->crosses;
 
@@ -431,10 +442,9 @@ class WordFillIn {
      * @return bool Success
      */
     protected function tryPlaceWordsInCertainOrder(
-            array $words,
-            string $difficulty
-    ): bool
-    {
+        array $words,
+        string $difficulty
+    ): bool {
         $maxPuzzleTries = 100;
         $puzzleTries = 0;
 
@@ -504,13 +514,12 @@ class WordFillIn {
      * @return string Direction or self::WORD_FAIL
      */
     protected function placeWord(
-            string $word,
-            string $difficulty,
-            bool $isFirstWord
-    ): string
-    {
+        string $word,
+        string $difficulty,
+        bool $isFirstWord
+    ): string {
         $wordTries = 0;
-        
+
         /* The optimum number of word tries has been determined experimentally
          * for optimizing the elapsed time.
          */
@@ -538,11 +547,10 @@ class WordFillIn {
      * @return string Direction or self::WORD_FAIL
      */
     protected function tryPlaceTheWord(
-            string $word,
-            string $difficulty,
-            bool $isFirstWord
-    ): string
-    {
+        string $word,
+        string $difficulty,
+        bool $isFirstWord
+    ): string {
 
         $direction = [self::DIRECTION_HORIZONTAL, self::DIRECTION_VERTICAL][$this->random->getRandomInt(0, 1)];
 
@@ -563,9 +571,11 @@ class WordFillIn {
             $isLastLetter = ($i === mb_strlen($theWord) - 1);
 
             // Check if the letter can be placed
-            if ($theRow < 0 || $theRow > $maxRow || $theCol < 0 || $theCol > $maxCol ||
-                    ($this->puzzle[$theRow][$theCol]['letter'] !== self::EMPTY_CELL &&
-                    $this->puzzle[$theRow][$theCol]['letter'] !== $theLetter)) {
+            if (
+                $theRow < 0 || $theRow > $maxRow || $theCol < 0 || $theCol > $maxCol ||
+                ($this->puzzle[$theRow][$theCol]['letter'] !== self::EMPTY_CELL &&
+                    $this->puzzle[$theRow][$theCol]['letter'] !== $theLetter)
+            ) {
 
                 return self::WORD_FAIL;
             }
@@ -580,10 +590,10 @@ class WordFillIn {
             // Check that the horizontal word is not contigous to another one
             if ($direction === self::DIRECTION_HORIZONTAL) {
                 if (
-                        ($theCol > 0 && $isFirstLetter && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
-                        ($theCol < $this->columns - 1 && $isLastLetter && $this->puzzle[$theRow][$theCol + 1]['letter'] !== self::EMPTY_CELL) ||
-                        (!$isWordCross && $theRow > 0 && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
-                        (!$isWordCross && $theRow < $this->rows - 1 && $this->puzzle[$theRow + 1][$theCol]['letter'] !== self::EMPTY_CELL)
+                    ($theCol > 0 && $isFirstLetter && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
+                    ($theCol < $this->columns - 1 && $isLastLetter && $this->puzzle[$theRow][$theCol + 1]['letter'] !== self::EMPTY_CELL) ||
+                    (!$isWordCross && $theRow > 0 && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
+                    (!$isWordCross && $theRow < $this->rows - 1 && $this->puzzle[$theRow + 1][$theCol]['letter'] !== self::EMPTY_CELL)
                 ) {
                     return self::WORD_FAIL;
                 }
@@ -592,10 +602,10 @@ class WordFillIn {
             // Check that the vertical word is not contigous to another one
             if ($direction === self::DIRECTION_VERTICAL) {
                 if (
-                        ($theRow > 0 && $isFirstLetter && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
-                        ($theRow < $this->rows - 1 && $isLastLetter && $this->puzzle[$theRow + 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
-                        (!$isWordCross && $theCol > 0 && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
-                        (!$isWordCross && $theCol < $this->columns - 1 && $this->puzzle[$theRow][$theCol + 1]['letter'] !== self::EMPTY_CELL)
+                    ($theRow > 0 && $isFirstLetter && $this->puzzle[$theRow - 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
+                    ($theRow < $this->rows - 1 && $isLastLetter && $this->puzzle[$theRow + 1][$theCol]['letter'] !== self::EMPTY_CELL) ||
+                    (!$isWordCross && $theCol > 0 && $this->puzzle[$theRow][$theCol - 1]['letter'] !== self::EMPTY_CELL) ||
+                    (!$isWordCross && $theCol < $this->columns - 1 && $this->puzzle[$theRow][$theCol + 1]['letter'] !== self::EMPTY_CELL)
                 ) {
                     return self::WORD_FAIL;
                 }
@@ -625,20 +635,20 @@ class WordFillIn {
                 if (!$reverse) {
                     $this->puzzle[$theRow][$theCol]['types'][] = self::CELL_TYPE_START_WORD;
                     $this->puzzle[$theRow][$theCol]['types'][] = ($direction === self::DIRECTION_HORIZONTAL ?
-                            self::CELL_TYPE_NO_REVERSE_HORIZONTAL :
-                            self::CELL_TYPE_NO_REVERSE_VERTICAL);
+                        self::CELL_TYPE_NO_REVERSE_HORIZONTAL :
+                        self::CELL_TYPE_NO_REVERSE_VERTICAL);
                 } else {
                     $this->puzzle[$theRow][$theCol]['types'][] = ($direction === self::DIRECTION_HORIZONTAL ?
-                            self::CELL_TYPE_REVERSE_HORIZONTAL :
-                            self::CELL_TYPE_REVERSE_VERTICAL);
+                        self::CELL_TYPE_REVERSE_HORIZONTAL :
+                        self::CELL_TYPE_REVERSE_VERTICAL);
                 }
             } elseif ($i == mb_strlen($theWord) - 1) {
                 $theDirection .= '-end';
                 if ($reverse) {
                     $this->puzzle[$theRow][$theCol]['types'][] = self::CELL_TYPE_START_WORD;
                     $this->puzzle[$theRow][$theCol]['types'][] = ($direction === self::DIRECTION_HORIZONTAL ?
-                            self::CELL_TYPE_REVERSE_HORIZONTAL :
-                            self::CELL_TYPE_REVERSE_VERTICAL);
+                        self::CELL_TYPE_REVERSE_HORIZONTAL :
+                        self::CELL_TYPE_REVERSE_VERTICAL);
                 }
             }
 
@@ -657,10 +667,9 @@ class WordFillIn {
     }
 
     protected function calculateWordBounds(
-            string $word,
-            string $direction
-    )
-    {
+        string $word,
+        string $direction
+    ) {
         $initialRow = 0;
         $initialCol = 0;
         $maxRow = $this->rows - 1;
@@ -737,8 +746,8 @@ class WordFillIn {
             for ($column = 0; $column < $this->columns; $column++) {
                 $cell = $this->puzzle[$row][$column];
                 $text .= $cell['letter'] == self::EMPTY_CELL ?
-                        self::PUZZLE_TEXT_EMPTY_CELL :
-                        sprintf(self::PUZZLE_TEXT_LETTER_CELL, $cell['letter']);
+                    self::PUZZLE_TEXT_EMPTY_CELL :
+                    sprintf(self::PUZZLE_TEXT_LETTER_CELL, $cell['letter']);
             }
             $text .= "\n";
         }
@@ -834,10 +843,9 @@ class WordFillIn {
     }
 
     public function wordListAsText(
-            bool $sorted = true,
-            string $sortLocale = "utf8"
-    ): string
-    {
+        bool $sorted = true,
+        string $sortLocale = "utf8"
+    ): string {
         $words = $this->words;
         if ($sorted) {
             $collator = collator_create($sortLocale);
@@ -848,11 +856,10 @@ class WordFillIn {
     }
 
     public function wordListAsHtml(
-            bool $sorted = true,
-            int $chunks = 1,
-            string $sortLocale = "utf8"
-    ): string
-    {
+        bool $sorted = true,
+        int $chunks = 1,
+        string $sortLocale = "utf8"
+    ): string {
         $words = $this->words;
         if ($sorted) {
             $collator = collator_create($sortLocale);
@@ -863,8 +870,8 @@ class WordFillIn {
         $itemChunks = array_chunk($words, intval(ceil(count($words) / $chunks)));
         foreach ($itemChunks as $index => $itemChunk) {
             $output .= sprintf('<ul class="chunk-%s-%s"><li>', $index + 1, $chunks)
-                    . implode("</li><li>", $itemChunk)
-                    . '</li></ul>';
+                . implode("</li><li>", $itemChunk)
+                . '</li></ul>';
         }
 
         return $output;
@@ -884,5 +891,4 @@ class WordFillIn {
     {
         return $this->totalTries;
     }
-
 }

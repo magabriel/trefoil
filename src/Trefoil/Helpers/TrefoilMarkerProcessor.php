@@ -1,5 +1,14 @@
 <?php
+
 declare(strict_types=1);
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Helpers;
 
@@ -34,12 +43,14 @@ class TrefoilMarkerProcessor
     {
         // we use a separate Twig environment for this
         $this->twig = new \Twig_Environment(
-            new \Twig_Loader_String(), [
-            'debug'            => true,
-            'cache'            => false,
-            'strict_variables' => true,
-            'autoescape'       => false,
-        ]);
+            new \Twig_Loader_String(),
+            [
+                'debug'            => true,
+                'cache'            => false,
+                'strict_variables' => true,
+                'autoescape'       => false,
+            ]
+        );
     }
 
     /**
@@ -48,9 +59,10 @@ class TrefoilMarkerProcessor
      * @param          $trefoilMarkerName
      * @param callable $code
      */
-    public function registerMarker($trefoilMarkerName,
-                                   callable $code): void
-    {
+    public function registerMarker(
+        $trefoilMarkerName,
+        callable $code
+    ): void {
         $this->twig->addFunction(new \Twig_SimpleFunction($trefoilMarkerName, $code));
         $this->functionNames[] = $trefoilMarkerName;
     }
@@ -75,7 +87,7 @@ class TrefoilMarkerProcessor
         $regExp .= '{@ +'; // block opening delimiter followed by one or more blanks
         $regExp .= '=*[ \n]*'; // optional visual delimiter: a series of "=" followed by optional blanks
         $regExp .= '(?<function>'; // begin function call
-        $regExp .= '('.implode('|', $this->functionNames).')'; // one of the functions to process
+        $regExp .= '(' . implode('|', $this->functionNames) . ')'; // one of the functions to process
         $regExp .= ' *\('; // zero or more blanks and opening parenthesis
         $regExp .= '.*(?=@})'; // rest of block content up until the closing (positive lookahead)
         $regExp .= ')'; // end function call
@@ -86,11 +98,12 @@ class TrefoilMarkerProcessor
         $text = preg_replace_callback(
             $regExp,
             function ($matches) {
-                $twigCall = '{{'.$matches['function'].'}}';
+                $twigCall = '{{' . $matches['function'] . '}}';
 
                 return $this->twig->render($twigCall);
             },
-            $text);
+            $text
+        );
 
         // restore the existing markdown code blocks
         $preserver->setText($text);
