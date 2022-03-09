@@ -1,5 +1,14 @@
 <?php
+
 declare(strict_types=1);
+/*
+ * This file is part of the trefoil application.
+ *
+ * (c) Miguel Angel Gabriel <magabriel@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Trefoil\Helpers;
 
@@ -55,9 +64,10 @@ class Table extends \ArrayObject
      * @param     $htmlTable
      * @param int $flags
      */
-    protected function parseHtmlTable($htmlTable,
-                                      $flags = self::CREATE_TBODY): void
-    {
+    protected function parseHtmlTable(
+        $htmlTable,
+        $flags = self::CREATE_TBODY
+    ): void {
         // init the ArrayObject
         $this->exchangeArray([]);
 
@@ -81,9 +91,10 @@ class Table extends \ArrayObject
      *
      * @return array of rows
      */
-    protected function extractHtmlRows($htmlTable,
-                                       $tag = 'tbody'): array
-    {
+    protected function extractHtmlRows(
+        $htmlTable,
+        $tag = 'tbody'
+    ): array {
         // extract section
         $regExp = sprintf('/<%s>(?<contents>.*)<\/%s>/Ums', $tag, $tag);
         preg_match_all($regExp, $htmlTable, $matches, PREG_SET_ORDER);
@@ -185,7 +196,7 @@ class Table extends \ArrayObject
             return '';
         }
 
-        return '<table>'.$html.'</table>';
+        return '<table>' . $html . '</table>';
     }
 
     /**
@@ -208,7 +219,7 @@ class Table extends \ArrayObject
                     $rowspan = isset($col['rowspan']) ? sprintf(' rowspan="%s"', $col['rowspan']) : '';
                     $colspan = isset($col['colspan']) ? sprintf(' colspan="%s"', $col['colspan']) : '';
 
-                    $attributes = isset($col['attributes']) && $col['attributes']? ' '.$this->renderAttributes($col['attributes']) : '';
+                    $attributes = isset($col['attributes']) && $col['attributes'] ? ' ' . $this->renderAttributes($col['attributes']) : '';
 
                     $html .= sprintf(
                         '<%s%s%s%s>%s</%s>',
@@ -271,7 +282,8 @@ class Table extends \ArrayObject
                     // find the primary colspanned cell (same row)
                     $colspanCol = -1;
                     for ($j = $colIndex - 1; $j >= 0; $j--) {
-                        if (!isset($newRows[$rowIndex][$j]['ignore']) ||
+                        if (
+                            !isset($newRows[$rowIndex][$j]['ignore']) ||
                             (isset($newRows[$rowIndex][$j]['ignore']) && $j === 0)
                         ) {
                             $colspanCol = $j;
@@ -296,7 +308,8 @@ class Table extends \ArrayObject
                 // a cell with only '"' as contents => rowspanned cell (same column)
                 // consider several kind of double quote character
                 // and the single quote character as a top alignment marker
-                if (in_array($col['contents'], $doubleQuotes, true) || in_array($col['contents'], $singleQuotes, true)
+                if (
+                    in_array($col['contents'], $doubleQuotes, true) || in_array($col['contents'], $singleQuotes, true)
                 ) {
 
                     // find the primary rowspanned cell
@@ -358,10 +371,11 @@ class Table extends \ArrayObject
      * @param int|null $column
      * @param array    $attributes
      */
-    public function addHeadingCell(string $contents,
-                                   int    $column = null,
-                                   array  $attributes = []): void
-    {
+    public function addHeadingCell(
+        string $contents,
+        int    $column = null,
+        array  $attributes = []
+    ): void {
         if ($column === null) {
             $column = count($this['thead'][0]);
         }
@@ -387,9 +401,10 @@ class Table extends \ArrayObject
      * @param array $cell
      * @param int   $column
      */
-    public function setHeadingCell(array $cell,
-                                         $column): void
-    {
+    public function setHeadingCell(
+        array $cell,
+        $column
+    ): void {
         $this['thead'][0][$column] = $cell;
     }
 
@@ -434,11 +449,12 @@ class Table extends \ArrayObject
      * @param array    $attributes
      * @return array
      */
-    public function addBodyCell(string $contents,
-                                int    $row = null,
-                                int    $column = null,
-                                array  $attributes = []): array
-    {
+    public function addBodyCell(
+        string $contents,
+        int    $row = null,
+        int    $column = null,
+        array  $attributes = []
+    ): array {
         if (!isset($this['tbody'])) {
             $this['tbody'][] = [];
         }
@@ -471,10 +487,11 @@ class Table extends \ArrayObject
      * @param $row
      * @param $column
      */
-    public function setBodyCellExtra($extra,
-                                     $row,
-                                     $column): void
-    {
+    public function setBodyCellExtra(
+        $extra,
+        $row,
+        $column
+    ): void {
         $this['tbody'][$row][$column]['extra'] = $extra;
     }
 
@@ -483,9 +500,10 @@ class Table extends \ArrayObject
      * @param $column
      * @return |null
      */
-    public function getBodyCellExtra($row,
-                                     $column)
-    {
+    public function getBodyCellExtra(
+        $row,
+        $column
+    ) {
         if (!isset($this['tbody'][$row][$column]['extra'])) {
             return null;
         }
@@ -498,10 +516,11 @@ class Table extends \ArrayObject
      * @param $row
      * @param $column
      */
-    public function setColspan($colspan,
-                               $row,
-                               $column): void
-    {
+    public function setColspan(
+        $colspan,
+        $row,
+        $column
+    ): void {
         $this['tbody'][$row][$column]['colspan'] = $colspan;
     }
 
@@ -510,10 +529,11 @@ class Table extends \ArrayObject
      * @param $row
      * @param $column
      */
-    public function setRowsspan($rowsspan,
-                                $row,
-                                $column): void
-    {
+    public function setRowsspan(
+        $rowsspan,
+        $row,
+        $column
+    ): void {
         $this['tbody'][$row][$column]['rowspan'] = $rowsspan;
     }
 
@@ -523,9 +543,10 @@ class Table extends \ArrayObject
      *
      * @return null|array cell
      */
-    public function getBodyCell($row,
-                                $column): ?array
-    {
+    public function getBodyCell(
+        $row,
+        $column
+    ): ?array {
         return $this['tbody'][$row][$column] ?? null;
     }
 
@@ -534,10 +555,11 @@ class Table extends \ArrayObject
      * @param       $row
      * @param       $column
      */
-    public function setBodyCell(array $cell,
-                                      $row,
-                                      $column): void
-    {
+    public function setBodyCell(
+        array $cell,
+        $row,
+        $column
+    ): void {
         $this['tbody'][$row][$column] = $cell;
     }
 
@@ -561,4 +583,3 @@ class Table extends \ArrayObject
         return true;
     }
 }
-
