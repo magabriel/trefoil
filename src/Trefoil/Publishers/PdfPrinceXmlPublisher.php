@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -55,14 +56,6 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         $this->prepareBookImages($imagesDir);
         $this->prepareBookCoverImage($imagesDir);
 
-        // implode all the contents to create the whole book
-        $htmlBookFilePath = $tmpDir . '/book.html';
-        $this->app->render(
-            'book.twig',
-            ['items' => $this->app['publishing.items']],
-            $htmlBookFilePath
-        );
-
         // use PrinceXML to transform the HTML book into a PDF book
         $prince = $this->app['prince'];
         $prince->setBaseURL($imagesDir);
@@ -80,9 +73,23 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         }
 
         $customCss = $this->getCustomCssFile();
-        if ($customCss !== null && file_exists($customCss)) {
-            $prince->addStyleSheet($customCss);
+        $hasCustomCss = $customCss !== null && file_exists($customCss);
+        if ($hasCustomCss) {
+            $customStyles = $tmpDir . '/styles.css';
+            $this->app['filesystem']->copy($customCss, $customStyles);
+            $prince->addStyleSheet($customStyles);
         }
+
+        // implode all the contents to create the whole book
+        $htmlBookFilePath = $tmpDir . '/book.html';
+        $this->app->render(
+            'book.twig',
+            [
+                'items' => $this->app['publishing.items'],
+                'has_custom_css' => $hasCustomCss,
+            ],
+            $htmlBookFilePath
+        );
 
         // Optional first-pass script
         $js = $this->getJavascriptFile('prince-1st-pass.js');
@@ -154,9 +161,9 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         throw new \RuntimeException(
             sprintf(
                 "ERROR: The PrinceXML library needed to generate PDF books cannot be found.\n"
-                . " Check that you have installed PrinceXML in a common directory \n"
-                . " or set your custom PrinceXML path in the book's config.yml file:\n\n"
-                . '%s',
+                    . " Check that you have installed PrinceXML in a common directory \n"
+                    . " or set your custom PrinceXML path in the book's config.yml file:\n\n"
+                    . '%s',
                 $this->getSampleYamlConfiguration()
             )
         );
@@ -170,11 +177,11 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         $this->app['console.output']->write(
             sprintf(
                 " In order to generate PDF files, PrinceXML library must be installed. \n\n"
-                . " We couldn't find PrinceXML executable in any of the following directories: \n"
-                . "   -> %s \n\n"
-                . " If you haven't installed it yet, you can download a fully-functional demo at: \n"
-                . " %s \n\n"
-                . " If you have installed in a custom directory, please type its full absolute path:\n > ",
+                    . " We couldn't find PrinceXML executable in any of the following directories: \n"
+                    . "   -> %s \n\n"
+                    . " If you haven't installed it yet, you can download a fully-functional demo at: \n"
+                    . " %s \n\n"
+                    . " If you have installed in a custom directory, please type its full absolute path:\n > ",
                 implode($this->app['prince.default_paths'], "\n   -> "),
                 'http://www.princexml.com/download'
             )
