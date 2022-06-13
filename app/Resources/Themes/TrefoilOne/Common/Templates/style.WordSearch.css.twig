@@ -87,8 +87,8 @@
     position: absolute;
 
     border-radius: {{ solutionGridSize }}px {{ solutionGridSize }}px 0 0;
-    height: {{ solutionGridSize + 4 }}px;
-    width: {{ solutionGridSize - 4 }}px;
+    height: {{ solutionGridSize * 1.38 }}px;
+    width: {{ solutionGridSize / 1.381 }}px;
     top: 0;
     left: 0;
 
@@ -101,8 +101,8 @@
     background: transparent;
     position: absolute;
 
-    height: {{ solutionGridSize + 4 }}px;
-    width: {{ solutionGridSize - 4 }}px;
+    height: {{ solutionGridSize * 1.38 }}px;
+    width: {{ solutionGridSize / 1.381 }}px;
     top: 0;
     left: 0;
 
@@ -115,9 +115,9 @@
     position: absolute;
 
     border-radius: 0 0 {{ solutionGridSize }}px {{ solutionGridSize }}px;
-    height: {{ solutionGridSize + 4 }}px;
-    width: {{ solutionGridSize - 4 }}px;
-    top: -4px;
+    height: {{ solutionGridSize * 1.38 }}px;
+    width: {{ solutionGridSize / 1.381 }}px;
+    top: {{ solutionGridSize * -0.37 }}px;
     left: 0;
 
     border-bottom: {{ solutionLineWidth }}px solid #888;
@@ -130,8 +130,8 @@
     position: absolute;
 
     border-radius: {{ solutionGridSize }}px 0 0 {{ solutionGridSize }}px;
-    height: {{ solutionGridSize - 4 }}px;
-    width: {{ solutionGridSize + 4 }}px;
+    height: {{ solutionGridSize / 1.381 }}px;
+    width: {{ solutionGridSize * 1.38 }}px;
     top: 0;
     left: 0;
 
@@ -144,8 +144,8 @@
     background: transparent;
     position: absolute;
 
-    height: {{ solutionGridSize - 4 }}px;
-    width: {{ solutionGridSize + 4 }}px;
+    height: {{ solutionGridSize / 1.381 }}px;
+    width: {{ solutionGridSize * 1.38 }}px;
     top: 0;
     left: 0;
 
@@ -158,10 +158,10 @@
     position: absolute;
 
     border-radius: 0 {{ solutionGridSize }}px {{ solutionGridSize }}px 0;
-    height: {{ solutionGridSize - 4 }}px;
-    width: {{ solutionGridSize + 4 }}px;
+    height: {{ solutionGridSize / 1.381 }}px;
+    width: {{ solutionGridSize * 1.38 }}px;
     top: 0;
-    left: -4px;
+    left: {{ solutionGridSize * -0.37 }}px;
 
     border-top: {{ solutionLineWidth }}px solid #888;
     border-bottom: {{ solutionLineWidth }}px solid #888;
@@ -303,7 +303,7 @@
 
 .wordsearch-wordlist {
     float: left;
-    font-size: 14px;;
+    font-size: 14px;
 }
 
 .wordsearch-wordlist ul {
