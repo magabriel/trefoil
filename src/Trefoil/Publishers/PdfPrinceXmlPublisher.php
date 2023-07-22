@@ -76,7 +76,17 @@ class PdfPrinceXmlPublisher extends PdfPublisher
         $hasCustomCss = $customCss !== null && file_exists($customCss);
         if ($hasCustomCss) {
             $customStyles = $tmpDir . '/styles.css';
-            $this->app['filesystem']->copy($customCss, $customStyles);
+            $customCssName = pathinfo($customCss, PATHINFO_BASENAME);
+            if ('style.css' === $customCssName) {
+                $this->app['filesystem']->copy($customCss, $customStyles);
+            } else {
+                $this->app->render(
+                    $customCssName,
+                    [],
+                    $customStyles
+                );
+            }
+
             $prince->addStyleSheet($customStyles);
         }
 
