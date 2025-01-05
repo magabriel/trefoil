@@ -7,7 +7,9 @@ declare(strict_types=1);
  * Time: 9:05
  */
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
+
+use Trefoil\Helpers\TrefoilMarkerProcessor;
 
 use PHPUnit\Framework\TestCase;
 

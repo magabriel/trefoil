@@ -9,7 +9,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
+
+use Trefoil\Helpers\TextPreserver;
+
 use PHPUnit\Framework\TestCase;
 
 /**

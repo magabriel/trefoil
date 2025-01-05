@@ -1,14 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
 
+use Trefoil\Helpers\Index;
+use Trefoil\Helpers\IndexItem;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class IndexTest
  *
- * @package Trefoil\Helpers
+ * @package Trefoil\Test\Helpers
  */
 class IndexTest extends TestCase
 {
