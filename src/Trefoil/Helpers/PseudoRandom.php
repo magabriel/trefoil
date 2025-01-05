@@ -7,7 +7,8 @@ namespace Trefoil\Helpers;
 /**
  * Generate a pseudo-random sequence of integers.
  */
-class PseudoRandom {
+class PseudoRandom
+{
 
     protected int $randomSeed = 0;
 
@@ -17,9 +18,9 @@ class PseudoRandom {
      * @param int $seed
      * @return void
      */
-    public function setRandomSeed(int $seed): void {
-        $this->randomSeed = abs($seed) % 9999999 + 1;
-        ;
+    public function setRandomSeed(int $seed): void
+    {
+        $this->randomSeed = abs($seed) % 9999999 + 1;;
         $this->getRandomInt();
     }
 
@@ -30,7 +31,8 @@ class PseudoRandom {
      * @param int $max
      * @return int
      */
-    public function getRandomInt(int $min = 0, int $max = 9999999): int {
+    public function getRandomInt(int $min = 0, int $max = 9999999): int
+    {
         if ($this->randomSeed == 0) {
             $this->setRandomSeed(mt_rand());
         }
@@ -42,9 +44,22 @@ class PseudoRandom {
 
         return $this->randomSeed % ($max - $min + 1) + $min;
     }
-    
-    public function getRandomBool(): bool {
+
+    public function getRandomBool(): bool
+    {
         return $this->getRandomInt() === 0;
     }
 
+    public function shuffle(array $array): array
+    {
+        $shuffled = $array;
+        $length = count($shuffled);
+        for ($i = 0; $i < $length; $i++) {
+            $j = $this->getRandomInt(0, $length - 1);
+            $temp = $shuffled[$i];
+            $shuffled[$i] = $shuffled[$j];
+            $shuffled[$j] = $temp;
+        }
+        return $shuffled;
+    }
 }
