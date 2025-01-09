@@ -1,0 +1,35 @@
+.paperdle-col1 {
+  border: 1px solid black;
+  width: 22em;
+  margin: auto;
+  padding: 0.5em;
+  text-align: center;
+  float: left;
+}
+
+.paperdle-col2 {
+  /* border: 1px solid black; */
+  width: 14em;
+  margin: auto;
+  padding: 0.5em;
+  text-align: center;
+  float: left;
+}
+
+.paperdle-col3 {
+  /* border: 1px solid black; */
+  width: 14em;
+  margin: auto;
+  padding: 0.5em;
+  text-align: center;
+  float: left;
+}
+
+.paperdle-col4 {
+  /* border: 1px solid black; */
+  width: 14em;
+  margin: auto;
+  padding: 0.5em;
+  text-align: center;
+  float: left;
+}

@@ -50,6 +50,9 @@ class PseudoRandom
         return $this->getRandomInt() === 0;
     }
 
+    /**
+     * Shuffle an array.
+     */
     public function shuffle(array $array): array
     {
         $shuffled = $array;
