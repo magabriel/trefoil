@@ -391,8 +391,6 @@ class PaperdleTest extends TestCase
         $paperdle->generate('PEÑAS', 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ');
         $decoderTable = $paperdle->getSolutionDecoderTable();
 
-        print_r($paperdle->getSolutionDecoderTableAsText());
-
         $expected = [
             'A' => 'GAIYU',
             'B' => 'VOFZH',

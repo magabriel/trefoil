@@ -10,7 +10,7 @@ book:
   contents:
     - { element: chapter, number: 1, content: chapter1.md }
     - { element: chapter, number: 2, content: chapter2.md }
-    - { element: chapter, number: 3, content: solutions.md }
+    # - { element: chapter, number: 3, content: solutions.md }
 
   editions:
     ebook:
@@ -30,26 +30,31 @@ book:
         options:
           Paperdle:
             alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            tries: 5
+            tries: 6
             markers: "O/#"
             strings:
               board:
                 title: "Puzzle %s"
-                text: "Guess the word in the grid."
-                text2: "Use Table 1 and Table 2 to evaluate every letter in your guess."
+                text: "Guess the word in the grid"
+                text2: >
+                  Use Table 1 and Table 2 to evaluate each letter in your guess.<br>
+                  Draw a circle over the correct letters, and a line over the misplaced letters.
               letters:
                 title: "Letters"
-                text: "Draw a circle over the correct letters, and a line over the misplaced letters."
+                text: "Cross out the used letters"
               randomizer:
                 title: "Table 1"
-                text: "Look up each letter in your guess to get the key for Table 2."
+                text: "Look up each letter in your guess to get the key for Table 2"
               decoder:
                 title: "Table 2"
-                text: "Look up the key you got from Table 1 to get the letter's evaluation."
-                text2: "- 'O': Letter is correct.<br>- '/': Letter is misplaced.<br>- '#': Wrong letter."
+                text: "Look up the key you got from Table 1 to get the letter's evaluation"
+                text2: >
+                  O ➔ Letter is correct<br>
+                  / ➔ Letter is misplaced<br>
+                  # ➔ Wrong letter
               solution:
                 title: "Solution"
                 text: "The solution is encoded. Use Table 3 to decode it."
               solution-decoder:
                 title: "Table 3"
-                text: "If you give up, look up the encoded solution components to get the puzzle solution."
+                text: "Look up each component of the encoded solution to decode it"

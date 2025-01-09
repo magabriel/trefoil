@@ -77,7 +77,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $this->processTrefoilMarkers($content);
 
-        $this->savePluginOptions();
+        // $this->savePluginOptions();
 
         $event->setItemProperty('original', $content);
 
@@ -96,10 +96,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('board', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-board" data-id="%s" markdown="1"></div>',
@@ -110,10 +107,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle_letters',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('letters', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-board-letters" data-id="%s" markdown="1"></div>',
@@ -124,10 +118,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle_randomizer',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('randomizer', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-randomizer" data-id="%s" markdown="1"></div>',
@@ -138,10 +129,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle_decoder',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('decoder', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-decoder" data-id="%s" markdown="1"></div>',
@@ -152,10 +140,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle_solution',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('solution', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-solution" data-id="%s" markdown="1"></div>',
@@ -166,10 +151,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'paperdle_solution_decoder',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $this->saveMarkerArguments('solution_decoder', $id, $arguments);
                 return sprintf(
                     '<div class="paperdle paperdle-solution-decoder" data-id="%s" markdown="1"></div>',
@@ -240,25 +222,27 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
         return $itemsList[$id];
     }
 
-    protected function savePluginOptions()
+    // protected function savePluginOptions()
+    // {
+    //     $alphabet = $this->getEditionOption('plugins.options.Paperdle.alphabet');
+    //     if ($alphabet) {
+    //         $this->app['publishing.plugins.options.Paperdle.alphabet'] = $alphabet;
+    //     }
+
+    //     $tries = $this->getEditionOption('plugins.options.Paperdle.tries');
+    //     if ($tries) {
+    //         $this->app['publishing.plugins.options.Paperdle.tries'] = $tries;
+    //     }
+
+    //     $markers = $this->getEditionOption('plugins.options.Paperdle.markers');
+    //     if ($markers) {
+    //         $this->app['publishing.plugins.options.Paperdle.markers'] = $markers;
+    //     }
+    // }
+
+    protected function checkBalancedCalls()
     {
-        $alphabet = $this->getEditionOption('plugins.options.Paperdle.alphabet');
-        if ($alphabet) {
-            $this->app['publishing.plugins.options.Paperdle.alphabet'] = $alphabet;
-        }
-
-        $tries = $this->getEditionOption('plugins.options.Paperdle.tries');
-        if ($tries) {
-            $this->app['publishing.plugins.options.Paperdle.tries'] = $tries;
-        }
-
-        $markers = $this->getEditionOption('plugins.options.Paperdle.markers');
-        if ($markers) {
-            $this->app['publishing.plugins.options.Paperdle.markers'] = $markers;
-        }
     }
-
-    protected function checkBalancedCalls() {}
 
     /**
      * @param ParseEvent $event
@@ -306,12 +290,11 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                     return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                 }
 
-                $alphabet = $arguments['alphabet'] ?? $this->app['publishing.plugins.options.Paperdle.alphabet'] ?? Paperdle::ALPHABET_ENGLISH;
-                $tries = $arguments['tries'] ?? $this->app['publishing.plugins.options.Paperdle.tries'] ?? 6;
-                $markers = mb_str_split($arguments['markers'] ?? $this->app['publishing.plugins.options.Paperdle.markers'] ?? "=?#");
+                $alphabet = $arguments['alphabet'] ?? $this->getEditionOption('plugins.options.Paperdle.alphabet') ?? Paperdle::ALPHABET_ENGLISH;
+                $tries = $arguments['tries'] ?? $this->getEditionOption('plugins.options.Paperdle.tries') ?? 6;
+                $markers = mb_str_split($arguments['markers'] ?? $this->getEditionOption('plugins.options.Paperdle.markers') ?? "=?#");
 
                 $word = $arguments['word'] ?? "";
-                $tries = $arguments['tries'] ?? 6;
                 $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.board.title') ?? '';
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.board.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.board.text2') ?? '';
@@ -366,25 +349,46 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
                 $this->saveItems($id, $items);
 
-                // Return the board
-                return sprintf(
-                    '<div class="paperdle paperdle-board-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-board">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "board",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $this->getBoard($tries, mb_strlen($paperdle->getWordToGuess())),
-                    $text2,
+                    $text2
                 );
             },
             $this->item['content']
         );
 
         $this->item['content'] = $content;
+    }
+
+    protected function renderMarkerHtml(
+        string $type,
+        int $id,
+        string $title,
+        string $text,
+        string $board,
+        string $text2
+    ) {
+        return sprintf(
+            '<div class="paperdle paperdle-%s-container" data-id="%s">' .
+            ' <div class="paperdle-heading">' .
+            '  <div class="paperdle-title">%s</div>' .
+            '  <div class="paperdle-text">%s</div>' .
+            ' </div>' .
+            ' <div class="paperdle-%s">%s</div>' .
+            ' <div class="paperdle-text2">%s</div>' .
+            '</div>',
+            $type,
+            $id,
+            sprintf($title, $id, $id),
+            $text,
+            $type,
+            $board,
+            $text2,
+        );
     }
 
     protected function processBoardLetters()
@@ -417,15 +421,10 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.letters.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.letters.text2') ?? '';
 
-                return sprintf(
-                    '<div class="paperdle paperdle-letters-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-letters">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "letters",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $this->getBoardLetters($items['alphabet']),
                     $text2
@@ -467,15 +466,10 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.randomizer.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.randomizer.text2') ?? '';
 
-                return sprintf(
-                    '<div class="paperdle paperdle-randomizer-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-randomizer">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "randomizer",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $items['randomizer_table'],
                     $text2
@@ -517,15 +511,10 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.decoder.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.decoder.text2') ?? '';
 
-                return sprintf(
-                    '<div class="paperdle paperdle-decoder-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-decoder">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "decoder",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $items['decoder_table'],
                     $text2
@@ -567,15 +556,10 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.solution.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.solution.text2') ?? '';
 
-                return sprintf(
-                    '<div class="paperdle paperdle-solution-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-solution">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "solution",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $items['solution'],
                     $text2
@@ -617,15 +601,10 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.solution-decoder.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.Paperdle.strings.solution-decoder.text2') ?? '';
 
-                return sprintf(
-                    '<div class="paperdle paperdle-solution-decoder-container" data-id="%s">' .
-                        '<div class="paperdle-title">%s</div>' .
-                        '<div class="paperdle-text">%s</div>' .
-                        '<div class="paperdle-solution-decoder">%s</div>' .
-                        '<div class="paperdle-text2">%s</div>' .
-                        '</div>',
+                return $this->renderMarkerHtml(
+                    "solution-decoder",
                     $id,
-                    sprintf($title, $id, $id),
+                    $title,
                     $text,
                     $items['solution_decoder_table'],
                     $text2
@@ -636,9 +615,6 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
 
         $this->item['content'] = $content;
     }
-
-
-
 
     protected function getBoard(int $rows, int $columns): string
     {

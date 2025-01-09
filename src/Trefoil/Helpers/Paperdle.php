@@ -78,7 +78,7 @@ class Paperdle
     /**
      * Generate the game with the word to guess and the symbols to evaluate the player's guess.
      * 
-     * @returns Suceess or failure.
+     * @return bool Success or failure.
      */
     public function generate(
         string $wordToGuess = "PAPER",

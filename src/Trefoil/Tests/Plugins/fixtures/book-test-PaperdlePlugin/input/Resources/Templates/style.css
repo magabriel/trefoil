@@ -5,6 +5,7 @@
   padding: 0.5em;
   text-align: center;
   float: left;
+  clear: both;
 }
 
 .paperdle-col2 {
