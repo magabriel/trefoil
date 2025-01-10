@@ -1,36 +1,36 @@
-.paperdle-col1 {
+.paperdle-row1 {
   border: 1px solid black;
-  width: 22em;
-  margin: auto;
-  padding: 0.5em;
-  text-align: center;
-  float: left;
-  clear: both;
+  display: inline-block;
+  width: 100%;
 }
 
-.paperdle-col2 {
+.paperdle-row2 {
   /* border: 1px solid black; */
-  width: 14em;
+
+  width: auto;
   margin: auto;
   padding: 0.5em;
-  text-align: center;
-  float: left;
 }
 
-.paperdle-col3 {
+.paperdle-row3 {
   /* border: 1px solid black; */
-  width: 14em;
+
+  width: auto;
   margin: auto;
   padding: 0.5em;
-  text-align: center;
-  float: left;
 }
 
-.paperdle-col4 {
+.paperdle-row4 {
   /* border: 1px solid black; */
-  width: 14em;
+
+  width: auto;
   margin: auto;
   padding: 0.5em;
-  text-align: center;
+}
+
+.paperdle-board-container,
+.paperdle-letters-container,
+.paperdle-solution-container {
   float: left;
+  text-align: center;
 }

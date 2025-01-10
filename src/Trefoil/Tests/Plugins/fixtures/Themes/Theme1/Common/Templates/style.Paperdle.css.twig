@@ -35,7 +35,6 @@
 
 .paperdle-board-container {
   display: inline-block;
-  width: 13em;
   margin-bottom: 0.5em;
   padding: 0.5em;
 }
@@ -78,7 +77,6 @@
 
 .paperdle-letters-container {
   display: inline-block;
-  width: 21em;
   margin-bottom: 0.5em;
   padding: 0.5em;
 }
@@ -110,6 +108,12 @@
 * Solution
 */
 
+.paperdle-solution-container {
+  display: inline-block;
+  margin-bottom: 0.5em;
+  padding: 0.5em;
+}
+
 .paperdle-solution {
   border: 2px solid gray;
   border-radius: 6px;
@@ -127,15 +131,34 @@
 .paperdle-decoder-container,
 .paperdle-solution-decoder-container {
   display: inline-block;
-  width: 13em;
   margin-bottom: 0.5em;
   padding: 0.5em;
+}
+
+.paperdle-randomizer-container .paperdle-heading,
+.paperdle-decoder-container .paperdle-heading,
+.paperdle-solution-decoder-container .paperdle-heading {
+  float: left;
+  width: 10em;
+}
+
+.paperdle-randomizer-container .paperdle-text2,
+.paperdle-decoder-container .paperdle-text2,
+.paperdle-solution-decoder-container .paperdle-text2 {
+  float: left;
+  width: auto;
+}
+
+.paperdle-randomizer,
+.paperdle-decoder,
+.paperdle-solution-decoder {
+  float: left;
 }
 
 .paperdle-randomizer table,
 .paperdle-decoder table,
 .paperdle-solution-decoder table {
-  margin: 1em auto;
+  margin: 0 1em;
   width: auto;
   padding: 0px;
   border: 0px;
@@ -158,7 +181,7 @@
 .paperdle-decoder td,
 .paperdle-solution-decoder td {
   border: 1px solid lightgrey;
-  width: 1em;
+  width: 1.5em;
   height: 1em;
   text-align: center;
   vertical-align: middle;

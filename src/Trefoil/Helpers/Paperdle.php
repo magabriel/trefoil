@@ -32,6 +32,7 @@ class Paperdle
     public const ALPHABET_ENGLISH = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     protected string $alphabet;
+    protected array $letters;
     protected array $positions;
 
     protected string $letterOk;
@@ -113,6 +114,7 @@ class Paperdle
         }
 
         $this->positions = array_map('strval', range(1, mb_strlen($this->wordToGuess)));
+        $this->letters = mb_str_split($this->alphabet);
 
         $this->createEvaluationTable();
         $this->createRandomizerTable();
@@ -128,16 +130,16 @@ class Paperdle
         $this->evaluationTable = $this->initializeTable($this->letterEmpty);
 
         // Evaluate which letters are in the correct position
-        $word_array = mb_str_split($this->wordToGuess);
-        foreach ($word_array as $idx => $letter) {
-            $this->evaluationTable[$letter][$idx + 1] = $this->letterOk;
+        $wordLetters = mb_str_split($this->wordToGuess);
+        foreach ($wordLetters as $idx => $letter) {
+            $this->evaluationTable[$idx + 1][$letter] = $this->letterOk;
         }
 
         // Evaluate misplaced letters
-        foreach ($word_array as $idx => $letter) {
+        foreach ($wordLetters as $idx => $letter) {
             foreach ($this->positions as $pos) {
-                if ($this->evaluationTable[$letter][$pos] === $this->letterEmpty && $pos !== $idx + 1) {
-                    $this->evaluationTable[$letter][$pos] = $this->letterExist;
+                if ($this->evaluationTable[$pos][$letter] === $this->letterEmpty && $pos !== $idx + 1) {
+                    $this->evaluationTable[$pos][$letter] = $this->letterExist;
                 }
             }
         }
@@ -147,8 +149,8 @@ class Paperdle
     {
         // Create a list of all possible LETTER + POSITION combinations
         $combinations = [];
-        foreach (mb_str_split($this->alphabet) as $letter) {
-            foreach ($this->positions as $pos) {
+        foreach ($this->positions as $pos) {
+            foreach ($this->letters as $letter) {
                 $combinations[] = $letter . $pos;
             }
         }
@@ -163,9 +165,9 @@ class Paperdle
         $this->randomizerTable = $this->initializeTable();
 
         // Assign each combination to a cell in the table in order
-        foreach (mb_str_split($this->alphabet) as $letter) {
-            foreach ($this->positions as $pos) {
-                $this->randomizerTable[$letter][$pos] = array_shift($combinations);
+        foreach ($this->positions as $pos) {
+            foreach ($this->letters as $letter) {
+                $this->randomizerTable[$pos][$letter] = array_shift($combinations);
             }
         }
     }
@@ -176,14 +178,14 @@ class Paperdle
         $this->decoderTable = $this->initializeTable();
 
         // Assign decoded evaluation value to each cell of the decoder table
-        foreach (mb_str_split($this->alphabet) as $letter) {
-            foreach ($this->positions as $pos) {
-                $combination = $this->randomizerTable[$letter][$pos];
+        foreach ($this->positions as $pos) {
+            foreach ($this->letters as $letter) {
+                $combination = $this->randomizerTable[$pos][$letter];
                 $parts = mb_str_split($combination);
                 $letter2 = $parts[0];
                 $pos2 = intval($parts[1]);
 
-                $this->decoderTable[$letter2][$pos2] = $this->evaluationTable[$letter][$pos];
+                $this->decoderTable[$pos2][$letter2] = $this->evaluationTable[$pos][$letter];
             }
         }
     }
@@ -205,11 +207,11 @@ class Paperdle
         foreach (mb_str_split($this->wordToGuess) as $pos => $letter) {
             $done = false;
             while (!$done) {
-                $letter2 = $this->alphabet[$random->getRandomInt(0, mb_strlen($this->alphabet) - 1)];
+                $letter2 = $this->letters[$random->getRandomInt(0, count($this->letters) - 1)];
                 $pos2 = $random->getRandomInt(1, mb_strlen($this->wordToGuess));
 
-                if ($this->solutionDecoderTable[$letter2][$pos2] == " ") {
-                    $this->solutionDecoderTable[$letter2][$pos2] = $letter;
+                if ($this->solutionDecoderTable[$pos2][$letter2] == " ") {
+                    $this->solutionDecoderTable[$pos2][$letter2] = $letter;
                     $parts[] = sprintf("%s%s", $letter2, $pos2);
                     $done = true;
                 }
@@ -219,12 +221,12 @@ class Paperdle
         $this->encodedSolution = join("-", $parts);
 
         // Fill the blanks with a random letter
-        $alphabetLetters = mb_str_split($this->alphabet);
 
-        foreach ($alphabetLetters as $letter) {
-            foreach ($this->positions as $pos) {
-                if ($this->solutionDecoderTable[$letter][$pos] == " ") {
-                    $this->solutionDecoderTable[$letter][$pos] = $alphabetLetters[$random->getRandomInt(0, count($alphabetLetters) - 1)];
+        foreach ($this->positions as $pos) {
+            foreach ($this->letters as $letter) {
+                if ($this->solutionDecoderTable[$pos][$letter] == " ") {
+                    $randomLetter = $this->letters[$random->getRandomInt(0, count($this->letters) - 1)];
+                    $this->solutionDecoderTable[$pos][$letter] = $randomLetter;
                 }
             }
         }
@@ -237,14 +239,15 @@ class Paperdle
      */
     protected function initializeTable($emptyCell = " "): array
     {
-        return array_combine(
-            mb_str_split($this->alphabet),
-            array_fill(
-                0,
-                mb_strlen($this->alphabet),
-                array_combine($this->positions, array_fill(0, mb_strlen($this->wordToGuess), $emptyCell))
-            )
-        );
+        $table = [];
+        foreach ($this->positions as $position) {
+            $table[$position] = [];
+            foreach ($this->letters as $letter) {
+                $table[$position][$letter] = $emptyCell;
+            }
+        }
+
+        return $table;
     }
 
     /**
@@ -268,6 +271,24 @@ class Paperdle
         return $this->evaluationTable;
     }
 
+    public function getEvaluationTableAsHtml(): string
+    {
+        return $this->tableToHtml($this->evaluationTable);
+    }
+
+    public function getEvaluationTableAsText(): string
+    {
+        $lines = [];
+        $lines[] = "   " . join(" ", $this->letters);
+        $lines[] = "  " . str_repeat(" -", count($this->letters));
+
+        foreach ($this->evaluationTable as $position => $letters) {
+            $lines[] = "$position: " . join(" ", $letters);
+        }
+
+        return join("\n", $lines);
+    }
+
     /**
      * Table 1 to be shown to the player.
      */
@@ -278,39 +299,37 @@ class Paperdle
 
     public function getRandomizerTableAsHtml(): string
     {
-        $html = "<table>";
-        $html .= "<tr><th></th>";
-        foreach ($this->positions as $pos) {
-            $html .= "<th>$pos</th>";
-        }
-        $html .= "</tr>";
-        foreach ($this->randomizerTable as $letter => $positions) {
-            $html .= "<tr><th>$letter</th>";
-            foreach ($positions as $pos => $value) {
-                $html .= "<td>$value</td>";
-            }
-            $html .= "</tr>";
-        }
-        $html .= "</table>";
+        // $html = "<table>";
+        // $html .= "<tr><th></th>";
+        // foreach ($this->letters as $letter) {
+        //     $html .= "<th>$letter</th>";
+        // }
+        // $html .= "</tr>";
+        // foreach ($this->randomizerTable as $position => $letters) {
+        //     $html .= "<tr><th>$position</th>";
+        //     foreach ($letters as $letter) {
+        //         $html .= "<td>$letter</td>";
+        //     }
+        //     $html .= "</tr>";
+        // }
+        // $html .= "</table>";
 
-        return $html;
+        // return $html;
+        return $this->tableToHtml($this->randomizerTable);
     }
+
 
     public function getRandomizerTableAsText(): string
     {
-        $text = "";
-        $text .= "    " . join("  ", $this->positions) . "\n";
-        $text .= "   " . str_repeat("-- ", count($this->positions)) . "\n";
+        $lines = [];
+        $lines[] = "    " . join("  ", $this->letters);
+        $lines[] = "  " . str_repeat(" --", count($this->letters));
 
-        foreach ($this->randomizerTable as $letter => $positions) {
-            $text .= "$letter: ";
-            foreach ($positions as $pos => $value) {
-                $text .= "$value ";
-            }
-            $text .= "\n";
+        foreach ($this->randomizerTable as $position => $letters) {
+            $lines[] = "$position: " . join(" ", $letters);
         }
 
-        return $text;
+        return join("\n", $lines);
     }
 
     /**
@@ -323,39 +342,37 @@ class Paperdle
 
     public function getDecoderTableAsHtml()
     {
-        $html = "<table>";
-        $html .= "<tr><th></th>";
-        foreach ($this->positions as $pos) {
-            $html .= "<th>$pos</th>";
-        }
-        $html .= "</tr>";
-        foreach ($this->decoderTable as $letter => $positions) {
-            $html .= "<tr><th>$letter</th>";
-            foreach ($positions as $pos => $value) {
-                $html .= "<td>$value</td>";
-            }
-            $html .= "</tr>";
-        }
-        $html .= "</table>";
+        // $html = "<table>";
+        // $html .= "<tr><th></th>";
+        // foreach ($this->letters as $letter) {
+        //     $html .= "<th>$letter</th>";
+        // }
+        // $html .= "</tr>";
+        // foreach ($this->decoderTable as $position => $letters) {
+        //     $html .= "<tr><th>$position</th>";
+        //     foreach ($letters as $letter) {
+        //         $html .= "<td>$letter</td>";
+        //     }
+        //     $html .= "</tr>";
+        // }
+        // $html .= "</table>";
 
-        return $html;
+        // return $html;
+
+        return $this->tableToHtml($this->decoderTable);
     }
 
     public function getDecoderTableAsText(): string
     {
-        $text = "";
-        $text .= "   " . join(" ", $this->positions) . "\n";
-        $text .= "   " . str_repeat("- ", count($this->positions)) . "\n";
+        $lines = [];
+        $lines[] = "   " . join(" ", $this->letters);
+        $lines[] = "  " . str_repeat(" -", count($this->letters));
 
-        foreach ($this->decoderTable as $letter => $positions) {
-            $text .= "$letter: ";
-            foreach ($positions as $pos => $value) {
-                $text .= "$value ";
-            }
-            $text .= "\n";
+        foreach ($this->decoderTable as $position => $letters) {
+            $lines[] = "$position: " . join(" ", $letters);
         }
 
-        return $text;
+        return join("\n", $lines);
     }
 
     public function getEncodedSolution(): string
@@ -370,39 +387,57 @@ class Paperdle
 
     public function getSolutionDecoderTableAsHtml(): string
     {
+        // $html = "<table>";
+        // $html .= "<tr><th></th>";
+        // foreach ($this->letters as $letter) {
+        //     $html .= "<th>$letter</th>";
+        // }
+        // $html .= "</tr>";
+        // foreach ($this->solutionDecoderTable as $position => $letters) {
+        //     $html .= "<tr><th>$position</th>";
+        //     foreach ($letters as $letter) {
+        //         $html .= "<td>$letter</td>";
+        //     }
+        //     $html .= "</tr>";
+        // }
+        // $html .= "</table>";
+
+        // return $html;
+
+        return $this->tableToHtml($this->solutionDecoderTable);
+    }
+
+    public function getSolutionDecoderTableAsText(): string
+    {
+        $lines = [];
+        $lines[] = "   " . join(" ", $this->letters);
+        $lines[] = "  " . str_repeat(" -", count($this->letters));
+
+        foreach ($this->solutionDecoderTable as $position => $letters) {
+            $lines[] = "$position: " . join(" ", $letters);
+        }
+
+        return join("\n", $lines);
+    }
+
+    protected function tableToHtml(array $table): string
+    {
         $html = "<table>";
         $html .= "<tr><th></th>";
-        foreach ($this->positions as $pos) {
-            $html .= "<th>$pos</th>";
+        foreach ($this->letters as $letter) {
+            $html .= "<th>$letter</th>";
         }
         $html .= "</tr>";
-        foreach ($this->solutionDecoderTable as $letter => $positions) {
-            $html .= "<tr><th>$letter</th>";
-            foreach ($positions as $pos => $value) {
-                $html .= "<td>$value</td>";
+        foreach ($table as $position => $letters) {
+            $html .= "<tr><th>$position</th>";
+            foreach ($letters as $letter) {
+                $html .= "<td>$letter</td>";
             }
             $html .= "</tr>";
         }
         $html .= "</table>";
 
         return $html;
-    }
-
-    public function getSolutionDecoderTableAsText(): string
-    {
-        $text = "";
-        $text .= "   " . join(" ", $this->positions) . "\n";
-        $text .= "   " . str_repeat("- ", count($this->positions)) . "\n";
-
-        foreach ($this->solutionDecoderTable as $letter => $positions) {
-            $text .= "$letter: ";
-            foreach ($positions as $pos => $value) {
-                $text .= "$value ";
-            }
-            $text .= "\n";
-        }
-
-        return $text;
     }
 
     public function getErrors(): array
