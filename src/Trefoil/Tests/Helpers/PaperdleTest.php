@@ -171,7 +171,7 @@ class PaperdleTest extends TestCase
         $paperdle->generate('CLAVE');
         $encodedSolution = $paperdle->getEncodedSolution();
 
-        $this->assertEquals('M4-P5-B3-C2-W1', $encodedSolution);
+        $this->assertEquals('M4P5B3C2W1', $encodedSolution);
     }
 
     public function testGetEncodedSolutionNonEnglish()
@@ -180,7 +180,7 @@ class PaperdleTest extends TestCase
         $paperdle->generate('PEÑAS', 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ');
         $encodedSolution = $paperdle->getEncodedSolution();
 
-        $this->assertEquals('Q4-V1-S1-D1-P5', $encodedSolution);
+        $this->assertEquals('Q4V1S1D1P5', $encodedSolution);
     }
 
     public function testGetSolutionDecoderTable(): void

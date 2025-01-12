@@ -32,15 +32,15 @@ class Paperdle
     public const ALPHABET_ENGLISH = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     protected string $alphabet;
-    protected array $letters;
-    protected array $positions;
+    protected array $letters = [];
+    protected array $positions = [];
 
     protected string $letterOk;
     protected string $letterExist;
     protected string $letterEmpty;
 
-    protected string $wordToGuess;
-    protected string $encodedSolution;
+    protected string $wordToGuess = "";
+    protected string $encodedSolution = "";
 
     /**
      * @var string[]
@@ -218,7 +218,7 @@ class Paperdle
             }
         }
 
-        $this->encodedSolution = join("-", $parts);
+        $this->encodedSolution = join("", $parts);
 
         // Fill the blanks with a random letter
 
@@ -299,22 +299,6 @@ class Paperdle
 
     public function getRandomizerTableAsHtml(): string
     {
-        // $html = "<table>";
-        // $html .= "<tr><th></th>";
-        // foreach ($this->letters as $letter) {
-        //     $html .= "<th>$letter</th>";
-        // }
-        // $html .= "</tr>";
-        // foreach ($this->randomizerTable as $position => $letters) {
-        //     $html .= "<tr><th>$position</th>";
-        //     foreach ($letters as $letter) {
-        //         $html .= "<td>$letter</td>";
-        //     }
-        //     $html .= "</tr>";
-        // }
-        // $html .= "</table>";
-
-        // return $html;
         return $this->tableToHtml($this->randomizerTable);
     }
 
@@ -342,23 +326,6 @@ class Paperdle
 
     public function getDecoderTableAsHtml()
     {
-        // $html = "<table>";
-        // $html .= "<tr><th></th>";
-        // foreach ($this->letters as $letter) {
-        //     $html .= "<th>$letter</th>";
-        // }
-        // $html .= "</tr>";
-        // foreach ($this->decoderTable as $position => $letters) {
-        //     $html .= "<tr><th>$position</th>";
-        //     foreach ($letters as $letter) {
-        //         $html .= "<td>$letter</td>";
-        //     }
-        //     $html .= "</tr>";
-        // }
-        // $html .= "</table>";
-
-        // return $html;
-
         return $this->tableToHtml($this->decoderTable);
     }
 
@@ -387,23 +354,6 @@ class Paperdle
 
     public function getSolutionDecoderTableAsHtml(): string
     {
-        // $html = "<table>";
-        // $html .= "<tr><th></th>";
-        // foreach ($this->letters as $letter) {
-        //     $html .= "<th>$letter</th>";
-        // }
-        // $html .= "</tr>";
-        // foreach ($this->solutionDecoderTable as $position => $letters) {
-        //     $html .= "<tr><th>$position</th>";
-        //     foreach ($letters as $letter) {
-        //         $html .= "<td>$letter</td>";
-        //     }
-        //     $html .= "</tr>";
-        // }
-        // $html .= "</table>";
-
-        // return $html;
-
         return $this->tableToHtml($this->solutionDecoderTable);
     }
 
