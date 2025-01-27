@@ -302,6 +302,8 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
                 if (!$word) {
                     $this->writeLn(sprintf('No word to guess for puzzle id "%s".', $id), 'error');
                     $this->saveProblem(sprintf('No word to guess for puzzle id "%s".', $id), 'error');
+                } else {
+                    $this->saveProblem(sprintf('Word "%s" used for puzzle id "%s".', $word, $id), "info");
                 }
 
                 $timeStart = microtime(true);

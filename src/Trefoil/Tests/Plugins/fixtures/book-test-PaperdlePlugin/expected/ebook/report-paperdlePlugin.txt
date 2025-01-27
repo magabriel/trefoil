@@ -6,6 +6,13 @@ Problems found
 Element              Severity   Message                                                                                              
 -------------------- ---------- ---------------------------------------------------------------------------------------------------- 
 
+chapter1.md          
+                     INFO       Word "PRIME" used for puzzle id "1".                                                                 
+                     INFO       Word "PAPER" used for puzzle id "2".                                                                 
+
+chapter2.md          
+                     INFO       Word "AÑEJOS" used for puzzle id "10".                                                               
+
     ==================================================
-    No problems found
+    3 problems found
     ==================================================
