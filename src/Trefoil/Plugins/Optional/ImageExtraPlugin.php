@@ -43,8 +43,8 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            EasybookEvents::PRE_PARSE     => ['onItemPreParse', -100], // after TwigExtensionPlugin
-            EasybookEvents::POST_PARSE    => 'onItemPostParse',    // after content has been parsed
+            EasybookEvents::PRE_PARSE => ['onItemPreParse', -100], // after TwigExtensionPlugin
+            EasybookEvents::POST_PARSE => 'onItemPostParse',    // after content has been parsed
             EasybookEvents::POST_DECORATE => 'onItemPostDecorate' // after templates have been rendered
         ];
     }
@@ -106,16 +106,16 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
                 // get the query
                 $parts = explode('?', html_entity_decode($matches['image']));
+
+                // the real image
+                $image = $parts[0];
+
+                // allow images to include 'images/' as path, for compatibility
+                // with Markdown editors like MdCharm
+                $image = str_replace('images/', '', $image);
+
+                // check if we have a query
                 if (isset($parts[1])) {
-                    // no query, nothing to do
-
-                    // the real image
-                    $image = $parts[0];
-
-                    // allow images to include 'images/' as path, for compatibility
-                    // with Markdown editors like MdCharm
-                    $image = str_replace('images/', '', $image);
-
                     // get the arguments
                     parse_str($parts[1], $args);
                     $args = str_replace('"', '', $args);
@@ -134,9 +134,10 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
                     $arguments = $this->internalRenderArguments($args);
                 }
 
-                return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?'.$arguments : ''));
+                return sprintf('![%s](%s%s)', $matches['alt'], $image, ($arguments ? '?' . $arguments : ''));
             },
-            $content);
+            $content
+        );
 
         return $content;
     }
@@ -159,7 +160,8 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
 
                 return Toolkit::renderHTMLTag('img', null, $image);
             },
-            $content);
+            $content
+        );
 
         // ensure there is no space replacements left (it can happen if
         // some of the image tags were not rendered because they were
@@ -195,14 +197,14 @@ class ImageExtraPlugin extends BasePlugin implements EventSubscriberInterface
         // assign them
         if (isset($args['class'])) {
             $args['class'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['class']);
-            $image['class'] = isset($image['class']) ? $image['class'].' '.$args['class'] : $args['class'];
+            $image['class'] = isset($image['class']) ? $image['class'] . ' ' . $args['class'] : $args['class'];
             unset($args['class']);
         }
 
         if (isset($args['style'])) {
             // replace back all spaces
             $args['style'] = str_replace(self::SPACE_REPLACEMENT, ' ', $args['style']);
-            $image['style'] = isset($image['style']) ? $image['style'].';'.$args['style'] : $args['style'];
+            $image['style'] = isset($image['style']) ? $image['style'] . ';' . $args['style'] : $args['style'];
             unset($args['style']);
         }
 
