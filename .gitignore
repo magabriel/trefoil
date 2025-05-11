@@ -6,5 +6,12 @@ vendor
 *debuglog.txt
 .phpunit.result.cache
 
-
 composer.phar
+
+.settings
+.idea
+nbproject
+.vscode
+.project
+.buildpath
+

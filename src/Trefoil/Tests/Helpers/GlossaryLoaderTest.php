@@ -9,8 +9,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
 
+use Trefoil\Helpers\GlossaryLoader;
 use EasySlugger\Utf8Slugger;
 use PHPUnit\Framework\TestCase;
 

@@ -36,7 +36,8 @@ use Trefoil\Util\SimpleReport;
  * @see     WordFillIn
  * @package Trefoil\Plugins\Optional
  */
-class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
+class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
+{
 
     protected static array $wordFiles = [];
     protected int $wordfillinCalls = 0;
@@ -85,78 +86,91 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
         $processor = new TrefoilMarkerProcessor();
 
         $processor->registerMarker(
-                'wordfillin',
-                function (
-                        int $id,
-                        array $arguments = []
-                ) {
-                    $arguments['id'] = $id;
+            'wordfillin',
+            function (
+                int $id,
+                array $arguments = []
+            ) {
+                $arguments['id'] = $id;
 
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
-                    $itemsArguments[$id]['puzzle'] = $arguments;
-                    $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
+                $itemsArguments[$id]['puzzle'] = $arguments;
+                $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
 
-                    return sprintf(
-                    '<div class="wordfillin wordfillin-puzzle-simple" data-id="%s" markdown="1"></div>', $id);
-                });
-
-        $processor->registerMarker(
-                'wordfillin_begin',
-                function (
-                        int $id,
-                        array $arguments = []
-                ) {
-                    $arguments['id'] = $id;
-
-                    $this->wordfillinCalls++;
-
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
-                    $itemsArguments[$id]['puzzle'] = $arguments;
-                    $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
-
-                    return sprintf(
-                    '<div class="wordfillin wordfillin-puzzle" data-id="%s" markdown="1">', $id);
-                });
+                return sprintf(
+                    '<div class="wordfillin wordfillin-puzzle-simple" data-id="%s" markdown="1"></div>',
+                    $id
+                );
+            }
+        );
 
         $processor->registerMarker(
-                'wordfillin_end',
-                function () {
-                    $this->wordfillinCalls--;
+            'wordfillin_begin',
+            function (
+                int $id,
+                array $arguments = []
+            ) {
+                $arguments['id'] = $id;
 
-                    return '</div>';
-                });
+                $this->wordfillinCalls++;
 
-        $processor->registerMarker(
-                'wordfillin_wordlist',
-                function (
-                        int $id,
-                        array $arguments = []
-                ) {
-                    $arguments['id'] = $id;
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
+                $itemsArguments[$id]['puzzle'] = $arguments;
+                $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
 
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
-                    $itemsArguments[$id] ['wordlist'] = $arguments;
-                    $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
-
-                    return sprintf(
-                    '<div class="wordfillin wordfillin-wordlist" data-id="%s" markdown="1"></div>', $id);
-                });
+                return sprintf(
+                    '<div class="wordfillin wordfillin-puzzle" data-id="%s" markdown="1">',
+                    $id
+                );
+            }
+        );
 
         $processor->registerMarker(
-                'wordfillin_solution',
-                function (
-                        int $id,
-                        array $arguments = []
-                ) {
-                    $arguments['id'] = $id;
+            'wordfillin_end',
+            function () {
+                $this->wordfillinCalls--;
 
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
-                    $itemsArguments[$id] ['solution'] = $arguments;
-                    $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
+                return '</div>';
+            }
+        );
 
-                    return sprintf(
-                    '<div class="wordfillin wordfillin-solution" data-id="%s" markdown="1"></div>', $id);
-                });
+        $processor->registerMarker(
+            'wordfillin_wordlist',
+            function (
+                int $id,
+                array $arguments = []
+            ) {
+                $arguments['id'] = $id;
+
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
+                $itemsArguments[$id]['wordlist'] = $arguments;
+                $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
+
+                return sprintf(
+                    '<div class="wordfillin wordfillin-wordlist" data-id="%s" markdown="1"></div>',
+                    $id
+                );
+            }
+        );
+
+        $processor->registerMarker(
+            'wordfillin_solution',
+            function (
+                int $id,
+                array $arguments = []
+            ) {
+                $arguments['id'] = $id;
+
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
+                $itemsArguments[$id]['solution'] = $arguments;
+                $this->app['publishing.wordfillin.arguments'] = $itemsArguments;
+
+                return sprintf(
+                    '<div class="wordfillin wordfillin-solution" data-id="%s" markdown="1"></div>',
+                    $id
+                );
+            }
+        );
 
         return $processor->parse($content);
     }
@@ -212,134 +226,153 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
     protected function processPuzzle()
     {
         $regExp = '/'
-                . '(?<div>'
-                . '<div +(?<pre>[^>]*)'
-                . 'class="(?<class>wordfillin wordfillin-puzzle(?<simple>-simple)?)"'
-                . ' +'
-                . 'data-id="(?<id>\d+)"'
-                . '(?<post>[^>]*)>'
-                . ')' // div group
-                . '(?<content>.*)'
-                . '<\/div>'
-                . '/Ums'; // Ungreedy, multiline, dotall
+            . '(?<div>'
+            . '<div +(?<pre>[^>]*)'
+            . 'class="(?<class>wordfillin wordfillin-puzzle(?<simple>-simple)?)"'
+            . ' +'
+            . 'data-id="(?<id>\d+)"'
+            . '(?<post>[^>]*)>'
+            . ')' // div group
+            . '(?<content>.*)'
+            . '<\/div>'
+            . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-                $regExp,
-                function ($matches) {
-                    $id = $matches['id'];
-                    $isSimple = (bool) $matches['simple'];
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'];
-                    if (!isset($itemsArguments[$id])) {
-                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
-                        $this->saveProblem(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+            $regExp,
+            function ($matches) {
+                $id = $matches['id'];
+                $isSimple = (bool) $matches['simple'];
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                    $this->saveProblem(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $arguments = $itemsArguments[$id]['puzzle'];
+                $rows = $arguments['rows'] ?? 15;
+                $cols = $arguments['cols'] ?? 15;
+                $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.title') ?? '';
+                $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text') ?? '';
+                $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text2') ?? '';
+                $difficulty = $arguments['difficulty'] ?? $this->getEditionOption('plugins.options.WordFillIn.default.difficulty')
+                    ?? WordFillIn::DIFFICULTY_EASY;
+
+                if ($isSimple) {
+                    $wordFile = $arguments['word_file'] ?? '';
+                    $numberOfWords = $arguments['number_of_words'] ?? 0;
+                    $words = WordFillIn::DEFAULT_WORDS;
+                    if ($wordFile) {
+                        $words = $this->readWordsFromFile($wordFile);
                     }
-                    $arguments = $itemsArguments[$id]['puzzle'];
-                    $rows = $arguments['rows'] ?? 15;
-                    $cols = $arguments['cols'] ?? 15;
-                    $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.title') ?? '';
-                    $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text') ?? '';
-                    $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text2') ?? '';
-                    $difficulty = $arguments['difficulty'] ?? $this->getEditionOption('plugins.options.WordFillIn.default.difficulty')
-                                ?? WordFillIn::DIFFICULTY_EASY;
-
-                    if ($isSimple) {
-                        $wordFile = $arguments['word_file'] ?? '';
-                        $numberOfWords = $arguments['number_of_words'] ?? 0;
-                        $words = WordFillIn::DEFAULT_WORDS;
-                        if ($wordFile) {
-                            $words = $this->readWordsFromFile($wordFile);
-                        }
-                    } else {
-                        $words = $this->parsePuzzleWords($matches['content']);
-                        if (!$words) {
-                            $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
-                            $this->saveProblem(sprintf('No words found for puzzle id "%s".', $id), 'error');
-                        }
-                        $numberOfWords = 0;
+                } else {
+                    $words = $this->parsePuzzleWords($matches['content']);
+                    if (!$words) {
+                        $this->writeLn(sprintf('No words found for puzzle id "%s".', $id), 'error');
+                        $this->saveProblem(sprintf('No words found for puzzle id "%s".', $id), 'error');
                     }
+                    $numberOfWords = 0;
+                }
 
-                    $seed = $arguments['seed'] ?? intval(1000 + $id);
+                $seed = $arguments['seed'] ?? intval(1000 + $id);
 
-                    $timeStart = microtime(true);
-                    $this->write(sprintf('Generating puzzle id "%s".', $id), 'info');
+                $timeStart = microtime(true);
+                $this->write(sprintf('Generating puzzle id "%s".', $id), 'info');
 
-                    $wordFillIn = new WordFillIn();
-                    $wordFillIn->setRandomSeed($seed);
-                    $success = $wordFillIn->generate($rows, $cols, $words, $numberOfWords, $difficulty);
+                $wordFillIn = new WordFillIn();
+                $wordFillIn->setRandomSeed($seed);
+                $success = $wordFillIn->generate($rows, $cols, $words, $numberOfWords, $difficulty);
 
-                    $timeEnd = microtime(true);
-                    $this->writeLn(sprintf(' %.2f sec. with %s tries.', $timeEnd - $timeStart,
-                                    number_format($wordFillIn->getTotalTries())), 'plain');
+                $timeEnd = microtime(true);
+                $this->writeLn(sprintf(
+                    ' %.2f sec. with %s tries.',
+                    $timeEnd - $timeStart,
+                    number_format($wordFillIn->getTotalTries())
+                ), 'plain');
 
-                    if (!$success) {
-//                        $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
-                        if ($wordFillIn->getErrors()) {
-                            foreach ($wordFillIn->getErrors() as $error) {
-                                $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
-                                $this->saveProblem(sprintf('Puzzle %s: %s', $id, $error), 'error');
-                            }
-                        }
-                    }
-                    if ($wordFillIn->getWarnings()) {
-                        foreach ($wordFillIn->getWarnings() as $warning) {
-                            $this->writeLn(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
-                            $this->saveProblem(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
+                if (!$success) {
+                    //                        $this->writeLn(sprintf('Puzzle %s generated with error.', $id), 'error');
+                    if ($wordFillIn->getErrors()) {
+                        foreach ($wordFillIn->getErrors() as $error) {
+                            $this->writeLn(sprintf('Puzzle %s: %s', $id, $error), 'error');
+                            $this->saveProblem(sprintf('Puzzle %s: %s', $id, $error), 'error');
                         }
                     }
-
-                    $items = $this->app['publishing.wordfillin.items'] ?? [];
-
-                    $items[$id] = [
-                        'solution' => $wordFillIn->solutionAsHtml(),
-                        'wordlist' => [
-                            'sorted-1-chunk' => $wordFillIn->wordListAsHtml(true),
-                            'unsorted-1-chunk' => $wordFillIn->wordListAsHtml(false),
-                            'sorted-2-chunk' => $wordFillIn->wordListAsHtml(true, 2),
-                            'unsorted-2-chunk' => $wordFillIn->wordListAsHtml(false, 2),
-                            'sorted-3-chunk' => $wordFillIn->wordListAsHtml(true, 3),
-                            'unsorted-3-chunk' => $wordFillIn->wordListAsHtml(false, 3),
-                            'sorted-4-chunk' => $wordFillIn->wordListAsHtml(true, 4),
-                            'unsorted-4-chunk' => $wordFillIn->wordListAsHtml(false, 4),
-                        ],
-                    ];
-                    $this->app['publishing.wordfillin.items'] = $items;
-
-                    $difficultyTextEasy = $this->getEditionOption(
-                            'plugins.options.WordFillIn.strings.difficulty.easy', 'Difficulty: Easy');
-                    $difficultyTextMedium = $this->getEditionOption(
-                            'plugins.options.WordFillIn.strings.difficulty.medium', 'Difficulty: Medium');
-                    $difficultyTextHard = $this->getEditionOption(
-                            'plugins.options.WordFillIn.strings.difficulty.hard', 'Difficulty: Hard');
-                    $difficultyTextVeryHard = $this->getEditionOption(
-                            'plugins.options.WordFillIn.strings.difficulty.very-hard', 'Difficulty: Very Hard');
-
-                    switch ($difficulty) {
-                        case WordFillIn::DIFFICULTY_EASY:
-                            $difficultyText = $difficultyTextEasy;
-                            break;
-                        case WordFillIn::DIFFICULTY_MEDIUM:
-                            $difficultyText = $difficultyTextMedium;
-                            break;
-                        case WordFillIn::DIFFICULTY_HARD:
-                            $difficultyText = $difficultyTextHard;
-                            break;
-                        case WordFillIn::DIFFICULTY_VERY_HARD:
-                            $difficultyText = $difficultyTextVeryHard;
-                            break;
+                }
+                if ($wordFillIn->getWarnings()) {
+                    foreach ($wordFillIn->getWarnings() as $warning) {
+                        $this->writeLn(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
+                        $this->saveProblem(sprintf('Puzzle %s: %s', $id, $warning), 'warning');
                     }
+                }
 
-                    return sprintf(
+                $items = $this->app['publishing.wordfillin.items'] ?? [];
+
+                $items[$id] = [
+                    'solution' => $wordFillIn->solutionAsHtml(),
+                    'wordlist' => [
+                        'sorted-1-chunk' => $wordFillIn->wordListAsHtml(true),
+                        'unsorted-1-chunk' => $wordFillIn->wordListAsHtml(false),
+                        'sorted-2-chunk' => $wordFillIn->wordListAsHtml(true, 2),
+                        'unsorted-2-chunk' => $wordFillIn->wordListAsHtml(false, 2),
+                        'sorted-3-chunk' => $wordFillIn->wordListAsHtml(true, 3),
+                        'unsorted-3-chunk' => $wordFillIn->wordListAsHtml(false, 3),
+                        'sorted-4-chunk' => $wordFillIn->wordListAsHtml(true, 4),
+                        'unsorted-4-chunk' => $wordFillIn->wordListAsHtml(false, 4),
+                    ],
+                ];
+                $this->app['publishing.wordfillin.items'] = $items;
+
+                $difficultyTextEasy = $this->getEditionOption(
+                    'plugins.options.WordFillIn.strings.difficulty.easy',
+                    'Difficulty: Easy'
+                );
+                $difficultyTextMedium = $this->getEditionOption(
+                    'plugins.options.WordFillIn.strings.difficulty.medium',
+                    'Difficulty: Medium'
+                );
+                $difficultyTextHard = $this->getEditionOption(
+                    'plugins.options.WordFillIn.strings.difficulty.hard',
+                    'Difficulty: Hard'
+                );
+                $difficultyTextVeryHard = $this->getEditionOption(
+                    'plugins.options.WordFillIn.strings.difficulty.very-hard',
+                    'Difficulty: Very Hard'
+                );
+
+                switch ($difficulty) {
+                    case WordFillIn::DIFFICULTY_EASY:
+                        $difficultyText = $difficultyTextEasy;
+                        break;
+                    case WordFillIn::DIFFICULTY_MEDIUM:
+                        $difficultyText = $difficultyTextMedium;
+                        break;
+                    case WordFillIn::DIFFICULTY_HARD:
+                        $difficultyText = $difficultyTextHard;
+                        break;
+                    case WordFillIn::DIFFICULTY_VERY_HARD:
+                        $difficultyText = $difficultyTextVeryHard;
+                        break;
+                }
+
+                return sprintf(
                     '<div class="wordfillin wordfillin-puzzle-container" data-id="%s">' .
-                    '<div class="wordfillin-title">%s</div>' .
-                    '<div class="wordfillin-text">%s</div>' .
-                    '<div class="wordfillin-text2">%s</div>' .
-                    '<div class="wordfillin-difficulty">%s</div>' .
-                    '<div class="wordfillin-puzzle">%s</div>' .
-                    '</div>', $arguments['id'], sprintf($title, $id, $id), $text, $text2, $difficultyText,
-                    $wordFillIn->puzzleAsHtml());
-                }, $this->item['content']);
+                        '<div class="wordfillin-title">%s</div>' .
+                        '<div class="wordfillin-text">%s</div>' .
+                        '<div class="wordfillin-text2">%s</div>' .
+                        '<div class="wordfillin-difficulty">%s</div>' .
+                        '<div class="wordfillin-puzzle">%s</div>' .
+                        '</div>',
+                    $arguments['id'],
+                    sprintf($title, $id, $id),
+                    $text,
+                    $text2,
+                    $difficultyText,
+                    $wordFillIn->puzzleAsHtml()
+                );
+            },
+            $this->item['content']
+        );
 
         $this->item['content'] = $content;
     }
@@ -347,55 +380,65 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
     protected function processWordList()
     {
         $regExp = '/'
-                . '(?<div>'
-                . '<div +(?<pre>[^>]*)'
-                . 'class="(?<class>wordfillin wordfillin-wordlist)"'
-                . ' +'
-                . 'data-id="(?<id>\d+)"'
-                . '(?<post>[^>]*)>'
-                . ')' // div group
-                . '.*'
-                . '<\/div>'
-                . '/Ums'; // Ungreedy, multiline, dotall
+            . '(?<div>'
+            . '<div +(?<pre>[^>]*)'
+            . 'class="(?<class>wordfillin wordfillin-wordlist)"'
+            . ' +'
+            . 'data-id="(?<id>\d+)"'
+            . '(?<post>[^>]*)>'
+            . ')' // div group
+            . '.*'
+            . '<\/div>'
+            . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-                $regExp,
-                function ($matches) {
+            $regExp,
+            function ($matches) {
 
-                    $id = $matches['id'];
+                $id = $matches['id'];
 
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'];
-                    if (!isset($itemsArguments[$id])) {
-                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
-                    }
-                    $arguments = $itemsArguments[$id]['wordlist'];
-                    $sorted = $arguments['sorted'] ?? false;
-                    $chunks = $arguments['chunks'] ?? 1;
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $arguments = $itemsArguments[$id]['wordlist'];
+                $sorted = $arguments['sorted'] ?? false;
+                $chunks = $arguments['chunks'] ?? 1;
 
-                    if ($chunks > 4) {
-                        $this->writeLn(
-                                sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks), 'error');
-                        $chunks = 1;
-                    }
+                if ($chunks > 4) {
+                    $this->writeLn(
+                        sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks),
+                        'error'
+                    );
+                    $chunks = 1;
+                }
 
-                    if (!isset($this->app['publishing.wordfillin.items'])) {
-                        return '';
-                    }
-                    $items = $this->app['publishing.wordfillin.items'] ?? [];
-                    if (!isset($items[$id])) {
-                        return '';
-                    }
+                if (!isset($this->app['publishing.wordfillin.items'])) {
+                    return '';
+                }
+                $items = $this->app['publishing.wordfillin.items'] ?? [];
+                if (!isset($items[$id])) {
+                    return '';
+                }
 
-                    $wordlist = $items[$id]['wordlist'];
+                $wordlist = $items[$id]['wordlist'];
 
-                    $wordlistKey = sprintf(
-                            "%s-%d-chunk", $sorted ? 'sorted' : 'unsorted', $chunks);
+                $wordlistKey = sprintf(
+                    "%s-%d-chunk",
+                    $sorted ? 'sorted' : 'unsorted',
+                    $chunks
+                );
 
-                    return sprintf(
-                    '<div class="wordfillin wordfillin-wordlist" data-id="%s">%s</div>', $arguments['id'], $wordlist[$wordlistKey]);
-                }, $this->item['content']);
+                return sprintf(
+                    '<div class="wordfillin wordfillin-wordlist" data-id="%s">%s</div>',
+                    $arguments['id'],
+                    $wordlist[$wordlistKey]
+                );
+            },
+            $this->item['content']
+        );
 
         $this->item['content'] = $content;
     }
@@ -403,50 +446,57 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
     protected function processSolution()
     {
         $regExp = '/'
-                . '(?<div>'
-                . '<div +(?<pre>[^>]*)'
-                . 'class="(?<class>wordfillin wordfillin-solution)"'
-                . ' +'
-                . 'data-id="(?<id>\d+)"'
-                . '(?<post>[^>]*)>'
-                . ')' // div group
-                . '.*'
-                . '<\/div>'
-                . '/Ums'; // Ungreedy, multiline, dotall
+            . '(?<div>'
+            . '<div +(?<pre>[^>]*)'
+            . 'class="(?<class>wordfillin wordfillin-solution)"'
+            . ' +'
+            . 'data-id="(?<id>\d+)"'
+            . '(?<post>[^>]*)>'
+            . ')' // div group
+            . '.*'
+            . '<\/div>'
+            . '/Ums'; // Ungreedy, multiline, dotall
 
         $content = preg_replace_callback(
-                $regExp,
-                function ($matches) {
+            $regExp,
+            function ($matches) {
 
-                    $id = $matches['id'];
+                $id = $matches['id'];
 
-                    $itemsArguments = $this->app['publishing.wordfillin.arguments'];
-                    if (!isset($itemsArguments[$id])) {
-                        $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
+                $itemsArguments = $this->app['publishing.wordfillin.arguments'];
+                if (!isset($itemsArguments[$id])) {
+                    $this->writeLn(sprintf('Puzzle with id "%s" not found.', $id), 'error');
 
-                        return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
-                    }
-                    $arguments = $itemsArguments[$id]['solution'];
+                    return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
+                }
+                $arguments = $itemsArguments[$id]['solution'];
 
-                    $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.solution_title') ?? '';
+                $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.solution_title') ?? '';
 
-                    $text = $arguments['text'] ?? '';
+                $text = $arguments['text'] ?? '';
 
-                    if (!isset($this->app['publishing.wordfillin.items'])) {
-                        return '';
-                    }
-                    $items = $this->app['publishing.wordfillin.items'] ?? [];
-                    if (!isset($items[$id])) {
-                        return '';
-                    }
+                if (!isset($this->app['publishing.wordfillin.items'])) {
+                    return '';
+                }
+                $items = $this->app['publishing.wordfillin.items'] ?? [];
+                if (!isset($items[$id])) {
+                    return '';
+                }
 
-                    return sprintf(
+                return sprintf(
                     '<div class="wordfillin wordfillin-solution-container" data-id="%s">' .
-                    '<div class="wordfillin-title">%s</div>' .
-                    '<div class="wordfillin-text">%s</div>' .
-                    '<div class="wordfillin-solution">%s</div>' .
-                    '</div>', $arguments['id'], sprintf($title, $id, $id), $text, $items[$id]['solution']);
-                }, $this->item['content']);
+                        '<div class="wordfillin-title">%s</div>' .
+                        '<div class="wordfillin-text">%s</div>' .
+                        '<div class="wordfillin-solution">%s</div>' .
+                        '</div>',
+                    $arguments['id'],
+                    sprintf($title, $id, $id),
+                    $text,
+                    $items[$id]['solution']
+                );
+            },
+            $this->item['content']
+        );
 
         $this->item['content'] = $content;
     }
@@ -480,15 +530,20 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
                     } else {
                         // relative path
                         $dirs[] = realpath(
-                                pathinfo(
-                                        $contentsDir . DIRECTORY_SEPARATOR . $file['name'], PATHINFO_DIRNAME));
+                            pathinfo(
+                                $contentsDir . DIRECTORY_SEPARATOR . $file['name'],
+                                PATHINFO_DIRNAME
+                            )
+                        );
                     }
                 }
 
                 $filePath = $this->app->getFirstExistingFile($fileName, $dirs);
                 if (!$filePath) {
                     $this->writeLn(
-                            sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir), 'error');
+                        sprintf('Word file with name "%s" not found in "%s".', $file['name'], $contentsDir),
+                        'error'
+                    );
 
                     return [];
                 }
@@ -511,6 +566,10 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
 
     protected function parsePuzzleWords($content): array
     {
+        // Ensure the Crawler reads the content with the proper encoding
+        $contentEncoding = mb_detect_encoding($content);
+        $content = sprintf('<?xml version="1.0" encoding="%s" ?>\n', $contentEncoding) . $content;
+
         $crawler = new Crawler();
         $crawler->addHtmlContent($content);
         $crawler = $crawler->filter('ul');
@@ -528,39 +587,37 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
         $output = [];
 
         $crawler->children()->each(
-                function (Crawler $liNode) use
-                (
-                        &$output
-                ) {
-                    if ($liNode->children()->count() == 0) {
-                        $output [] = $liNode->html();
+            function (Crawler $liNode) use (
+                &$output
+            ) {
+                if ($liNode->children()->count() == 0) {
+                    $output[] = $liNode->html();
 
-                        return;
-                    }
-
-                    $cellText = '';
-
-                    $liNode->children()->each(
-                            function (Crawler $liChildrenNode) use
-                            (
-                                    &$cellText
-                            ) {
-                                switch ($liChildrenNode->nodeName()) {
-                                    case 'p':
-                                        $cellText = $liChildrenNode->html();
-                                        break;
-                                    default:
-                                        // other tags are ignored
-                                        break;
-                                }
-                            }
-                    );
-
-                    // uncollected text
-                    if (!empty($cellText)) {
-                        $output[] = $cellText;
-                    }
+                    return;
                 }
+
+                $cellText = '';
+
+                $liNode->children()->each(
+                    function (Crawler $liChildrenNode) use (
+                        &$cellText
+                    ) {
+                        switch ($liChildrenNode->nodeName()) {
+                            case 'p':
+                                $cellText = $liChildrenNode->html();
+                                break;
+                            default:
+                                // other tags are ignored
+                                break;
+                        }
+                    }
+                );
+
+                // uncollected text
+                if (!empty($cellText)) {
+                    $output[] = $cellText;
+                }
+            }
         );
 
         return $output;
@@ -574,9 +631,9 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
     }
 
     protected function saveProblem(
-            string $message,
-            string $severity)
-    {
+        string $message,
+        string $severity
+    ) {
         $problem = [];
 
         $problem['message'] = $message;
@@ -611,11 +668,12 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
             foreach ($problems as $problem) {
                 $count++;
                 $report->addLine(
-                        [
-                            '',
-                            strtoupper($problem['severity']),
-                            $problem['message'],
-                ]);
+                    [
+                        '',
+                        strtoupper($problem['severity']),
+                        $problem['message'],
+                    ]
+                );
             }
         }
 
@@ -628,5 +686,4 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface {
 
         file_put_contents($reportFile, $report->getText());
     }
-
 }

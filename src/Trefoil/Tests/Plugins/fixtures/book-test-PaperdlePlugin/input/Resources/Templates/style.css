@@ -1,0 +1,36 @@
+.paperdle-row1 {
+  border: 1px solid black;
+  display: inline-block;
+  width: 100%;
+}
+
+.paperdle-row2 {
+  /* border: 1px solid black; */
+
+  width: auto;
+  margin: auto;
+  padding: 0.5em;
+}
+
+.paperdle-row3 {
+  /* border: 1px solid black; */
+
+  width: auto;
+  margin: auto;
+  padding: 0.5em;
+}
+
+.paperdle-row4 {
+  /* border: 1px solid black; */
+
+  width: auto;
+  margin: auto;
+  padding: 0.5em;
+}
+
+.paperdle-board-container,
+.paperdle-letters-container,
+.paperdle-solution-container {
+  float: left;
+  text-align: center;
+}

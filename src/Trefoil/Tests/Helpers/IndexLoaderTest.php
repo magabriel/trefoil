@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
+
+use Trefoil\Helpers\IndexLoader;
 
 use EasySlugger\Utf8Slugger;
 use PHPUnit\Framework\TestCase;

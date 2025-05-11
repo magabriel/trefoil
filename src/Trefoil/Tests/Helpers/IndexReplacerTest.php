@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
+
+use Trefoil\Helpers\Index;
+use Trefoil\Helpers\IndexItem;
+use Trefoil\Helpers\IndexReplacer;
+use Trefoil\Helpers\TextPreserver;
 
 use PHPUnit\Framework\TestCase;
 

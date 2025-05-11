@@ -9,7 +9,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Trefoil\Helpers;
+namespace Trefoil\Tests\Helpers;
+
+use Trefoil\Helpers\QuizActivityParser;
+use Trefoil\Helpers\QuizActivity;
+use Trefoil\Helpers\QuizActivityQuestion;
+use Trefoil\Helpers\QuizItem;
 
 use Michelf\MarkdownExtra;
 use PHPUnit_Framework_TestCase;
