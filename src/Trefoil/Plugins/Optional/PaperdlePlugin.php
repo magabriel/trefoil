@@ -632,7 +632,7 @@ class PaperdlePlugin extends BasePlugin implements EventSubscriberInterface
         for ($i = 0; $i < $rows; $i++) {
             $board .= '<tr>';
             for ($j = 0; $j < $columns; $j++) {
-                $board .= '<td></td>';
+                $board .= '<td>&nbsp;</td>';
             }
             $board .= '</tr>';
         }
