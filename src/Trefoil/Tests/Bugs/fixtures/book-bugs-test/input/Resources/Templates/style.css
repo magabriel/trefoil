@@ -1,0 +1,13 @@
+.bug-001 a {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
+.bug-001 a.internal {
+  color: #ff0000;
+}
+
+.page-break {
+  display: block;
+  page-break-after: always;
+}

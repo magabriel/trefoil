@@ -53,10 +53,11 @@ abstract class BookPublishingAllTestCase extends TestCase
     protected $console;
     protected $isDebug;
 
-    public function __construct($name = null,
-                                array $data = [],
-                                $dataName = '')
-    {
+    public function __construct(
+        $name = null,
+        array $data = [],
+        $dataName = ''
+    ) {
         parent::__construct($name, $data, $dataName);
 
         $this->app = new Application();
@@ -66,7 +67,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         $this->isDebug = array_key_exists('debug', getopt('', ['debug']));
 
         $className = basename(str_replace('\\', '/', static::class));
-        $this->tmpDirBase = $this->app['app.dir.cache'].'/'.'phpunit_debug/'.$className;
+        $this->tmpDirBase = $this->app['app.dir.cache'] . '/' . 'phpunit_debug/' . $className;
 
         if ($this->filesystem->exists($this->tmpDirBase)) {
             $this->filesystem->remove($this->tmpDirBase);
@@ -84,7 +85,7 @@ abstract class BookPublishingAllTestCase extends TestCase
             }
 
             if ($this->isDebug) {
-                echo '>>> Actual and expected results not deleted: '.$this->tmpDir;
+                echo '>>> Actual and expected results not deleted: ' . $this->tmpDir;
                 $delete = false;
             }
         }
@@ -109,7 +110,7 @@ abstract class BookPublishingAllTestCase extends TestCase
         }
 
         if ($this->isDebug) {
-            echo '> Using fixtures from '.$this->fixturesDir."\n";
+            echo '> Using fixtures from ' . $this->fixturesDir . "\n";
         }
 
         // find the test books
@@ -121,14 +122,14 @@ abstract class BookPublishingAllTestCase extends TestCase
             $slug = $fixture->getFileName();
 
             // look for and publish all the book editions
-            $bookConfigFile = $this->fixturesDir.'/'.$slug.'/input/config.yml';
+            $bookConfigFile = $this->fixturesDir . '/' . $slug . '/input/config.yml';
             $bookConfig = Yaml::parse(file_get_contents($bookConfigFile));
 
             /** @var string[] $editions */
             $editions = $bookConfig['book']['editions'];
 
             foreach ($editions as $editionName => $editionConfig) {
-                $books[$slug.' '. $editionName] = [
+                $books[$slug . ' ' . $editionName] = [
                     $slug,
                     $editionName,
                 ];
@@ -143,9 +144,10 @@ abstract class BookPublishingAllTestCase extends TestCase
      *
      * @dataProvider bookProvider
      */
-    public function testBookPublish($bookName,
-                                    $editionName): void
-    {
+    public function testBookPublish(
+        $bookName,
+        $editionName
+    ): void {
         $slug = $bookName;
 
         static::$lastBook = static::$currentBook ?: $bookName;
@@ -154,31 +156,33 @@ abstract class BookPublishingAllTestCase extends TestCase
             static::$someEditionOfSameBookHasErrors = false;
         }
 
-        $this->tmpDir = $this->tmpDirBase.'/'.$slug;
+        $this->tmpDir = $this->tmpDirBase . '/' . $slug;
 
         if ($this->isDebug) {
-            echo sprintf("\n".'- Processing test "%s"'."\n", $slug);
+            echo sprintf("\n" . '- Processing test "%s"' . "\n", $slug);
         }
 
-        $thisBookDir = $this->fixturesDir.$slug;
+        $thisBookDir = $this->fixturesDir . $slug;
 
         // mirror test book contents in temp dir
         $this->filesystem->mirror(
-            $thisBookDir.'/input',
-            $this->tmpDir);
+            $thisBookDir . '/input',
+            $this->tmpDir
+        );
 
         // look for and publish the book edition
-        $bookConfigFile = $this->tmpDir.'/config.yml';
+        $bookConfigFile = $this->tmpDir . '/config.yml';
 
         // publish the book edition
         $input = new ArrayInput(
             [
-                'command'      => 'publish',
-                'slug'         => $slug,
-                'edition'      => $editionName,
-                '--dir'        => $this->tmpDirBase,
-                '--themes_dir' => $this->fixturesDir.'Themes',
-            ]);
+                'command' => 'publish',
+                'slug' => $slug,
+                'edition' => $editionName,
+                '--dir' => $this->tmpDirBase,
+                '--themes_dir' => $this->fixturesDir . 'Themes',
+            ]
+        );
 
         $output = new NullOutput();
         if ($this->isDebug) {
@@ -190,30 +194,32 @@ abstract class BookPublishingAllTestCase extends TestCase
         $command->run($input, $output);
 
         // look for config.yml modification
-        $expectedBookConfigFile = $thisBookDir.'/expected/config.yml';
+        $expectedBookConfigFile = $thisBookDir . '/expected/config.yml';
         if (file_exists($expectedBookConfigFile)) {
             static::assertFileEquivalent(
                 $expectedBookConfigFile,
                 $bookConfigFile,
-                'Book config.yml not modified correctly');
+                'Book config.yml not modified correctly'
+            );
         }
 
         // assert that generated files are exactly the same as expected
-        $generatedFiles = Finder::create()->files()->notName('.gitignore')->in($this->tmpDir.'/Output/'.$editionName);
+        $generatedFiles = Finder::create()->files()->notName('.gitignore')->in($this->tmpDir . '/Output/' . $editionName);
 
         foreach ($generatedFiles as $file) {
             /* @var $file SplFileInfo */
 
             if ('epub' === $file->getExtension()) {
                 // unzip both files to compare its contents
-                $workDir = $this->tmpDir.'/unzip/'.$editionName;
-                $generated = $workDir.'/generated';
-                $expected = $workDir.'/expected';
+                $workDir = $this->tmpDir . '/unzip/' . $editionName;
+                $generated = $workDir . '/generated';
+                $expected = $workDir . '/expected';
 
                 Toolkit::unzip($file->getRealPath(), $generated);
                 Toolkit::unzip(
-                    $thisBookDir.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
-                    $expected);
+                    $thisBookDir . '/expected/' . $editionName . '/' . $file->getRelativePathname(),
+                    $expected
+                );
 
                 // assert that generated files insize EPUB are exactly the same as expected
                 $this->checkGeneratedFiles($expected, $generated, $file->getPathname());
@@ -226,45 +232,59 @@ abstract class BookPublishingAllTestCase extends TestCase
                 // because kindlegen does funny things with the contents
                 // so do nothing
 
+            } elseif ('pdf' === $file->getExtension()) {
+                // PDF files cannot be compared to expected results
+                // because their contents are binary and always change,
+                // so we just check that the file size is the same.
+                static::assertEquals(
+                    filesize($thisBookDir . '/expected/' . $editionName . '/' . $file->getRelativePathname()),
+                    filesize($file->getPathname()),
+                    sprintf("'%s' file not properly generated", $file->getPathname())
+                );
+
             } else {
                 static::assertFileEquivalent(
-                    $thisBookDir.'/expected/'.$editionName.'/'.$file->getRelativePathname(),
+                    $thisBookDir . '/expected/' . $editionName . '/' . $file->getRelativePathname(),
                     $file->getPathname(),
-                    sprintf("'%s' file not properly generated", $file->getPathname()));
+                    sprintf("'%s' file not properly generated", $file->getPathname())
+                );
             }
 
             // assert that all required files for this edition are generated
             $this->checkForMissingFiles(
-                $thisBookDir.'/expected/'.$editionName,
-                $this->tmpDir.'/Output/'.$editionName);
+                $thisBookDir . '/expected/' . $editionName,
+                $this->tmpDir . '/Output/' . $editionName
+            );
 
             // assert that book publication took less than 5 seconds
             static::assertLessThan(
                 10,
                 $this->app['app.timer.finish'] - $this->app['app.timer.start'],
-                sprintf("Publication of '%s' edition for '%s' book took more than 10 seconds", $editionName, $slug));
+                sprintf("Publication of '%s' edition for '%s' book took more than 10 seconds", $editionName, $slug)
+            );
         }
     }
 
-    static function assertFileEquivalent(string $expected,
-                                         string $actual,
-                                         string $message = '',
-                                         bool $canonicalize = false,
-                                         bool $ignoreCase = false): void
-    {
+    static function assertFileEquivalent(
+        string $expected,
+        string $actual,
+        string $message = '',
+        bool $canonicalize = false,
+        bool $ignoreCase = false
+    ): void {
         if (pathinfo($expected, PATHINFO_EXTENSION) === 'html') {
             static::assertFileExists($expected, $message);
             static::assertFileExists($actual, $message);
 
             $options = [
                 'drop-empty-elements' => false,
-                'drop-empty-paras'    => false,
-                'escape-scripts'      => false,
-                'fix-backslash'       => false,
-                'fix-style-tags'      => false,
-                'fix-uri'             => false,
-                'lower-literals'      => false,
-                'skip-nested'         => false,
+                'drop-empty-paras' => false,
+                'escape-scripts' => false,
+                'fix-backslash' => false,
+                'fix-style-tags' => false,
+                'fix-uri' => false,
+                'lower-literals' => false,
+                'skip-nested' => false,
             ];
 
             $expectedContents = tidy_repair_string(file_get_contents($expected));
@@ -287,20 +307,23 @@ abstract class BookPublishingAllTestCase extends TestCase
      * @apram string $zipName
      */
     protected
-    function checkGeneratedFiles($dirExpected,
-                                 $dirGenerated,
-                                 $zipName): void
-    {
+        function checkGeneratedFiles(
+        $dirExpected,
+        $dirGenerated,
+        $zipName
+    ): void {
         $genFiles = Finder::create()->files()->notName('.gitignore')->in($dirGenerated);
 
         foreach ($genFiles as $genFile) {
             static::assertFileEquivalent(
-                $dirExpected.'/'.$genFile->getRelativePathname(),
+                $dirExpected . '/' . $genFile->getRelativePathname(),
                 $genFile->getPathname(),
                 sprintf(
                     "'%s' file (into ZIP file '%s') not properly generated",
                     $genFile->getRelativePathname(),
-                    $zipName));
+                    $zipName
+                )
+            );
         }
     }
 
@@ -311,15 +334,17 @@ abstract class BookPublishingAllTestCase extends TestCase
      * @param string $dirGenerated
      */
     protected
-    function checkForMissingFiles($dirExpected,
-                                  $dirGenerated): void
-    {
+        function checkForMissingFiles(
+        $dirExpected,
+        $dirGenerated
+    ): void {
         $expectedFiles = Finder::create()->files()->notName('.gitignore')->in($dirExpected);
 
         foreach ($expectedFiles as $file) {
             static::assertFileExists(
-                $dirGenerated.'/'.$file->getRelativePathname(),
-                sprintf("'%s' file has not been generated", $file->getPathname()));
+                $dirGenerated . '/' . $file->getRelativePathname(),
+                sprintf("'%s' file has not been generated", $file->getPathname())
+            );
         }
     }
 }
