@@ -9,13 +9,16 @@ use Trefoil\DependencyInjection\Application;
 use Trefoil\Helpers\WordFillIn;
 use Trefoil\Tests\HelpersTestCase;
 
-class WordFillInTest extends HelpersTestCase {
+class WordFillInTest extends HelpersTestCase
+{
 
-    private function isDebug(): bool {
+    private function isDebug(): bool
+    {
         return array_key_exists('debug', getopt('', ['debug']));
     }
 
-    public function testGenerateWithDefaults() {
+    public function testGenerateWithDefaults()
+    {
         $sut = new WordFillIn();
 
         $sut->setRandomSeed(1);
@@ -30,7 +33,8 @@ class WordFillInTest extends HelpersTestCase {
         $this->testFixture('wordfillin-generate-with-defaults.txt', $sut);
     }
 
-    private function testFixture(string $fixtureName, WordFillIn $sut) {
+    private function testFixture(string $fixtureName, WordFillIn $sut)
+    {
         $actualPuzzle = $sut->puzzleAsText();
         $actualSolution = $sut->solutionAsText();
         $actualWordList = $sut->wordListAsText();
@@ -41,22 +45,22 @@ class WordFillInTest extends HelpersTestCase {
         $testData = $this->readFixture($fixtureName);
 
         if ($this->isDebug()) {
-                        
+
             $actual = '';
-            $actual .= '==== PUZZLE TEXT'."\n";
+            $actual .= '==== PUZZLE TEXT' . "\n";
             $actual .= $actualPuzzle . "\n";
-            $actual .= '==== WORD LIST TEXT'."\n";
+            $actual .= '==== WORD LIST TEXT' . "\n";
             $actual .= $actualWordList . "\n";
-            $actual .= '==== SOLUTION TEXT'."\n";
+            $actual .= '==== SOLUTION TEXT' . "\n";
             $actual .= $actualSolution . "\n";
-            $actual .= '==== PUZZLE HTML'."\n";
+            $actual .= '==== PUZZLE HTML' . "\n";
             $actual .= $actualPuzzleHtml . "\n";
-            $actual .= '==== WORD LIST HTML'."\n";
+            $actual .= '==== WORD LIST HTML' . "\n";
             $actual .= $actualWordListHtml . "\n";
-            $actual .= '==== SOLUTION HTML'."\n";
+            $actual .= '==== SOLUTION HTML' . "\n";
             $actual .= $actualSolutionHtml . "\n";
 
-            $this->saveTestData($fixtureName, $testData['text'], $actual);                      
+            $this->saveTestData($fixtureName, $testData['text'], $actual);
         }
 
         self::assertEquals($testData['PUZZLE TEXT'], $actualPuzzle, 'Puzzle TEXT not correctly generated');
@@ -67,7 +71,8 @@ class WordFillInTest extends HelpersTestCase {
         self::assertEquals(tidy_repair_string($testData['SOLUTION HTML']), $actualSolutionHtml, 'Solution HTML not correctly generated');
     }
 
-    private function readFixture(string $fixtureName): array {
+    private function readFixture(string $fixtureName): array
+    {
         $text = file_get_contents(__DIR__ . '/fixtures/' . $fixtureName);
         $fileData = preg_split('/^==== (.*$)\n/m', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
         $data = [];
@@ -78,13 +83,14 @@ class WordFillInTest extends HelpersTestCase {
             }
             $data[$fileData[$i]] = $fixtureText;
         }
-        
+
         $data['text'] = $text;
 
         return $data;
     }
 
-    public function testGenerateFailsOnImpossiblePuzzle() {
+    public function testGenerateFailsOnImpossiblePuzzle()
+    {
         $sut = new WordFillIn();
 
         $words = ['wordfillin', 'puzzle', 'testing', 'phpunit', 'generator'];
@@ -96,7 +102,8 @@ class WordFillInTest extends HelpersTestCase {
         self::assertFalse($success);
     }
 
-    public function testGenerateCustom() {
+    public function testGenerateCustom()
+    {
         $sut = new WordFillIn();
         $sut->setRandomSeed(1);
 
@@ -112,7 +119,8 @@ class WordFillInTest extends HelpersTestCase {
         $this->testFixture('wordfillin-generate-custom.txt', $sut);
     }
 
-    public function testGeneratCustomWithNumberOfWords() {
+    public function testGeneratCustomWithNumberOfWords()
+    {
         $sut = new WordFillIn();
         $sut->setRandomSeed(17);
 
