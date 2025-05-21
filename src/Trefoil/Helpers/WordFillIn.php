@@ -872,7 +872,8 @@ class WordFillIn
             $collator->sort($words, Collator::SORT_STRING);
         }
 
-        // Before the first word with a certain length, add an element with the form "#<length>"
+        // Before the first word with a certain length, add an element with the length rendered 
+        // using the $byLengthText format
         if ($byWordLength) {
             $newWords = [];
             $lastLength = 0;
@@ -883,7 +884,8 @@ class WordFillIn
                 $word = mb_substr($word, 3);
 
                 if ($length !== $lastLength) {
-                    $newWords[] = sprintf($byLengthText, intval($length));
+                    // $newWords[] = sprintf($byLengthText, intval($length));
+                    $newWords[] = sprintf("#-%s", intval($length));
                     $lastLength = $length;
                 }
 
@@ -892,20 +894,18 @@ class WordFillIn
         }
         $words = $newWords ?? $words;
 
-        // if ($byWordLength) {
-        //     // Remove the word length from each word
-        //     $words = array_map(
-        //         fn($word) => mb_substr($word, mb_strpos($word, '~') + 1),
-        //         $words
-        //     );
-        // }
-
-        // if ($byWordLength) {
-        //     print_r($words);
-        // }
-
         $output = '';
         $itemChunks = array_chunk($words, intval(ceil(count($words) / $chunks)));
+
+        // Render the length element
+        foreach ($itemChunks as $index => $itemChunk) {
+            foreach ($itemChunk as $key => $item) {
+                if (preg_match('/^#-(\d+).*/', $item, $matches)) {
+                    $itemChunks[$index][$key] = sprintf($byLengthText, intval($matches[1]));
+                }
+            }
+        }
+
         foreach ($itemChunks as $index => $itemChunk) {
             $output .= sprintf('<ul class="chunk-%s-%s"><li>', $index + 1, $chunks)
                 . implode("</li><li>", $itemChunk)
