@@ -30,7 +30,7 @@ The list literal can be one of the following:
 - "1ª", "2ª"... (a number followed by the feminine sign)
 
 The plugin detects the list by the type of starting literal of the
-first item in an unordered list, and adds the class "list-literal"
+first item in an unordered list, and adds the class "literal-list"
 to the `<ul>'  tag to alow styling.
 
 At the HTML level, the following input:
@@ -47,7 +47,7 @@ Is transformed into the following output which can be CSS styled
 to look like a real list with `a)...n)` literals.
 
 ~~~.html
-<ul class="list-literal">
+<ul class="literal-list">
     <li>a) First item.</li>
     ...
     <li>x) Last item.</>
