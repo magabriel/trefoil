@@ -31,7 +31,7 @@ The list literal can be one of the following:
 
 The plugin detects the list by the type of starting literal of the
 first item in an unordered list, and adds the class "literal-list"
-to the `<ul>'  tag to alow styling.
+to the `<ul>` tag to alow styling.
 
 At the HTML level, the following input:
 
