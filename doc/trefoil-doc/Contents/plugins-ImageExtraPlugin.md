@@ -36,9 +36,8 @@ for this to work the image path must point to the relative location of the image
 # but the preview won't work:
 ![This is image 1](image1.jpeg)
 
-# You can write it this way,
-# an the preview will work:
-![This is image 1](images/image1.jpeg)
+# You can write it using 'images/image1.jpeg' 
+# as the image path, and the preview will work.
 ~~~
 
 Both ways will render exactly the same, but only the second one will produce a preview in
