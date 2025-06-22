@@ -13,9 +13,7 @@ namespace Trefoil\Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use Easybook\Util\WeasyPrint;
-// TODO: Creeate Easybook\Util\WeasyPrint like the one in Easybook\Util\Wkhtmltopdf
-// TODO: Include https://github.com/pontedilana/php-weasyprint via composer 
+use Pontedilana\PhpWeasyPrint\Pdf;
 
 class WeasyPrintServiceProvider implements ServiceProviderInterface
 {
@@ -44,8 +42,7 @@ class WeasyPrintServiceProvider implements ServiceProviderInterface
                 }
             }
 
-            $weasyPrint = new WeasyPrint($weasyPrintPath);
-            $weasyPrint->setHtml(true);
+            $weasyPrint = new Pdf($weasyPrintPath);
 
             return $weasyPrint;
         };

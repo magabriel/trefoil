@@ -33,7 +33,8 @@
 		"michelf/php-smartypants" : "^1.8",
 		"ext-intl" : "*",
 		"ext-mbstring" : "*",
-		"abcaeffchen/sudoku-php" : "dev-master"
+		"abcaeffchen/sudoku-php" : "dev-master",
+		"pontedilana/php-weasyprint": "^0.9.0"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "^8",

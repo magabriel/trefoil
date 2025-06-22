@@ -57,10 +57,13 @@ class PdfWeasyPrintPublisher extends PdfPublisher
         $this->prepareBookCoverImage($imagesDir);
 
         // use WeasyPrint to transform the HTML book into a PDF book
+        /** @var \Pontedilana\PhpWeasyPrint\Pdf */
         $weasyPrint = $this->app['weasyprint'];
-        $weasyPrint->setBaseURL($imagesDir);
+        $weasyPrint->setOption('base_url', $imagesDir);
 
         // Prepare and add stylesheets before PDF conversion
+        $styleSheets = [];
+
         if ($this->app->edition('include_styles')) {
             $defaultStyles = $tmpDir . '/default_styles.css';
             $this->app->render(
@@ -69,7 +72,7 @@ class PdfWeasyPrintPublisher extends PdfPublisher
                 $defaultStyles
             );
 
-            $weasyPrint->addStyleSheet($defaultStyles);
+            $styleSheets[] = $defaultStyles;
         }
 
         $customCss = $this->getCustomCssFile();
@@ -87,8 +90,10 @@ class PdfWeasyPrintPublisher extends PdfPublisher
                 );
             }
 
-            $weasyPrint->addStyleSheet($customStyles);
+            $styleSheets[] = $customStyles;
         }
+
+        $weasyPrint->setOption('stylesheet', $styleSheets);
 
         // implode all the contents to create the whole book
         $htmlBookFilePath = $tmpDir . '/book.html';
@@ -101,46 +106,57 @@ class PdfWeasyPrintPublisher extends PdfPublisher
             $htmlBookFilePath
         );
 
-        // Optional first-pass script
-        $js = $this->getJavascriptFile('weasyprint-1st-pass.js');
-        if ($js !== null && file_exists($js)) {
-            $weasyPrint->addScript($js);
-            $weasyPrint->setJavaScript(true);
-        }
+        // // Optional first-pass script
+        // $js = $this->getJavascriptFile('weasyprint-1st-pass.js');
+        // if ($js !== null && file_exists($js)) {
+        //     $weasyPrint->addScript($js);
+        //     $weasyPrint->setJavaScript(true);
+        // }
 
-        // Run the first pass
+        // // Run the first pass
+        // $outputMessages = [];
+        // $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
+        // $weasyPrint->convert_file_to_file($htmlBookFilePath, $pdfBookFilePath, $outputMessages);
+        // $this->displayPdfConversionErrors($outputMessages);
+
+        // // Generate the second-pass input script
+        // $secondPassFile = '';
+        // $output = $this->getGeneratedOutput($outputMessages);
+        // if ($output !== '') {
+        //     $secondPassFile = $tmpDir . '/weasyprint-2nd-pass-input.js';
+        //     file_put_contents($secondPassFile, $output);
+        // }
+
+        // // Optional second-pass script
+        // $js = $this->getJavascriptFile('weasyprint-2nd-pass.js');
+        // if ($js !== null && file_exists($js)) {
+        //     $weasyPrint->addScript($js);
+        //     $weasyPrint->setJavaScript(true);
+
+        //     // Add the second-pass input script
+        //     $js = $secondPassFile;
+        //     if (file_exists($js)) {
+        //         $weasyPrint->addScript($js);
+        //         $weasyPrint->setJavaScript(true);
+        //     }
+
+        //     $this->app['console.output']->writeln("\n > WeasyPrint running second pass");
+        //     $outputMessages = [];
+        //     $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
+        //     $weasyPrint->convert_file_to_file($htmlBookFilePath, $pdfBookFilePath, $outputMessages);
+        //     $this->displayPdfConversionErrors($outputMessages);
+        // }
+
+        // Run the generation
         $outputMessages = [];
         $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
-        $weasyPrint->convert_file_to_file($htmlBookFilePath, $pdfBookFilePath, $outputMessages);
+
+        // TODO: Poner un logger para recoger los mensajes de salida de WeasyPrint en $outputMessages
+        $weasyPrint->setLogger($this->app['console.output']);
+
+        $weasyPrint->generate($htmlBookFilePath, $pdfBookFilePath);
         $this->displayPdfConversionErrors($outputMessages);
 
-        // Generate the second-pass input script
-        $secondPassFile = '';
-        $output = $this->getGeneratedOutput($outputMessages);
-        if ($output !== '') {
-            $secondPassFile = $tmpDir . '/weasyprint-2nd-pass-input.js';
-            file_put_contents($secondPassFile, $output);
-        }
-
-        // Optional second-pass script
-        $js = $this->getJavascriptFile('weasyprint-2nd-pass.js');
-        if ($js !== null && file_exists($js)) {
-            $weasyPrint->addScript($js);
-            $weasyPrint->setJavaScript(true);
-
-            // Add the second-pass input script
-            $js = $secondPassFile;
-            if (file_exists($js)) {
-                $weasyPrint->addScript($js);
-                $weasyPrint->setJavaScript(true);
-            }
-
-            $this->app['console.output']->writeln("\n > WeasyPrint running second pass");
-            $outputMessages = [];
-            $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
-            $weasyPrint->convert_file_to_file($htmlBookFilePath, $pdfBookFilePath, $outputMessages);
-            $this->displayPdfConversionErrors($outputMessages);
-        }
 
         $this->addBookCover($pdfBookFilePath, $this->getCustomCover());
     }
@@ -156,7 +172,7 @@ class PdfWeasyPrintPublisher extends PdfPublisher
     {
         /** @var string $path */
         foreach ($this->app['weasyprint.default_paths'] as $path) {
-            if (file_exists($path)) {
+            if (file_exists($path ?? '')) {
                 return $path;
             }
         }
