@@ -1,0 +1,35 @@
+/*
+ * AutoIndex
+ * =========
+ */
+
+div.item.auto-index {
+}
+
+    div.item.auto-index h5 {
+        font-size: 2em;
+    }
+
+    div.item.auto-index a {
+        background: none;
+        padding: 0;
+    }
+
+    div.item.auto-index .entry {
+        padding-left: 2em;
+    }
+
+    div.item.auto-index .group {
+        font-weight: bold;
+    }
+
+    div.item.auto-index .group.with-entries::after {
+        content: "\A";
+        white-space: pre;
+    }
+
+a.auto-index-term {
+    background: none;
+    color: inherit;
+    padding: 0;
+}

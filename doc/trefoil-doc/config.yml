@@ -11,7 +11,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.924'
+    version:          '1.971'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -93,6 +93,7 @@ book:
                     - TabularLists
                     - WordSearch
                     - WordFillIn
+                    - Paperdle
 
                 options:
                     DropCaps:
@@ -132,6 +133,37 @@ book:
                         highlight_type: line
                         word_files:
                             - { label: word_file_1, name: word_file_1.txt }
+
+                    Paperdle:
+                        alphabet: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                        tries: 6
+                        markers: "O/#"
+                        strings:
+                            board:
+                                title: "Puzzle %s"
+                                text: "Guess the word in the grid"
+                                text2: >
+                                    Use Table 1 and Table 2 to evaluate each letter in your guess.<br>
+                                    Draw a circle over the correct letters, and a line over the misplaced letters.
+                            letters:
+                                title: "Letters"
+                                text: "Cross out the used letters"
+                            randomizer:
+                                title: "Table 1"
+                                text: "Look up each letter in your guess to get the key for Table 2"
+                            decoder:
+                                title: "Table 2"
+                                text: "Look up the key you got from Table 1 to get the letter's evaluation"
+                                text2: >
+                                    O ➔ Letter is correct<br>
+                                    / ➔ Letter is misplaced<br>
+                                    # ➔ Wrong letter
+                            solution:
+                                title: "Solution"
+                                text: "The solution is encoded. Use Table 3 to decode it."
+                            solution-decoder:
+                                title: "Table 3"
+                                text: "Look up each component of the encoded solution to decode it"
 
         ebook:
             extends:         base-edition

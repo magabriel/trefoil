@@ -7,4 +7,5 @@ provide a way to automatically generate content for your book.
 
 {{ fragment('plugins-WordSearchPlugin.md') }}
 {{ fragment('plugins-WordFillInPlugin.md') }}
+{{ fragment('plugins-PaperdlePlugin.md') }}
  

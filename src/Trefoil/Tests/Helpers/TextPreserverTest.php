@@ -140,6 +140,19 @@ TEXT;
         static::assertEquals($html, $this->object->getText());
     }
 
+    public function testPreserveInternalLinks(): void
+    {
+        $html = '<a href="#the-internal-link">Lorem ipsum</a>';
+
+        $this->object->setText($html);
+        $this->object->preserveHtmlTagAttributes(['href', 'class']);
+
+        static::assertNotEquals($html, $this->object->getText());
+
+        $this->object->restore();
+        static::assertEquals($html, $this->object->getText());
+    }
+
     public function testCreatePlacehoder(): void
     {
         $value = 'myvalue';

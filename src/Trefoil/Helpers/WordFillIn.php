@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Trefoil\Helpers;
 
 use Trefoil\Util\Toolkit;
-
+use Collator;
 class WordFillIn
 {
 
@@ -322,12 +322,12 @@ class WordFillIn
         $newRowToAdd = array_pad([], $newColumns, $emptyCell);
 
         // Add as many rows as needed at the top and bottom
-        $newPuzzle = array_pad($newPuzzle, - ($newRows + $rowsToAddTop), $newRowToAdd);
+        $newPuzzle = array_pad($newPuzzle, -($newRows + $rowsToAddTop), $newRowToAdd);
         $newPuzzle = array_pad($newPuzzle, $newRows + $rowsToAdd, $newRowToAdd);
 
         // Add as many columns as needed at the left and right
         for ($row = 0; $row < count($newPuzzle); $row++) {
-            $newPuzzle[$row] = array_pad($newPuzzle[$row], - ($newColumns + $columnsToAddLeft), $emptyCell);
+            $newPuzzle[$row] = array_pad($newPuzzle[$row], -($newColumns + $columnsToAddLeft), $emptyCell);
             $newPuzzle[$row] = array_pad($newPuzzle[$row], $newColumns + $columnsToAdd, $emptyCell);
         }
 
@@ -846,6 +846,9 @@ class WordFillIn
         bool $sorted = true,
         string $sortLocale = "utf8"
     ): string {
+
+        // TODO: implement byWordLength
+
         $words = $this->words;
         if ($sorted) {
             $collator = collator_create($sortLocale);
@@ -858,16 +861,59 @@ class WordFillIn
     public function wordListAsHtml(
         bool $sorted = true,
         int $chunks = 1,
+        bool $byWordLength = false,
+        string $byLengthText = "[%s]",
         string $sortLocale = "utf8"
     ): string {
         $words = $this->words;
-        if ($sorted) {
-            $collator = collator_create($sortLocale);
-            $collator->sort($words);
+
+        if ($byWordLength) {
+            // Prepend the word length to each word for easy sorting
+            $words = array_map(
+                fn($word) => sprintf('%02u~%s', mb_strlen($word), $word),
+                $words
+            );
         }
+
+        if ($sorted || $byWordLength) {
+            $collator = collator_create($sortLocale);
+            $collator->sort($words, Collator::SORT_STRING);
+        }
+
+        // Before the first word with a certain length, add an element with the length rendered 
+        // using the $byLengthText format
+        if ($byWordLength) {
+            $newWords = [];
+            $lastLength = 0;
+            foreach ($words as $word) {
+                // Get the length prefix (2 digits + "~")
+                $length = mb_substr($word, 0, 2);
+                // Remove the length prefix
+                $word = mb_substr($word, 3);
+
+                if ($length !== $lastLength) {
+                    // $newWords[] = sprintf($byLengthText, intval($length));
+                    $newWords[] = sprintf("#-%s", intval($length));
+                    $lastLength = $length;
+                }
+
+                $newWords[] = $word;
+            }
+        }
+        $words = $newWords ?? $words;
 
         $output = '';
         $itemChunks = array_chunk($words, intval(ceil(count($words) / $chunks)));
+
+        // Render the length element
+        foreach ($itemChunks as $index => $itemChunk) {
+            foreach ($itemChunk as $key => $item) {
+                if (preg_match('/^#-(\d+).*/', $item, $matches)) {
+                    $itemChunks[$index][$key] = sprintf($byLengthText, intval($matches[1]));
+                }
+            }
+        }
+
         foreach ($itemChunks as $index => $itemChunk) {
             $output .= sprintf('<ul class="chunk-%s-%s"><li>', $index + 1, $chunks)
                 . implode("</li><li>", $itemChunk)

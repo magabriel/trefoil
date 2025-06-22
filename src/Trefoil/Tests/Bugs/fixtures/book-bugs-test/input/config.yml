@@ -1,0 +1,29 @@
+# easybook:
+#   parameters:
+#     kindlegen.path: "/usr/local/bin/kindlegen"
+
+book:
+  title: "Test book - Bugs Tests PDF"
+  author: "trefoil"
+  edition: "0"
+  language: en
+  publication_date: "01-05-2025"
+
+  version: "1.0"
+
+  generator: { name: trefoil, version: "DEV" }
+
+  contents:
+    - { element: chapter, number: 1, content: chapter1.md }
+
+  editions:
+    print:
+      debug: true
+      format: pdf
+      highlight_code: false
+      include_styles: true
+      labels: ["appendix", "chapter", "figure"] # labels also available for: "figure", "table"
+      # theme: use-default-theme
+      toc:
+        deep: 1
+        elements: ["appendix", "chapter", "part", "introduction"]

@@ -38,6 +38,7 @@ book:
                           solution_title: ""
                           text: "" 
                           text2: ""
+                          by_length_text: "[%s]"
                           difficulty:
                             easy: "Dificulty: Easy"
                             medium: "Dificulty: Medium"
@@ -57,12 +58,17 @@ sensible defaults that are shown in the previous YAML block.
 - `word_files`: Labels for the word files to use with the automatic word selection feature. The name can include a path
   and its relative to the book's `Content` directory.
 - `default`: Some default values to use.
-    - `difficulty`: The puzzle difficulty. Either `easy`, `medium`, `hard`, or `very-hard`.
-- `string`: Some string used on the puzzle and solution rendering.
-    - `easy`: Text for easy puzzles.
-    - `medium`: Text for medium puzzles.
-    - `hard`: Text for hard puzzles.
-    - `very-hard`: Text for very hard puzzles.
+    - `difficulty`: Difficulty of the puzzle. Either `easy`, `medium`, `hard`, or `very-hard`.
+- `strings`: Some string used on the puzzle and solution rendering.
+     - `title`: The title of the puzzle. 
+        - It can include HTML markup.
+        - The puzzle id can be included one or two times using sprintf syntax.
+        - Example: `<span>%s</span>Puzzle<span>%s</span>`
+    - `text`: A text to show before the puzzle. It can include HTML markup.
+    - `text2`: Another text. It can include HTML markup.
+    - `by_length_text`: Text to use as heading when the word list is classified by word length. 
+    - `difficulty`: Difficulty of the puzzle. Either `easy`, `medium`, `hard`, or `very-hard`.
+
 
 This feature uses several *trefoil markers* to achieve its complex functionality.
 
@@ -94,9 +100,10 @@ This feature uses several *trefoil markers* to achieve its complex functionality
       - Example: `<span>%s</span>Puzzle<span>%s</span>`
     - `text`: A text to show before the puzzle. It can include HTML markup.
     - `text2`: Another text. It can include HTML markup.
+    - `by_length_text`: Text to use as heading when the word list is classified by word length. 
     - `difficulty`: Difficulty of the puzzle. Either `easy`, `medium`, `hard`, or `very-hard`.
     - `seed`: The seed used for the pseudo-random numbers generator (see explanation below). If not provided, the
-      pluting will generate a different puzzle on each run, so it is better to set a specific seed to get repeatable
+      plugin will generate a different puzzle on each run, so it is better to set a specific seed to get repeatable
       results.
 
 - `list of words` is a list with the words to use in the puzzle.
@@ -119,6 +126,7 @@ N> - `very-hard`: Longer words, always reversed and very few hints.
 - `id`: The id of the puzzle to show the wordlist.
 - `options` A list of argument in the form {key:value, ... ,key:value}. They are:
     - `sorted`: Whether the list should be shown sorted or unsorted. Default is unsorted.
+    - `by_length`: Set it to true to classify the word list by word length. It always be sorted.
     - `chunks`: The number of parts that the wordlist should be divided into. Useful for styling the list in columns.
       Default is 1.
 
@@ -166,7 +174,7 @@ N> same seed will be identical.
 
 {@ wordfillin_end() @}
 
-{@ wordfillin_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100, { by_length: true } ) @}
 
 {@ wordfillin_solution( 100, { title: 'This is the solution'} ) @}
 ~~~
@@ -195,7 +203,7 @@ This will render as follows:
 {@ wordfillin_end() @}
 [comment]: <> (@formatter:on)
 
-{@ wordfillin_wordlist( 100 ) @}
+{@ wordfillin_wordlist( 100, { by_length: true } ) @}
 
 <div class="clearfix"></div>
 

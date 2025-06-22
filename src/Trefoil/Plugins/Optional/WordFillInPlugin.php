@@ -87,10 +87,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordfillin',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
@@ -106,10 +103,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordfillin_begin',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $arguments['id'] = $id;
 
                 $this->wordfillinCalls++;
@@ -136,10 +130,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordfillin_wordlist',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
@@ -155,10 +146,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
         $processor->registerMarker(
             'wordfillin_solution',
-            function (
-                int $id,
-                array $arguments = []
-            ) {
+            function (int $id, array $arguments = []) {
                 $arguments['id'] = $id;
 
                 $itemsArguments = $this->app['publishing.wordfillin.arguments'] ?? [];
@@ -255,6 +243,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
                 $title = $arguments['title'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.title') ?? '';
                 $text = $arguments['text'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text') ?? '';
                 $text2 = $arguments['text2'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.text2') ?? '';
+                $byLengthText = $arguments['by_length_text'] ?? $this->getEditionOption('plugins.options.WordFillIn.strings.by_length_text') ?? '[%s]';
                 $difficulty = $arguments['difficulty'] ?? $this->getEditionOption('plugins.options.WordFillIn.default.difficulty')
                     ?? WordFillIn::DIFFICULTY_EASY;
 
@@ -311,14 +300,21 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
                 $items[$id] = [
                     'solution' => $wordFillIn->solutionAsHtml(),
                     'wordlist' => [
-                        'sorted-1-chunk' => $wordFillIn->wordListAsHtml(true),
-                        'unsorted-1-chunk' => $wordFillIn->wordListAsHtml(false),
+                        'sorted-1-chunk' => $wordFillIn->wordListAsHtml(true, 1),
+                        'unsorted-1-chunk' => $wordFillIn->wordListAsHtml(false, 1),
+                        'by_length-1-chunk' => $wordFillIn->wordListAsHtml(false, 1, true, $byLengthText),
+
                         'sorted-2-chunk' => $wordFillIn->wordListAsHtml(true, 2),
                         'unsorted-2-chunk' => $wordFillIn->wordListAsHtml(false, 2),
+                        'by_length-2-chunk' => $wordFillIn->wordListAsHtml(false, 2, true, $byLengthText),
+
                         'sorted-3-chunk' => $wordFillIn->wordListAsHtml(true, 3),
                         'unsorted-3-chunk' => $wordFillIn->wordListAsHtml(false, 3),
+                        'by_length-3-chunk' => $wordFillIn->wordListAsHtml(false, 3, true, $byLengthText),
+
                         'sorted-4-chunk' => $wordFillIn->wordListAsHtml(true, 4),
                         'unsorted-4-chunk' => $wordFillIn->wordListAsHtml(false, 4),
+                        'by_length-4-chunk' => $wordFillIn->wordListAsHtml(false, 4, true, $byLengthText),
                     ],
                 ];
                 $this->app['publishing.wordfillin.items'] = $items;
@@ -357,12 +353,12 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
                 return sprintf(
                     '<div class="wordfillin wordfillin-puzzle-container" data-id="%s">' .
-                        '<div class="wordfillin-title">%s</div>' .
-                        '<div class="wordfillin-text">%s</div>' .
-                        '<div class="wordfillin-text2">%s</div>' .
-                        '<div class="wordfillin-difficulty">%s</div>' .
-                        '<div class="wordfillin-puzzle">%s</div>' .
-                        '</div>',
+                    '<div class="wordfillin-title">%s</div>' .
+                    '<div class="wordfillin-text">%s</div>' .
+                    '<div class="wordfillin-text2">%s</div>' .
+                    '<div class="wordfillin-difficulty">%s</div>' .
+                    '<div class="wordfillin-puzzle">%s</div>' .
+                    '</div>',
                     $arguments['id'],
                     sprintf($title, $id, $id),
                     $text,
@@ -404,10 +400,11 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
                     return sprintf('ERROR: Puzzle with id "%s" not found.', $id);
                 }
                 $arguments = $itemsArguments[$id]['wordlist'];
-                $sorted = $arguments['sorted'] ?? false;
-                $chunks = $arguments['chunks'] ?? 1;
+                $sorted = boolval($arguments['sorted'] ?? false);
+                $chunks = intval($arguments['chunks'] ?? 1);
+                $byLength = boolval($arguments['by_length'] ?? false);
 
-                if ($chunks > 4) {
+                if ($chunks > 6) {
                     $this->writeLn(
                         sprintf('Puzzle with id "%s": chunks value (%s) out of range.', $id, $chunks),
                         'error'
@@ -427,7 +424,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
                 $wordlistKey = sprintf(
                     "%s-%d-chunk",
-                    $sorted ? 'sorted' : 'unsorted',
+                    $byLength ? "by_length" : ($sorted ? "sorted" : "unsorted"),
                     $chunks
                 );
 
@@ -485,10 +482,10 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
 
                 return sprintf(
                     '<div class="wordfillin wordfillin-solution-container" data-id="%s">' .
-                        '<div class="wordfillin-title">%s</div>' .
-                        '<div class="wordfillin-text">%s</div>' .
-                        '<div class="wordfillin-solution">%s</div>' .
-                        '</div>',
+                    '<div class="wordfillin-title">%s</div>' .
+                    '<div class="wordfillin-text">%s</div>' .
+                    '<div class="wordfillin-solution">%s</div>' .
+                    '</div>',
                     $arguments['id'],
                     sprintf($title, $id, $id),
                     $text,
@@ -587,9 +584,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
         $output = [];
 
         $crawler->children()->each(
-            function (Crawler $liNode) use (
-                &$output
-            ) {
+            function (Crawler $liNode) use (&$output) {
                 if ($liNode->children()->count() == 0) {
                     $output[] = $liNode->html();
 
@@ -599,9 +594,7 @@ class WordFillInPlugin extends BasePlugin implements EventSubscriberInterface
                 $cellText = '';
 
                 $liNode->children()->each(
-                    function (Crawler $liChildrenNode) use (
-                        &$cellText
-                    ) {
+                    function (Crawler $liChildrenNode) use (&$cellText) {
                         switch ($liChildrenNode->nodeName()) {
                             case 'p':
                                 $cellText = $liChildrenNode->html();
