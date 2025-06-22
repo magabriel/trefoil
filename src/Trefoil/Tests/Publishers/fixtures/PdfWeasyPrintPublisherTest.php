@@ -40,7 +40,7 @@ HELP;
             $publisher->checkIfThisPublisherIsSupported();
         } catch (\Exception $e) {
             $this->assertInstanceOf('RuntimeException', $e);
-            $this->assertContains($helpMessage, $e->getMessage());
+            $this->assertStringContainsString($helpMessage, $e->getMessage());
         }
     }
 
@@ -202,7 +202,7 @@ HELP;
 
         $bookCss = $app->render('@theme/style.css.twig');
 
-        $this->assertNotContains(
+        $this->assertStringNotContainsString(
             ".item {\n    page-break-before: right;",
             $bookCss,
             "One-sided books don't include blank pages."
@@ -217,7 +217,7 @@ HELP;
 
         $bookCss = $app->render('@theme/style.css.twig');
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             ".item {\n    page-break-before: right;",
             $bookCss,
             'Two-sided books include blank pages when needed.'
@@ -269,12 +269,12 @@ HELP;
             'The cover PDF file is NOT deleted after adding it to the book.'
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'EASYBOOK COVER',
             $resultingPdfBook->render(),
             'The resulting book contains the cover text.'
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'easybook contents',
             $resultingPdfBook->render(),
             'The resulting book contains the original book contents.'
