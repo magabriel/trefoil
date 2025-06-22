@@ -14,6 +14,7 @@ namespace Trefoil\DependencyInjection;
 use Easybook\DependencyInjection\Application as EasybookApplication;
 use Trefoil\Providers\PublisherServiceProvider;
 use Trefoil\Providers\TwigServiceProvider;
+use Trefoil\Providers\WeasyPrintServiceProvider;
 use Trefoil\Util\Toolkit;
 
 /**
@@ -36,25 +37,26 @@ class Application extends EasybookApplication
   |_   _| |  _| '_/ -_)  _/ _ \ | |
     |_|    \__|_| \___|_| \___/_|_|
 SIGNATURE;
-        $this['app.signature'] = substr($this['app.signature'], 0, -1)."\n".$signature."\n";
+        $this['app.signature'] = substr($this['app.signature'], 0, -1) . "\n" . $signature . "\n";
 
         $this['app.debug'] = true;
         $this['app.debug.strict_variables'] = false;
 
         // -- global directories location -------------------------------------
         /** @noinspection RealpathInStreamContextInspection */
-        $this['trefoil.app.dir.base'] = realpath(__DIR__.'/../../../');
+        $this['trefoil.app.dir.base'] = realpath(__DIR__ . '/../../../');
 
         $this['app.dir.cache'] = '/tmp/trefoil';
         // Used to be: $this['app.dir.cache'] = $this['trefoil.app.dir.base'] . '/app/Cache';
 
-        $this['app.dir.doc'] = $this['trefoil.app.dir.base'].'/doc';
-        $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'].'/app/Resources';
-        $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'].'/Themes';
+        $this['app.dir.doc'] = $this['trefoil.app.dir.base'] . '/doc';
+        $this['trefoil.app.dir.resources'] = $this['trefoil.app.dir.base'] . '/app/Resources';
+        $this['trefoil.publishing.dir.themes'] = $this['trefoil.app.dir.resources'] . '/Themes';
 
         // -- own services -----------------------------------------------------
         $this->register(new PublisherServiceProvider());
         $this->register(new TwigServiceProvider());
+        $this->register(new WeasyPrintServiceProvider());
 
         // -- console ---------------------------------------------------------
         $this['console.progress'] = null;
@@ -73,7 +75,7 @@ SIGNATURE;
      */
     public function getCustomLabelsFile(): ?string
     {
-        $labelsFileName = 'labels.'.$this->book('language').'.yml';
+        $labelsFileName = 'labels.' . $this->book('language') . '.yml';
         $labelsFile = parent::getCustomLabelsFile();
 
         // the file found has precedence
@@ -82,7 +84,7 @@ SIGNATURE;
         }
 
         // look for a file inside the theme
-        $themeLabelsFile = Toolkit::getCurrentResource($this, 'Translations/'.$labelsFileName);
+        $themeLabelsFile = Toolkit::getCurrentResource($this, 'Translations/' . $labelsFileName);
 
         if ($themeLabelsFile) {
             return $themeLabelsFile;
@@ -96,7 +98,7 @@ SIGNATURE;
      */
     public function getCustomTitlesFile(): ?string
     {
-        $titlesFileName = 'titles.'.$this->book('language').'.yml';
+        $titlesFileName = 'titles.' . $this->book('language') . '.yml';
         $titlesFile = parent::getCustomTitlesFile();
 
         // the file found has precedence
@@ -105,7 +107,7 @@ SIGNATURE;
         }
 
         // look for a file inside the theme
-        $themeTitlesFile = Toolkit::getCurrentResource($this, 'Translations/'.$titlesFileName);
+        $themeTitlesFile = Toolkit::getCurrentResource($this, 'Translations/' . $titlesFileName);
 
         if ($themeTitlesFile !== null && file_exists($themeTitlesFile)) {
             return $themeTitlesFile;
@@ -128,7 +130,7 @@ SIGNATURE;
     {
         if (is_numeric($string[0])) {
             // epubcheck does not like ids starting with digit
-            $string = 'tr_'.$string;
+            $string = 'tr_' . $string;
         }
 
         return parent::slugifyUniquely($string, $separator, $prefix);

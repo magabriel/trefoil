@@ -20,6 +20,7 @@ use Trefoil\Publishers\HtmlPublisher;
 use Trefoil\Publishers\MobiPublisher;
 use Trefoil\Publishers\PdfPrinceXmlPublisher;
 use Trefoil\Publishers\PdfWkhtmltopdfPublisher;
+use Trefoil\Publishers\PdfWeasyPrintPublisher;
 
 /**
  * Class PublisherServiceProvider
@@ -46,6 +47,10 @@ class PublisherServiceProvider implements ServiceProviderInterface
                             $publisher = new PdfWkhtmltopdfPublisher($app);
                             break;
 
+                        case 'weasyprint':
+                            $publisher = new PdfWeasyPrintPublisher($app);
+                            break;
+
                         // PrinceXML is the default
                         case 'princexml':
                         case '':
@@ -56,9 +61,11 @@ class PublisherServiceProvider implements ServiceProviderInterface
                         default:
                             throw new \RuntimeException(
                                 sprintf(
-                                    'Unknown "%s" pdf_engine for "%s" edition (allowed: "PrinceXML" (default), "wkhtmltopdf")',
+                                    'Unknown "%s" pdf_engine for "%s" edition (allowed: "PrinceXML" (default), "wkhtmltopdf", "weasyprint")',
                                     $pdfEngine,
-                                    $app['publishing.edition']));
+                                    $app['publishing.edition']
+                                )
+                            );
                     }
 
                     break;
@@ -84,14 +91,18 @@ class PublisherServiceProvider implements ServiceProviderInterface
                         sprintf(
                             'Unknown "%s" format for "%s" edition (allowed: "pdf", "html", "html_chunked", "epub", "mobi")',
                             $outputFormat,
-                            $app['publishing.edition']));
+                            $app['publishing.edition']
+                        )
+                    );
             }
 
             if (true !== $publisher->checkIfThisPublisherIsSupported()) {
                 throw new \RuntimeException(
                     sprintf(
-                        "Your system doesn't support publishing books with the '%s' format\n".'Check the easybook documentation to know the dependencies required by this format.',
-                        $outputFormat));
+                        "Your system doesn't support publishing books with the '%s' format\n" . 'Check the easybook documentation to know the dependencies required by this format.',
+                        $outputFormat
+                    )
+                );
             }
 
             return $publisher;
