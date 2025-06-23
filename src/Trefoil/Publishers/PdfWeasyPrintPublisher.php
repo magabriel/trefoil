@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 /*
  * This file is part of the trefoil application.
@@ -13,6 +11,8 @@ declare(strict_types=1);
 
 namespace Trefoil\Publishers;
 
+use Psr\Log\LogLevel;
+use Trefoil\Helpers\MemoryLogger;
 use Trefoil\Util\Toolkit;
 
 /**
@@ -59,7 +59,7 @@ class PdfWeasyPrintPublisher extends PdfPublisher
         // use WeasyPrint to transform the HTML book into a PDF book
         /** @var \Pontedilana\PhpWeasyPrint\Pdf */
         $weasyPrint = $this->app['weasyprint'];
-        $weasyPrint->setOption('base_url', $imagesDir);
+        $weasyPrint->setOption('base-url', $imagesDir);
 
         // Prepare and add stylesheets before PDF conversion
         $styleSheets = [];
@@ -151,12 +151,14 @@ class PdfWeasyPrintPublisher extends PdfPublisher
         $outputMessages = [];
         $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
 
-        // TODO: Poner un logger para recoger los mensajes de salida de WeasyPrint en $outputMessages
-        $weasyPrint->setLogger($this->app['console.output']);
+        $logger = new MemoryLogger();
+        $logger->setLogLevel(LogLevel::WARNING);
+        $weasyPrint->setLogger($logger);
 
-        $weasyPrint->generate($htmlBookFilePath, $pdfBookFilePath);
-        $this->displayPdfConversionErrors($outputMessages);
+        $weasyPrint->setTimeout(600); // Some books can take a while to generate
 
+        $weasyPrint->generate($htmlBookFilePath, $pdfBookFilePath, [], true);
+        $this->displayPdfConversionErrors($logger->getMessages());
 
         $this->addBookCover($pdfBookFilePath, $this->getCustomCover());
     }
@@ -234,12 +236,7 @@ class PdfWeasyPrintPublisher extends PdfPublisher
             $this->app['console.output']->writeln(" -----------------------------\n");
 
             foreach ($outputMessages as $message) {
-                // ignore the output from weasyprint    
-                if ($message[0] !== 'out') {
-                    $this->app['console.output']->writeln(
-                        '   [' . strtoupper($message[0]) . '] ' . ucfirst($message[2]) . ' (' . $message[1] . ')'
-                    );
-                }
+                $this->app['console.output']->writeln('   ' . $message);
             }
 
             $this->app['console.output']->writeln("\n");

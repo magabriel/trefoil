@@ -4,54 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3ceeeac9b53e29f7e3a0cdcafab1487",
+    "content-hash": "642df484c5bba6c6c60523fba7f4b233",
     "packages": [
-        {
-            "name": "abcaeffchen/sudoku-php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/magabriel/sudoku-php.git",
-                "reference": "04e1684a628d3f4cae02c147a587a14a5ad26331"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/magabriel/sudoku-php/zipball/04e1684a628d3f4cae02c147a587a14a5ad26331",
-                "reference": "04e1684a628d3f4cae02c147a587a14a5ad26331",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~5.0 || ~7.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "AbcAeffchen\\sudoku\\": [
-                        "src/"
-                    ]
-                }
-            },
-            "license": [
-                "LGPL v3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Alexander Schickedanz (AbcAeffchen)",
-                    "email": "abcaeffchen@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Generate random Sudokus of different size and difficulty and check the solution.",
-            "support": {
-                "issues": "https://github.com/AbcAeffchen/sudoku-php/issues",
-                "source": "https://github.com/magabriel/sudoku-php/tree/master"
-            },
-            "time": "2019-08-20T12:48:08+00:00"
-        },
         {
             "name": "easybook/easybook",
             "version": "dev-master",
@@ -508,27 +462,27 @@
         },
         {
             "name": "pontedilana/php-weasyprint",
-            "version": "0.9.0",
+            "version": "dev-fix-stylesheet-option",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pontedilana/php-weasyprint.git",
-                "reference": "b0191db08a62520ba6fa379c4e9094bf8c4b8ce7"
+                "url": "https://github.com/magabriel/php-weasyprint.git",
+                "reference": "351008246ab77829b288463511d9ead57af8a45b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pontedilana/php-weasyprint/zipball/b0191db08a62520ba6fa379c4e9094bf8c4b8ce7",
-                "reference": "b0191db08a62520ba6fa379c4e9094bf8c4b8ce7",
+                "url": "https://api.github.com/repos/magabriel/php-weasyprint/zipball/351008246ab77829b288463511d9ead57af8a45b",
+                "reference": "351008246ab77829b288463511d9ead57af8a45b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4||^8.0",
-                "psr/log": "^1.1",
-                "symfony/process": "^4.4||^5.3"
+                "php": "7.4.* || 8.0.* || 8.1.* || 8.2.* || 8.3.* || 8.4.*",
+                "psr/log": "^1.1 || ^2.0 || ^3.0",
+                "symfony/process": "^4.4 || ^5.4 || ^6.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "phpstan/phpstan": "^0.12",
-                "phpstan/phpstan-phpunit": "^0.12",
+                "friendsofphp/php-cs-fixer": "^3.4",
+                "phpstan/phpstan": "^1.2",
+                "phpstan/phpstan-phpunit": "^1.0",
                 "phpunit/phpunit": "^9.5"
             },
             "type": "library",
@@ -537,7 +491,25 @@
                     "Pontedilana\\PhpWeasyPrint\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\Unit\\Pontedilana\\PhpWeasyPrint\\": "tests/Unit/"
+                }
+            },
+            "scripts": {
+                "check-cs": [
+                    "vendor/bin/php-cs-fixer fix --diff --dry-run --verbose"
+                ],
+                "fix-cs": [
+                    "vendor/bin/php-cs-fixer fix --verbose"
+                ],
+                "static-analysis": [
+                    "vendor/bin/phpstan analyse --ansi"
+                ],
+                "unit-tests": [
+                    "vendor/bin/phpunit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -549,15 +521,24 @@
             ],
             "description": "PHP library allowing PDF generation from an url or a html page. Wrapper for Kozea/WeasyPrint.",
             "keywords": [
-                "WeasyPrint",
                 "pdf",
-                "php"
+                "php",
+                "weasyprint"
             ],
             "support": {
-                "issues": "https://github.com/pontedilana/php-weasyprint/issues",
-                "source": "https://github.com/pontedilana/php-weasyprint/tree/0.9.0"
+                "source": "https://github.com/magabriel/php-weasyprint/tree/fix-stylesheet-option"
             },
-            "time": "2021-07-16T14:19:14+00:00"
+            "funding": [
+                {
+                    "type": "github",
+                    "url": "https://github.com/endelwar"
+                },
+                {
+                    "type": "ko_fi",
+                    "url": "https://ko-fi.com/endelwar"
+                }
+            ],
+            "time": "2025-06-23T12:38:41+00:00"
         },
         {
             "name": "psr/container",
@@ -3807,8 +3788,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "abcaeffchen/sudoku-php": 20,
-        "easybook/easybook": 20
+        "easybook/easybook": 20,
+        "pontedilana/php-weasyprint": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
