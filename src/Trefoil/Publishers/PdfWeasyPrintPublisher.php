@@ -59,7 +59,7 @@ class PdfWeasyPrintPublisher extends PdfPublisher
         // use WeasyPrint to transform the HTML book into a PDF book
         /** @var \Pontedilana\PhpWeasyPrint\Pdf */
         $weasyPrint = $this->app['weasyprint'];
-        $weasyPrint->setOption('base-url', $imagesDir);
+        $weasyPrint->setOption('base-url', $tmpDir);
 
         // Prepare and add stylesheets before PDF conversion
         $styleSheets = [];
@@ -148,7 +148,6 @@ class PdfWeasyPrintPublisher extends PdfPublisher
         // }
 
         // Run the generation
-        $outputMessages = [];
         $pdfBookFilePath = $this->app['publishing.dir.output'] . '/book.pdf';
 
         $logger = new MemoryLogger();
