@@ -14,16 +14,27 @@ namespace Trefoil\Plugins\Optional;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
+use FilesystemIterator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Plugins\BasePlugin;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  */
 class LatexPlugin extends BasePlugin implements EventSubscriberInterface
 {
+    protected Filesystem $filesystem;
+    protected Finder $finder;
+
+    public function init(BaseEvent $event): void
+    {
+        parent::init($event);
+        $this->filesystem = $this->app['filesystem'];
+        $this->finder = $this->app['finder'];
+    }
 
     /**
      * @return array
@@ -37,46 +48,39 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
         ];
     }
 
-    public function onPrePublish(BaseEvent $event)
+    public function onPrePublish(BaseEvent $event): void
     {
         $this->init($event);
 
         // Check if we have a path for gladtex
         $gladtex = $this->getConfigOption('easybook.parameters.gladtex.path');
-        $gladtexOptions = $this->getConfigOption('easybook.parameters.gladtex.command_options');
 
         if (!$gladtex || !file_exists($gladtex)) {
             throw new \RuntimeException(
-                'The GladTeX library needed to process LaTeX in documents cannot be found. ' .
+                'The GladTeX utility needed to process LaTeX in documents cannot be found. ' .
                 'Check that you have set your custom GladTeX path in the book\'s config.yml file.'
             );
         }
 
         // Delete the image cache directory if it exists
-        /** @var Filesystem */
-        $filesystem = $this->app['filesystem'];
         $imagesOutputDir = $this->getLatexCacheDir();
-        echo sprintf('About to delete images output directory: %s', $imagesOutputDir);
 
         // Remove the cache directory if it exists
-        if ($filesystem->exists($imagesOutputDir)) {
-            $filesystem->remove($imagesOutputDir);
+        if ($this->filesystem->exists($imagesOutputDir)) {
+            $this->filesystem->remove($imagesOutputDir);
         }
     }
 
     /**
      * @param ParseEvent $event
      */
-    public function onItemPreParse(ParseEvent $event)
+    public function onItemPreParse(ParseEvent $event): void
     {
         $this->init($event);
 
         $content = $event->getItemProperty('original');
 
-        // $content = $this->latexPreProcess($content);
         $content = $this->preserveLatex($content);
-
-        // print_r($content);
 
         $event->setItemProperty('original', $content);
     }
@@ -92,36 +96,26 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $this->restoreLatex($content);
 
-        $content = $this->latexPostProcess($content);
+        $content = $this->latexProcess($content);
 
         $this->item['content'] = $content;
         $event->setItem($this->item);
     }
 
     /**
-     * @param string $content
-     * @return string
+     * Preserve LaTeX equations by commenting them out.
      */
-    protected function preserveLatex($content): string
+    protected function preserveLatex(string $content): string
     {
-        echo "\n================== before preserveLatex ==================\n";
-        print_r($content);
-        echo "\n====================================================\n";
-
-
-        // Comment out latex equations to avoid processing
         $regExp = '/';
-        $regExp .= '(?<opening>\\\[\(\[])'; // opening delimiter (or "\[" or "\(")
+        $regExp .= '(?<opening>\\\[\(\[])'; // opening delimiter ("\[" or "\(")
         $regExp .= '(?<equation>.*)';
-        $regExp .= '(?<closing>\\\[\)\]])'; // closing delimiter (or "\]" or "\)")
+        $regExp .= '(?<closing>\\\[\)\]])'; // closing delimiter ("\]" or "\)")
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
-        print_r($regExp);
         $content = preg_replace_callback(
             $regExp,
             function ($matches) {
-                echo "\n================== MATCHES ==================\n";
-                print_r($matches);
                 return sprintf(
                     '<!--LATEXEQ %s%s%s -->',
                     $matches['opening'],
@@ -132,101 +126,36 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
             $content
         );
 
-        echo "\n================== after preserveLatex ==================\n";
-        print_r($content);
-        echo "\n====================================================\n";
-
-
         return $content;
     }
     /**
-     * @param string $content
-     * @return string
+     * Restore LaTeX equations by removing the comments.
      */
-    protected function restoreLatex($content): string
+    protected function restoreLatex(string $content): string
     {
-        echo "\n================== before restoreLatex ==================\n";
-        print_r($content);
-        echo "\n====================================================\n";
-
-
-        // Comment out latex equations to avoid processing
         $regExp = '/';
-        $regExp .= '<!--LATEXEQ'; // opening comment
+        $regExp .= '<!--LATEXEQ'; // comment opening
         $regExp .= '(?<eqtext>.*)';
-        $regExp .= '-->'; // closing comment
+        $regExp .= '-->'; // comment closing
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
 
-        print_r($regExp);
         $content = preg_replace_callback(
             $regExp,
             function ($matches) {
-                echo "\n================== MATCHES ==================\n";
-                print_r($matches);
                 return $matches['eqtext'];
             },
             $content
         );
 
-        echo "\n================== after restoreLatex ==================\n";
-        print_r($content);
-        echo "\n====================================================\n";
-
-
         return $content;
     }
 
     /**
-     *
-     * @param string $content
-     * @return string
+     * Transform LaTeX equations into HTML.
      */
-    protected function latexPreProcess($content): string
+    protected function latexProcess(string $content): string
     {
-        // Replace delimiters with the required HTML tags
-        $content = str_replace(
-            [
-                '\(', // inline opening delimiter
-                '\)', // inline closing delimiter
-                '\[', // block opening delimiter
-                '\]' // block closing delimiter
-            ],
-            [
-                '<eq env="inlinemath">',
-                '</eq>',
-                '<span style="display:block; text-align:center;"><eq env="displaymath">',
-                '</eq></span>'
-            ],
-            $content
-        );
-
-        return $content;
-    }
-
-    /**
-     * @param $content
-     * @return mixed
-     */
-    protected function latexPostProcess($content)
-    {
-        // Replace delimiters with the required HTML tags
-        // $content = str_replace(
-        //     [
-        //         '&#92;(', // inline opening delimiter
-        //         '&#92;)', // inline closing delimiter
-        //         '&#92;[', // block opening delimiter
-        //         '&#92;]' // block closing delimiter
-        //     ],
-        //     [
-        //         '<eq env="inlinemath">',
-        //         '</eq>',
-        //         '<span style="display:block; text-align:center;"><eq env="displaymath">',
-        //         '</eq></span>'
-        //     ],
-        //     $content
-        // );
-
-        // Replace delimiters with the required HTML tags
+        // Replace delimiters with the required HTML tags for gladtex
         $content = str_replace(
             [
                 '\(', // inline opening delimiter
@@ -243,63 +172,64 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
             $content
         );
 
+        // And now process the LaTeX equations
         $content = $this->processLatexFormulas($content);
 
         return $content;
     }
-
-    protected function getLatexCacheDir()
+    /**
+     * Return the path to the LaTeX cache directory for this book.
+     */
+    protected function getLatexCacheDir(): string
     {
         // gdlatex needs an images dir path relative to the current working directory
-        /** @var Filesystem */
-        $filesystem = $this->app['filesystem'];
 
         $absolutePath = $this->app['app.dir.cache'] . '/latex_images/' . $this->app['publishing.book.slug'];
-        return $filesystem->makePathRelative($absolutePath, getcwd());
+        return $this->filesystem->makePathRelative($absolutePath, getcwd());
     }
-
-    protected function processLatexFormulas($content)
+    /**
+     * Process the LaTeX formulas in the content using GladTeX.
+     */
+    protected function processLatexFormulas(string $content): string
     {
         // Get the path for gladtex
         $gladtex = $this->getConfigOption('easybook.parameters.gladtex.path');
         $gladtexOptions = $this->getConfigOption('easybook.parameters.gladtex.command_options');
 
         // gdlatex needs an images dir path relative to the current working directory
-        /** @var Filesystem */
-        $filesystem = $this->app['filesystem'];
         $imagesOutputDir = $this->getLatexCacheDir();
 
         $fontSize = $this->getEditionOption('plugins.options.Latex.font_size', 12);
 
-        echo "\n================== before command ==================\n";
-        echo $content;
-        echo "\n====================================================\n";
-
         // Run it
         $command = sprintf(
-            '"%s" -o - --png -d "%s" -f %d %s -p "\usepackage{amsmath}" -',
+            '"%s" -o - --png -R -d "%s" -f %d -p "\usepackage{amsmath}" %s -',
             $gladtex,
             $imagesOutputDir,
             $fontSize,
             $gladtexOptions
         );
 
-        $this->writeLn(sprintf('Running GladTeX with command: %s', $command));
+        // $this->writeLn(sprintf('Running GladTeX with command: %s', $command));
 
         $process = new Process($command);
         $process->setInput($content);
         $process->run();
         $outputText = $process->getOutput();
-        $errorText = $process->getErrorOutput();
+        $errorText = trim($process->getErrorOutput());
 
-        if (!$process->isSuccessful()) {
-            $this->writeLn(sprintf('GladTeX errors detected: %s %s', $outputText, $errorText), 'error');
+        // echo "\n=== output ========================\n";
+        // print_r($outputText);
+        // echo "\n=== error ========================\n";
+        // print ($errorText);
+        // echo "\n=== end ==========================\n";
+
+        $errorText = $this->filterGladtexErrors($errorText);
+
+        if (!$process->isSuccessful() || !empty($errorText)) {
+            $this->writeLn(sprintf("GladTeX errors detected: \n%s", $errorText), 'error');
             return $content;
         }
-
-        echo "\n================== after command ==================\n";
-        echo $outputText;
-        echo "\n====================================================\n";
 
         // Replace the generated image paths with "images/" (because the images will be copied there 
         // later in the publishing phase)
@@ -310,27 +240,55 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
         );
 
         // Create the images directory in the contents directory if it does not exist
-        $imagesContentLatexDir = $this->app['publishing.dir.contents'] . '/images/latex';
-        if (!$filesystem->exists($imagesContentLatexDir)) {
-            $filesystem->mkdir($imagesContentLatexDir);
+        $imagesContentLatexDir = $this->app['publishing.dir.contents'] . '/images';
+        if (!$this->filesystem->exists($imagesContentLatexDir)) {
+            $this->filesystem->mkdir($imagesContentLatexDir);
         }
 
         // Copy the generated images to the contents images directory
 
-        /** @var \Symfony\Component\Finder\Finder */
-        $finder = $this->app['finder'];
         // Delete the latex content images first
-        $contentLatexImages = $finder->files()->in($imagesContentLatexDir)->name(['eqn*.png', 'gladtex.cache']);
-        $filesystem->remove($contentLatexImages);
+        $contentLatexImages = $this->finder->files()->in($imagesContentLatexDir)->name('eqn*.png');
+        $this->filesystem->remove($contentLatexImages);
+
         // Copy all the files
-        $filesystem->mirror($imagesOutputDir, $imagesContentLatexDir);
-        // Remove the gladtex cache file if it was copied over
-        $gladtexCacheFile = $imagesContentLatexDir . '/gladtex.cache';
-        if ($filesystem->exists($gladtexCacheFile)) {
-            $filesystem->remove($gladtexCacheFile);
-        }
+        $this->filesystem->mirror($imagesOutputDir, $imagesContentLatexDir);
+
+        // Remove gladtext-generated files that could have been copied over
+        $this->filesystem->remove([
+            $imagesContentLatexDir . '/gladtex.cache',
+            $imagesContentLatexDir . '/outsourced-descriptions.html'
+        ]);
 
         return $outputText;
     }
 
+    /**
+     * Filter out bug output lines
+     */
+    protected function filterGladtexErrors(string $errorText): string
+    {
+        $lines = explode(PHP_EOL, $errorText);
+
+        // GladText bug: we need to detect a possible ConversionException message
+        $line = preg_grep('/gleetex\.cachedconverter\.ConversionException/', $lines);
+        if (is_array($line) && count($line) > 0) {
+            $errorText = implode(PHP_EOL, $line) . PHP_EOL;
+            return $errorText;
+        }
+
+        $errorText = '';
+        // Python bug: we need to filter out some warnings
+        foreach ($lines as $line) {
+            if (
+                trim($line) !== '' &&
+                !str_contains($line, 'RuntimeWarning') &&
+                !str_contains($line, 'bufsize')
+            ) {
+                $errorText .= $line . PHP_EOL;
+            }
+        }
+
+        return $errorText;
+    }
 }

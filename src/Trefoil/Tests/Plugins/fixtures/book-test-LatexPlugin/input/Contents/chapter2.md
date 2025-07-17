@@ -13,7 +13,7 @@ A = 4 * \sqrt{x^2+1}
 \]
 
 Multiline formula with split (`A & = \frac{\pi r^2}{2} \\ & = \frac{1}{2} \pi r^2`):
-\[
+\[ 
 \begin{split}
 A & = \frac{\pi r^2}{2} \\
   & = \frac{1}{2} \pi r^2
