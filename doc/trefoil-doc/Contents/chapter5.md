@@ -1,4 +1,4 @@
-# The Trefoil interactive plugins
+# Interactive plugins
 
 This chapter describes the *interactive plugins*. These plugins
 provide some interactive capabilities to ebooks, making them more 
