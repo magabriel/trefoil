@@ -252,7 +252,9 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
         $this->filesystem->remove($contentLatexImages);
 
         // Copy all the files
-        $this->filesystem->mirror($imagesOutputDir, $imagesContentLatexDir);
+        if ($this->filesystem->exists($imagesOutputDir)) {
+            $this->filesystem->mirror($imagesOutputDir, $imagesContentLatexDir);
+        }
 
         // Remove gladtext-generated files that could have been copied over
         $this->filesystem->remove([
