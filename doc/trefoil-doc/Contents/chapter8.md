@@ -123,3 +123,27 @@ book:
 The `import` value is an array of all the directories where a suitable `config.yml` file will 
 be looked up for inclusion. The first one will be used, and used as the base definition
 in which the "local" definitions will be merged in. 
+
+WeasyPrint as PDF rendering engine
+----------------------------------
+
+**WeasyPrint** <https://weasyprint.org/> can be used as an alternative PDF rendering engine
+instead of **PrinceXML**. Unlike it, **WeasyPrint** is an open source project that can be 
+used for free. It offers a comparable feature set to **PrinceXML**, but be aware that 
+some things still don't work.
+
+To use it, install it following the instructions from <https://doc.courtbouillon.org/weasyprint/stable/first_steps.html> and activate it using the following configuration option:
+
+~~~.yaml
+# <book-dir>/config.yml 
+
+easybook:
+  parameters:
+    weasyprint:
+      path: /usr/bin/weasyprint      
+
+book:
+    editions:
+      <edition-name>
+         pdf_engine: weasyprint
+~~~

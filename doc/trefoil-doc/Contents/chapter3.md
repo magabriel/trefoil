@@ -1,4 +1,4 @@
-# The Trefoil book formatting plugins
+# Book formatting plugins
 
 This chapter describes the *book formatting plugins*. These
 plugins provide functionalities to enhance the book's appearance
@@ -21,6 +21,8 @@ or to ease applying advanced formatting.
 {{ fragment('plugins-KindleTweaksPlugin.md', {}, {"pagebreak": true}) }}
 
 {{ fragment('plugins-LiteralListsPlugin.md', {}, {"pagebreak": true}) }}
+
+{{ fragment('plugins-LatexPlugin.md', {}, {"pagebreak": true}) }}
 
 {{ fragment('plugins-ManualTitleLabelsPlugin.md', {}, {"pagebreak": true}) }}
 

@@ -4,6 +4,7 @@ easybook:
             code_block_type: fenced
         kindlegen.path: '/usr/local/bin/kindlegen'
         epubcheck.path: '/usr/local/bin/epubcheck.jar'
+        gladtex.path: '/usr/bin/gladtex'
 book:
     title:            'Trefoil documentation'
     author:           'Miguel A. Gabriel - magabriel@gmail.com'
@@ -11,7 +12,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.971'
+    version:          '1.995'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -94,6 +95,7 @@ book:
                     - WordSearch
                     - WordFillIn
                     - Paperdle
+                    - Latex
 
                 options:
                     DropCaps:
