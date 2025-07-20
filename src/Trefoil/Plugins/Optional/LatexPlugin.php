@@ -14,10 +14,10 @@ namespace Trefoil\Plugins\Optional;
 use Easybook\Events\BaseEvent;
 use Easybook\Events\EasybookEvents;
 use Easybook\Events\ParseEvent;
-use FilesystemIterator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Trefoil\Events\TrefoilEvents;
 use Trefoil\Plugins\BasePlugin;
+use Trefoil\Util\Toolkit;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -96,7 +96,7 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
 
         $content = $this->restoreLatex($content);
 
-        $content = $this->latexProcess($content);
+        $content = $this->processLatexDelimiters($content);
 
         $this->item['content'] = $content;
         $event->setItem($this->item);
@@ -153,7 +153,7 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
     /**
      * Transform LaTeX equations into HTML.
      */
-    protected function latexProcess(string $content): string
+    protected function processLatexDelimiters(string $content): string
     {
         // Replace delimiters with the required HTML tags for gladtex
         $content = str_replace(
@@ -231,6 +231,10 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
             return $content;
         }
 
+        // Remove the problematic parts from the output text
+        $outputText = $this->cleanImageAltTags($outputText);
+        $outputText = $this->removeOutsourcedDescriptionsLinks($outputText);
+
         // Replace the generated image paths with "images/" (because the images will be copied there 
         // later in the publishing phase)
         $outputText = str_replace(
@@ -292,5 +296,65 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
         }
 
         return $errorText;
+    }
+
+    /**
+     * Clean the alt tags from all images with classes "inlinemath" or "displaymath"
+     * because they confuse epubcheck.
+     */
+    protected function cleanImageAltTags(string $content): string
+    {
+        $content = preg_replace(
+            '/<img[^>]+class="(inlinemath|displaymath)"[^>]*alt="[^"]*"[^>]*>/i',
+            '<img class="$1">',
+            $content
+        );
+
+        $regExp = '/';
+        $regExp .= '<img(?<attributes>[^>]+)>'; // Get all attributes of the img tag
+        $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                $attributes = Toolkit::parseHTMLAttributes($matches['attributes']);
+                // Clear the alt attribute
+                // TODO: Set it to something meaningful but epubcheck-friendly.
+                $attributes['alt'] = "";
+                // Rebuild the img tag without the alt attribute
+                $newAttributes = Toolkit::renderHTMLAttributes($attributes);
+                return sprintf(
+                    '<img %s>',
+                    $newAttributes
+                );
+            },
+            $content
+        );
+
+        return $content;
+    }
+
+    /**
+     * Remove the links to the "outsourced-descriptions.html" file, because it is not
+     * included in the final book, so epubcheck will complain about it.
+     */
+    protected function removeOutsourcedDescriptionsLinks(string $content): string
+    {
+        $regExp = '/';
+        $regExp .= '<a(?<prev>.*)href="(?<href>.*)"(?<post>.*)>(?<text>.*)<\/a>';
+        $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
+
+        $content = preg_replace_callback(
+            $regExp,
+            function ($matches) {
+                if (str_contains($matches['href'], 'outsourced-descriptions.html')) {
+                    return $matches['text'];
+                }
+                return $matches[0];
+            },
+            $content
+        );
+
+        return $content;
     }
 }

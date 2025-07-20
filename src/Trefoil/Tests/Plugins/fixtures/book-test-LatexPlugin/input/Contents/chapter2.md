@@ -27,7 +27,10 @@ Inline formula with inline delimiters (`u = \pi\cdot d`): \( u = \pi\cdot d \) c
 
 ## Additional to test 1
 
-And this is an additional formula not found in test 1.
+And this is an additional formula not found in test 1. 
 \[
-\frac{a^2 - b^2}{a + b} = a - b
+\begin{split}
+p(x) = 3x^6 + 14x^5y + 590x^4y^2 & + 19x^3y^3\\ 
+            & - 12x^2y^4 - 12xy^5 + 2y^6 - a^3b^3
+\end{split}
 \]
