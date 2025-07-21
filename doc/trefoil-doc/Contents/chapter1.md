@@ -27,7 +27,7 @@ php composer.phar install
 
 N> ##### TIP
 N> You should _really_ be familiar with the **easybook** documentation 
-N> <https://easycorp.io/EasyBook> to understand what's going on here ;)
+N> <https://github.com/javiereguiluz/easybook> to understand what's going on here ;)
 
 The basic usage is the same as **easybook**: 
 
