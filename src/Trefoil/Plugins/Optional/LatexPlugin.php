@@ -304,12 +304,6 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
      */
     protected function cleanImageAltTags(string $content): string
     {
-        $content = preg_replace(
-            '/<img[^>]+class="(inlinemath|displaymath)"[^>]*alt="[^"]*"[^>]*>/i',
-            '<img class="$1">',
-            $content
-        );
-
         $regExp = '/';
         $regExp .= '<img(?<attributes>[^>]+)>'; // Get all attributes of the img tag
         $regExp .= '/Umsu'; // Ungreedy, multiline, dotall, unicode <= PLEASE NOTE UNICODE FLAG
@@ -318,9 +312,15 @@ class LatexPlugin extends BasePlugin implements EventSubscriberInterface
             $regExp,
             function ($matches) {
                 $attributes = Toolkit::parseHTMLAttributes($matches['attributes']);
-                // Clear the alt attribute
-                // TODO: Set it to something meaningful but epubcheck-friendly.
-                $attributes['alt'] = "";
+                // Clear the alt attribute of the LaTeX images
+                $className = $attributes['class'] ?? '';
+                if (
+                    str_contains($className, 'inlinemath') ||
+                    str_contains($className, 'displaymath')
+                ) {
+                    // TODO: Set it to something meaningful and epubcheck-friendly.
+                    $attributes['alt'] = "";
+                }
                 // Rebuild the img tag without the alt attribute
                 $newAttributes = Toolkit::renderHTMLAttributes($attributes);
                 return sprintf(
