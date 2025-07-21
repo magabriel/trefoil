@@ -2,7 +2,7 @@ Introduction
 ============
 
 This is the documentation of **trefoil**, a project conceived as an extension
-to **easybook** (<https://easycorp.io/EasyBook>). 
+to **easybook** (<https://github.com/javiereguiluz/easybook>). 
 
 **trefoil** extends **easybook** to provide additional features for publication
 of *ebooks*, both fiction and non-fiction.
@@ -39,7 +39,7 @@ book publish trefoil-doc print
 book publish trefoil-doc doc-website
 ~~~
 
-Other formats may be supported, so look at 
+Other formats may be supported, so take a look at 
 `<trefoil-dir>/doc/trefoil-doc/config.yml` to see all the options available.
 
 ## License

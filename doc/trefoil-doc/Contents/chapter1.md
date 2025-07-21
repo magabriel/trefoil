@@ -2,7 +2,7 @@
 
 This project aims to provide a great tool for creating ebooks.
 It does that by extending the already superb **easybook**
-(<https://easycorp.io/EasyBook>) to provide additional features
+(<https://github.com/javiereguiluz/easybook>) to provide additional features
 specifically targeted towards generation of ebooks.
 
 {{ itemtoc() }}
@@ -15,7 +15,7 @@ specifically targeted towards generation of ebooks.
 mkdir trefoil
 git clone http://github.com/magabriel/trefoil trefoil/
 ~~~
-
+ 
 2.- Download the vendors and dependencies:
 
 ~~~.bash

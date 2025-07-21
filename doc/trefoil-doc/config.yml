@@ -12,7 +12,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.996'
+    version:          '1.998'
 
     generator:        { name: trefoil, version: DEV }
 
