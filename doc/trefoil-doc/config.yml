@@ -8,11 +8,11 @@ easybook:
 book:
     title:            'Trefoil documentation'
     author:           'Miguel A. Gabriel - magabriel@gmail.com'
-    edition:          '2019'
+    edition:          '2025'
     language:         en
     publication_date: ~
 
-    version:          '1.995'
+    version:          '1.996'
 
     generator:        { name: trefoil, version: DEV }
 
