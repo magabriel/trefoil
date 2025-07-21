@@ -1,4 +1,4 @@
-# The Trefoil utility plugins
+# Utility plugins
 
 This chapter describes the *utility plugins*. These plugins
 provide functionalities that, while not related to the book's
