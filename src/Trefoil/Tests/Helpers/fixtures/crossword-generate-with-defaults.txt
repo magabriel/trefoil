@@ -1,0 +1,25 @@
+==== WORD LIST
+AAAAA    Definition for AAAAA
+BBBBBBB  Definition for BBBBBBB
+CCCCCC   Definition for CCCCCC
+DDD      Definition for DDD
+EEEEEEEE Definition for EEEEEEEE
+PEACE    Definition for PEACE   
+ALLEN    Definition for ALLEN   
+STEAD    Definition for STEAD   
+HOUSE    Definition for HOUSE   
+ANTED    Definition for ANTED   
+PASHA    Definition for PASHA   
+ELTON    Definition for ELTON   
+ALEUT    Definition for ALEUT   
+CEASE    Definition for CEASE   
+ENDED    Definition for ENDED   
+
+==== EXPECTED PUZZLE TEXT
+|----|----|----|----|----|
+| 1=P| 2vA| 3vS| 4vH| 5vA|
+| 6>E|   L|   T|   O|   N|
+| 7>A|   L|   E|   U|   T|
+| 8>C|   E|   A|   S|   E|
+| 9>E|   N|   D|   E|   D|
+|----|----|----|----|----|

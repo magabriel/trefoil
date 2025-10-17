@@ -38,18 +38,21 @@ use Trefoil\DependencyInjection\Application;
  *      - "--debug" will show verbose messages and leave the test output
  *        files for inspection after execution (such as current results).
  * Example:
- *  "phpunit --debug src/Trefoil/Tests/Helpers/WordFillInText.php"
+ *  "phpunit --debug src/Trefoil/Tests/Helpers/WordFillInTest.php"
  */
-abstract class HelpersTestCase extends TestCase {
+abstract class HelpersTestCase extends TestCase
+{
 
     protected $tmpDirBase;
     protected $app;
     protected $filesystem;
     protected $isDebug;
 
-    public function __construct($name = null,
-            array $data = [],
-            $dataName = '') {
+    public function __construct(
+        $name = null,
+        array $data = [],
+        $dataName = ''
+    ) {
         parent::__construct($name, $data, $dataName);
 
         $this->app = new Application();
@@ -65,13 +68,14 @@ abstract class HelpersTestCase extends TestCase {
         }
     }
 
-    protected function saveTestData(string $testName, string $expected, string $actual) {
+    protected function saveTestData(string $testName, string $expected, string $actual)
+    {
 
         $tmpDir = $this->tmpDirBase . '/' . $testName;
         $this->filesystem->mkdir($this->tmpDirBase);
-        
-        file_put_contents($tmpDir.'_expected.txt', $expected);
-        file_put_contents($tmpDir.'_actual.txt', $actual);
+
+        file_put_contents($tmpDir . '_expected.txt', $expected);
+        file_put_contents($tmpDir . '_actual.txt', $actual);
     }
 
 }
