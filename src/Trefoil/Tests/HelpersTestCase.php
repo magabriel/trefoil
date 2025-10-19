@@ -77,5 +77,4 @@ abstract class HelpersTestCase extends TestCase
         file_put_contents($tmpDir . '_expected.txt', $expected);
         file_put_contents($tmpDir . '_actual.txt', $actual);
     }
-
 }

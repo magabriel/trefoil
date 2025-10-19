@@ -24,8 +24,46 @@ class CrosswordTest extends HelpersTestCase
         $testData = $this->readFixture($fixtureName);
 
         $sut = new Crossword();
-
         $sut->setRandomSeed(1); // Fixed seed for reproducibility
+
+        $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
+        $board = $testData['BOARD'] ?? Crossword::DEFAULT_BOARD;
+
+        $success = $sut->generate($wordsWithDefinitions, board: $board);
+        if ($this->isDebug()) {
+            echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
+        }
+
+        self::assertTrue($success, 'Generate puzzle.');
+
+        $this->testFixture($fixtureName, $sut);
+    }
+
+    public function testGenerate7x7()
+    {
+        $fixtureName = 'crossword-generate-7x7.txt';
+
+        $testData = $this->readFixture($fixtureName);
+
+        $sut = new Crossword();
+        $sut->setRandomSeed(1); // Fixed seed for reproducibility
+
+        $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
+        $board = explode("\n", trim($testData['BOARD'] ?? Crossword::DEFAULT_BOARD));
+
+        $success = $sut->generate($wordsWithDefinitions, board: $board);
+        if ($this->isDebug()) {
+            echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
+        }
+
+        self::assertTrue($success, 'Generate puzzle.');
+
+        $this->testFixture($fixtureName, $sut);
+    }
+
+    private function getWordListFromFixture(string $fixtureName): array
+    {
+        $testData = $this->readFixture($fixtureName);
 
         $wordsWithDefinitions = [];
         $lines = explode("\n", $testData['WORD LIST']);
@@ -39,14 +77,7 @@ class CrosswordTest extends HelpersTestCase
             $wordsWithDefinitions[$word] = $definition;
         }
 
-        $success = $sut->generate($wordsWithDefinitions);
-        if ($this->isDebug()) {
-            echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
-        }
-
-        self::assertTrue($success);
-
-        $this->testFixture($fixtureName, $sut);
+        return $wordsWithDefinitions;
     }
 
     private function testFixture(string $fixtureName, Crossword $sut)
@@ -57,18 +88,33 @@ class CrosswordTest extends HelpersTestCase
 
         if ($this->isDebug()) {
             $actual = '';
+            $actual .= '==== BOARD TEXT' . "\n";
+            $actual .= $sut->boardAsText() . "\n";
             $actual .= '==== PUZZLE TEXT' . "\n";
-            $actual .= $actualPuzzle . "\n";
+            $actual .= $sut->puzzleAsText() . "\n";
+            $actual .= '==== DEFINITION LIST' . "\n";
+            $actual .= $sut->definitionListAsText() . "\n";
 
             $this->saveTestData($fixtureName, $testData['text'], $actual);
         }
 
         self::assertEquals(
-            $testData['EXPECTED PUZZLE TEXT'],
-            $actualPuzzle,
+            trim($testData['EXPECTED BOARD TEXT']),
+            trim($sut->boardAsText()),
+            'Board TEXT not correctly generated'
+        );
+
+        self::assertEquals(
+            trim($testData['EXPECTED PUZZLE TEXT']),
+            trim($sut->puzzleAsText()),
             'Puzzle TEXT not correctly generated'
         );
 
+        self::assertEquals(
+            trim($testData['EXPECTED DEFINITION LIST']),
+            trim($actualDefinitionList = $sut->definitionListAsText()),
+            'Definition LIST not correctly generated'
+        );
     }
 
     private function readFixture(string $fixtureName): array
@@ -88,6 +134,4 @@ class CrosswordTest extends HelpersTestCase
 
         return $data;
     }
-
-
 }

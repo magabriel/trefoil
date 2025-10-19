@@ -15,11 +15,35 @@ ALEUT    Definition for ALEUT
 CEASE    Definition for CEASE   
 ENDED    Definition for ENDED   
 
+==== EXPECTED BOARD TEXT
++----+----+----+----+----+
+| 1  | 2  | 3  | 4  | 5  |
+| 6  |    |    |    |    |
+| 7  |    |    |    |    |
+| 8  |    |    |    |    |
+| 9  |    |    |    |    |
++----+----+----+----+----+
+
 ==== EXPECTED PUZZLE TEXT
-|----|----|----|----|----|
-| 1=P| 2vA| 3vS| 4vH| 5vA|
-| 6>E|   L|   T|   O|   N|
-| 7>A|   L|   E|   U|   T|
-| 8>C|   E|   A|   S|   E|
-| 9>E|   N|   D|   E|   D|
-|----|----|----|----|----|
++----+----+----+----+----+
+| 1 P| 2 A| 3 S| 4 H| 5 A|
+| 6 E|   L|   T|   O|   N|
+| 7 A|   L|   E|   U|   T|
+| 8 C|   E|   A|   S|   E|
+| 9 E|   N|   D|   E|   D|
++----+----+----+----+----+
+
+==== EXPECTED DEFINITION LIST
+Down:
+ 1: Definition for PEACE.
+ 2: Definition for ALLEN.
+ 3: Definition for STEAD.
+ 4: Definition for HOUSE.
+ 5: Definition for ANTED.
+
+Across:
+ 1: Definition for PASHA.
+ 6: Definition for ELTON.
+ 7: Definition for ALEUT.
+ 8: Definition for CEASE.
+ 9: Definition for ENDED.

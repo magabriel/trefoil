@@ -1,0 +1,87 @@
+==== WORD LIST
+SACK    Definition for SACK   
+IP      Definition for IP     
+IS      Definition for IS     
+CANE    Definition for CANE     
+TIP     Definition for TIP     
+SHE     Definition for SHE     
+NADIA   Definition for NADIA     
+DIN     Definition for DIN     
+ALA     Definition for ALA     
+UNTO    Definition for UNTO     
+ES      Definition for ES     
+NE      Definition for NE     
+BASS    Definition for BASS     
+SIT     Definition for SIT     
+ASININE Definition for ASININE     
+KC      Definition for KC     
+INHALES Definition for INHALES     
+PEE     Definition for PEE     
+ASIA    Definition for ASIA     
+PANT    Definition for PANT     
+DUN     Definition for DUN     
+ASS     Definition for ASS     
+OB      Definition for OB      
+C       Definition for C 
+A       Definition for A
+D       Definition for D
+
+==== BOARD
+....#..
+..#....
+...#...
+#.....#
+...#...
+....#..
+..#....
+
+==== EXPECTED BOARD TEXT
++----+----+----+----+----+----+----+
+| 1  | 2  |    | 3  | ## | 4  | 5  |
+| 6  |    | ## | 7  |  8 |    |    |
+| 9  |    |10  | ## |11  |    |    |
+| ## |12  |    |    |    |    | ## |
+|13  |    |    | ## |14  |    |15  |
+|16  |    |    |17  | ## |18  |    |
+|19  |    | ## |20  |    |    |    |
++----+----+----+----+----+----+----+
+
+==== EXPECTED PUZZLE TEXT
++----+----+----+----+----+----+----+
+| 1 S| 2 A|   C| 3 K| ## | 4 I| 5 P|
+| 6 I|   S| ## | 7 C| 8 A|   N|   E|
+| 9 T|   I|10 P| ## |11 S|   H|   E|
+| ## |12 N|   A|   D|   I|   A| ## |
+|13 D|   I|   N| ## |14 A|   L|15 A|
+|16 U|   N|   T|17 O| ## |18 E|   S|
+|19 N|   E| ## |20 B|   A|   S|   S|
++----+----+----+----+----+----+----+
+
+==== EXPECTED DEFINITION LIST
+Down:
+ 1: Definition for AAA.
+ 1: Definition for SIT.
+ 2: Definition for ASININE.
+ 3: Definition for KC.
+ 4: Definition for INHALES.
+ 5: Definition for PEE.
+ 8: Definition for ASIA.
+10: Definition for PANT.
+13: Definition for DUN.
+15: Definition for ASS.
+17: Definition for OB.
+ 
+Across:
+ 1: Definition for SACK.
+ 4: Definition for IP.
+ 6: Definition for IS.
+ 7: Definition for CANE.
+ 9: Definition for TIP.
+11: Definition for SHE.
+12: Definition for NADIA.
+13: Definition for DIN.
+14: Definition for ALA.
+16: Definition for UNTO.
+18: Definition for ES.
+19: Definition for NE.
+20: Definition for BASS.
