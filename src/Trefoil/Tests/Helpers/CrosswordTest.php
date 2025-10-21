@@ -24,6 +24,7 @@ class CrosswordTest extends HelpersTestCase
         $testData = $this->readFixture($fixtureName);
 
         $sut = new Crossword();
+        $sut->debug = $this->isDebug();
         $sut->setRandomSeed(1); // Fixed seed for reproducibility
 
         $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
@@ -46,6 +47,7 @@ class CrosswordTest extends HelpersTestCase
         $testData = $this->readFixture($fixtureName);
 
         $sut = new Crossword();
+        $sut->debug = $this->isDebug();
         $sut->setRandomSeed(1); // Fixed seed for reproducibility
 
         $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
@@ -112,7 +114,7 @@ class CrosswordTest extends HelpersTestCase
 
         self::assertEquals(
             trim($testData['EXPECTED DEFINITION LIST']),
-            trim($actualDefinitionList = $sut->definitionListAsText()),
+            trim($sut->definitionListAsText()),
             'Definition LIST not correctly generated'
         );
     }

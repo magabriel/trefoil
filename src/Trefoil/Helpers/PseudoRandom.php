@@ -65,4 +65,18 @@ class PseudoRandom
         }
         return $shuffled;
     }
+
+    public function choice(array $array): mixed
+    {
+        $index = $this->getRandomInt(0, count($array) - 1);
+        return $array[$index] ?? null;
+    }
+
+    public function choiceWithIndex(array $array): array
+    {
+        $index = $this->getRandomInt(0, count($array) - 1);
+        $value = $array[$index] ?? null;
+        $index = $value !== null ? $index : -1;
+        return [$value, $index];
+    }
 }
