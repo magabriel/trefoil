@@ -35,7 +35,7 @@ D       Definition for D
 ....#..
 ..#....
 
-==== EXPECTED BOARD TEXT
+==== EXPECTED PUZZLE TEXT
 +----+----+----+----+----+----+----+
 | 1  | 2  | 3  | 4  | ## | 5  | 6  |
 |    |    |    |    | ## |    |    |
@@ -59,7 +59,7 @@ D       Definition for D
 |    |    | ## |    |    |    |    |
 +----+----+----+----+----+----+----+
 
-==== EXPECTED PUZZLE TEXT
+==== EXPECTED SOLUTION TEXT
 +----+----+----+----+----+----+----+
 | 1  | 2  | 3  | 4  | ## | 5  | 6  |
 |   S|   A|   C|   K| ## |   I|   P|

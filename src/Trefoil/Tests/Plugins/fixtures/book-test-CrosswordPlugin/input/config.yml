@@ -1,5 +1,5 @@
 book:
-  title: "Test book - WordFillInPlugin"
+  title: "Test book - CrosswordPlugin"
   author: "trefoil"
   edition: "0"
   language: en
@@ -9,7 +9,6 @@ book:
 
   contents:
     - { element: chapter, number: 1, content: chapter1.md }
-    - { element: chapter, number: 2, content: chapter2.md }
     - { element: chapter, number: 3, content: solutions.md }
 
   editions:
@@ -34,9 +33,12 @@ book:
             word_files:
               - { label: words_a, name: word_file_1.txt }
               - { label: words_b, name: word_file_2.txt }
-              - { label: words_c, name: lista_palabras_con_definiciones.txt }
+              - { label: words_spanish, name: lista-palabras.txt }
+              - { label: words_english, name: ENG_engmix-no-swear.txt }
             strings:
               title: "Crossword %s"
               text: "Place the solution in the grid."
               text2: "This is a very interesting puzzle."
               solution_title: "Solution %s"
+              across: "Across"
+              down: "Down"

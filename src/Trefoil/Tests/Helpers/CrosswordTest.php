@@ -30,7 +30,7 @@ class CrosswordTest extends HelpersTestCase
         $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
         $board = $testData['BOARD'] ?? Crossword::DEFAULT_BOARD;
 
-        $success = $sut->generate($wordsWithDefinitions, board: $board);
+        $success = $sut->generate($wordsWithDefinitions, boardLayout: $board);
         if ($this->isDebug()) {
             echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
         }
@@ -53,7 +53,7 @@ class CrosswordTest extends HelpersTestCase
         $wordsWithDefinitions = $this->getWordListFromFixture($fixtureName);
         $board = explode("\n", trim($testData['BOARD'] ?? Crossword::DEFAULT_BOARD));
 
-        $success = $sut->generate($wordsWithDefinitions, board: $board);
+        $success = $sut->generate($wordsWithDefinitions,  $board);
         if ($this->isDebug()) {
             echo "\nErrors:\n" . implode("\n", $sut->getErrors()) . "\n";
         }
@@ -84,16 +84,16 @@ class CrosswordTest extends HelpersTestCase
 
     private function testFixture(string $fixtureName, Crossword $sut)
     {
-        $actualPuzzle = $sut->puzzleAsText();
+        $actualPuzzle = $sut->solutionAsText();
 
         $testData = $this->readFixture($fixtureName);
 
         if ($this->isDebug()) {
             $actual = '';
-            $actual .= '==== BOARD TEXT' . "\n";
-            $actual .= $sut->boardAsText() . "\n";
             $actual .= '==== PUZZLE TEXT' . "\n";
             $actual .= $sut->puzzleAsText() . "\n";
+            $actual .= '==== SOLUTION TEXT' . "\n";
+            $actual .= $sut->solutionAsText() . "\n";
             $actual .= '==== DEFINITION LIST' . "\n";
             $actual .= $sut->definitionListAsText() . "\n";
 
@@ -101,15 +101,15 @@ class CrosswordTest extends HelpersTestCase
         }
 
         self::assertEquals(
-            trim($testData['EXPECTED BOARD TEXT']),
-            trim($sut->boardAsText()),
-            'Board TEXT not correctly generated'
-        );
-
-        self::assertEquals(
             trim($testData['EXPECTED PUZZLE TEXT']),
             trim($sut->puzzleAsText()),
             'Puzzle TEXT not correctly generated'
+        );
+
+        self::assertEquals(
+            trim($testData['EXPECTED SOLUTION TEXT']),
+            trim($sut->solutionAsText()),
+            'Solution TEXT not correctly generated'
         );
 
         self::assertEquals(
