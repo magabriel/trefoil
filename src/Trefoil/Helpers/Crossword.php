@@ -88,6 +88,13 @@ class Crossword
     protected $usedDefinitions = [];
 
     /**
+     * Precomputed word patterns for prefixes. 
+     * $wordPatterns[length][prefix] = [word1, word2, ...]
+     * @var array<string, array<string, array<string>>>
+     */
+    protected $wordPatterns = [];
+
+    /**
      * Cache to store validity of down words for placed across words.
      * @var array
      */
@@ -190,6 +197,8 @@ class Crossword
         if ($success) {
             $this->completePlacedWords();
             $this->createUsedDefinitionList();
+        } else {
+            $this->errors[] = sprintf('Could not generate the puzzle after %d tries.', $this->tries);
         }
 
         $this->writeDebugStatus($this->puzzle, true);
@@ -297,6 +306,7 @@ class Crossword
 
         arsort($this->wordsWithDefinitions);
 
+        // Group words by their lengths
         foreach ($this->wordsWithDefinitions as $word => $definition) {
             $len = mb_strlen($word);
             if ($len === 0) {
@@ -309,9 +319,19 @@ class Crossword
                 $this->wordList[$len][] = $word;
             }
         }
+
+        // Precompute word patterns for prefixes
+        foreach ($this->wordList as $length => $words) {
+            foreach ($words as $word) {
+                for ($i = 1; $i <= $length; $i++) {
+                    $prefix = substr($word, 0, $i);
+                    $this->wordPatterns[$length][$prefix][] = $word;
+                }
+            }
+        }
     }
 
-    protected function placeWords(int $row, int $col, array &$puzzle, array $usedWords = []): bool
+    protected function placeWords(int $row, int $col, array &$puzzle, array &$usedWords = []): bool
     {
         $this->recursionDepth++;
         $this->log(sprintf("::ENTER placeWords row=%d, col=%d", $row, $col));
@@ -356,13 +376,23 @@ class Crossword
         $candidateWords = $this->wordList[$neededWordLength];
         $wordisValid = false;
 
+        // Max attempts to avoid testing too many words
+        $maxAttempts = 1000;
+        $attempts = 0;
+
         while (count($candidateWords) > 0 && !$wordisValid) {
+            $attempts++;
+            if ($attempts > $maxAttempts) {
+                $this->log(sprintf("No words of length %d found after %d attempts", $neededWordLength, $maxAttempts));
+                $this->recursionDepth--;
+                return false; // Early stopping
+            }
 
             // $this->log(sprintf("Candidate words:"));
             // $this->log(print_r($candidateWords, true));
             $this->tries++;
 
-            $word = $this->chooseWordForAcross($candidateWords, $usedWords);
+            $word = $this->chooseWordForAcross($candidateWords, $neededWordLength, $usedWords);
 
             $this->log(sprintf("Chosen word: %s", $word));
 
@@ -523,32 +553,34 @@ class Crossword
             $this->log(sprintf("Word starts with '%s'", $wordStartsWith));
 
             // Look if it is cached
-            $cacheKey = sprintf(
-                "%d,%d,%d,%s",
-                $placedWordStartRow,
-                $col,
-                $neededWordDownLength,
-                $wordStartsWith
+            // $cacheKey = sprintf(
+            //     "%d,%d,%d,%s",
+            //     $placedWordStartRow,
+            //     $col,
+            //     $neededWordDownLength,
+            //     $wordStartsWith
+            // );
+
+            // $cacheKey = sprintf(
+            //     "%d,%s",
+            //     $neededWordDownLength,
+            //     $wordStartsWith
+            // );
+
+            // if (!isset($this->wordDownValidCache[$cacheKey])) {
+            //     // Calcular y cachear todas las palabras posibles de una vez
+            //     $this->wordDownValidCache[$cacheKey] = array_filter(
+            //         $this->wordList[$neededWordDownLength],
+            //         fn($w) => str_starts_with($w, $wordStartsWith)
+            //     );
+            // }
+
+            // $possibleWords = array_diff($this->wordDownValidCache[$cacheKey], $usedWords);
+
+            $possibleWords = array_diff(
+                $this->wordPatterns[$neededWordDownLength][$wordStartsWith] ?? [],
+                $usedWords
             );
-
-            if (array_key_exists($cacheKey, $this->wordDownValidCache)) {
-                $possibleWords = array_diff($this->wordDownValidCache[$cacheKey], $usedWords);
-            } else {
-                $possibleWords = [];
-                foreach ($this->wordList[$neededWordDownLength] as $w) {
-                    if (
-                        str_starts_with($w, $wordStartsWith)
-                    ) {
-                        $possibleWords[] = $w;
-                    }
-                }
-
-                // Remove used words from possible words
-                $possibleWords = array_diff($possibleWords, $usedWords);
-
-                // Cache the result
-                $this->wordDownValidCache[$cacheKey] = $possibleWords;
-            }
 
             if (!$possibleWords) {
                 return false;
@@ -558,20 +590,36 @@ class Crossword
         return true;
     }
 
-    private function chooseWordForAcross(array &$candidateWords, array $usedWords): string|null
+    private function chooseWordForAcross(array &$candidateWords, int $neededWordLength, array $usedWords): string|null
     {
         $this->log("::chooseWordForAcross");
 
-        // Filter out used words
-        $candidateWords = array_diff($candidateWords, $usedWords);
+        // // Filter out used words
+        // $candidateWords = array_diff($candidateWords, $usedWords);
 
-        if (!$candidateWords) {
+        // if (!$candidateWords) {
+        //     return null;
+        // }
+
+        // // Choose a random word from the available words
+        // [$word, $wordIndex] = $this->random->choiceWithIndex($candidateWords);
+        // array_splice($candidateWords, $wordIndex, 1);
+
+        // return $word;
+        // Filtrar palabras usadas una sola vez
+        static $filteredWords = [];
+        $key = $neededWordLength . ':' .    implode(',', $usedWords);
+
+        if (!isset($filteredWords[$key])) {
+            $filteredWords[$key] = array_values(array_diff($candidateWords, $usedWords));
+        }
+
+        if (empty($filteredWords[$key])) {
             return null;
         }
 
-        // Choose a random word from the available words
-        [$word, $wordIndex] = $this->random->choiceWithIndex($candidateWords);
-        array_splice($candidateWords, $wordIndex, 1);
+        [$word, $index] = $this->random->choiceWithIndex($filteredWords[$key]);
+        array_splice($candidateWords, $index, 1);
 
         return $word;
     }
@@ -633,25 +681,25 @@ class Crossword
         $cols = count($this->puzzle[0]);
 
         if ($orientation === self::ORIENTATION_ACROSS) {
-            $word = "";
-            for ($c = $col; $c < $cols; $c++) {
+            $letters = [];
+            for ($c = $col; $c < count($this->puzzle[0]); $c++) {
                 if ($this->puzzle[$row][$c]->isBlock) {
                     break;
                 }
-                $word .= $this->puzzle[$row][$c]->letter;
+                $letters[] = $this->puzzle[$row][$c]->letter;
             }
-            return $word;
+            return implode('', $letters);
         }
 
         if ($orientation === self::ORIENTATION_DOWN) {
-            $word = "";
-            for ($r = $row; $r < $rows; $r++) {
+            $letters = [];
+            for ($r = $row; $r < count($this->puzzle); $r++) {
                 if ($this->puzzle[$r][$col]->isBlock) {
                     break;
                 }
-                $word .= $this->puzzle[$r][$col]->letter;
+                $letters[] = $this->puzzle[$r][$col]->letter;
             }
-            return $word;
+            return implode('', $letters);
         }
 
         return null;
@@ -791,7 +839,7 @@ class Crossword
             return;
         }
 
-        if ($elapsed % 5 !== 0 && !$force) {
+        if ($elapsed % 1 !== 0 && !$force) {
             return;
         }
 
