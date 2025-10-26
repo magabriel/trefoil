@@ -1,19 +1,19 @@
 # Crossword test
 
 {@ crossword_begin(1, {
-    seed: 12,
+    seed: 5,
     word_file: 'words_english' ,
     title: 'Este es el puzzle nº <b>1</b>',
     text: 'Resuelva el crucigrama.'
 }) @} 
-- ....#..
-- ..#....
-- ...#...
-- #.....#
-- ...#...
-- ....#..
-- ..#....
-
+- ....#......#..
+- ..#......#....
+- ...#......#...
+- #.....##.....#
+- ...#......#...
+- ....#......#..
+- ..#......#....
+ 
 {@ crossword_end() @}
 {@ crossword_definitions(1) @}
 

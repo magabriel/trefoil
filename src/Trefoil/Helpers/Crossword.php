@@ -88,6 +88,12 @@ class Crossword
     protected $usedDefinitions = [];
 
     /**
+     * Cache to store validity of down words for placed across words.
+     * @var array
+     */
+    protected array $wordDownValidCache = [];
+
+    /**
      * The errors encountered during puzzle generation.
      * @var array
      */
@@ -110,8 +116,10 @@ class Crossword
     protected $recursionDepth = 0;
     protected $tries = 0;
     protected $antTries = 0;
-    protected $elapsedTime = 0;
-    protected $antElapsedTime = 0;
+    protected $startTime = 0;
+    protected $antPeriodTime = 0;
+
+    protected const TIME_LIMIT_SECONDS = 10 * 3600;
 
     public function __construct()
     {
@@ -160,8 +168,8 @@ class Crossword
 
         $this->tries = 0;
         $this->antTries = 0;
-        $this->elapsedTime = time();
-        $this->antElapsedTime = 0;
+        $this->startTime = time();
+        $this->antPeriodTime = 0;
 
         $this->clearDebugLog();
         $this->prepareBoard();
@@ -171,7 +179,13 @@ class Crossword
         $this->log($this->puzzleAsText());
         $this->writeDebugStatus($this->puzzle, true);
 
-        $success = $this->placeWords(0, 0, $this->puzzle);
+        $success = false;
+        try {
+            $success = $this->placeWords(0, 0, $this->puzzle);
+        } catch (\RuntimeException $e) {
+            $this->errors[] = $e->getMessage();
+            $this->log($e->getMessage());
+        }
 
         if ($success) {
             $this->completePlacedWords();
@@ -303,6 +317,11 @@ class Crossword
         $this->log(sprintf("::ENTER placeWords row=%d, col=%d", $row, $col));
         $this->log("\n" . $this->solutionAsText($puzzle));
 
+        $elapsed = time() - $this->startTime;
+        if ($elapsed >= self::TIME_LIMIT_SECONDS) {
+            throw new \RuntimeException('Time limit exceeded during puzzle generation.');
+        }
+
         $this->writeDebugStatus($puzzle);
 
         $rows = count($puzzle);
@@ -332,10 +351,10 @@ class Crossword
             return $result;
         }
 
+
         $neededWordLength = $this->getAvailableLengthAcross($row, $col, $puzzle);
         $candidateWords = $this->wordList[$neededWordLength];
         $wordisValid = false;
-
 
         while (count($candidateWords) > 0 && !$wordisValid) {
 
@@ -343,7 +362,7 @@ class Crossword
             // $this->log(print_r($candidateWords, true));
             $this->tries++;
 
-            [$word, $candidateWords] = $this->chooseWordForAcross($candidateWords, $usedWords);
+            $word = $this->chooseWordForAcross($candidateWords, $usedWords);
 
             $this->log(sprintf("Chosen word: %s", $word));
 
@@ -366,7 +385,7 @@ class Crossword
 
             $usedWordsIncludingCurrent = [...$usedWords, $word];
 
-            $wordisValid = $this->checkWordsDown($row, $puzzle, $usedWordsIncludingCurrent);
+            $wordisValid = $this->checkWordsDown($row, $col, $puzzle, $usedWordsIncludingCurrent);
             if (!$wordisValid) {
                 // Backtrack: the word placed causes down words to be invalid
                 $this->log("Word is NOT valid");
@@ -386,13 +405,12 @@ class Crossword
                     $usedWords[] = $word;
                     $this->recursionDepth--;
                     return true;
-                } else {
-                    // Backtrack: cannot place the word
-                    $this->log(sprintf("Next col:Cannot place \"%s\" at row %d, col %d", $word, $row + 1, $col + 1));
-                    $this->clearTheWordAcross($puzzle, $row, $col, $neededWordLength);
-                    $wordisValid = false;
-                    continue;
                 }
+                // Backtrack: cannot place the word
+                $this->log(sprintf("Next col:Cannot place \"%s\" at row %d, col %d", $word, $row + 1, $col + 1));
+                $this->clearTheWordAcross($puzzle, $row, $col, $neededWordLength);
+                $wordisValid = false;
+                continue;
             }
 
             // Continue with next row
@@ -403,13 +421,12 @@ class Crossword
                 $usedWords[] = $word;
                 $this->recursionDepth--;
                 return true;
-            } else {
-                // Backtrack: cannot place the word
-                $this->log(sprintf("Next row: Cannot place \"%s\" at row %d, col %d", $word, $row + 1, $col + 1));
-                $this->clearTheWordAcross($puzzle, $row, $col, $neededWordLength);
-                $wordisValid = false;
-                continue;
             }
+            // Backtrack: cannot place the word
+            $this->log(sprintf("Next row: Cannot place \"%s\" at row %d, col %d", $word, $row + 1, $col + 1));
+            $this->clearTheWordAcross($puzzle, $row, $col, $neededWordLength);
+            $wordisValid = false;
+            continue;
         }
 
         $this->log(sprintf("No more candidate words at row %d, col %d", $row + 1, $col + 1));
@@ -456,50 +473,50 @@ class Crossword
         }
     }
 
-    protected array $wordDownValidCache = [];
-
     /**
-     * Check if there are words in the list than can be placed on all columns of that row.
+     * Check if there are words in the list than can be placed on all columns of that word.
      * 
-     * @param int $row
+     * @param int $placedWordStartRow
+     * @param int $placedWordStartCol
      * @param array $puzzle
      * @param array $usedWords
      * @return bool
      */
-    private function checkWordsDown(int $row, array $puzzle, array $usedWords): bool
-    {
-        $this->log(sprintf("::checkWordsDown for row %d", $row + 1));
+    private function checkWordsDown(
+        int $placedWordStartRow,
+        int $placedWordStartCol,
+        array $puzzle,
+        array $usedWords
+    ): bool {
+        $this->log(sprintf("::checkWordsDown for row %d", $placedWordStartRow + 1));
         $this->log("Used words:");
         $this->log(print_r($usedWords, true));
 
         $rows = count($puzzle);
         $cols = count($puzzle[0]);
 
-        for ($col = 0; $col < $cols; $col++) {
+        for ($col = $placedWordStartCol; $col < $cols; $col++) {
             // Skip empty cells in this row (i.e. not yet filled)
-            if (!$puzzle[$row][$col]->letter) {
+            if (!$puzzle[$placedWordStartRow][$col]->letter) {
                 continue;
             }
 
             // Use precomputed start and end rows for this word
-            $wordStartRow = $puzzle[$row][$col]->downWordStartRow;
-            $wordEndRow = $puzzle[$row][$col]->downWordEndRow;
+            $wordStartRow = $puzzle[$placedWordStartRow][$col]->downWordStartRow;
+            $wordEndRow = $puzzle[$placedWordStartRow][$col]->downWordEndRow;
 
             // $this->log(sprintf("Word start row for col %d is %d", $col, $wordStartRow));
             // $this->log(sprintf("Word end row for col %d is %d", $col, $wordEndRow));
 
             // Get the word length needed and the starting letters
             $neededWordDownLength = $wordEndRow - $wordStartRow + 1;
-            // if ($neededWordDownLength <= 1) {
-            //     // No word to check
-            //     continue;
-            // }
 
             $wordStartsWith = '';
-            for ($r = $wordStartRow; $r <= $wordEndRow; $r++) {
-                if ($puzzle[$r][$col]->letter) {
-                    $wordStartsWith .= $puzzle[$r][$col]->letter;
+            for ($row = $wordStartRow; $row <= $wordEndRow; $row++) {
+                if (!$puzzle[$row][$col]->letter) {
+                    break;
                 }
+                $wordStartsWith .= $puzzle[$row][$col]->letter;
             }
 
             $this->log(sprintf("Needed word length for col %d is %d", $col, $neededWordDownLength));
@@ -507,58 +524,56 @@ class Crossword
 
             // Look if it is cached
             $cacheKey = sprintf(
-                "row=%d,col=%d,starts=%s,used=%s",
-                $row,
+                "%d,%d,%d,%s",
+                $placedWordStartRow,
                 $col,
-                $wordStartsWith,
-                md5(serialize($usedWords))
+                $neededWordDownLength,
+                $wordStartsWith
             );
 
             if (array_key_exists($cacheKey, $this->wordDownValidCache)) {
-                $isValid = $this->wordDownValidCache[$cacheKey];
-                if (!$isValid) {
-                    return false;
+                $possibleWords = array_diff($this->wordDownValidCache[$cacheKey], $usedWords);
+            } else {
+                $possibleWords = [];
+                foreach ($this->wordList[$neededWordDownLength] as $w) {
+                    if (
+                        str_starts_with($w, $wordStartsWith)
+                    ) {
+                        $possibleWords[] = $w;
+                    }
                 }
-                continue;
+
+                // Remove used words from possible words
+                $possibleWords = array_diff($possibleWords, $usedWords);
+
+                // Cache the result
+                $this->wordDownValidCache[$cacheKey] = $possibleWords;
             }
 
-            $possibleWords = array_filter(
-                $this->wordList[$neededWordDownLength],
-                fn($w) => str_starts_with($w, $wordStartsWith)
-                    && mb_strlen($w) === $neededWordDownLength
-                    && !in_array($w, $usedWords, true)
-            );
-
-            // $this->log(sprintf("Possible words for col %d (length %d, starts with '%s'):", $col, $neededWordDownLength, $wordStartsWith));
-            // $this->log(print_r($possibleWords, true));
-
-            if (count($possibleWords) === 0) {
-                $this->wordDownValidCache[$cacheKey] = false;
+            if (!$possibleWords) {
                 return false;
             }
-
-            $this->wordDownValidCache[$cacheKey] = true;
         }
 
         return true;
     }
 
-    private function chooseWordForAcross(array $candidateWords, array $usedWords): array
+    private function chooseWordForAcross(array &$candidateWords, array $usedWords): string|null
     {
         $this->log("::chooseWordForAcross");
 
         // Filter out used words
-        $availableWords = array_diff($candidateWords, $usedWords);
+        $candidateWords = array_diff($candidateWords, $usedWords);
 
-        if (empty($availableWords)) {
-            return [null, $candidateWords];
+        if (!$candidateWords) {
+            return null;
         }
 
         // Choose a random word from the available words
-        [$word, $wordIndex] = $this->random->choiceWithIndex($availableWords);
+        [$word, $wordIndex] = $this->random->choiceWithIndex($candidateWords);
         array_splice($candidateWords, $wordIndex, 1);
 
-        return [$word, $candidateWords];
+        return $word;
     }
     /**
      * Assign orientation types and definition numbers and store placed words with definitions.
@@ -696,14 +711,17 @@ class Crossword
                     $defNumber = sprintf('%2d  ', $cell->definitionNumber);
                 }
                 if ($withLetters && $cell->letter !== null) {
-                    $letter = '   ' . strtoupper($cell->letter);
+                    $letter = sprintf(
+                        '   %s',
+                        strtoupper($cell->letter)
+                    );
                 }
 
                 $cells1[] = $defNumber;
                 $cells2[] = $letter;
             }
-            $lines[] = '|' . implode('|', $cells1) . '|';
-            $lines[] = '|' . implode('|', $cells2) . '|';
+            $lines[] = sprintf('|%s|', implode('|', $cells1));
+            $lines[] = sprintf('|%s|', implode('|', $cells2));
             $lines[] = $border;
         }
         return implode("\n", $lines);
@@ -762,26 +780,23 @@ class Crossword
     private const DEBUG_LOG_FILE = '/tmp/trefoil/crossword-debug.log';
     private const DEBUG_STATUS_FILE = '/tmp/trefoil/crossword-debug-status.txt';
 
-
-
     protected function writeDebugStatus(array $tempPuzzle = [], bool $force = false): void
     {
         if (!$this->debugStatus) {
             return;
         }
 
-        $puzzle = $tempPuzzle === [] ? $this->puzzle : $tempPuzzle;
-
-        $elapsed = time() - $this->elapsedTime;
-        if ($elapsed === $this->antElapsedTime && !$force) {
+        $elapsed = time() - $this->startTime;
+        if ($elapsed === $this->antPeriodTime && !$force) {
             return;
         }
-        // if ($elapsed % 2 !== 0 && !$force) {
-        //     return;
-        // }
 
-        $triesPerSecond = ($elapsed - $this->antElapsedTime) > 0
-            ? ($this->tries - $this->antTries) / ($elapsed - $this->antElapsedTime)
+        if ($elapsed % 5 !== 0 && !$force) {
+            return;
+        }
+
+        $triesPerSecond = ($elapsed - $this->antPeriodTime) > 0
+            ? ($this->tries - $this->antTries) / ($elapsed - $this->antPeriodTime)
             : 0;
 
         $totalTriesPerSecond = $elapsed > 0
@@ -789,7 +804,8 @@ class Crossword
             : 0;
 
         $this->antTries = $this->tries;
-        $this->antElapsedTime = $elapsed;
+        $this->antPeriodTime = $elapsed;
+        $puzzle = $tempPuzzle === [] ? $this->puzzle : $tempPuzzle;
 
         $status = '';
         $status .= date('Y-m-d H:i:s') . "\n";
