@@ -36,32 +36,32 @@ ENDED    Definition for ENDED
 ==== EXPECTED SOLUTION TEXT
 +----+----+----+----+----+
 | 1  | 2  | 3  | 4  | 5  |
-|   P|   A|   S|   H|   A|
+|   P|   E|   A|   C|   E|
 +----+----+----+----+----+
 | 6  |    |    |    |    |
-|   E|   L|   T|   O|   N|
+|   A|   L|   L|   E|   N|
 +----+----+----+----+----+
 | 7  |    |    |    |    |
-|   A|   L|   E|   U|   T|
+|   S|   T|   E|   A|   D|
 +----+----+----+----+----+
 | 8  |    |    |    |    |
-|   C|   E|   A|   S|   E|
+|   H|   O|   U|   S|   E|
 +----+----+----+----+----+
 | 9  |    |    |    |    |
-|   E|   N|   D|   E|   D|
+|   A|   N|   T|   E|   D|
 +----+----+----+----+----+
 
 ==== EXPECTED DEFINITION LIST
 Down:
- 1: Definition for PEACE.
- 2: Definition for ALLEN.
- 3: Definition for STEAD.
- 4: Definition for HOUSE.
- 5: Definition for ANTED.
+ 1: Definition for PASHA.
+ 2: Definition for ELTON.
+ 3: Definition for ALEUT.
+ 4: Definition for CEASE.
+ 5: Definition for ENDED.
 
 Across:
- 1: Definition for PASHA.
- 6: Definition for ELTON.
- 7: Definition for ALEUT.
- 8: Definition for CEASE.
- 9: Definition for ENDED.
+ 1: Definition for PEACE.
+ 6: Definition for ALLEN.
+ 7: Definition for STEAD.
+ 8: Definition for HOUSE.
+ 9: Definition for ANTED. 

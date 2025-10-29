@@ -21,6 +21,7 @@ class CrosswordCell
     public ?int $definitionNumber = null;
     public ?int $downWordStartRow = null;
     public ?int $downWordEndRow = null;
+    public ?array $possibleLetters = null;
 }
 
 /** @internal */
@@ -94,11 +95,7 @@ class Crossword
      */
     protected $wordPatterns = [];
 
-    /**
-     * Cache to store validity of down words for placed across words.
-     * @var array
-     */
-    protected array $wordDownValidCache = [];
+    protected array $filteredWordsForAcross = [];
 
     /**
      * The errors encountered during puzzle generation.
@@ -371,13 +368,17 @@ class Crossword
             return $result;
         }
 
-
         $neededWordLength = $this->getAvailableLengthAcross($row, $col, $puzzle);
         $candidateWords = $this->wordList[$neededWordLength];
+
+        // TODO: Filter the candidate words by the possible letters in these posiions
+        $possibleWordLetters = $this->getPossibleLettersAcross($row, $col, $puzzle, $neededWordLength);
+        $candidateWords = $this->filterCandidateWordsByPossibleLetters($candidateWords, $possibleWordLetters);
+
         $wordisValid = false;
 
         // Max attempts to avoid testing too many words
-        $maxAttempts = 1000;
+        $maxAttempts = 100;
         $attempts = 0;
 
         while (count($candidateWords) > 0 && !$wordisValid) {
@@ -504,6 +505,44 @@ class Crossword
     }
 
     /**
+     * Return an array with the possible letters for each position of the word in that row/col.
+     * 
+     * @param int $row
+     * @param int $col
+     * @param CrosswordCell[][] $puzzle
+     * @param int $neededWordLength
+     * @return array<string|null>
+     */
+    protected function getPossibleLettersAcross(int $row, int $col, array &$puzzle, int $neededWordLength): array
+    {
+        $pos = 0;
+        $possibleLetters = [];
+        for ($c = $col; $c < $col + $neededWordLength; $c++) {
+            // $possibleLetters will contain on each position an array of possible letters. 
+            // An empty array in a position means all letters (i.e, not filtered by that position)
+            $possibleLetters[$pos++] = $puzzle[$row][$c]->possibleLetters ?: [];
+        }
+
+        return $possibleLetters;
+    }
+
+    protected function filterCandidateWordsByPossibleLetters(array $candidateWords, array $possibleLetters): array
+    {
+        // Create a regexp with the possible letters
+        $regexp = '';
+        foreach ($possibleLetters as $letters) {
+            if (count($letters) > 0) {
+                $regexp .= '[' . implode('', $letters) . ']';
+            } else {
+                $regexp .= '.';
+            }
+        }
+        $regexp = '/^' . $regexp . '/u'; // UTF-8
+
+        return preg_filter($regexp, '$0', $candidateWords);
+    }
+
+    /**
      * Check if there are words in the list than can be placed on all columns of that word.
      * 
      * @param int $placedWordStartRow
@@ -515,7 +554,7 @@ class Crossword
     private function checkWordsDown(
         int $placedWordStartRow,
         int $placedWordStartCol,
-        array $puzzle,
+        array &$puzzle,
         array $usedWords
     ): bool {
         $this->log(sprintf("::checkWordsDown for row %d", $placedWordStartRow + 1));
@@ -552,35 +591,24 @@ class Crossword
             $this->log(sprintf("Needed word length for col %d is %d", $col, $neededWordDownLength));
             $this->log(sprintf("Word starts with '%s'", $wordStartsWith));
 
-            // Look if it is cached
-            // $cacheKey = sprintf(
-            //     "%d,%d,%d,%s",
-            //     $placedWordStartRow,
-            //     $col,
-            //     $neededWordDownLength,
-            //     $wordStartsWith
-            // );
-
-            // $cacheKey = sprintf(
-            //     "%d,%s",
-            //     $neededWordDownLength,
-            //     $wordStartsWith
-            // );
-
-            // if (!isset($this->wordDownValidCache[$cacheKey])) {
-            //     // Calcular y cachear todas las palabras posibles de una vez
-            //     $this->wordDownValidCache[$cacheKey] = array_filter(
-            //         $this->wordList[$neededWordDownLength],
-            //         fn($w) => str_starts_with($w, $wordStartsWith)
-            //     );
-            // }
-
-            // $possibleWords = array_diff($this->wordDownValidCache[$cacheKey], $usedWords);
-
             $possibleWords = array_diff(
                 $this->wordPatterns[$neededWordDownLength][$wordStartsWith] ?? [],
                 $usedWords
             );
+
+            // TODO: Save the possible letters in the next row (the second letter of each one of the possible down words)
+            if ($possibleWords && $neededWordDownLength > 1 && $wordStartRow + 1 < $rows) {
+                $nextRow = $wordStartRow + 1;
+
+                $possibleLetters = [];
+                foreach ($possibleWords as $word) {
+                    // We want the second letter of the word, which goes on the next row
+                    $possibleLetters[] = mb_substr($word, 1, 1);
+                }
+                $possibleLetters = array_unique($possibleLetters);
+
+                $puzzle[$nextRow][$col]->possibleLetters = $possibleLetters;
+            }
 
             if (!$possibleWords) {
                 return false;
@@ -594,31 +622,17 @@ class Crossword
     {
         $this->log("::chooseWordForAcross");
 
-        // // Filter out used words
-        // $candidateWords = array_diff($candidateWords, $usedWords);
-
-        // if (!$candidateWords) {
-        //     return null;
-        // }
-
-        // // Choose a random word from the available words
-        // [$word, $wordIndex] = $this->random->choiceWithIndex($candidateWords);
-        // array_splice($candidateWords, $wordIndex, 1);
-
-        // return $word;
-        // Filtrar palabras usadas una sola vez
-        static $filteredWords = [];
         $key = $neededWordLength . ':' .    implode(',', $usedWords);
 
-        if (!isset($filteredWords[$key])) {
-            $filteredWords[$key] = array_values(array_diff($candidateWords, $usedWords));
+        if (!isset($this->filteredWordsForAcross[$key])) {
+            $this->filteredWordsForAcross[$key] = array_values(array_diff($candidateWords, $usedWords));
         }
 
-        if (empty($filteredWords[$key])) {
+        if (empty($this->filteredWordsForAcross[$key])) {
             return null;
         }
 
-        [$word, $index] = $this->random->choiceWithIndex($filteredWords[$key]);
+        [$word, $index] = $this->random->choiceWithIndex($this->filteredWordsForAcross[$key]);
         array_splice($candidateWords, $index, 1);
 
         return $word;
