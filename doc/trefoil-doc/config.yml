@@ -12,7 +12,7 @@ book:
     language:         en
     publication_date: ~
 
-    version:          '1.999'
+    version:          '1.1010'
 
     generator:        { name: trefoil, version: DEV }
 
@@ -96,6 +96,7 @@ book:
                     - WordFillIn
                     - Paperdle
                     - Latex
+                    - Crossword
 
                 options:
                     DropCaps:
@@ -166,6 +167,17 @@ book:
                             solution-decoder:
                                 title: "Table 3"
                                 text: "Look up each component of the encoded solution to decode it"
+
+                    Crossword:
+                        grid_size: 20
+                        solution_grid_size: 18
+                        ipuz_folder: . # Same folder (Contents)
+                        strings:
+                        title: "Crossword %s"
+                        text: "Place the solution in the grid."
+                        solution_title: "Solution %s"
+                        across_title: "Across"
+                        down_title: "Down"
 
         ebook:
             extends:         base-edition

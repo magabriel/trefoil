@@ -1,0 +1,40 @@
+book:
+  title: "Test book - CrosswordPlugin"
+  author: "trefoil"
+  edition: "0"
+  language: en
+  publication_date: "01-02-2013"
+
+  generator: { name: trefoil, version: DEV }
+
+  contents:
+    - { element: chapter, number: 1, content: chapter1.md }
+    - { element: chapter, number: 3, content: solutions.md }
+
+  editions:
+    ebook:
+      format: epub
+      highlight_code: false
+      include_styles: true
+      labels: ["appendix", "chapter", "figure"] # labels also available for: "figure", "table"
+      theme: theme1
+      toc:
+        deep: 1
+        elements: ["appendix", "chapter", "part", "introduction", "usage-instructions"]
+      isbn: 1234567890X
+      plugins:
+        enabled:
+          - Crossword
+
+        options:
+          Crossword:
+            grid_size: 20
+            solution_grid_size: 10.5
+            ipuz_folder: . # Same folder (Contents)
+            strings:
+              title: "Crossword %s"
+              text: "Place the solution in the grid."
+              solution_title: "Solution %s"
+              across_title: "Across"
+              down_title: "Down"
+
