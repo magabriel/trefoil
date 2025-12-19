@@ -71,9 +71,10 @@ abstract class BasePlugin
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info', 'plain')
      */
-    public function writeLn($message = '',
-                            $type = 'info'): void
-    {
+    public function writeLn(
+        $message = '',
+        $type = 'info'
+    ): void {
         $this->write($message, $type);
         $this->output->writeln('');
     }
@@ -84,12 +85,13 @@ abstract class BasePlugin
      * @param string $message
      * @param string $type of message ('error', 'warning', 'info', 'plain')
      */
-    public function write($message,
-                          $type = 'info'): void
-    {
-//        $class = (new \ReflectionClass($this))->getShortName();
+    public function write(
+        $message,
+        $type = 'info'
+    ): void {
+        //        $class = (new \ReflectionClass($this))->getShortName();
         $class = implode('', array_slice(explode('\\', static::class), -1));
-        $part = ': '.$this->item['config']['content'] ?? '';
+        $part = ': ' . $this->item['config']['content'] ?? '';
         $prefix = sprintf(' > %s%s: ', $class, $part);
 
         $msgType = '';
@@ -102,15 +104,15 @@ abstract class BasePlugin
             case 'error':
                 $msgType = '<bg=red;fg=white> ERROR </> ';
                 break;
-            
+
             case 'plain':
                 $msgType = '';
                 $prefix = '';
                 break;
         }
-        
 
-        $this->output->write($prefix.$msgType.$message);
+
+        $this->output->write($prefix . $msgType . $message);
     }
 
     /**
@@ -139,9 +141,10 @@ abstract class BasePlugin
      *
      * @return mixed
      */
-    protected function getEditionOption($optionName,
-                                        $default = null)
-    {
+    protected function getEditionOption(
+        $optionName,
+        $default = null
+    ) {
         $editions = $this->app->book('editions');
         $editionOptions = $editions[$this->edition];
 
@@ -150,7 +153,7 @@ abstract class BasePlugin
         $option = $editionOptions;
 
         foreach ($keys as $key) {
-            if (array_key_exists($key, $option)) {
+            if (is_array($option) && array_key_exists($key, $option)) {
                 $option = $option[$key];
             } else {
                 return $default;
@@ -168,9 +171,10 @@ abstract class BasePlugin
      *
      * @return mixed
      */
-    protected function getConfigOption($optionName,
-                                       $default = null)
-    {
+    protected function getConfigOption(
+        $optionName,
+        $default = null
+    ) {
         $configOptions = $this->app['publishing.book.config'];
 
         $keys = explode('.', $optionName);

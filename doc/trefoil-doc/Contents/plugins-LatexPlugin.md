@@ -30,7 +30,7 @@ book:
 
 ### Description
 
-**LaTeX** formulas can be seamlessly include into books using special delimiters:
+**LaTeX** formulas can be seamlessly included into books using special delimiters:
 
 - This is an inline formula &#92;( u = \pi\cdot d &#92;) that is rendered in the same line.
 
