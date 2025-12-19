@@ -1,0 +1,139 @@
+/*
+* Crossword
+* ===========
+*/
+
+{% set gridSize =         app['publishing.plugins.options.Crossword.grid_size'] | default(30) %}
+{% set solutionGridSize = app['publishing.plugins.options.Crossword.solution_grid_size'] | default(30) %}
+{% set puzzleLineWidth = 1 %}
+{% set solutionLineWidth = 1 %}
+
+.crossword-title {
+    font-size: 2em;
+    font-weight: bold;
+    width: 100%;
+    border-bottom: 3px solid black;
+    line-height: 1em;
+}
+
+.crossword-puzzle {
+    float: left;
+    margin-bottom: 0.5em;
+}
+
+.crossword-puzzle,
+.crossword-solution {
+    font-family: "Courier New", monospace;
+    border: 1px solid black;
+    width: max-content;
+    display: inline-block;
+}
+
+.crossword-solution {
+    width: max-content;
+    display: inline-block;
+}
+
+.crossword-puzzle table,
+.crossword-solution table {
+    margin: 0;
+    width: auto;
+    height: auto;
+    border: none;
+    border-collapse: collapse;
+}
+
+.crossword.crossword-puzzle-container {
+    clear: both;
+    margin-bottom: 0;
+}
+
+.crossword-puzzle table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ gridSize }}px;
+    width: {{ gridSize }}px;
+    font-size: {{ gridSize * 0.9 }}px;
+    border: {{ puzzleLineWidth }}px solid #888;
+    position: relative; /* needed for absolute positioning of the cell-contents */
+}
+
+.crossword-puzzle table td.block {
+    background-color: #222;
+}
+
+.crossword-puzzle table td span.clue-number {
+    font-size: .5em;
+    text-align: left;
+    line-height: .9;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    position: absolute;
+}
+
+.crossword-solution table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    height: {{ solutionGridSize }}px;
+    width: {{ solutionGridSize }}px;
+    font-size: {{ solutionGridSize * 0.9 }}px;
+    border: {{ solutionLineWidth }}px solid #888;
+    position: relative; /* needed for absolute positioning of the cell-contents */
+}
+
+.crossword-solution table td.block {
+    background-color: #222;
+}
+
+.crossword-solution table td span.clue-number {
+    font-size: .5em;
+    text-align: left;
+    line-height: .9;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    position: absolute;
+}
+
+.crossword-puzzle table td.circle::before {
+    width: 97%;
+    height: 97%;
+    border: 1px solid #666;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.crossword-solution table td.circle::before {
+    width: 97%;
+    height: 97%;
+    border: 1px solid #666;
+    border-radius: 100%;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.crossword-clues-across ul, 
+.crossword-clues-down ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;  
+}
+
+.crossword-clues-across span.clue-number,
+.crossword-clues-down span.clue-number {
+    width: 2em;
+    display: inline-block;
+    text-align: right;
+}

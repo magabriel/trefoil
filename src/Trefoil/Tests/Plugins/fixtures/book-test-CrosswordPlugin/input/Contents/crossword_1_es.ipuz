@@ -1,0 +1,289 @@
+{
+  "uniqueid": "e2fd8057e51b4ac403750978634e6366",
+  "title": "es-7x7-1236",
+  "annotation": "Generated on 2025-12-08 17:07:30",
+  "date": "12/08/2025",
+  "origin": "cwgen",
+  "version": "http://ipuz.org/v2",
+  "kind": [
+    "http://ipuz.org/crossword#1"
+  ],
+  "dimensions": {
+    "height": 7,
+    "width": 7
+  },
+  "puzzle": [
+    [
+      1,
+      2,
+      3,
+      4,
+      "#",
+      5,
+      {
+        "cell": 6,
+        "style": {
+          "shapebg": "circle"
+        }
+      }
+    ],
+    [
+      7,
+      0,
+      "#",
+      8,
+      {
+        "cell": 9,
+        "style": {
+          "shapebg": "circle"
+        }
+      },
+      0,
+      0
+    ],
+    [
+      10,
+      0,
+      11,
+      "#",
+      12,
+      0,
+      0
+    ],
+    [
+      "#",
+      13,
+      0,
+      14,
+      0,
+      0,
+      "#"
+    ],
+    [
+      {
+        "cell": 15,
+        "style": {
+          "shapebg": "circle"
+        }
+      },
+      0,
+      0,
+      "#",
+      16,
+      0,
+      17
+    ],
+    [
+      18,
+      0,
+      {
+        "cell": 0,
+        "style": {
+          "shapebg": "circle"
+        }
+      },
+      19,
+      "#",
+      20,
+      0
+    ],
+    [
+      21,
+      0,
+      "#",
+      22,
+      23,
+      0,
+      0
+    ]
+  ],
+  "solution": [
+    [
+      "J",
+      "A",
+      "T",
+      "A",
+      "#",
+      "A",
+      "S"
+    ],
+    [
+      "U",
+      "F",
+      "#",
+      "L",
+      "A",
+      "Z",
+      "O"
+    ],
+    [
+      "R",
+      "O",
+      "S",
+      "#",
+      "F",
+      "A",
+      "N"
+    ],
+    [
+      "#",
+      "R",
+      "U",
+      "L",
+      "A",
+      "R",
+      "#"
+    ],
+    [
+      "L",
+      "A",
+      "S",
+      "#",
+      "N",
+      "O",
+      "N"
+    ],
+    [
+      "A",
+      "D",
+      "O",
+      "R",
+      "#",
+      "S",
+      "O"
+    ],
+    [
+      "Y",
+      "O",
+      "#",
+      "O",
+      "B",
+      "O",
+      "E"
+    ]
+  ],
+  "clues": {
+    "Across": [
+      {
+        "number": 1,
+        "clue": "Hierba de campo",
+        "answer": "jata"
+      },
+      {
+        "number": 5,
+        "clue": "Triunfador",
+        "answer": "as"
+      },
+      {
+        "number": 7,
+        "clue": "Expresión de fastidio",
+        "answer": "uf"
+      },
+      {
+        "number": 8,
+        "clue": "Vínculo afectivo",
+        "answer": "lazo"
+      },
+      {
+        "number": 10,
+        "clue": "Flor de jardín",
+        "answer": "ros"
+      },
+      {
+        "number": 12,
+        "clue": "Admirador",
+        "answer": "fan"
+      },
+      {
+        "number": 13,
+        "clue": "Rodar",
+        "answer": "rular"
+      },
+      {
+        "number": 15,
+        "clue": "Artículo femenino plural",
+        "answer": "las"
+      },
+      {
+        "number": 16,
+        "clue": "Número cardinal",
+        "answer": "non"
+      },
+      {
+        "number": 18,
+        "clue": "Persona que adora",
+        "answer": "ador"
+      },
+      {
+        "number": 20,
+        "clue": "En la parte inferior",
+        "answer": "so"
+      },
+      {
+        "number": 21,
+        "clue": "Pronombre personal",
+        "answer": "yo"
+      },
+      {
+        "number": 22,
+        "clue": "Doble lengüeta",
+        "answer": "oboe"
+      }
+    ],
+    "Down": [
+      {
+        "number": 1,
+        "clue": "Derecho, poder (arcaísmo)",
+        "answer": "jur"
+      },
+      {
+        "number": 2,
+        "clue": "Contribuyente",
+        "answer": "aforado"
+      },
+      {
+        "number": 4,
+        "clue": "Árbol de madera dura",
+        "answer": "ál"
+      },
+      {
+        "number": 5,
+        "clue": "Incierto",
+        "answer": "azaroso"
+      },
+      {
+        "number": 6,
+        "clue": "Sonido",
+        "answer": "son"
+      },
+      {
+        "number": 9,
+        "clue": "Esfuerzo",
+        "answer": "afán"
+      },
+      {
+        "number": 11,
+        "clue": "Arriba, encima (arcaísmo)",
+        "answer": "suso"
+      },
+      {
+        "number": 15,
+        "clue": "Canto medieval",
+        "answer": "lay"
+      },
+      {
+        "number": 17,
+        "clue": "Patriarca bíblico del diluvio",
+        "answer": "Noé"
+      },
+      {
+        "number": 19,
+        "clue": "Grafema",
+        "answer": "ro"
+      }
+    ]
+  },
+  "answer": "LASO",
+  "cwgen:anagram-word": "LASO",
+  "cwgen:anagram-clue": "Lo contrario de estricto"
+}

@@ -191,7 +191,7 @@ class Crossword
         } catch (\RuntimeException $e) {
             $msg = $e->getMessage() . " : " . $e->getFile() . " " . $e->getLine();
             $this->errors[] = $msg;
-            //$this->log($msg);
+            $this->log($msg);
         }
 
         if ($success) {
@@ -537,7 +537,7 @@ class Crossword
         // Create a regexp with the possible letters
         $regexp = '';
         foreach ($possibleLetters as $letters) {
-            if (count($letters) > 0) {
+            if (!empty($letters)) {
                 $regexp .= '[' . implode('', $letters) . ']';
             } else {
                 $regexp .= '.';
@@ -597,21 +597,27 @@ class Crossword
                 $usedWords
             );
 
-            // Save the possible letters in the next row (the second letter of each one of the possible down words)
-            if ($possibleWords && $neededWordDownLength > 1 && $wordStartRow + 1 < $this->rows) {
-                $nextRow = $wordStartRow + 1;
+            // Save the possible letters in the next row
+            $nextRow = $placedWordStartRow + 1;
+            if ($nextRow >= $this->rows || $this->puzzle[$nextRow][$col]->isBlock) {
+                continue;
+            }
 
+            // Save the possible letters in the next row
+            if ($possibleWords && $neededWordDownLength > 1 && $nextRow < $this->rows) {
+                // We want the letter which goes on the next row
+                $letterIndex = $nextRow - $wordStartRow;
                 $possibleLetters = [];
                 foreach ($possibleWords as $word) {
                     // We want the second letter of the word, which goes on the next row
-                    $possibleLetters[] = mb_substr($word, 1, 1);
+                    $possibleLetters[] = mb_substr($word, $letterIndex, 1);
                 }
                 $possibleLetters = array_unique($possibleLetters);
 
                 $this->puzzle[$nextRow][$col]->possibleLetters = $possibleLetters;
             }
 
-            if (!$possibleWords) {
+            if (empty($possibleWords)) {
                 return false;
             }
         }

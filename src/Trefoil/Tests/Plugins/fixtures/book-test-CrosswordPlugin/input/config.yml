@@ -30,15 +30,11 @@ book:
           Crossword:
             grid_size: 20
             solution_grid_size: 10.5
-            word_files:
-              - { label: words_a, name: word_file_1.txt }
-              - { label: words_b, name: word_file_2.txt }
-              - { label: words_spanish, name: lista-palabras.txt }
-              - { label: words_english, name: ENG_engmix-no-swear.txt }
+            ipuz_folder: . # Same folder (Contents)
             strings:
               title: "Crossword %s"
               text: "Place the solution in the grid."
-              text2: "This is a very interesting puzzle."
               solution_title: "Solution %s"
-              across: "Across"
-              down: "Down"
+              across_title: "Across"
+              down_title: "Down"
+
